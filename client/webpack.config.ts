@@ -51,12 +51,19 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
                             loader: 'css-loader',
                             options: {
                                 modules: {
-                                    localIdentName: isDevelopment ? '[local]__[path][name]' : '[hash:base64]',
-                                    context:        path.join(home, 'client'),
+                                    compileType:                'module',
+                                    mode:                       'local',
+                                    auto:                       /\.pcss$/,
+                                    exportGlobals:              true,
+                                    localIdentName:             isDevelopment ? '[local]__[path][name]' : '[hash:base64]',
+                                    localIdentContext:          path.join(home, 'client'),
+                                    localIdentHashPrefix:       'technobuddha',
+                                    exportLocalsConvention:     'camelCase',
+                                    exportOnlyLocals:           false,
                                 },
+                                //esModule:           true,
                                 sourceMap:          true,
                                 importLoaders:      1,
-                                localsConvention:   'camelCase',
                             },
                         },
                         'postcss-loader',
@@ -76,6 +83,10 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
                             },
                         },
                     ],
+                },
+                {
+                    test:       /\.(ttf|eot|svg|png|jpg|gif|ico)$/,
+                    loader:     'file-loader'
                 },
                 {
                     enforce:    'pre',

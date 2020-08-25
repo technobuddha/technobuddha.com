@@ -15,8 +15,8 @@ type RowProps<T = unknown> = {
     columns:                Column<T>[];
     columnWidths:           number[];
     scrollbarWidth:         number;
-    rowHeight:              number;
     controlWidth:           number;
+    rowHeight?:             number;
     menu?:                  MenuFactory<T>;
     className?:             string;
     style?:                 React.CSSProperties;
@@ -32,9 +32,9 @@ export type RowRenderProps<T = unknown> = {
 }
 
 export function Row<T = unknown>(
-    {header, datum, data, index, columns, columnWidths, scrollbarWidth, rowHeight, controlWidth, menu, className, style, classes, styles, stub, children}: RowProps<T>
+    {header, datum, data, index, columns, columnWidths, scrollbarWidth, controlWidth, rowHeight, menu, className, style, classes, styles, stub, children}: RowProps<T>
 ) {
-    const css = useColumnStyles({rowHeight, scrollbarWidth, controlWidth});
+    const css = useColumnStyles({scrollbarWidth, controlWidth});
 
     const handleMenuClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
         menu?.({event, data, datum, index})
@@ -49,6 +49,7 @@ export function Row<T = unknown>(
                 (column, index) => (
                     <Box 
                         key={column.name}
+                        height={rowHeight}
                         width={columnWidths[index]}
                         className={clsx(css.cell, classes?.cell, header && css.cellHeader, header && classes?.cellHeader)}
                         style={{...styles?.cell, ...(header && styles?.cellHeader)}}
@@ -60,6 +61,7 @@ export function Row<T = unknown>(
             {menu &&
                 <Box
                     key="[menu]"
+                    height={rowHeight}
                     width={`${controlWidth}px`}
                     className={clsx(css.cell, classes?.cell, header && css.cellHeader, header && classes?.cellHeader)}
                     style={{...styles?.cell, ...(header && styles?.cellHeader)}}
@@ -81,8 +83,8 @@ export function Row<T = unknown>(
                 <Box
                     key="[stub]"
                     width={`${scrollbarWidth}px`}
-                    className={clsx(css.cell, classes?.cell, header && css.cellHeader, header && classes?.cellHeader)}
-                    style={{...styles?.cell, ...(header && styles?.cellHeader)}}
+                    className={clsx(css.cell, css.stub, classes?.cell, header && css.cellHeader, header && classes?.cellHeader)}
+                    style={{...styles?.cell, ...styles?.stub, ...(header && styles?.cellHeader)}}
                 >
                     {'\u00A0'}
                 </Box>

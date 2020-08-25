@@ -16,7 +16,7 @@ export type ColumnWidth = number | '*' | '1*' | '2*' | '3*' | '4*' | '5*' | '6*'
 export type ColumnRenderProps<T = unknown> = {
     datum:          T;
     classes?:       Record<string, string>;
-    styles?:         Record<string, React.CSSProperties>;
+    styles?:        Record<string, React.CSSProperties>;
 }
 
 export type ColumnHeaderProps<T = unknown> = {

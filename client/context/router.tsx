@@ -1,23 +1,18 @@
 import React                                        from 'react';
 // import useAuthentication                         from '$client/context/authentication';
-import { createBrowserHistory, Location, History }  from 'history';
+import { Location, History }  from 'history';
 import {
-    Router as ReactRouter,
-    //Route,
-    //RouteProps,
+    BrowserRouter,
     useHistory as routerUseHistory,
-    //Redirect,
 } from 'react-router-dom';
 
 type HistoryState = { referrer: Location<HistoryState> }
 
-const history = createBrowserHistory();
-
 export const Router: React.FC = ({children}: {children?: React.ReactNode}) => {
     return (
-        <ReactRouter history={history}>
+        <BrowserRouter>
             {children}
-        </ReactRouter>
+        </BrowserRouter>
     );
 }
 
@@ -48,6 +43,7 @@ export const useHistory = () => {
     return routerUseHistory() as History<HistoryState>;
 }
 
-export { Location }                         from 'history';
-export { Route, Switch, Redirect, Link }    from 'react-router-dom';
+export { Location }                                 from 'history';
+export { Route, Switch, Redirect, useLocation }     from 'react-router-dom';
+
 export default useHistory;

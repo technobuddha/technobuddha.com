@@ -34,7 +34,6 @@ const ucs = makeStyles(theme => ({
         flex: '0 0 auto',
         display: 'flex',
         flexFlow: 'row nowrap',
-        height: (props: Record<string, unknown>) => `${props.rowHeight}px`,
         alignItems: 'center',
         cursor: 'default',
         whiteSpace: 'nowrap',
@@ -50,7 +49,7 @@ const ucs = makeStyles(theme => ({
     menu: {
         flex: '0 0 auto',
         width: (props: Record<string, unknown>) => `${props.controlWidth}px`,
-        height: (props: Record<string, unknown>) => `${props.rowHeight}px`,
+        height: '100%',
     },
     menuButton: {
         width: '28px',
@@ -74,9 +73,10 @@ const ucs = makeStyles(theme => ({
     stub: {
         width: (props: Record<string, unknown>) => `${props.scrollbarWidth}px`,
         userSelect: 'none',
+        height: '100%',
     }
 }));
 
-export const useColumnStyles: ((args: {rowHeight: number, scrollbarWidth: number, controlWidth: number}) => ReturnType<typeof ucs>) = ucs;
+export const useColumnStyles: ((args: {scrollbarWidth: number, controlWidth: number}) => ReturnType<typeof ucs>) = ucs;
 
 export default useColumnStyles;

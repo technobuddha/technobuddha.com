@@ -34,8 +34,8 @@ export type GridProps<T = unknown> = {
     columns:                Column<T>[];
     columnWidths:           number[];
     scrollbarWidth:         number;
-    rowHeight:              number;
     controlWidth:           number;
+    rowHeight?:             number;
     filters?:               Filter<T>[],
     menu?:                  MenuFactory<T>;
     children?:              never;
@@ -149,17 +149,38 @@ function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlW
             </Row>
             <Size flexGrow={1}>
                 {({width, height}) => (
-                    <FixedSizeList
-                        height={height}
-                        width={width}
-                        itemCount={data.length}
-                        itemSize={rowHeight}
-                        layout="vertical"
-                    >
-                        {GridRow}
-                    </FixedSizeList>
+                    rowHeight
+                    ?   <FixedSizeList
+                            height={height}
+                            width={width}
+                            itemCount={data.length}
+                            itemSize={rowHeight}
+                            layout="vertical"
+                        >
+                          {GridRow}
+                        </FixedSizeList>
+                    :   <Box width={width} height={height} style={{overflowX: 'auto'}}>
+                            {data.map((datum, index) => (
+                                <Row
+                                    key={index}
+                                    classes={classes?.row}
+                                    styles={styles?.row}
+                                    header={false}
+                                    data={data}
+                                    datum={datum}
+                                    columns={columns}
+                                    columnWidths={columnWidths}
+                                    controlWidth={controlWidth}
+                                    scrollbarWidth={scrollbarWidth}
+                                    menu={menu}
+                                >
+                                    {({column}) => column.render({datum, classes: classes?.column, styles: styles?.column})}
+                                </Row>)
+                            )}
+                        </Box>
                 )}
             </Size>
+
         </>
     )
 

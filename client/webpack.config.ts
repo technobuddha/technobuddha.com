@@ -9,6 +9,7 @@ import MiniCssExtractPlugin     from 'mini-css-extract-plugin';
 import { TsConfigPathsPlugin }  from 'awesome-typescript-loader';
 import externalPackages         from '../external-packages';
 import { CMTDWebpackPlugin }    from 'css-module-type-definitions';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const home = path.normalize(path.join(__dirname, '..'));
 
@@ -130,9 +131,10 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
                 filename:           '[name].css',
                 chunkFilename:      '[id].css',
             }),
-            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: 'client', globPattern: '**/*.pcss', camelCase: true })  : null),
-            (isDevelopment ? new webpack.NamedModulesPlugin()                                                                   : null),
-            (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                           : null),
+            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: 'client', globPattern: '**/*.pcss', camelCase: true })     : null),
+            (isDevelopment ? new webpack.NamedModulesPlugin()                                                                       : null),
+            (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                               : null),
+            (isDevelopment ? new BundleAnalyzerPlugin()                                                                             : null),
         ]),
     }
 }

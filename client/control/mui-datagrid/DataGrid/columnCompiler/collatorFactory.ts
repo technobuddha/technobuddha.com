@@ -2,7 +2,7 @@ import isNil        from 'lodash/isNil';
 import isNumber     from 'lodash/isNumber';
 import toString     from 'lodash/toString';
 import { Shape }    from '../analyzer';
-import { toTimestamp, toNumber } from '../../util';
+import { toTimestamp, toNumber } from '@technobuddha/utility';
 import { ColumnSpecification, ColumnType } from '../column';
 
 export const nullCollator = () => () => 0;
@@ -16,7 +16,7 @@ export function collatorFactory<T = unknown>(column: ColumnSpecification<T>, typ
         case 'key-value': {
             const key = column.name.toString();
     
-            switch (type) {
+            switch (type.dataType) {
                 case 'string': {
                     return (ascending: boolean) => {
             
@@ -74,7 +74,7 @@ export function collatorFactory<T = unknown>(column: ColumnSpecification<T>, typ
         case 'array': {
             const key = isNumber(column.name) ? column.name : parseInt(column.name);
     
-            switch (type) {
+            switch (type.dataType) {
                 case 'string':
                     return (ascending: boolean) => {
            
@@ -130,7 +130,7 @@ export function collatorFactory<T = unknown>(column: ColumnSpecification<T>, typ
 
         case 'primitive': 
         case 'polymorphic': {
-            switch (type) {
+            switch (type.dataType) {
                 case 'string': {
                     return (ascending: boolean) => ascending
                     ?   (x: T, y: T) => isNil(x) ? (isNil(y) ? 0 : +1) : (isNil(y) ? -1 : intlCollator.compare(toString(x), toString(y)))

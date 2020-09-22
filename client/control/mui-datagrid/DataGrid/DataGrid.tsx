@@ -61,7 +61,7 @@ export function DataGrid<T = unknown>(
      onSelectionChanged}: DataGridProps<T>
 ) {
     const css               = useDataGridStyles();
-    const analysis          = useDerivedValue(() => analyzer(data, columns),   [data, columns]);
+    const analysis          = useDerivedValue(() => analyzer({data, columns}), [data, columns]);
     const compiledColumns   = useDerivedValue(
         () => columnCompiler<T>(analysis, selection ?? false, controlWidth ?? 40, columns),
         [analysis, selection, controlWidth, columns]

@@ -27,13 +27,16 @@ export type ColumnHeaderProps<T = unknown> = {
 
 export type SortProperties = { sortBy: string, sortAscending: boolean; };
 
-export type ColumnType = 'string' | 'number' | 'date' | 'unknown';
-type UsableColumnType  = Exclude<ColumnType, 'unknown'>;
+export type DataType = 'string' | 'number' | 'date' | 'object' | 'array' | 'unknown';
+export type ColumnType = {
+    dataType:   DataType;
+    nullable:   boolean;
+}
 
 export type ColumnSpecifications<T = unknown> = ColumnSpecification<T>[];
 export type ColumnSpecification<T = unknown>  = {
     name:       ColumnName;
-    type?:      UsableColumnType;
+    type?:      DataType | ColumnType;
     width?:     Column<T>['width'];
     header?:    string | Column<T>['header'];
     render?:    Column<T>['render'];

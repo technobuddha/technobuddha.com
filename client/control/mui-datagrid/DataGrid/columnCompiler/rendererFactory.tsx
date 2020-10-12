@@ -9,10 +9,10 @@ import { Shape }            from '../analyzer';
 import { Anything }         from '../Anything';
 import { ColumnSpecification, ColumnType, ColumnRenderProps } from '../column';
 
-const useCellStyles = makeStyles(theme => ({
+const useCellStyles = makeStyles(_theme => ({
     cell: {
         flexGrow: 1,
-        margin: theme.spacing(0.5),
+        //margin: theme.spacing(0.5),
     },
     left: {
         textAlign: 'left',
@@ -30,43 +30,11 @@ export function rendererFactory<T = unknown>(column: ColumnSpecification<T>, typ
             case 'key-value': {
                 const key = column.name.toString();
 
-                switch (type.dataType) {
-                    case 'number':
-                        return ({datum}: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            const field = (datum as Record<string, unknown>)[key];
-                            return <Box className={clsx(css.cell, css.right)}>{toString(field)}</Box>;
-                        };
-            
-                    case 'date':
-                        return ({datum}: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            const field = (datum as Record<string, unknown>)[key];
-                            return <Box className={clsx(css.cell, css.left)}>{toDateUTCString(field)}</Box>;
-                        };
-            
-                    case 'unknown':
-                    case 'string':
-                        return ({datum}: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            const field = (datum as Record<string, unknown>)[key];
-                            return <Box className={clsx(css.cell, css.left)}>{toString(field)}</Box>;
-                        };
-
-                    case 'object':
-                        return ({datum}: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            const field = (datum as Record<string, unknown>)[key];
-                            return <Box className={clsx(css.cell, css.left)}><Anything data={field} /></Box>;
-                        };
-
-                    case 'array':
-                        return ({datum}: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            const field = (datum as Record<string, unknown>)[key] as unknown[];
-                            return <Box className={clsx(css.cell, css.left)}>{field.map(toString).join(', ')}</Box>;
-                        };
-                }
+                return ({datum}: ColumnRenderProps<T>) => {
+                    const css = useCellStyles();
+                    const field = (datum as Record<string, unknown>)[key];
+                    return <Anything className={css.cell} type={type.dataType}>{field}</Anything>;
+                };
             }
             break;
 
@@ -100,14 +68,14 @@ export function rendererFactory<T = unknown>(column: ColumnSpecification<T>, typ
                         return ({datum}: ColumnRenderProps<T>) => {
                             const css = useCellStyles();
                             const field = (datum as unknown as unknown[])[key];
-                            return <Box className={clsx(css.cell, css.left)}><Anything data={field} /></Box>;
+                            return <Box className={clsx(css.cell, css.left)}><Anything>{field}</Anything></Box>;
                         };
 
                     case 'array':
                         return ({datum}: ColumnRenderProps<T>) => {
                             const css = useCellStyles();
                             const field = (datum as unknown as unknown[])[key] as unknown[];
-                            return <Box className={clsx(css.cell, css.left)}>{field.map(toString).join(', ')}</Box>;
+                            return <Box className={clsx(css.cell, css.left)}><Anything>{field}</Anything></Box>;
                         };
                 }
             }
@@ -138,7 +106,7 @@ export function rendererFactory<T = unknown>(column: ColumnSpecification<T>, typ
                     case 'object':
                         return ({datum}: ColumnRenderProps<T>) => {
                             const css = useCellStyles();
-                            return <Box className={clsx(css.cell, css.left)}><Anything data={datum} /></Box>;
+                            return <Box className={clsx(css.cell, css.left)}><Anything>{datum}</Anything></Box>;
                         };
 
                     case 'array':

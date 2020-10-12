@@ -17,6 +17,7 @@ export function collatorFactory<T = unknown>(column: ColumnSpecification<T>, typ
             const key = column.name.toString();
     
             switch (type.dataType) {
+                case 'array':
                 case 'string': {
                     return (ascending: boolean) => {
             

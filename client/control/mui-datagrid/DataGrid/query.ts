@@ -19,7 +19,7 @@ export function getSortFromQueryString() {
     return sort;
 }
 
-export function setSortInQueryString(sort: string | undefined) {
+export function setSortInQueryString(sort: string | null) {
     const search = queryString.parse(location.search);
 
     search[KEY_SORT] = sort;
@@ -29,7 +29,7 @@ export function setSortInQueryString(sort: string | undefined) {
 export function getFiltersFromQueryString() {
     const { [KEY_SORT]: _, ...filterValues } = mapValues(
         queryString.parse(location.search),
-        q => q ?? undefined
+        q => q ?? null
     );
 
     return filterValues;

@@ -27,14 +27,14 @@ const ucs = makeStyles(theme => ({
     root: {
         display: 'flex',
         flexFlow: 'row nowrap',
-        alignItems: 'center',
+        alignItems: 'stretch',
         border: `1px solid ${theme.palette.divider}`,
     },
     cell: {
         flex: '0 0 auto',
         display: 'flex',
         flexFlow: 'row nowrap',
-        alignItems: 'center',
+        alignItems: 'stretch',
         cursor: 'default',
         whiteSpace: 'nowrap',
         overflow: 'hidden',

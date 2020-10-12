@@ -5,97 +5,120 @@ import isObject from 'lodash/isObject';
 import isEmpty  from 'lodash/isEmpty';
 import isNil    from 'lodash/isNil';
 import toString from 'lodash/toString';
+import { toDateUTCString }  from '@technobuddha/utility';
+import { DataType }         from '$client/control/mui-datagrid/DataGrid/column';    // TODO data types should be moved!
 
 import { makeStyles } from '@material-ui/core/styles';
 
 export type AnythingParams = {
-    data:       unknown;
+    className?: string;
+    type?:      DataType;
     top?:       boolean;
-    children?:  never;
+    children:   unknown;
 }
 
 const useStyles = makeStyles(theme => ({
     array: {
         display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
+        flexDirection: 'row',
 
-        "&$top": {
-            margin: theme.spacing(-0.5),
-            width: `calc(100% + ${theme.spacing(1)}px)`,
-        },
-        "&:not($top)": {
+        "&:not($top) > *": {
             backgroundColor: theme.palette.divider,
-        },
-
-        "& > div": {
-            padding: theme.spacing(0.25),
-            width: '100%',
-            "&:not(:last-child)": {
-                borderBottom: `1px dashed ${theme.palette.divider}`,
-            },
-        },
+        }
     },
     object: {
-        borderCollapse: 'collapse',
+        display: 'flex',
+        flexDirection: 'row',
 
-        "&$top": {
-            margin: theme.spacing(-0.5),
-            width: `calc(100% + ${theme.spacing(1)}px)`,
-        },
-        "&:not($top)": {
+        "&:not($top) > *": {
             backgroundColor: theme.palette.divider,
-            width: '100%',
+        }
+    },
+    member: {
+        padding: `0 ${theme.spacing(0.25)}`,
+
+        "&:not(:last-child)": {
+            borderRight: `1px dashed ${theme.palette.divider}`,
         },
-        
-        "& > tbody ": {
-            "& > tr": {
-                "& > td": {
-                    padding: theme.spacing(0.25),
-                    "&:nth-child(1)": {
-                        width: '25%',
-                        borderRight: `1px dotted ${theme.palette.divider}`,
-                    },
-                    "&:nth-child(2)": {
-                        width: '75%',
-                    }
-                },
-                "&:not(:last-child)": {
-                    borderBottom: `1px dotted ${theme.palette.divider}`,
-                }
-            }
+    },
+    keyValue: {
+        display: 'flex',
+        flexDirection: 'column',
+
+        "&:not(:last-child)": {
+            borderRight: `1px dotted ${theme.palette.divider}`,
+        },
+    },
+    key: {
+        fontSize: '75%',
+        fontStyle: 'italic',
+    },
+    value: {
+        "&:not(:last-child)": {
+            borderRight: `1px dotted ${theme.palette.divider}`,
         }
     },
     top: {
+        
+    },
+    null: {
 
     },
+    primative: {
+        paddingRight: theme.spacing(0.25),
+        paddingLeft: theme.spacing(0.25),
+
+        display: 'flex',
+        justifyCOntent: 'flex-end',
+        alignItems: 'center',
+
+        "&:not($member, $value)": {
+            paddingTop: theme.spacing(0.25),
+            paddingBottom: theme.spacing(0.25),
+        },
+    },
+    left: {
+        justifyContent: 'flex-begin',
+    },
+    right: {
+        justifyContent: 'flex-end',
+    }
 }));
 
-export function Anything({data, top = true}: AnythingParams) {
+export function Anything({children, type, className, top = true}: AnythingParams) {
     const css = useStyles();
 
-    if(isNil(data) || (isObject(data) && isEmpty(data))) {
-        return <div>&nbsp;</div>;
+    if(isNil(children) || (isObject(children) && isEmpty(children))) {
+        return <div className={clsx(className, css.null, className)}>&nbsp;</div>;
     }
 
-    if(isArray(data)) {
+    if(isArray(children)) {
         return (
-            <div className={clsx(css.array, top && css.top)}>
-                {data.map((datum, index) => <Anything key={index} data={datum} top={false}/>)}
+            <div className={clsx(css.array, className, top && css.top)}>
+                {children.map((datum, index) => <Anything key={index} className={css.member} top={false}>{datum}</Anything>)}
             </div>
         );
-    } else if(isObject(data)) {
+    } else if(isObject(children)) {
         return (
-            <div>
-                <table className={clsx(css.object, top && css.top)}>
-                    <tbody>
-                        {Object.entries(data).map(([key, value], index) => (
-                            <tr key={index}><td>{key}</td><td><Anything data={value} top={false}/></td></tr>
-                        ))}
-                    </tbody>
-                </table>
+            <div className={clsx(css.object, className, top && css.top)}>
+                {Object.entries(children).map(([key, value]) => (
+                    <div key={key} className={css.keyValue}>
+                        <div className={css.key}>{key}</div>
+                        <Anything className={css.value} top={false}>{value}</Anything>
+                    </div>
+                ))}
             </div>
         );
     }
-    return <div>{toString(data)}</div>
+
+    switch(type) {
+        case 'number':
+            return <div className={clsx(className, css.primative, css.right)}>{toString(children)}</div>;
+    
+        case 'date':
+            return <div className={clsx(className, css.primative, css.left)}>{toDateUTCString(children)}</div>;
+
+        default:
+            return <div className={clsx(className, css.primative, css.left)}>{toString(children)}</div>;
+    }
 }

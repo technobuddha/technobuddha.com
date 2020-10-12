@@ -9,7 +9,7 @@ export type Filter<T = unknown> = {
     execute:    (data: T[], value: FilterValue) => T[];
 }
 
-export type FilterValue  = string | string[] | undefined;
+export type FilterValue  = string | string[] | null;
 export type FilterValues = Record<string, FilterValue>;
 
 export type FilterActuatorProps = {

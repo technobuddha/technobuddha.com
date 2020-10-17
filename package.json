@@ -5,7 +5,8 @@
   "scripts": {
     "start": "ts-node technobuddha.ts",
     "migrate": "node-pg-migrate --config-file db/config.json --migrations-dir db/migrations",
-    "lint": "eslint . --ext '.ts,.tsx,.js'"
+    "lint": "eslint . --ext '.ts,.tsx,.js'",
+    "doc": "typedoc --out docs client"
   },
   "author": "Phil Hill <phil@technobuddha.com>",
   "repository": {
@@ -90,6 +91,7 @@
     "css-module-type-definitions": "^0.0.3",
     "eslint": "^7.10.0",
     "eslint-plugin-react": "^7.21.3",
+    "eslint-plugin-tsdoc": "^0.2.7",
     "file-loader": "^6.1.0",
     "mini-css-extract-plugin": "^0.11.3",
     "node-pg-migrate": "^5.8.0",
@@ -112,6 +114,7 @@
     "react-hot-loader": "^4.13.0",
     "source-map-loader": "^1.1.0",
     "ts-node": "^9.0.0",
+    "typedoc": "^0.19.2",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
     "webpack-bundle-analyzer": "^3.9.0",

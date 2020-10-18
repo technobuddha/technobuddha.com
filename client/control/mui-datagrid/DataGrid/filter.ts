@@ -37,8 +37,8 @@ export type FilterIndicatorStyles = {[key in keyof FilterIndicatorClasses]: Reac
 
 export function serializeFilterValue(filterValues: FilterValues) {
     return JSON.stringify(mapValues(filterValues, filterValue => {
-        if(filterValue === undefined)
-            return undefined;
+        if(filterValue === null)
+            return null;
         else if(isArray(filterValue))
             return filterValue.join('&');
         else

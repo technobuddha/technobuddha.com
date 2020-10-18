@@ -39,7 +39,7 @@ export function filterCompilerCheckbox<T = unknown>({name, title, Icon}: FilterF
             const handleDialogClose         = () => { setOpen(false); }
             const handleSelectionChanged    = (
                 {selectedRows, selectedCount, unselectedCount}: OnSelectionChangedParams<string>) => {
-                filterValue.current = unselectedCount === 0 ? undefined : selectedRows;
+                filterValue.current = unselectedCount === 0 ? null : selectedRows;
                 setDisabled(selectedCount === 0);
             }
             const handleOKClick             = () => { setOpen(false); changeFilter(name, filterValue.current); }
@@ -65,7 +65,7 @@ export function filterCompilerCheckbox<T = unknown>({name, title, Icon}: FilterF
                                 <DataGrid
                                     data={search}
                                     selection={true}
-                                    selected={(datum: string) => filterValue.current === undefined || filterValue.current.includes(toString(datum))}
+                                    selected={(datum: string) => filterValue.current === null || filterValue.current.includes(toString(datum))}
                                     columns={[{name}]}
                                     filters={[{type: 'search', name, title: title ?? name}]}
                                     defaultSort={name}

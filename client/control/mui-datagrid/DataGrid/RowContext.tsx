@@ -50,7 +50,7 @@ export function RowProvider<T = unknown>({selected, onSelectionChanged, children
     
             console.log('Row Provider initialized with ', selectedCount, data.length)
 
-            return {map, selectedCount, unselectedCount: data.length - selectedCount};
+            return {map, selectedCount, unselectedCount: data.length - selectedCount, now: Date.now() };
         },
         [data, selected]
     );
@@ -71,6 +71,7 @@ export function RowProvider<T = unknown>({selected, onSelectionChanged, children
             const current = state.map.get(datum);
             if(current) {
                 if(current.selected !== selected) {
+                    current.selected = selected;
                     if(selected) {
                         state.selectedCount++;
                         state.unselectedCount--;
@@ -81,7 +82,6 @@ export function RowProvider<T = unknown>({selected, onSelectionChanged, children
                         forceUpdate();
                     }
                 }
-                current.selected = selected;
             } else {
                 console.error('Attempt to set selected state for row not in dataset', datum);
             }

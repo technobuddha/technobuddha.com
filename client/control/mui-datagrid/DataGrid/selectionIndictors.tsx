@@ -17,7 +17,7 @@ export function RowSelectionIndicator<T = unknown>({datum, className, style}: Ro
 
     const handleCheckboxChange = React.useCallback(
         (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => setSelected(datum!, checked),
-        [datum]
+        [datum, setSelected]
     );
 
     return (

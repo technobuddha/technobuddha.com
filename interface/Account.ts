@@ -1,4 +1,4 @@
-import { RequiredBy }   from '$library/types';
+import { RequiredBy }   from '@technobuddha/library/types';
 
 export type Account = {
     id:                 number;

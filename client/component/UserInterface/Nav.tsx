@@ -18,6 +18,7 @@ import IconButton       from '$client/control/IconButton';
 const control = [
     { icon: Home,       primary: 'Home',                                         location: '/home' },
     { icon: MusicNote,  primary: 'Music',                                        location: '/music' },
+    { icon: Menu,       primary: 'Life',                                         location: '/life' },
     { icon: Orbit,      primary: 'Space',       secondary: 'Our Solar System',   location: '/nbody' },
     { icon: Menu,       primary: 'button 1',    secondary: 'Aliquam lobortis',   location: '/one' },
     { icon: Menu,       primary: 'button 1',    secondary: 'Sed libero',         location: '/two' },

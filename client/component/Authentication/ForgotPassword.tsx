@@ -1,6 +1,6 @@
 import React                    from 'react';
 import useTranslation           from '$client/context/i18n';
-import {email as emailRegExp}   from '$library/regexp';
+import {email as emailRegExp}   from '@technobuddha/library/regexp';
 import Typography               from '@material-ui/core/Typography';
 import Button                   from '@material-ui/core/Button';
 import TextField                from '$client/control/TextField';

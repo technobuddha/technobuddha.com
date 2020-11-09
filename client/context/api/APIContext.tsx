@@ -6,8 +6,8 @@ import keys                         from 'lodash/keys';
 import every                        from 'lodash/every';
 import isNil                        from 'lodash/isNil';
 import range                        from 'lodash/range';
-import {replacer, reviver}          from '$library/json';
-import fetcher, {FetcherOptions}    from '$library/fetcher';
+import {replacer, reviver}          from '@technobuddha/library/json';
+import fetcher, {Options as FetcherOptions}    from '@technobuddha/library/fetcher';
 import Account                      from '$interface/Account';
 import ServerError                  from './ServerError';
 

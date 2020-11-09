@@ -6,12 +6,13 @@ import isNil                    from 'lodash/isNil';
 import compact                  from 'lodash/compact';
 import { Dictionary }           from 'lodash';
 import MiniCssExtractPlugin     from 'mini-css-extract-plugin';
-import { TsConfigPathsPlugin }  from 'awesome-typescript-loader';
+import TsConfigPathsPlugin      from 'tsconfig-paths-webpack-plugin';
 import externalPackages         from '../external-packages';
 import { CMTDWebpackPlugin }    from 'css-module-type-definitions';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
-const home = path.normalize(path.join(__dirname, '..'));
+const home          = path.normalize(path.join(__dirname, '..'));
+const extensions    = [ '.ts', '.tsx', '.js', '.json', '.css', '.pcss' ];
 
 export function genClientWebpackConfig(isDevelopment = true): webpack.Configuration {
     return {
@@ -37,7 +38,7 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
             rules: [
                 {
                     test:       /\.tsx?$/,
-                    loader:     'awesome-typescript-loader',
+                    loader:     'ts-loader',
                     options:    {
                         transpileOnly: true 
                     },
@@ -98,8 +99,8 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
         },
         // https://webpack.js.org/configuration/resolve/
         resolve: {
-            extensions:     [ '.ts', '.tsx', '.js', '.json', '.css', '.pcss' ],
-            plugins:        [ new TsConfigPathsPlugin() ],
+            extensions,
+            plugins:        [ new TsConfigPathsPlugin({extensions}) ],
         },
         // https://webpack.js.org/configuration/optimization/
         optimization: {

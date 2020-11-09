@@ -1,9 +1,10 @@
 import path                         from 'path';
 import webpack                      from 'webpack';
-import { TsConfigPathsPlugin }      from 'awesome-typescript-loader';
+import TsConfigPathsPlugin          from 'tsconfig-paths-webpack-plugin';
 import nodeExternals                from 'webpack-node-externals';
 
 const home          = path.normalize(path.join(__dirname, '..'));
+const extensions    = [ '.ts', '.tsx', '.js', '.json', '.css', '.pcss' ];
 
 export const genServerWebpackConfig: ((isDevelopment?: boolean) => webpack.Configuration) = (isDevelopment = true) => {
     return {
@@ -20,7 +21,7 @@ export const genServerWebpackConfig: ((isDevelopment?: boolean) => webpack.Confi
             rules: [
                 {
                     test:       /\.ts?$/,
-                    loader:     'awesome-typescript-loader',
+                    loader:     'ts-loader',
                     options:    { 
                         transpileOnly: true,
                     },
@@ -29,8 +30,8 @@ export const genServerWebpackConfig: ((isDevelopment?: boolean) => webpack.Confi
             ],
         },
         resolve: {
-            extensions:     [ '.ts', '.tsx', '.js', '.json', '.css', '.pcss' ],
-            plugins:        [ new TsConfigPathsPlugin() ],
+            extensions,
+            plugins:        [ new TsConfigPathsPlugin({extensions}) ],
         },
         optimization:   { minimize: !isDevelopment, },
         devtool:        isDevelopment ? 'source-map' : false,

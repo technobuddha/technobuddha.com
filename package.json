@@ -22,6 +22,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@material-ui/styles": "^4.10.0",
     "@technobuddha/react-hooks": "^0.0.3",
+    "@technobuddha/library": "file:../library",
     "@technobuddha/utility": "^1.0.0",
     "clsx": "^1.1.1",
     "cookie-parser": "^1.4.5",

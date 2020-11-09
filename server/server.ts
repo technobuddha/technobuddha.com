@@ -18,7 +18,7 @@ import join                         from 'lodash/join';
 import home                         from '$/home';
 import settings                     from '$/settings';
 import externalPackages             from '$/external-packages';
-import { replacer, reviver }        from '$library/json';
+import { replacer, reviver }        from '@technobuddha/library/json';
 import { pgp }                      from '$db/driver';
 import clientWebpackConfig          from '$client/webpack.config';
 import api                          from './api';

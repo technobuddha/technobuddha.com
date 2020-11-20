@@ -6,6 +6,7 @@ import MenuOpen         from '@material-ui/icons/MenuOpen';
 import Home             from '@material-ui/icons/Home';
 import MusicNote        from '@material-ui/icons/MusicNote';
 import Orbit            from '@material-ui/icons/FilterTiltShift';
+import User             from '@material-ui/icons/AccountCircle';
 import ListItem         from '@material-ui/core/ListItem';
 import useHistory       from '$client/context/router';
 import Box              from '$client/control/Box';
@@ -22,6 +23,7 @@ const control = [
     { icon: Orbit,      primary: 'Space',       secondary: 'Our Solar System',   location: '/nbody' },
     { icon: Menu,       primary: 'button 1',    secondary: 'Aliquam lobortis',   location: '/one' },
     { icon: Menu,       primary: 'button 1',    secondary: 'Sed libero',         location: '/two' },
+    { icon: User,       primary: 'authentication',                               location: '/login'},
 ];
 
 const expanstionTimeout = 800;

@@ -1,16 +1,31 @@
-import React                    from 'react';
-import useTranslation           from '$client/context/i18n';
-import useAuthentication        from '$client/context/authentication';
-import useHistory               from '$client/context/router';
-import Button                   from '$client/control/Button';
-import Box                      from '$client/control/Box';
-import Alert                    from '$client/control/Alert';
-import Email                    from '@material-ui/icons/Email';
-import PasswordField            from '$client/control/PasswordField';
-import TextField                from '$client/control/TextField';
-import Typography               from '$client/control/Typography';
+import React              from 'react';
+import useTranslation     from '$client/context/i18n';
+import useAuthentication  from '$client/context/authentication';
+import useHistory         from '$client/context/router';
+import {makeStyles}       from '$client/context/mui';
+import PasswordField      from '$client/control/PasswordField';
+import TextField          from '$client/control/TextField';
+import Email              from '@material-ui/icons/Email';
+import Box                from '@material-ui/core/Box';
+import Button             from '@material-ui/core/Button';
+import Typography         from '@material-ui/core/Typography';
+import Alert              from '@material-ui/lab/Alert';
+
+const useStyles = makeStyles(theme => ({
+    login: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    input: {
+        margin: `${theme.spacing(1)} 0`,
+    },
+    message: {
+        margin: `${theme.spacing(1)} 0`,
+    }
+}));
 
 export const Login: React.FC = () => {
+    const css                                   = useStyles();
     const {t}                                   = useTranslation();
     const authentication                        = useAuthentication();
     const history                               = useHistory();
@@ -18,8 +33,8 @@ export const Login: React.FC = () => {
     const [password, setPassword]               = React.useState<string>('');
     const [errorMessage, setErrorMessage]       = React.useState<string | null>(null);
 
-    const handleUsernameChange      = (text: string) =>     { setUsername(text);    setErrorMessage(null); };
-    const handlePasswordChange      = (text: string) =>     { setPassword(text);    setErrorMessage(null); };
+    const handleUsernameChange      = (text: string) => { setUsername(text); setErrorMessage(null); };
+    const handlePasswordChange      = (text: string) => { setPassword(text); setErrorMessage(null); };
     const isEnabled                 = () => Boolean(username && password);
     const handleExecute             = (event: React.MouseEvent<HTMLButtonElement>) => { event.preventDefault(); handleLogin(); }
     const handleKeyPress            = (event: React.KeyboardEvent<HTMLElement>)    => { 
@@ -31,7 +46,6 @@ export const Login: React.FC = () => {
     const handleLogin               = () => {
         authentication.login(username!, password!).then(response => {
             if(response) {
-                //TODO history state should be typed...
                 if(history.location.state?.referrer) {
                     history.push(history.location.state.referrer);
                 } else {
@@ -44,11 +58,11 @@ export const Login: React.FC = () => {
     }
 
     return (
-        <Box display="flex" flexDirection="column" onKeyPress={handleKeyPress}>
+        <Box className={css.login} onKeyPress={handleKeyPress}>
             <Typography variant="h5">
                 {t('Log In')}
             </Typography>
-            <Box marginY={1}>
+            <Box className={css.input}>
                 <TextField
                     onChange={handleUsernameChange}
                     autoFocus
@@ -58,7 +72,7 @@ export const Login: React.FC = () => {
                     startAdornment={<Email/>}
                 />
             </Box>
-            <Box marginY={1}>
+            <Box className={css.input}>
             <PasswordField
                 label={t('Password')}
                 helperText={t('Password is case-sensitive.')}
@@ -71,13 +85,13 @@ export const Login: React.FC = () => {
                 type="submit"
                 disabled={!isEnabled()}
                 fullWidth={true}
-                    >
+            >
                 {t('Login')}
             </Button>
 
             {
                 errorMessage &&
-                <Box marginY={1}>
+                <Box className={css.message}>
                     <Alert severity="error">
                         {t(errorMessage)}
                     </Alert>

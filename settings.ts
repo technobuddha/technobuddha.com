@@ -1,15 +1,17 @@
+import { ticksPerWeek, ticksPerHour } from '@technobuddha/library/constants';
+
 export default {
     browser: {
         title:      'Hill Software',
         favicon:    '/assets/favicon.png'
     },
     authentication: {
-        forgotPassword:   true,
+        forgotPassword:   false,
         signUp:           true,
         session: {
-            duration:     1000 * 60 * 60 * 24 * 7,
-            cookieAge:    1000 * 60 * 60 * 24 * 7,
-            keepAlive:    1000 * 60 * 60 * 24,
+            duration:     1   * ticksPerWeek,
+            cookieAge:    1   * ticksPerWeek,
+            keepAlive:    0.5 * ticksPerHour,
         },
         password: {
             minLength: null,

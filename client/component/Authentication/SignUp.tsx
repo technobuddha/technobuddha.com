@@ -2,6 +2,7 @@ import React                        from 'react';
 import {useTranslation}             from '$client/context/i18n';
 import escapeRegExp                 from 'lodash/escapeRegExp';
 import settings                     from '$/settings';
+import useHistory                   from '$client/context/router';
 import {useAuthentication}          from '$client/context/authentication';
 import {email as emailRegExp}       from '@technobuddha/library/regexp';
 import {nbsp}                       from '@technobuddha/library/constants';
@@ -20,6 +21,7 @@ import Email                        from '@material-ui/icons/Email';
 export const SignUp: React.FC = () => {
     const {t}                                                           = useTranslation();
     const authentication                                                = useAuthentication();
+    const history                                                       = useHistory();
     const [first,                       setFirst]                       = React.useState<string>('');
     const [last,                        setLast]                        = React.useState<string>('');
     const [email,                       setEmail]                       = React.useState<string>('');
@@ -54,9 +56,10 @@ export const SignUp: React.FC = () => {
         authentication.createAccount(first, last, email, password)
         .then(async () => {
             await authentication.login(email, password);
+            history.push('/');
         })
         .catch(() =>
-            setErrorMessage(t('Please enter a correct username and password.'))
+            setErrorMessage(t('Email address already in use.'))
         )
     }
 
@@ -141,7 +144,7 @@ export const SignUp: React.FC = () => {
                     onClick={handleExecute}
                     variant="contained"
                     type="submit"
-                    color="primary"
+                    //color="primary"
                     disabled={!isEnabled()}
                     fullWidth
                 >

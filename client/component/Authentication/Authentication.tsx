@@ -1,60 +1,79 @@
-import React                    from 'react';
-import useTranslation           from '$client/context/i18n';
+import React             from 'react';
+import Login             from './Login';
+import ForgotPassword    from './ForgotPassword';
+import SignUp            from './SignUp';
+import settings          from '$settings';
+import useTranslation    from '$client/context/i18n';
+import {makeStyles}      from '$client/context/mui';
+import { Switch, Route } from '$client/context/router';
+import Link              from '$client/control/Link';
+import Watermark         from '$client/control/Watermark';
+import Box               from '@material-ui/core/Box';
+import Paper             from '@material-ui/core/Paper';
+import Typography        from '@material-ui/core/Typography';
 
-import Login                    from './Login';
-import ForgotPassword           from './ForgotPassword';
-import SignUp                   from './SignUp';
-import settings                 from '$settings';
-import { Switch, Route }        from '$client/context/router';
-import Typography               from '$client/control/Typography';
-import Link                     from '$client/control/Link';
-import Paper                    from '$client/control/Paper';
-import Box                      from '$client/control/Box';
-import Watermark                from '$client/control/Watermark';
+const useStyles = makeStyles(theme => ({
+    main: {
+
+    },
+    outer: {
+        margin: `${theme.spacing(12)}px auto 0 auto`,
+        maxWidth: '480px',
+    },
+    inner: {
+        display: 'flex',
+        flexDirection: 'column',
+        padding: theme.spacing(4),
+    },
+    jump: {
+        marginTop: theme.spacing(2),
+    }
+}))
 
 export const Authentication: React.FC = () => {
-    const { t }                     = useTranslation();
+    const css   = useStyles();
+    const { t } = useTranslation();
 
     return (
         <Watermark>
-        <Box marginX="auto" marginTop={4} maxWidth="480px">
-            <Paper>
-                <Box display="flex" flexDirection="column" padding={4}>
-                    <Switch>
-                        <Route path='/login'            component={Login} />
-                        {
-                            settings.authentication.signUp &&
-                            <Route path='/sign-up' component={SignUp} />
-                        }
-                        {
-                            settings.authentication.forgotPassword &&
-                            <Route path='/forgot-password' component={ForgotPassword} />
-                        }
-                    </Switch>
-                    <Box marginTop={2}>
+            <Box className={css.outer}>
+                <Paper>
+                    <Box className={css.inner}>
                         <Switch>
+                            <Route path='/login'            component={Login} />
                             {
                                 settings.authentication.signUp &&
-                                <Route path={['/login', '/forgot-password']} >
+                                <Route path='/sign-up' component={SignUp} />
+                            }
+                            {
+                                settings.authentication.forgotPassword &&
+                                <Route path='/forgot-password' component={ForgotPassword} />
+                            }
+                        </Switch>
+                        <Box className={css.jump}>
+                            <Switch>
+                                {
+                                    settings.authentication.signUp &&
+                                    <Route path={['/login', '/forgot-password']} >
+                                        <Box>
+                                            <Typography variant="caption">
+                                                {t("Don't have an account?")} <Link to="/sign-up" replace>{t('Sign up')}</Link>
+                                            </Typography>
+                                        </Box>
+                                    </Route>
+                                }
+                                <Route path={['/sign-up', '/forgot-password']}>
                                     <Box>
                                         <Typography variant="caption">
-                                            {t("Don't have an account?")} <Link to="/sign-up" replace>{t('Sign up')}</Link>
+                                        {t("Already have an account?")} <Link to="/login" replace>{t('Login')}</Link>
                                         </Typography>
-                                    </Box>
+                                    </Box>                            
                                 </Route>
-                            }
-                            <Route path={['/sign-up', '/forgot-password']}>
-                                <Box>
-                                    <Typography variant="caption">
-                                    {t("Already have an account?")} <Link to="/login" replace>{t('Login')}</Link>
-                                    </Typography>
-                                </Box>                            
-                            </Route>
-                        </Switch>
+                            </Switch>
+                        </Box>
                     </Box>
-                </Box>
-            </Paper>
-        </Box>
+                </Paper>
+            </Box>
         </Watermark>
     );
 };

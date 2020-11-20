@@ -1,6 +1,6 @@
 import React                        from 'react';
 import {useTranslation}             from '$client/context/i18n';
-import {useSnackbar}                from 'notistack';
+//import {useSnackbar}                from 'notistack';
 import isArray                      from 'lodash/isArray';
 import keys                         from 'lodash/keys';
 import every                        from 'lodash/every';
@@ -9,7 +9,7 @@ import range                        from 'lodash/range';
 import {replacer, reviver}          from '@technobuddha/library/json';
 import fetcher, {Options as FetcherOptions}    from '@technobuddha/library/fetcher';
 import Account                      from '$interface/Account';
-import ServerError                  from './ServerError';
+//import ServerError                  from './ServerError';
 
 export type FetchAPIOptions     = Omit<FetcherOptions, 'body'> & {validStatuses?: number[]};
 export type API<T>              = {status: number, statusText: string, payload: T};
@@ -41,7 +41,7 @@ const CONTENT_JSON = 'application/json;charset=utf-8';
 
 export const APIProvider: React.FC = (props: {children?: React.ReactNode}) => {
     const {t}               = useTranslation();
-    const {enqueueSnackbar} = useSnackbar();
+    //const {enqueueSnackbar} = useSnackbar();
 
     async function fetchAPI<T>(url: string, options: FetchAPIOptions, json?: Record<string, unknown>): Promise<API<T>> {
         const validStatuses   = options.validStatuses ?? range(200, 300);
@@ -89,7 +89,8 @@ export const APIProvider: React.FC = (props: {children?: React.ReactNode}) => {
                 }
             }
         ).catch(err => { 
-            enqueueSnackbar((<ServerError err={err}/>), {persist: true, variant: 'error'})
+            console.error(err);
+            //enqueueSnackbar((<ServerError err={err}/>), {persist: true, variant: 'error'})
             throw err; 
         });
     }

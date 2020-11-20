@@ -5,7 +5,7 @@ import CircularProgress                     from '@material-ui/core/CircularProg
 import { ThemeProvider }                    from './context/mui';
 import { I18nProvider }                     from './context/i18n';
 import { SnackbarProvider }                 from './context/snackbar';
-//import { AuthenticationProvider }           from './context/authentication';
+import { AuthenticationProvider }           from './context/authentication';
 import { APIProvider }                      from './context/api';
 import { Router }                           from './context/router';
 import Body                                 from './component/Body';
@@ -21,11 +21,11 @@ export const App = hot(module) (
                         <I18nProvider>
                             <SnackbarProvider>
                                 <APIProvider>
-                                    {/* <AuthenticationProvider> */}
+                                    <AuthenticationProvider>
                                         <Router>
                                             <Body />
                                         </Router>
-                                    {/* </AuthenticationProvider> */}
+                                    </AuthenticationProvider>
                                 </APIProvider>
                             </SnackbarProvider>
                         </I18nProvider>

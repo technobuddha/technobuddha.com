@@ -3,7 +3,7 @@ import webpack                      from 'webpack';
 import TsConfigPathsPlugin          from 'tsconfig-paths-webpack-plugin';
 import nodeExternals                from 'webpack-node-externals';
 
-const home          = path.normalize(path.join(__dirname, '..'));
+const home          = path.normalize(path.join(__dirname, '..', '..'));
 const extensions    = [ '.ts', '.tsx', '.js', '.json', '.css', '.pcss' ];
 
 export const genServerWebpackConfig: ((isDevelopment?: boolean) => webpack.Configuration) = (isDevelopment = true) => {
@@ -11,7 +11,7 @@ export const genServerWebpackConfig: ((isDevelopment?: boolean) => webpack.Confi
         name:   'server',
         mode:   isDevelopment ? 'development' : 'production',
         entry: {
-            'server': path.join(home, 'server/server.ts')
+            'server': path.join(home, 'src/server/server.ts')
         },
         output: {
             filename:   '[name].js',

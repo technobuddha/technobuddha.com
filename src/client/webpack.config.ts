@@ -23,15 +23,15 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
         entry: {
             main:   compact([
                 (isDevelopment ? path.join(home, 'node_modules/webpack-hot-middleware/client.js') : null),
-                path.join(home, 'client/index.tsx'),
+                path.join(home, 'src/client/index.tsx'),
             ]),
         },
         // https://webpack.js.org/configuration/output/
         output: {
             filename:       '[name].js',
             chunkFilename:  '[name].js',
-            publicPath:     '/scripts/',
-            path:           path.join(home, 'scripts'),
+            publicPath:     '/dist/',
+            path:           path.join(home, 'dist'),
         },
         // https://webpack.js.org/configuration/module/
         module: {
@@ -58,7 +58,7 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
                                     auto:                       /\.pcss$/,
                                     exportGlobals:              true,
                                     localIdentName:             isDevelopment ? '[local]__[path][name]' : '[hash:base64]',
-                                    localIdentContext:          path.join(home, 'client'),
+                                    localIdentContext:          path.join(home, 'src/client'),
                                     localIdentHashPrefix:       'technobuddha',
                                     exportLocalsConvention:     'camelCase',
                                     exportOnlyLocals:           false,
@@ -115,6 +115,7 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
                     },
                 },
             },
+            namedModules: true,
         },
         // https://webpack.js.org/configuration/devtool/
         devtool:        isDevelopment ? 'source-map' : false,
@@ -132,8 +133,7 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
                 filename:           '[name].css',
                 chunkFilename:      '[id].css',
             }),
-            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: 'client', globPattern: '**/*.pcss', camelCase: true })     : null),
-            (isDevelopment ? new webpack.NamedModulesPlugin()                                                                       : null),
+            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: 'src/client', globPattern: '**/*.pcss', camelCase: true })     : null),
             (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                               : null),
             (isDevelopment ? new BundleAnalyzerPlugin()                                                                             : null),
         ]),

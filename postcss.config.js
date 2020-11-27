@@ -3,8 +3,8 @@ const process       = require('process');
 const mapKeys       = require('lodash/mapKeys');
 const kebabCase     = require('lodash/kebabCase');
 const parser        = require('postcss-comment');
-const theme         = require('./mui-theme')
-const variables     = require('./css-variables.js');
+const theme         = require('./src/mui-theme')
+const variables     = require('./src/css-variables.js');
 
 module.exports = {
     parser:     parser,

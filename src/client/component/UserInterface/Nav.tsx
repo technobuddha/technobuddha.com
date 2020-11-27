@@ -21,6 +21,7 @@ const control = [
     { icon: MusicNote,  primary: 'Music',                                        location: '/music' },
     { icon: Menu,       primary: 'Life',                                         location: '/life' },
     { icon: Orbit,      primary: 'Space',       secondary: 'Our Solar System',   location: '/nbody' },
+    { icon: Orbit,      primary: 'Chaos',                                        location: '/chaos' },
     { icon: Menu,       primary: 'button 1',    secondary: 'Aliquam lobortis',   location: '/one' },
     { icon: Menu,       primary: 'button 1',    secondary: 'Sed libero',         location: '/two' },
     { icon: User,       primary: 'authentication',                               location: '/login'},

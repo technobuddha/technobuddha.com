@@ -1,6 +1,6 @@
 node_modules
 bin
-scripts
+dist
 *.pcss.d.ts
 *.log
 assets/.well-known/*

@@ -7,8 +7,8 @@ import commandLineUsage             from 'command-line-usage';
 import chalk                        from 'chalk';
 import repeat                       from 'lodash/repeat';
 import { spawn, ChildProcess }      from 'child_process';
-import { genServerWebpackConfig }   from './server/webpack.config';
-import { genClientWebpackConfig }   from './client/webpack.config';
+import { genServerWebpackConfig }   from '../src/server/webpack.config';
+import { genClientWebpackConfig }   from '../src/client/webpack.config';
 
 chalk.level = 3;    // Tell chalk that we support full RGB colors
 

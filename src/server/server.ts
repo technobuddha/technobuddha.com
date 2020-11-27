@@ -24,7 +24,7 @@ import clientWebpackConfig          from '$client/webpack.config';
 import api                          from './api';
 import TranslationWorker            from './TranslationWorker';
 
-import '$/postcss.config';
+import 'postcss.config';
 
 const exit = () => {
     pgp.end();
@@ -109,7 +109,7 @@ process.on('uncaughtException', exit);
     const key_authority     = fs.existsSync(file_authority) ? fs.readFileSync(file_authority,   'utf8') : null;
     const credentials       = key_private && key_public && key_authority ? { key: key_private, cert: key_public, ca: key_authority } : null;
 
-    const views             = path.join(home, 'server', 'views');
+    const views             = path.join(home, 'src/server/views');
     const app               = express();
 
     app.set('view engine', 'ejs');
@@ -145,7 +145,7 @@ process.on('uncaughtException', exit);
             devMiddleware(
                 compiler,
                 {
-                    publicPath:     clientWebpackConfig.output?.publicPath ?? '/scripts',
+                    publicPath:     clientWebpackConfig.output?.publicPath ?? '/dist',
                     stats:          'errors-warnings',
                 }
             )
@@ -188,7 +188,7 @@ process.on('uncaughtException', exit);
     )
 
     app.get(
-        '/scripts/*',
+        '/dist/*',
         express.static(home),
         (_req, res) => {
             res.sendStatus(404);

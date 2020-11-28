@@ -122,8 +122,10 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
     )
 
     return (
-        <canvas ref={canvas} className={css.canvas} width={boxWidth} height={boxHeight}>
-        </canvas>
+        <div style={{width: boxWidth, height: height, position: 'relative'}}>
+            <canvas ref={canvas} className={css.canvas} width={boxWidth} height={boxHeight}>
+            </canvas>
+        </div>
     );
 }
 

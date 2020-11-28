@@ -7,3 +7,8 @@ assets/.well-known/*
 !assets/.well-known/acme-challenge
 assets/.well-known/acme-challenge/*
 *.mldata
+
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

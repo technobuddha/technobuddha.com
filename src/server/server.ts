@@ -5,8 +5,9 @@ import http                         from 'http';
 import https                        from 'https';
 import express                      from 'express';
 import { createProxyMiddleware }    from 'http-proxy-middleware';
-import cookieParser                 from 'cookie-parser';
 
+import chalk                        from 'chalk';
+import cookieParser                 from 'cookie-parser';
 import webpack                      from 'webpack';
 import devMiddleware                from 'webpack-dev-middleware';
 import hotMiddleware                from 'webpack-hot-middleware';
@@ -39,11 +40,26 @@ process.on('exit', exit);
 process.on('uncaughtException', exit);
 
 (async function main(){
+    chalk.level = 3;
+    
+    const logLevel = (level: string) => {
+        switch(level) {
+            case 'error':   return chalk.red(level);
+            case 'warn':    return chalk.yellow(level);
+            case 'info':    return chalk.cyan(level);
+            case 'http':    return chalk.blue(level);
+            case 'verbose': return chalk.green(level);
+            case 'debug': 
+            case 'silly':
+            default:        return level;  
+        }
+    }
+
     const logger = winston.createLogger({
         level:          'verbose',
         format:         winston.format.combine(
                             winston.format.timestamp(),
-                            winston.format.printf(info => `${info.timestamp} ${`[${info.level}]`.padEnd(10)} ${info.message}`),
+                            winston.format.printf(info => `${info.timestamp} ${`[${logLevel(info.level)}]`.padEnd(10)} ${info.message}`),
                         ),
         transports:     [
             new winston.transports.Console(),
@@ -51,7 +67,7 @@ process.on('uncaughtException', exit);
         ],
     });
 
-  
+
     const isDevelopment         = process.env.NODE_ENV !== 'production';
     const HTTP_PORT             = 8080;
     const HTTPS_PORT            = 8443;
@@ -71,7 +87,7 @@ process.on('uncaughtException', exit);
 
     let preload: string;
     // eslint-disable-next-line no-constant-condition
-    if (false) { 
+    if (process.env.USE_CDN === 'true') { 
         const cdn = 'https://cdnjs.cloudflare.com/ajax/libs';
         preload =
             join (
@@ -120,13 +136,13 @@ process.on('uncaughtException', exit);
     app.use(express.urlencoded({extended: true}));
     app.set('json replacer', replacer);
 
-    logger.verbose(`Server booting... ${isDevelopment ? 'DEVELOPMENT' : 'PRODUCTION'}`);
+    logger.verbose(`Server booting... ${chalk.green(isDevelopment ? 'DEVELOPMENT' : 'PRODUCTION')}`);
 
     app.use(
         (req, _res, next) => {
             const { protocol, method, url,  } = req;
 
-            logger.verbose(`${protocol} ${method} ${url}`);
+            logger.info(`${protocol} ${method} ${url}`);
             next();
         }
     );
@@ -228,7 +244,8 @@ process.on('uncaughtException', exit);
                 target:         'http://mail.technobuddha.com',
                 changeOrigin:   true,
                 autoRewrite:    true,
-                logLevel:       'debug',
+                logLevel:       'error',
+                logProvider:    () => logger,
             }
         )
     )

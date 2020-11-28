@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Web site for hill.software",
   "scripts": {
-    "start": "ts-node scripts/start.ts",
+    "start": "scripts/start.ts",
     "migrate": "node-pg-migrate --config-file db/config.json --migrations-dir db/migrations",
     "lint": "eslint . --ext '.ts,.tsx,.js'",
     "doc": "typedoc --out docs client"
@@ -91,6 +91,7 @@
     "@types/zxcvbn": "^4.4.0",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
+    "ansi-escapes": "^4.3.1",
     "browserslist": "^4.14.7",
     "chalk": "^4.1.0",
     "command-line-args": "^5.1.1",

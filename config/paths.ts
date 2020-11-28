@@ -1,11 +1,10 @@
 import path                 from 'path';
 import fs                   from 'fs';
 import getPublicUrlOrPath   from 'react-dev-utils/getPublicUrlOrPath';
+import packagejson          from '../package.json';
 
-// Make sure any symlinks in the project folder are resolved:
-// https://github.com/facebook/create-react-app/issues/637
-const appDirectory  = fs.realpathSync(process.cwd());
-const resolveApp    = (relativePath: string) => path.resolve(appDirectory, relativePath);
+const home          = fs.realpathSync(path.resolve(__dirname, '..'));
+const resolveHome   = (relativePath: string) => path.resolve(home, relativePath);
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -15,7 +14,7 @@ const resolveApp    = (relativePath: string) => path.resolve(appDirectory, relat
 // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
 const publicUrlOrPath = getPublicUrlOrPath(
   process.env.NODE_ENV === 'development',
-  require(resolveApp('package.json')).homepage,
+  packagejson.homepage,
   process.env.PUBLIC_URL
 );
 
@@ -46,20 +45,20 @@ const resolveModule = (resolveFn: (path: string) => string, filePath: string) =>
 
 // config after eject: we're in ./config/
 export default {
-  dotenv:           resolveApp('.env'),
-  appPath:          resolveApp('.'),
-  appBuild:         resolveApp('build'),
-  appPublic:        resolveApp('public'),
-  appHtml:          resolveApp('public/index.html'),
-  appIndexJs:       resolveModule(resolveApp, 'src/index'),
-  appPackageJson:   resolveApp('package.json'),
-  appSrc:           resolveApp('src'),
-  appTsConfig:      resolveApp('tsconfig.json'),
+  'home':           resolveHome('.'),
+  '.env':           resolveHome('.env'),
+  appBuild:         resolveHome('build'),
+  appPublic:        resolveHome('public'),
+  appHtml:          resolveHome('public/index.html'),
+  appIndexJs:       resolveModule(resolveHome, 'src/index'),
+  appPackageJson:   resolveHome('package.json'),
+  appSrc:           resolveHome('src'),
+  appTsConfig:      resolveHome('tsconfig.json'),
   //appJsConfig:      resolveApp('jsconfig.json'),
-  yarnLockFile:     resolveApp('yarn.lock'),
+  yarnLockFile:     resolveHome('yarn.lock'),
   //testsSetup:       resolveModule(resolveApp, 'src/setupTests'),
   //proxySetup:       resolveApp('src/setupProxy.js'),
-  appNodeModules:   resolveApp('node_modules'),
+  appNodeModules:   resolveHome('node_modules'),
   //swSrc:            resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
   moduleFileExtensions

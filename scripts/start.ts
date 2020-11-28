@@ -1,13 +1,10 @@
+#!/bin/env -S ts-node -r ./config/env.ts
+
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.BABEL_ENV = 'development';
 process.env.NODE_ENV  = 'development';
 
-// Makes the script crash on unhandled rejections instead of silently
-// ignoring them. In the future, promise rejections that are not handled will
-// terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
-  throw err;
-});
+
 
 // Ensure environment variables are read.
 // import getClientEnvironment from '../config/env';
@@ -32,9 +29,9 @@ import webpack from 'webpack';
 
 //import { checkBrowsers } from 'react-dev-utils/browsersHelper';
 
-///
-import repeat                       from 'lodash/repeat';
-import chalk from 'chalk'; chalk.level = 3;    // Tell chalk that we support full RGB colors
+/// 
+import repeat                                   from 'lodash/repeat';
+import chalk                                    from 'chalk'; chalk.level = 3;    // Tell chalk that we support full RGB colors
 import { out, clearScreen, header, screenSize } from '@technobuddha/vt100';
 import { spawn, ChildProcess }                  from 'child_process';
 import { genServerWebpackConfig }               from '../src/server/webpack.config';
@@ -43,18 +40,15 @@ let serverProcess: ChildProcess | null = null;
 
 const startServer   = () => {
     if(serverProcess) {
-        out(chalk.red(`\nServer changed, restarting...\n\n`));
+        out(chalk.red(`\n\nServer changed, restarting...\n\n`));
         stopServer();
     }
 
     serverProcess = spawn('node', ['./bin/server.js'], { stdio: 'inherit'});
-    //serverProcess?.stdout?.on('data', out);
-    //serverProcess?.stderr?.on('data', out);
 }
 
 const stopServer    = () => {
     if(serverProcess) {
-        out(chalk.red(`\nServer shutting down...\n\n`));
         serverProcess.kill();
         serverProcess = null;
     }
@@ -62,9 +56,6 @@ const stopServer    = () => {
 
 const exit = () => {
     stopServer();
-
- //    setScrollRegion();
- //    moveCursorTo(1, height);
     process.exit(0);
 }
 
@@ -72,10 +63,16 @@ const exit = () => {
     sig => process.on(sig, exit)
 );
 
+// Makes the script crash on unhandled rejections instead of silently
+// ignoring them. In the future, promise rejections that are not handled will
+// terminate the Node.js process with a non-zero exit code.
+process.on('unhandledRejection', err => {
+  throw err;
+});
+
 webpack(genServerWebpackConfig(true)).watch(
     {},
     (error: Error, stats: webpack.Stats) => {
-       stopServer();
        if(error ?? stats.hasErrors())
            process.stdout.write(`${stats.toString('errors-only')}\n`);
        else
@@ -86,7 +83,6 @@ webpack(genServerWebpackConfig(true)).watch(
 const {width} = screenSize();
 
 clearScreen();
-// setScrollRegion(HEADER_HEIGHT+2, height);
 out(header());
 out(`${repeat('=', width)}\n`)
 

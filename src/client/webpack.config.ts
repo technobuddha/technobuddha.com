@@ -9,7 +9,7 @@ import MiniCssExtractPlugin     from 'mini-css-extract-plugin';
 import TsConfigPathsPlugin      from 'tsconfig-paths-webpack-plugin';
 import externalPackages         from '../external-packages';
 import { CMTDWebpackPlugin }    from 'css-module-type-definitions';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+//import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const home          = path.normalize(path.join(__dirname, '..'));
 const extensions    = [ '.ts', '.tsx', '.js', '.json', '.css', '.pcss' ];
@@ -133,9 +133,9 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
                 filename:           '[name].css',
                 chunkFilename:      '[id].css',
             }),
-            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: 'src/client', globPattern: '**/*.pcss', camelCase: true })     : null),
+            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: 'src/client', globPattern: '**/*.pcss', camelCase: true }) : null),
             (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                               : null),
-            (isDevelopment ? new BundleAnalyzerPlugin()                                                                             : null),
+            //(isDevelopment ? new BundleAnalyzerPlugin()                                                                             : null),
         ]),
     }
 }

@@ -1,3 +1,4 @@
+import process   from 'process';
 import pgPromise from 'pg-promise';
 
 export const pgp = pgPromise({
@@ -5,10 +6,10 @@ export const pgp = pgPromise({
 });
 
 export const db = pgp({
-    user:       'postgres',
-    host:       '/var/run/postgresql',
-    database:   'technobuddha',
-    port:       5432,
+    user:       process.env.DB_USER,
+    host:       process.env.DB_HOST,
+    database:   process.env.DB_DATABASE,
+    port:       parseInt(process.env.DB_PORT!),
 });
 
 export default db;

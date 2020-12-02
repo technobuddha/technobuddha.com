@@ -8,10 +8,10 @@ import { Dictionary }           from 'lodash';
 import MiniCssExtractPlugin     from 'mini-css-extract-plugin';
 import TsConfigPathsPlugin      from 'tsconfig-paths-webpack-plugin';
 import externalPackages         from '../external-packages';
+import paths                    from '../../config/paths';
 import { CMTDWebpackPlugin }    from 'css-module-type-definitions';
 //import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
-const home          = path.normalize(path.join(__dirname, '..'));
 const extensions    = [ '.ts', '.tsx', '.js', '.json', '.css', '.pcss' ];
 
 export function genClientWebpackConfig(isDevelopment = true): webpack.Configuration {
@@ -22,8 +22,8 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
         // https://webpack.js.org/configuration/entry-context/#entry
         entry: {
             main:   compact([
-                (isDevelopment ? path.join(home, 'node_modules/webpack-hot-middleware/client.js') : null),
-                path.join(home, 'src/client/index.tsx'),
+                (isDevelopment ? path.join(paths.home, 'node_modules', 'webpack-hot-middleware', 'client.js') : null),
+                path.join(paths.home, 'src/client/index.tsx'),
             ]),
         },
         // https://webpack.js.org/configuration/output/
@@ -31,7 +31,7 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
             filename:       '[name].js',
             chunkFilename:  '[name].js',
             publicPath:     '/dist/',
-            path:           path.join(home, 'dist'),
+            path:           path.join(paths.home, 'dist'),
         },
         // https://webpack.js.org/configuration/module/
         module: {
@@ -58,7 +58,7 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
                                     auto:                       /\.pcss$/,
                                     exportGlobals:              true,
                                     localIdentName:             isDevelopment ? '[local]__[path][name]' : '[hash:base64]',
-                                    localIdentContext:          path.join(home, 'src/client'),
+                                    localIdentContext:          path.join(paths.home, 'src', 'client'),
                                     localIdentHashPrefix:       'technobuddha',
                                     exportLocalsConvention:     'camelCase',
                                     exportOnlyLocals:           false,

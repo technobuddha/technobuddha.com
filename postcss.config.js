@@ -11,7 +11,7 @@ module.exports = {
     plugins: {
         'postcss-import': {
             resolve(id, basedir) {
-                if (/^\$/.test(id))    return path.join(process.cwd(), 'client', 'style', id.slice(1));
+                if (/^\$/.test(id))    return path.join(process.cwd(), 'client', 'style', id.slice(1)); //TODO we shouldn't be using cwd()
 
                 return path.resolve(basedir, id);
             }

@@ -2,6 +2,15 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "node_modules/react-dev-utils"
+		},
+		{
+			"path": "../vt100"
+		},
+		{
+			"path": "../css-module-type-definitions"
 		}
 	],
 	"settings": {}

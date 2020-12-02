@@ -3,8 +3,8 @@ import fs                   from 'fs';
 import getPublicUrlOrPath   from 'react-dev-utils/getPublicUrlOrPath';
 import packagejson          from '../package.json';
 
-const home          = fs.realpathSync(path.resolve(__dirname, '..'));
-const resolveHome   = (relativePath: string) => path.resolve(home, relativePath);
+const home          = fs.realpathSync(path.join(__dirname, '..'));
+const resolveHome   = (relativePath: string) => path.join(home, relativePath);
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -47,6 +47,7 @@ const resolveModule = (resolveFn: (path: string) => string, filePath: string) =>
 export default {
   'home':           resolveHome('.'),
   '.env':           resolveHome('.env'),
+  'data':           resolveHome('data'),
   appBuild:         resolveHome('build'),
   appPublic:        resolveHome('public'),
   appHtml:          resolveHome('public/index.html'),

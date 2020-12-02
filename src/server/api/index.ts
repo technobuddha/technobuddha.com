@@ -2,9 +2,9 @@ import path             from 'path';
 import express          from 'express';
 import authentication   from './authentication';
 import music            from './music';
-import home             from '$/home';
+import paths            from 'config/paths';
 
-const apiHome               = path.join(home, 'server', 'api');
+const apiHome               = path.join(paths.home, 'server', 'api');
 
 export const api = express();
 

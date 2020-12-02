@@ -5,7 +5,6 @@ import http                         from 'http';
 import https                        from 'https';
 import express                      from 'express';
 import { createProxyMiddleware }    from 'http-proxy-middleware';
-
 import chalk                        from 'chalk';
 import cookieParser                 from 'cookie-parser';
 import webpack                      from 'webpack';
@@ -13,19 +12,26 @@ import devMiddleware                from 'webpack-dev-middleware';
 import hotMiddleware                from 'webpack-hot-middleware';
 import mime                         from 'mime';
 import winston                      from 'winston';
+import { matchesUA }                from 'browserslist-useragent';
+
 import map                          from 'lodash/map';
 import join                         from 'lodash/join';
+import repeat                       from 'lodash/repeat';
 
-import home                         from '$/home';
+import paths                        from 'config/paths';
 import settings                     from '$/settings';
 import externalPackages             from '$/external-packages';
 import { replacer, reviver }        from '@technobuddha/library/json';
+import { space }                    from '@technobuddha/library/constants';
 import { pgp }                      from '$db/driver';
 import clientWebpackConfig          from '$client/webpack.config';
+
 import api                          from './api';
 import TranslationWorker            from './TranslationWorker';
 
-import 'postcss.config';
+import packageJson                  from '~package.json';
+
+// import 'postcss.config';
 
 const exit = () => {
     pgp.end();
@@ -43,23 +49,27 @@ process.on('uncaughtException', exit);
     chalk.level = 3;
     
     const logLevel = (level: string) => {
+        let colored: string;
+
         switch(level) {
-            case 'error':   return chalk.red(level);
-            case 'warn':    return chalk.yellow(level);
-            case 'info':    return chalk.cyan(level);
-            case 'http':    return chalk.blue(level);
-            case 'verbose': return chalk.green(level);
+            case 'error':   colored = chalk.red(level);     break;
+            case 'warn':    colored = chalk.yellow(level);  break;
+            case 'info':    colored = chalk.cyan(level);    break;
+            case 'http':    colored = chalk.blue(level);    break;
+            case 'verbose': colored = chalk.green(level);   break;
             case 'debug': 
             case 'silly':
-            default:        return level;  
+            default:        colored = level;                break;
         }
+
+        return `${colored}${repeat(space, 7 - level.length)}`
     }
 
     const logger = winston.createLogger({
         level:          'verbose',
         format:         winston.format.combine(
                             winston.format.timestamp(),
-                            winston.format.printf(info => `${info.timestamp} ${`[${logLevel(info.level)}]`.padEnd(10)} ${info.message}`),
+                            winston.format.printf(info => `${info.timestamp} ${logLevel(info.level)} ${info.message}`),
                         ),
         transports:     [
             new winston.transports.Console(),
@@ -74,7 +84,7 @@ process.on('uncaughtException', exit);
     const title                 = (settings?.browser?.title)      ?? 'Untitled';
     const favicon               = (settings?.browser?.favicon)    ?? '/assets/favicon.ico';
     
-    const translationWorker     = new TranslationWorker(home, logger);
+    const translationWorker     = new TranslationWorker(paths.home, logger);
 
     function cacheControl(days = 0) {
         const seconds = days * 24 * 60 * 60;
@@ -94,7 +104,7 @@ process.on('uncaughtException', exit);
                 map (
                     externalPackages,
                     (info, packageName) => {
-                        const version   = fs.readJsonSync(path.resolve(home, 'node_modules', packageName, 'package.json')).version;
+                        const version   = fs.readJsonSync(path.join(paths.home, 'node_modules', packageName, 'package.json')).version;
                         const url       = `${cdn}/${info.alias ?? packageName}/${version}/${isDevelopment ? info.development : info.production}`;
                         return `<script type="application/javascript" src="${url}"></script>`;
                     }
@@ -117,15 +127,16 @@ process.on('uncaughtException', exit);
         );
     }
 
-    const file_private      = path.join('/etc/letsencrypt/live', 'technobuddha', 'privkey.pem');
-    const file_public       = path.join('/etc/letsencrupt/live', 'technobuddha', 'fullchain.pem');
-    const file_authority    = path.join('/etc/letsencrupt/live', 'technobuddha', 'chain.pem');
-    const key_private       = fs.existsSync(file_private)   ? fs.readFileSync(file_private,     'utf8') : null;
-    const key_public        = fs.existsSync(file_public)    ? fs.readFileSync(file_public,      'utf8') : null;
-    const key_authority     = fs.existsSync(file_authority) ? fs.readFileSync(file_authority,   'utf8') : null;
+    const certificate_home  = process.env.CERTIFICATE_HOME ?? '/etc/letsencrypt/live';
+    const file_private      = path.join(certificate_home, 'technobuddha', 'privkey.pem');
+    const file_public       = path.join(certificate_home, 'technobuddha', 'fullchain.pem');
+    const file_authority    = path.join(certificate_home, 'technobuddha', 'chain.pem');
+    const key_private       = fs.existsSync(file_private)   ? fs.readFileSync(file_private,   'utf8') : null;
+    const key_public        = fs.existsSync(file_public)    ? fs.readFileSync(file_public,    'utf8') : null;
+    const key_authority     = fs.existsSync(file_authority) ? fs.readFileSync(file_authority, 'utf8') : null;
     const credentials       = key_private && key_public && key_authority ? { key: key_private, cert: key_public, ca: key_authority } : null;
 
-    const views             = path.join(home, 'src/server/views');
+    const views             = path.join(paths.home, 'src', 'server', 'views');  // TODO should probably be in paths
     const app               = express();
 
     app.set('view engine', 'ejs');
@@ -142,7 +153,7 @@ process.on('uncaughtException', exit);
         (req, _res, next) => {
             const { protocol, method, url,  } = req;
 
-            logger.info(`${protocol} ${method} ${url}`);
+            logger.http(`${protocol} ${method} ${url}`);
             next();
         }
     );
@@ -181,7 +192,7 @@ process.on('uncaughtException', exit);
 
     app.use(
         '/.well-known/',
-        express.static(path.join(home, 'assets', '.well-known')),
+        express.static(path.join(paths.home, 'assets', '.well-known')),
         (_req, res) => {
             res.sendStatus(404);
         }
@@ -189,7 +200,7 @@ process.on('uncaughtException', exit);
 
     app.use(
         '/assets/',
-        express.static(path.join(home, 'assets')),
+        express.static(path.join(paths.home, 'assets')),
         (_req, res) => {
             res.sendStatus(404);
         }
@@ -197,7 +208,7 @@ process.on('uncaughtException', exit);
 
     app.get(
         '/favicon.ico',
-        express.static(path.join(home, 'assets')),
+        express.static(path.join(paths.home, 'assets')),
         (_req, res) => {
             res.sendStatus(404);
         }      
@@ -205,7 +216,7 @@ process.on('uncaughtException', exit);
 
     app.get(
         '/dist/*',
-        express.static(home),
+        express.static(paths.home),
         (_req, res) => {
             res.sendStatus(404);
         }
@@ -215,13 +226,13 @@ process.on('uncaughtException', exit);
         '/cdn/*',
         (req, res) => {
             const name = req.url.substr(5);         // 5 is the length of '/cdn/'
-            res.sendFile(path.resolve(home, 'node_modules', name));
+            res.sendFile(path.join(paths.home, 'node_modules', name));
         }
     );
 
     app.get(
         '/locales/*',
-        express.static(home),
+        express.static(paths.home),
         (_req, res) => {
             res.sendStatus(404);
         }
@@ -252,9 +263,18 @@ process.on('uncaughtException', exit);
 
     app.get(
         '/*',
-        (_req, res) => {
+        (req, res) => {
             res.setHeader('Content-Type',   mime.getType('index.html') ?? 'text/html');
             res.setHeader('Cache-Control',  cacheControl(1));
+
+            const userAgent = req.headers['user-agent'];
+            if(userAgent && !matchesUA(userAgent, { browsers: packageJson.browserslist, allowHigherVersions: true})) {
+                if(req.cookies['peril'] !== 'accepted') {
+                    logger.warn(`user-agent not supported: "${userAgent}"`);
+                    res.render('abandon-hope.ejs', { favicon, years: new Date().getFullYear() - 1314 });
+                    return;
+                }
+            }
 
             res.render('index.ejs', { title, preload, favicon });
         }
@@ -276,7 +296,7 @@ process.on('uncaughtException', exit);
         .listen(HTTP_PORT, () => logger.verbose(`HTTP Redirector listening on port ${HTTP_PORT}`));
 
         https.createServer(credentials, app)
-        .listen(HTTPS_PORT, () => logger.verbose(`HTTPS Server listening on port %{HTTPS_PORT}`));
+        .listen(HTTPS_PORT, () => logger.verbose(`HTTPS Server listening on port ${HTTPS_PORT}`));
     } else {
         app.listen(
             HTTP_PORT,

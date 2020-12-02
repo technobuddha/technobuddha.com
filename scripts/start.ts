@@ -1,40 +1,10 @@
-#!/bin/env -S ts-node -r ./config/env.ts
-
-// Do this as the first thing so that any code reading it knows the right env.
-process.env.BABEL_ENV = 'development';
-process.env.NODE_ENV  = 'development';
-
-
-
-// Ensure environment variables are read.
-// import getClientEnvironment from '../config/env';
-
-// import fs from 'fs';
-import webpack from 'webpack';
-// import WebpackDevServer from 'webpack-dev-server';
-//import clearConsole from 'react-dev-utils/clearConsole';
-// import checkRequiredFiles from 'react-dev-utils/checkRequiredFiles';
-// import {
-//   choosePort,
-//   createCompiler,
-//   prepareProxy,
-//   prepareUrls,
-//} from 'react-dev-utils/WebpackDevServerUtils';
-//import openBrowser from 'react-dev-utils/openBrowser';
-//import semver from 'semver';
-//import paths from '../config/paths';
-//import configFactory from '../config/webpack.config';
-//import createDevServerConfig from '../config/webpackDevServer.config';
-//import react from 'react';//require.resolve('react', { paths: [paths.appPath] });
-
-//import { checkBrowsers } from 'react-dev-utils/browsersHelper';
-
-/// 
-import repeat                                   from 'lodash/repeat';
+#!/bin/env -S ts-node -r ./config/env.ts -r tsconfig-paths/register
+import webpack                                  from 'webpack';
 import chalk                                    from 'chalk'; chalk.level = 3;    // Tell chalk that we support full RGB colors
-import { out, clearScreen, header, screenSize } from '@technobuddha/vt100';
 import { spawn, ChildProcess }                  from 'child_process';
-import { genServerWebpackConfig }               from '../src/server/webpack.config';
+import repeat                                   from 'lodash/repeat';
+import { out, clearScreen, header, screenSize } from '@technobuddha/vt100';
+import { genServerWebpackConfig }               from 'server/webpack.config';
 
 let serverProcess: ChildProcess | null = null;
 

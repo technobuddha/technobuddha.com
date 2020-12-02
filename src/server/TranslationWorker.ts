@@ -7,6 +7,7 @@ import omit                             from 'lodash/omit';
 import each                             from 'lodash/each';
 import { Logger }                       from 'winston';
 import i18next                          from '$/i18next.config.json';
+import paths                            from 'config/paths';
 
 export class TranslationWorker
 {
@@ -15,12 +16,10 @@ export class TranslationWorker
     private queue:  { [key: string]: string[] }     = {};
     private timer:  NodeJS.Timer | null             = null;
 
-    private home:   string;
     private logger: Logger;
 
-    constructor(home: string, logger: Logger)
+    constructor(logger: Logger)
     {
-        this.home   = home;
         this.logger = logger;
 
         process
@@ -55,7 +54,7 @@ export class TranslationWorker
             (phrases, _url) => {
                 if(i18next.whitelist) {
                     for (const lng of i18next.whitelist) {
-                        const translationPath   = path.join(this.home, 'locales', lng, 'translation.json');
+                        const translationPath   = path.join(paths.locales, lng, 'translation.json');
                         fs.readFile(translationPath)
                         .then(
                             (text) => {

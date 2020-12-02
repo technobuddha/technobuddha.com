@@ -8,10 +8,10 @@ if(!process.env.NODE_ENV) {
 }
 
 [
-    `${paths['.env']}.${process.env.NODE_ENV}.local`,
-    `${paths['.env']}.${process.env.NODE_ENV}`,
-    `${paths['.env']}.local`,
-    paths['.env'],
+    `${paths.env}.${process.env.NODE_ENV}.local`,
+    `${paths.env}.${process.env.NODE_ENV}`,
+    `${paths.env}.local`,
+    paths.env,
 ]
 .filter(fs.existsSync)
 .forEach(path => dotenvExpand(config({ path })));

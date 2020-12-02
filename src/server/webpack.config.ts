@@ -1,4 +1,3 @@
-import path                         from 'path';
 import webpack                      from 'webpack';
 import TsConfigPathsPlugin          from 'tsconfig-paths-webpack-plugin';
 import nodeExternals                from 'webpack-node-externals';
@@ -11,11 +10,11 @@ export const genServerWebpackConfig: ((isDevelopment?: boolean) => webpack.Confi
         name:   'server',
         mode:   isDevelopment ? 'development' : 'production',
         entry: {
-            'server': path.join(paths.home, 'src', 'server', 'server.ts')       // TODO use paths
+            'server': paths.serverEntry,
         },
         output: {
             filename:   '[name].js',
-            path:       path.join(paths.home, 'bin'),
+            path:       paths.bin,
         },
         module: {
             rules: [

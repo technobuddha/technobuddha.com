@@ -12,7 +12,7 @@ music.get(
         let second = true;
         res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
-        const lineReader = new nReadLines(path.join(paths.home, 'data', 'tracks.mldata'));
+        const lineReader = new nReadLines(path.join(paths.data, 'tracks.mldata'));
 
         let line: Buffer | false;
         // eslint-disable-next-line no-cond-assign
@@ -36,7 +36,7 @@ music.get(
 music.post(
     '/tracks',
     async (_req, res) => {
-        const lineReader = new nReadLines(path.join(paths.home, 'data', 'tracks.mldata'));
+        const lineReader = new nReadLines(path.join(paths.data, 'tracks.mldata'));
 
         let line: Buffer | false;
         // eslint-disable-next-line no-cond-assign

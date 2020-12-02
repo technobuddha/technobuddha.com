@@ -84,7 +84,7 @@ process.on('uncaughtException', exit);
     const title                 = (settings?.browser?.title)      ?? 'Untitled';
     const favicon               = (settings?.browser?.favicon)    ?? '/assets/favicon.ico';
     
-    const translationWorker     = new TranslationWorker(paths.home, logger);
+    const translationWorker     = new TranslationWorker(logger);
 
     function cacheControl(days = 0) {
         const seconds = days * 24 * 60 * 60;
@@ -104,7 +104,7 @@ process.on('uncaughtException', exit);
                 map (
                     externalPackages,
                     (info, packageName) => {
-                        const version   = fs.readJsonSync(path.join(paths.home, 'node_modules', packageName, 'package.json')).version;
+                        const version   = fs.readJsonSync(path.join(paths.node_modules, packageName, 'package.json')).version;
                         const url       = `${cdn}/${info.alias ?? packageName}/${version}/${isDevelopment ? info.development : info.production}`;
                         return `<script type="application/javascript" src="${url}"></script>`;
                     }
@@ -136,11 +136,10 @@ process.on('uncaughtException', exit);
     const key_authority     = fs.existsSync(file_authority) ? fs.readFileSync(file_authority, 'utf8') : null;
     const credentials       = key_private && key_public && key_authority ? { key: key_private, cert: key_public, ca: key_authority } : null;
 
-    const views             = path.join(paths.home, 'src', 'server', 'views');  // TODO should probably be in paths
     const app               = express();
 
     app.set('view engine', 'ejs');
-    app.set('views',       views);
+    app.set('views',       paths.views);
 
     app.use(cookieParser());
     app.use(express.json({reviver}));
@@ -192,7 +191,7 @@ process.on('uncaughtException', exit);
 
     app.use(
         '/.well-known/',
-        express.static(path.join(paths.home, 'assets', '.well-known')),
+        express.static(path.join(paths.assets, '.well-known')),
         (_req, res) => {
             res.sendStatus(404);
         }
@@ -200,7 +199,7 @@ process.on('uncaughtException', exit);
 
     app.use(
         '/assets/',
-        express.static(path.join(paths.home, 'assets')),
+        express.static(paths.assets),
         (_req, res) => {
             res.sendStatus(404);
         }
@@ -208,7 +207,7 @@ process.on('uncaughtException', exit);
 
     app.get(
         '/favicon.ico',
-        express.static(path.join(paths.home, 'assets')),
+        express.static(paths.assets),
         (_req, res) => {
             res.sendStatus(404);
         }      
@@ -226,7 +225,7 @@ process.on('uncaughtException', exit);
         '/cdn/*',
         (req, res) => {
             const name = req.url.substr(5);         // 5 is the length of '/cdn/'
-            res.sendFile(path.join(paths.home, 'node_modules', name));
+            res.sendFile(path.join(paths.node_modules, name));
         }
     );
 

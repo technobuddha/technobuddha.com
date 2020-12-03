@@ -8,7 +8,7 @@ import Header                       from './Header';
 import Main                         from './Main';
 import Footer                       from './Footer';
 import CssBaseLine                  from '@material-ui/core/CssBaseline';
-import Authentication               from '$client/component/Authentication';
+import Authentication               from '#component/Authentication';
 
 const useStyles = makeStyles({
     root: {

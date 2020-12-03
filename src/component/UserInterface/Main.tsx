@@ -1,12 +1,12 @@
 import React                from 'react';
 import Box                  from '@material-ui/core/Box';
-import Home                 from '$client/component/Home';
-import NBody                from '$client/component/NBody';
-import Music                from '$client/component/Music';
-//import Knight               from '$client/component/Knight';
-import Life                 from '$client/component/Life';
-import Chaos                from '$client/component/Chaos';
-import Authentication       from '$client/component/Authentication';
+import Home                 from '#component/Home';
+import NBody                from '#component/NBody';
+import Music                from '#component/Music';
+//import Knight               from '#component/Knight';
+import Life                 from '#component/Life';
+import Chaos                from '#component/Chaos';
+import Authentication       from '#component/Authentication';
 
 import { Route, Switch }    from '#context/router';
 

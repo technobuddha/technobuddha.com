@@ -1,11 +1,14 @@
 
 import React                        from 'react';
 import { makeStyles }               from '$client/context/mui';
+import {Route, Switch/*, ErrorRoute */, Redirect}  from '$client/context/router';
 import Box                          from '$client/control/Box';
 import Nav                          from './Nav';
 import Header                       from './Header';
 import Main                         from './Main';
 import Footer                       from './Footer';
+import CssBaseLine                  from '@material-ui/core/CssBaseline';
+import Authentication               from '$client/component/Authentication';
 
 const useStyles = makeStyles({
     root: {
@@ -30,14 +33,25 @@ export const UserInterface: React.FC = () => {
     const css = useStyles();
 
     return (
-        <Box className={css.root}>
-            <Nav />
-            <Box className={css.frame}>
-                <Header />
-                <Main />
-                <Footer/>            
+        <>
+            <CssBaseLine />
+            <Box className={css.root}>
+                <Switch>
+                    {/* <ErrorRoute component={SiteUnavailable} /> */}
+                    <Route exact path={['/login', '/sign-up', '/forgot-password']} component={Authentication}/>
+                    <Route exact path='/'><Redirect to="/home"/></Route>
+                    <Route>
+                        <Nav />
+                        <Box className={css.frame}>
+                            <Header />
+                            <Main />
+                            <Footer/>            
+                        </Box>
+                    </Route>
+                </Switch>
             </Box>
-        </Box>
+        </>
+
     );
 }
 

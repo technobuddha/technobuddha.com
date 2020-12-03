@@ -1,6 +1,5 @@
 import React            from 'react';
 import clsx             from 'clsx';
-import memoize          from 'lodash/memoize';
 import Menu             from '@material-ui/icons/Menu';
 import MenuOpen         from '@material-ui/icons/MenuOpen';
 import Home             from '@material-ui/icons/Home';
@@ -27,7 +26,7 @@ const control = [
     { icon: User,       primary: 'authentication',                               location: '/login'},
 ];
 
-const expanstionTimeout = 800;
+const expanstionTimeout = 1250;
 
 const useStyles = makeStyles(theme => {
     const drawerClosedWidth = theme.typography.pxToRem(24 + theme.spacing(2) * 2);
@@ -82,44 +81,40 @@ const useStyles = makeStyles(theme => {
 });
 
 
-export function Nav() {
-    const css                               = useStyles();
-    const history                           = useHistory();
-    const [ menuOpen, setMenuOpen ]         = React.useState(false);
-    const timer                             = React.useRef(undefined as (number | undefined));
-    const handleListClick                   = React.useCallback(
-        memoize(
-            (location: string) => () => {
-                setMenuOpen(false);
-                history.push(location);
+export const Nav: React.FC = () => {
+    const css                       = useStyles();
+    const history                   = useHistory();
+    const [ menuOpen, setMenuOpen ] = React.useState(false);
+    const [ clicked,  setClicked ]  = React.useState(false);
+    const timer                     = React.useRef<number | undefined>(undefined);
 
-                if(timer.current)
-                    clearTimeout(timer.current);
+    const cancelTimer = () => {
+        if(timer.current) {
+            clearTimeout(timer.current);
+            timer.current = undefined;
+        }        
+    }
 
-                timer.current = window.setTimeout(() => setMenuOpen(true), expanstionTimeout * 5);
-            }
-        ),
-        []
-    )
-    const handleMouseOver                   = React.useCallback(
-        () => {
-            if(!timer.current)
-                timer.current = window.setTimeout(() => setMenuOpen(true), expanstionTimeout);
-        },
-        []
-    )
-    const handleMouseLeave                  = React.useCallback(
-        () => {
-            setMenuOpen(false);
+    const handleListClick = (location: string) => () => {
+        setMenuOpen(false);
+        setClicked(true);
+        history.push(location);
+        cancelTimer();
+    }
 
-            if(timer.current) {
-                clearTimeout(timer.current);
-                timer.current = undefined;
-            }
-        },
-        []
-    );
-    const handleMenuClick                   = React.useCallback(() => setMenuOpen(false), []);
+    const handleMouseOver = () => {
+        cancelTimer();
+        if(!clicked)
+            timer.current = window.setTimeout(() => setMenuOpen(true), expanstionTimeout);
+    }
+
+    const handleMouseLeave = () => {
+        setMenuOpen(false);
+        setClicked(false);
+        cancelTimer();
+    }
+
+    const handleMenuClick = () => setMenuOpen(false);
 
     return (
         <Box className={css.root}>

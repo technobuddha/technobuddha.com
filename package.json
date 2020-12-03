@@ -49,7 +49,6 @@
     "jss": "^10.5.0",
     "lodash": "^4.17.20",
     "mime": "^2.4.6",
-    "mui-datagrid": "^0.0.5",
     "n-readlines": "^1.0.1",
     "notistack": "^1.0.2",
     "pg-promise": "^10.8.0",

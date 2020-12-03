@@ -55,7 +55,8 @@
       "config*":    [ "./config/*" ],
       "server*":    [ "./src/server*" ],
       "~*":         [ "./*" ],
-      "#context*":  [ "./src/context*" ], 
+      "#context*":  [ "./src/context*" ],
+      "#control*":  [ "./src/control*" ],
       "$*":         [ "./src/*" ],
     },                                        
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */

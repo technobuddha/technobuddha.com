@@ -3,7 +3,7 @@ import useTranslation           from '#context/i18n';
 import {email as emailRegExp}   from '@technobuddha/library/regexp';
 import Typography               from '@material-ui/core/Typography';
 import Button                   from '@material-ui/core/Button';
-import TextField                from '$client/control/TextField';
+import TextField                from '#control/TextField';
 import Email                    from '@material-ui/icons/Email';
 
 

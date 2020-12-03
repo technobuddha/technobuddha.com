@@ -1,12 +1,12 @@
 import React from 'react';
 //import range from 'lodash/range';
-import DataGrid from '$client/control/mui-datagrid/DataGrid'; // TODO 'mui-datagrid';
+import DataGrid from '#control/mui-datagrid/DataGrid'; // TODO 'mui-datagrid';
 import useApi from '#context/api';
 import Box from '@material-ui/core/Box';
 import Album    from '@material-ui/icons/Album';
 import MusicNote from '@material-ui/icons/MusicNote';
 import Group from '@material-ui/icons/Group';
-import DelayedCircularProgress from '$client/control/DelayedCircularProgress';
+import DelayedCircularProgress from '#control/DelayedCircularProgress';
 
 export const Music: React.FC = () => {
     const api   = useApi();

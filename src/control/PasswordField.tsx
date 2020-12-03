@@ -1,5 +1,5 @@
 import React                        from 'react';
-import TextField                    from '$client/control/TextField';
+import TextField                    from '#control/TextField';
 import IconButton                   from '@material-ui/core/IconButton';
 import Lock                         from '@material-ui/icons/Lock';
 import Visibility                   from '@material-ui/icons/Visibility';

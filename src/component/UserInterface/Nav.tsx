@@ -9,7 +9,6 @@ import ViewComfy        from '@material-ui/icons/ViewComfy'
 import {ImSpinner9}     from 'react-icons/im';
 import {FaChessKnight}  from 'react-icons/fa';
 import BrightnessLow    from '@material-ui/icons/BrightnessLow';
-import User             from '@material-ui/icons/AccountCircle';
 import ListItem         from '@material-ui/core/ListItem';
 import useHistory       from '#context/router';
 import Box              from '@material-ui/core/Box';
@@ -27,7 +26,6 @@ const control = [
     { icon: ImSpinner9,         primary: 'Space',           secondary: 'Gravitional Simulation',    location: '/nbody'  },
     { icon: BrightnessLow,      primary: 'Chaos',           secondary: 'The Mandlebrot Set',        location: '/chaos'  },
     { icon: FaChessKnight,      primary: 'Knight',          secondary: 'The Knight Move Problem',   location: '/knight' },
-    { icon: User,               primary: 'authentication',                                          location: '/login'  },
 ];
 
 const expanstionTimeout = 1250;

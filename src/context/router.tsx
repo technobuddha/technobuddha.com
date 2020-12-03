@@ -1,10 +1,7 @@
 import React                                        from 'react';
 // import useAuthentication                         from '#context/authentication';
-import { Location, History }  from 'history';
-import {
-    BrowserRouter,
-    useHistory as routerUseHistory,
-} from 'react-router-dom';
+import { Location, History } from 'history';
+import { BrowserRouter, useHistory as routerUseHistory } from 'react-router-dom';
 
 type HistoryState = { referrer: Location<HistoryState> }
 

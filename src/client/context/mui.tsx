@@ -1,10 +1,16 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
 import React                                                    from 'react';
 import theme, { Theme }                                         from '$/mui-theme';
 import { useTheme as muiUseTheme, makeStyles as muiMakeStyles } from '@material-ui/core';
 import { MuiThemeProvider }                                     from '@material-ui/core/styles';
 import { ClassNameMap, Styles, WithStylesOptions }              from '@material-ui/styles/withStyles';
 
-export const ThemeProvider: React.FC = ({children}: {children?: React.ReactNode}) => {
+type ThemeProviderProps = {
+    children?: React.ReactNode;
+}
+
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({children}: ThemeProviderProps) => {
     return (
         <MuiThemeProvider theme={theme}>
             {children}
@@ -16,11 +22,12 @@ export function useTheme() {
     return muiUseTheme<Theme>();
 }
 
-export function makeStyles<ClassKey extends string = string>(
-    style: Styles<Theme, Record<string, unknown>, ClassKey>,
-    options?: Omit<WithStylesOptions<Theme>, 'withTheme'>
+export function makeStyles<Props extends object = {}, ClassKey extends string = string>( 
+    style: Styles<Theme, Props, ClassKey>,
+    options?: WithStylesOptions<Theme>
 ): (props?: unknown) => ClassNameMap<ClassKey> {
-    return muiMakeStyles<Theme, ClassKey>(style, options)
+    //@ts-expect-error assignment to more restrictive type
+    return muiMakeStyles<Theme, Props, ClassKey>(style, options)
 }
 
 export { Theme } from '$mui-theme';

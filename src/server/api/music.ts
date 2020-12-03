@@ -33,21 +33,4 @@ music.get(
     }
 )
 
-music.post(
-    '/tracks',
-    async (_req, res) => {
-        const lineReader = new nReadLines(path.join(paths.data, 'tracks.mldata'));
-
-        let line: Buffer | false;
-        // eslint-disable-next-line no-cond-assign
-        while(line = lineReader.next()) {
-            lineReader.close();
-            res.write(line.toString('utf-8'));
-            break;
-        }
-
-        res.end();
-    }
-)
-
 export default music;

@@ -9,7 +9,7 @@ import { SnackbarProvider }                 from '#context/snackbar';
 import { AuthenticationProvider }           from '#context/authentication';
 import { APIProvider }                      from '#context/api';
 import { Router }                           from '#context/router';
-import UserInteraface                       from './component/UserInterface';
+import UserInterface                        from '#component/UserInterface';
 
 setConfig({ showReactDomPatchNotification: false });
 
@@ -25,7 +25,7 @@ export const App = hot(module) (
                                     <APIProvider>
                                         <AuthenticationProvider>
                                             <Router>
-                                                <UserInteraface />
+                                                <UserInterface />
                                             </Router>
                                         </AuthenticationProvider>
                                     </APIProvider>

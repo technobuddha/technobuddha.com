@@ -17,7 +17,7 @@ export default {
     clientEntry:                resolveHome('src', 'client', 'index.tsx'),
     server:                     resolveHome('src', 'server'),
     serverEntry:                resolveHome('src', 'server', 'server.ts'),
-    views:                      resolveHome('src', 'server', 'views'),
+    views:                      resolveHome('src', 'views'),
     locales:                    resolveHome('locales'),
     bin:                        resolveHome('bin'),
 };

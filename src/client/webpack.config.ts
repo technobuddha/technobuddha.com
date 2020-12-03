@@ -4,16 +4,16 @@ import omitBy                   from 'lodash/omitBy';
 import isNil                    from 'lodash/isNil';
 import compact                  from 'lodash/compact';
 import { Dictionary }           from 'lodash';
-import MiniCssExtractPlugin     from 'mini-css-extract-plugin';
-import TsConfigPathsPlugin      from 'tsconfig-paths-webpack-plugin';
-import externalPackages         from '../external-packages';
-import paths                    from 'config/paths';
-import { CMTDWebpackPlugin }    from 'css-module-type-definitions';
+import MiniCssExtractPlugin          from 'mini-css-extract-plugin';
+import TsConfigPathsPlugin           from 'tsconfig-paths-webpack-plugin';
+import externalPackages              from '../external-packages';
+import paths                         from 'config/paths';
+import { CMTDWebpackPlugin, Logger } from 'css-module-type-definitions';
 //import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const extensions    = [ '.ts', '.tsx', '.js', '.json', '.css', '.pcss' ];
 
-export function genClientWebpackConfig(isDevelopment = true): webpack.Configuration {
+export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): webpack.Configuration {
     return {
         name:   'client',
         // https://webpack.js.org/concepts/mode/
@@ -131,9 +131,9 @@ export function genClientWebpackConfig(isDevelopment = true): webpack.Configurat
                 filename:           '[name].css',
                 chunkFilename:      '[id].css',
             }),
-            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: 'src/client', globPattern: '**/*.pcss', camelCase: true }) : null),
-            (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                               : null),
-            //(isDevelopment ? new BundleAnalyzerPlugin()                                                                             : null),
+            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: 'src/client', globPattern: '**/*.pcss', camelCase: true, logger }) : null),
+            (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                                       : null),
+            //(isDevelopment ? new BundleAnalyzerPlugin()                                                                                     : null),
         ]),
     }
 }

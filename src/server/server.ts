@@ -24,7 +24,7 @@ import externalPackages             from '$/external-packages';
 import { replacer, reviver }        from '@technobuddha/library/json';
 import { space }                    from '@technobuddha/library/constants';
 import { pgp }                      from '$db/driver';
-import clientWebpackConfig          from '$client/webpack.config';
+import { genClientWebpackConfig }   from '$client/webpack.config';
 
 import api                          from './api';
 import TranslationWorker            from './TranslationWorker';
@@ -84,6 +84,7 @@ process.on('uncaughtException', exit);
     const title                 = (settings?.browser?.title)      ?? 'Untitled';
     const favicon               = (settings?.browser?.favicon)    ?? '/assets/favicon.ico';
     
+    const clientWebpackConfig   = genClientWebpackConfig(isDevelopment, logger);
     const translationWorker     = new TranslationWorker(logger);
 
     function cacheControl(days = 0) {

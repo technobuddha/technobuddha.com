@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "../css-module-type-definitions"
+		},
+		{
+			"path": "../datagrid"
 		}
 	],
 	"settings": {}

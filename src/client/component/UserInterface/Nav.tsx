@@ -4,7 +4,10 @@ import Menu             from '@material-ui/icons/Menu';
 import MenuOpen         from '@material-ui/icons/MenuOpen';
 import Home             from '@material-ui/icons/Home';
 import MusicNote        from '@material-ui/icons/MusicNote';
-import Orbit            from '@material-ui/icons/FilterTiltShift';
+import ViewComfy        from '@material-ui/icons/ViewComfy'
+//import FilterTiltShift  from '@material-ui/icons/FilterTiltShift';
+import {ImSpinner9}     from 'react-icons/im';
+import BrightnessLow    from '@material-ui/icons/BrightnessLow';
 import User             from '@material-ui/icons/AccountCircle';
 import ListItem         from '@material-ui/core/ListItem';
 import useHistory       from '$client/context/router';
@@ -16,21 +19,19 @@ import { makeStyles }   from '$client/context/mui';
 import IconButton       from '$client/control/IconButton';
 
 const control = [
-    { icon: Home,       primary: 'Home',                                         location: '/home' },
-    { icon: MusicNote,  primary: 'Music',                                        location: '/music' },
-    { icon: Menu,       primary: 'Life',                                         location: '/life' },
-    { icon: Orbit,      primary: 'Space',       secondary: 'Our Solar System',   location: '/nbody' },
-    { icon: Orbit,      primary: 'Chaos',                                        location: '/chaos' },
-    { icon: Menu,       primary: 'button 1',    secondary: 'Aliquam lobortis',   location: '/one' },
-    { icon: Menu,       primary: 'button 1',    secondary: 'Sed libero',         location: '/two' },
-    { icon: User,       primary: 'authentication',                               location: '/login'},
+    { icon: Home,               primary: 'Home',                                                    location: '/home' },
+    { icon: MusicNote,          primary: 'Music',           secondary: 'Music collection',          location: '/music' },
+    { icon: ViewComfy,          primary: 'Life',            secondary: 'Conway\'s Game of Life',    location: '/life' },
+    { icon: ImSpinner9,         primary: 'Space',           secondary: 'Gravitional Simulation',    location: '/nbody' },
+    { icon: BrightnessLow,      primary: 'Chaos',           secondary: 'The Mandlebrot Set',        location: '/chaos' },
+    { icon: User,               primary: 'authentication',                                          location: '/login'},
 ];
 
 const expanstionTimeout = 1250;
 
 const useStyles = makeStyles(theme => {
     const drawerClosedWidth = theme.typography.pxToRem(24 + theme.spacing(2) * 2);
-    const drawerOpenedWidth = '20vw';
+    const drawerOpenedWidth = '25vw';
 
     return {
         root: {
@@ -64,6 +65,10 @@ const useStyles = makeStyles(theme => {
         listItemText: {
             whiteSpace: 'nowrap',
             overflow: 'hidden',
+        },
+        icon: {
+            width: '1.5rem',
+            height: '1.5rem',
         },
         current: {
             color: theme.palette.secondary.light,
@@ -114,7 +119,7 @@ export const Nav: React.FC = () => {
         cancelTimer();
     }
 
-    const handleMenuClick = () => setMenuOpen(false);
+    const handleMenuClick = () => setMenuOpen(m => !m);
 
     return (
         <Box className={css.root}>
@@ -138,7 +143,7 @@ export const Nav: React.FC = () => {
                             return (
                                 <ListItem button onClick={handleListClick(item.location)} key={i}>
                                     <ListItemIcon>
-                                        <Icon className={clsx({ [css.current]: current, [css.available]: !current })} />
+                                        <Icon className={clsx(css.icon, { [css.current]: current, [css.available]: !current })} />
                                     </ListItemIcon>
                                     <ListItemText 
                                         primary={item.primary} 

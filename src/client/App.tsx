@@ -2,6 +2,7 @@
 import { hot, setConfig }                   from 'react-hot-loader';
 import React, { PureComponent, Suspense }   from 'react';                             // Load React AFTER hot loader
 import CircularProgress                     from '@material-ui/core/CircularProgress';
+import { IconContext }                      from 'react-icons';
 import { ThemeProvider }                    from './context/mui';
 import { I18nProvider }                     from './context/i18n';
 import { SnackbarProvider }                 from './context/snackbar';
@@ -17,19 +18,21 @@ export const App = hot(module) (
         public render() {
             return (
                 <Suspense fallback={<CircularProgress />}>
-                    <ThemeProvider>
-                        <I18nProvider>
-                            <SnackbarProvider>
-                                <APIProvider>
-                                    <AuthenticationProvider>
-                                        <Router>
-                                            <UserInteraface />
-                                        </Router>
-                                    </AuthenticationProvider>
-                                </APIProvider>
-                            </SnackbarProvider>
-                        </I18nProvider>
-                    </ThemeProvider>
+                    <IconContext.Provider value={{ size: '1.5em' }}>
+                        <ThemeProvider>
+                            <I18nProvider>
+                                <SnackbarProvider>
+                                    <APIProvider>
+                                        <AuthenticationProvider>
+                                            <Router>
+                                                <UserInteraface />
+                                            </Router>
+                                        </AuthenticationProvider>
+                                    </APIProvider>
+                                </SnackbarProvider>
+                            </I18nProvider>
+                        </ThemeProvider>
+                    </IconContext.Provider>
                 </Suspense>
             );
         }

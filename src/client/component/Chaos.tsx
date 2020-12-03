@@ -7,7 +7,7 @@ import { makeStyles }                       from '@material-ui/core/styles';
 import {pool}                               from 'workerpool';
 
 const SIZE          = 1;
-const MAX_ITERATION = 10240;
+const MAX_ITERATION = 32;
 
 const useChaosStyles = makeStyles(_theme => ({
     canvas: {
@@ -18,28 +18,12 @@ const useChaosStyles = makeStyles(_theme => ({
     },
 }));
 
-const quarter = MAX_ITERATION / 4;
 const palette = Array.from((function*() {
-    for(let i = 0; i < 1 * quarter; ++i) {
-        const c = Math.round(255 * (i / quarter));
-        yield {r: c, g: 0, b: 0};
+    for(let i = 0; i < MAX_ITERATION; ++i) {
+        const c = Math.round(255 * (i / MAX_ITERATION));
+        yield {r: c, g: c, b: c};
     }
-
-    for(let i = 0; i < 1 * quarter; ++i) {
-        const c = Math.round(255 * (i / quarter));
-        yield {r: 0, g: c, b: 0};
-    }
-
-    for(let i = 0; i < 1 * quarter; ++i) {
-        const c = Math.round(255 * (i / quarter));
-        yield {r: 0, g: 0, b: c};
-    }
-
-    for(let i = 0; i < 1 * quarter; ++i) {
-        const c = Math.round(255 * (i / quarter));
-        yield {r: 255, g: 255, b: c};
-    }
-})() )
+})());
 
 console.log(palette);
 
@@ -85,7 +69,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
                                 ++iteration;
                             }
 
-                            res[i][j] = iteration;
+                            res[i][j] = iteration - 1;
                         }
                     }
                     return res;
@@ -109,7 +93,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
                     for(let j = 0; j < height; ++j) {
                         const iteration = grid[i][j];
 
-                        setPixel(i, j, iteration == MAX_ITERATION ? 255 : 0, iteration == MAX_ITERATION ? 255 : 0, iteration == MAX_ITERATION ? 255 : 0)
+                        setPixel(i, j, palette[iteration].r, palette[iteration].g, palette[iteration].b)
                     }
                 }
 

@@ -1,5 +1,5 @@
 import React                from 'react';
-import Box                  from '$client/control/Box';
+import Box                  from '@material-ui/core/Box';
 import Home                 from '$client/component/Home';
 import NBody                from '$client/component/NBody';
 import Music                from '$client/component/Music';

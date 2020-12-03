@@ -2,7 +2,7 @@
 import React                        from 'react';
 import { makeStyles }               from '#context/mui';
 import {Route, Switch/*, ErrorRoute */, Redirect}  from '#context/router';
-import Box                          from '$client/control/Box';
+import Box                          from '@material-ui/core/Box';
 import Nav                          from './Nav';
 import Header                       from './Header';
 import Main                         from './Main';

@@ -2,7 +2,7 @@ import React from 'react';
 //import range from 'lodash/range';
 import DataGrid from '$client/control/mui-datagrid/DataGrid'; // TODO 'mui-datagrid';
 import useApi from '#context/api';
-import Box from '$client/control/Box';
+import Box from '@material-ui/core/Box';
 import Album    from '@material-ui/icons/Album';
 import MusicNote from '@material-ui/icons/MusicNote';
 import Group from '@material-ui/icons/Group';

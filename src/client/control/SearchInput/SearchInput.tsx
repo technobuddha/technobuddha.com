@@ -2,7 +2,7 @@ import React            from 'react';
 import clsx       from 'clsx';
 import uuid             from 'uuid';
 import TextField        from '$client/control/TextField';
-import IconButton       from '$client/control/IconButton';
+import IconButton       from '@material-ui/core/IconButton';
 import Search           from '@material-ui/icons/Search';
 import Cancel           from '@material-ui/icons/Cancel';
 import css              from './SearchInput.pcss';

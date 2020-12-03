@@ -1,8 +1,8 @@
 import React                    from 'react';
 import useTranslation           from '#context/i18n';
 import isNil                    from 'lodash/isNil';
-import Box                      from '$client/control/Box';
-import Typography               from '$client/control/Typography';
+import Box                      from '@material-ui/core/Box';
+import Typography               from '@material-ui/core/Typography';
 import useAPI                   from '#context/api';
 
 type PasswordFieldProps =

@@ -11,12 +11,12 @@ import BrightnessLow    from '@material-ui/icons/BrightnessLow';
 import User             from '@material-ui/icons/AccountCircle';
 import ListItem         from '@material-ui/core/ListItem';
 import useHistory       from '#context/router';
-import Box              from '$client/control/Box';
-import List             from '$client/control/List';
-import ListItemIcon     from '$client/control/ListItemIcon';
-import ListItemText     from '$client/control/ListItemText';
+import Box              from '@material-ui/core/Box';
+import List             from '@material-ui/core/List';
+import ListItemIcon     from '@material-ui/core/ListItemIcon';
+import ListItemText     from '@material-ui/core/ListItemText';
 import { makeStyles }   from '#context/mui';
-import IconButton       from '$client/control/IconButton';
+import IconButton       from '@material-ui/core/IconButton';
 
 const control = [
     { icon: Home,               primary: 'Home',                                                    location: '/home' },

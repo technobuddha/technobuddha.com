@@ -1,5 +1,5 @@
 import React      from 'react';
-import Typography from '$client/control/Typography';
+import Typography from '@material-ui/core/Typography';
 
 export type HomeProps = {
     children?:  never,

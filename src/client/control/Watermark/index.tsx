@@ -1,5 +1,5 @@
 import React                from 'react';
-import Box                  from '$client/control/Box';
+import Box                  from '@material-ui/core/Box';
 import css                  from './Watermark.module.pcss';
 
 export const Watermark: React.FC = ({children}: {children?: React.ReactNode}) => {

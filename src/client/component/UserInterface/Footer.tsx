@@ -1,5 +1,5 @@
 import React                                        from 'react';
-import AppBar                                       from '$client/control/AppBar';
+import AppBar                                       from '@material-ui/core/AppBar';
 
 export const Footer: React.FC = () => {
 

@@ -6,15 +6,15 @@ import useHistory                   from '#context/router';
 import {useAuthentication}          from '#context/authentication';
 import {email as emailRegExp}       from '@technobuddha/library/regexp';
 import {nbsp}                       from '@technobuddha/library/constants';
-import Button                       from '$client/control/Button';
-import Box                          from '$client/control/Box';
-import Alert                        from '$client/control/Alert';
+import Button                       from '@material-ui/core/Button';
+import Box                          from '@material-ui/core/Box';
+import Alert                        from '@material-ui/lab/Alert';
 import TextField                    from '$client/control/TextField';
 import PasswordField                from '$client/control/PasswordField';
 import PasswordValidation           from '$client/control/PasswordValidation';
 import Checkbox                     from '$client/control/Checkbox';
 import Link                         from '$client/control/Link';
-import Typography                   from '$client/control/Typography';
+import Typography                   from '@material-ui/core/Typography';
 import Person                       from '@material-ui/icons/Person';
 import Email                        from '@material-ui/icons/Email';
 
@@ -144,7 +144,7 @@ export const SignUp: React.FC = () => {
                     onClick={handleExecute}
                     variant="contained"
                     type="submit"
-                    //color="primary"
+                    color="primary"
                     disabled={!isEnabled()}
                     fullWidth
                 >

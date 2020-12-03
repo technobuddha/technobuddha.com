@@ -1,5 +1,5 @@
 import React                    from 'react';
-//import useAuthentication        from '$client/context/authentication';
+//import useAuthentication        from '#context/authentication';
 import AppBar                   from '$client/control/AppBar';
 import Box                      from '$client/control/Box';
 

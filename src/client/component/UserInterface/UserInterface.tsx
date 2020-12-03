@@ -1,7 +1,7 @@
 
 import React                        from 'react';
-import { makeStyles }               from '$client/context/mui';
-import {Route, Switch/*, ErrorRoute */, Redirect}  from '$client/context/router';
+import { makeStyles }               from '#context/mui';
+import {Route, Switch/*, ErrorRoute */, Redirect}  from '#context/router';
 import Box                          from '$client/control/Box';
 import Nav                          from './Nav';
 import Header                       from './Header';

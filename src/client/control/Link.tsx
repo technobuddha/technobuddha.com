@@ -1,7 +1,7 @@
 import React, {AnchorHTMLAttributes}                                    from 'react';
 import MuiLink, { LinkProps as MuiLinkProps }    from '@material-ui/core/Link';
 import {LinkProps as RouterLinkProps }          from 'react-router-dom';
-import useHistory                               from '$client/context/router';
+import useHistory                               from '#context/router';
 
 export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
     to:                 string;

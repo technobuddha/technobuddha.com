@@ -2,18 +2,23 @@
 
 import React                                                    from 'react';
 import theme, { Theme }                                         from '$/mui-theme';
+import { create }                                               from 'jss';
 import { useTheme as muiUseTheme, makeStyles as muiMakeStyles } from '@material-ui/core';
-import { MuiThemeProvider }                                     from '@material-ui/core/styles';
+import { MuiThemeProvider, StylesProvider, jssPreset }          from '@material-ui/core/styles';
 import { ClassNameMap, Styles, WithStylesOptions }              from '@material-ui/styles/withStyles';
 
+const jss = create({ plugins: jssPreset().plugins });
+
 type ThemeProviderProps = {
-    children?: React.ReactNode;
+    children: React.ReactNode;
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({children}: ThemeProviderProps) => {
     return (
         <MuiThemeProvider theme={theme}>
-            {children}
+            <StylesProvider jss={jss}>
+                {children}
+            </StylesProvider>
         </MuiThemeProvider>
     );
 }

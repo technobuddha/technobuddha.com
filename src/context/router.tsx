@@ -1,5 +1,5 @@
 import React                                        from 'react';
-// import useAuthentication                         from '$client/context/authentication';
+// import useAuthentication                         from '#context/authentication';
 import { Location, History }  from 'history';
 import {
     BrowserRouter,

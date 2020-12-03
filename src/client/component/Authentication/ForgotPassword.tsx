@@ -1,5 +1,5 @@
 import React                    from 'react';
-import useTranslation           from '$client/context/i18n';
+import useTranslation           from '#context/i18n';
 import {email as emailRegExp}   from '@technobuddha/library/regexp';
 import Typography               from '@material-ui/core/Typography';
 import Button                   from '@material-ui/core/Button';

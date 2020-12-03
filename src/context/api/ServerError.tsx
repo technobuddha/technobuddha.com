@@ -1,5 +1,5 @@
 import React                from 'react';
-import {useTranslation}     from '$client/context/i18n';
+import {useTranslation}     from '#context/i18n';
 import Box                  from '@material-ui/core/Box';
 import Typography           from '@material-ui/core/Typography';
 import IconButton           from '@material-ui/core/IconButton';

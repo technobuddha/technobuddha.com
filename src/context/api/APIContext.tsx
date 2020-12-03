@@ -1,5 +1,5 @@
 import React                        from 'react';
-import {useTranslation}             from '$client/context/i18n';
+import {useTranslation}             from '#context/i18n';
 //import {useSnackbar}                from 'notistack';
 import isArray                      from 'lodash/isArray';
 import keys                         from 'lodash/keys';

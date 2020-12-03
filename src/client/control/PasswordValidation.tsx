@@ -1,9 +1,9 @@
 import React                    from 'react';
-import useTranslation           from '$client/context/i18n';
+import useTranslation           from '#context/i18n';
 import isNil                    from 'lodash/isNil';
 import Box                      from '$client/control/Box';
 import Typography               from '$client/control/Typography';
-import useAPI                   from '$client/context/api';
+import useAPI                   from '#context/api';
 
 type PasswordFieldProps =
     {

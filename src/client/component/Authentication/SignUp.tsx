@@ -1,9 +1,9 @@
 import React                        from 'react';
-import {useTranslation}             from '$client/context/i18n';
+import {useTranslation}             from '#context/i18n';
 import escapeRegExp                 from 'lodash/escapeRegExp';
 import settings                     from '$/settings';
-import useHistory                   from '$client/context/router';
-import {useAuthentication}          from '$client/context/authentication';
+import useHistory                   from '#context/router';
+import {useAuthentication}          from '#context/authentication';
 import {email as emailRegExp}       from '@technobuddha/library/regexp';
 import {nbsp}                       from '@technobuddha/library/constants';
 import Button                       from '$client/control/Button';

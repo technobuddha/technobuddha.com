@@ -8,7 +8,7 @@ import Life                 from '$client/component/Life';
 import Chaos                from '$client/component/Chaos';
 import Authentication       from '$client/component/Authentication';
 
-import { Route, Switch }    from '$client/context/router';
+import { Route, Switch }    from '#context/router';
 
 export const Content: React.FC = () => {
     return (

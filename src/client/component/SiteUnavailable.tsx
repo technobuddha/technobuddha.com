@@ -1,7 +1,7 @@
 import React            from 'react';
 import Box              from '$client/control/Box';
 import Typography       from '$client/control/Typography';
-import useTranslation   from '$client/context/i18n';
+import useTranslation   from '#context/i18n';
 
 export const SiteUnavailable: React.FC = () => {
     const { t }     = useTranslation();

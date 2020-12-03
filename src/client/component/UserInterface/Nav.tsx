@@ -10,12 +10,12 @@ import {ImSpinner9}     from 'react-icons/im';
 import BrightnessLow    from '@material-ui/icons/BrightnessLow';
 import User             from '@material-ui/icons/AccountCircle';
 import ListItem         from '@material-ui/core/ListItem';
-import useHistory       from '$client/context/router';
+import useHistory       from '#context/router';
 import Box              from '$client/control/Box';
 import List             from '$client/control/List';
 import ListItemIcon     from '$client/control/ListItemIcon';
 import ListItemText     from '$client/control/ListItemText';
-import { makeStyles }   from '$client/context/mui';
+import { makeStyles }   from '#context/mui';
 import IconButton       from '$client/control/IconButton';
 
 const control = [

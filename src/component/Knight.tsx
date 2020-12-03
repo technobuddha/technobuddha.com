@@ -1,8 +1,8 @@
 import React                                from 'react';
 import clsx                                 from 'clsx';
 import { nbsp  }                            from '@technobuddha/library/constants';
-import { create2DArray }                    from '@technobuddha/library/array';
-import { numberToLetter }                   from '@technobuddha/library/numbers';
+import { create2DArray }                    from '@technobuddha/library/create2DArray';
+import { numberToLetter }                   from '@technobuddha/library/numberToLetter';
 import { useDerivedValue, useDerivedState } from '@technobuddha/react-hooks';
 import range                                from 'lodash/range';
 import Box                                  from '@material-ui/core/Box';
@@ -14,7 +14,6 @@ import MenuItem                             from '@material-ui/core/MenuItem';
 import { makeStyles }                       from '@material-ui/core/styles';
 
 const blackKnight        = '♞';
-//const whiteKnight        = '♘';
 
 const MOVES = [[1,2], [2,1], [-1,2], [-2,1], [1, -2], [2,-1], [-1,-2], [-2,-1]];
 
@@ -47,7 +46,15 @@ class Square {
     }
 }
 
+const useKnightStyles = makeStyles({
+    solution: {
+        fontSize: 'x-large',
+        textAlign: 'center',
+    }
+})
+
 export const Knight: React.FC = () => {
+    const css                        = useKnightStyles();
     const [width,    setWidth]       = React.useState(8);
     const [height,   setHeight]      = React.useState(8);
     const [startX,   setStartX]      = React.useState(0);
@@ -153,7 +160,7 @@ export const Knight: React.FC = () => {
                                 id: 'startY'
                             }}
                         >
-                            {range(0, height).map(i => <MenuItem key={i} value={i}>{(i+1).toString()}</MenuItem>)}
+                            {range(0, height).map(i => <MenuItem key={i} value={i}>{numberToLetter(i+1)}</MenuItem>)}
                         </Select>
                     </FormControl> 
                 </Box>
@@ -181,12 +188,13 @@ export const Knight: React.FC = () => {
                                 id: 'finishY'
                             }}
                         >
-                            {range(0, height).map(i => <MenuItem key={i} value={i}>{(i+1).toString()}</MenuItem>)}
+                            {range(0, height).map(i => <MenuItem key={i} value={i}>{numberToLetter(i+1)}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </Box>
                 <Box>
-                    {solution === null ? nbsp : solution}
+                    <div>Number of Moves</div>
+                    <div className={css.solution}>{solution === null ? nbsp : solution}</div>
                 </Box>           
             </Box>
             <Box>

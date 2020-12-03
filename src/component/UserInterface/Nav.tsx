@@ -7,6 +7,7 @@ import MusicNote        from '@material-ui/icons/MusicNote';
 import ViewComfy        from '@material-ui/icons/ViewComfy'
 //import FilterTiltShift  from '@material-ui/icons/FilterTiltShift';
 import {ImSpinner9}     from 'react-icons/im';
+import {FaChessKnight}  from 'react-icons/fa';
 import BrightnessLow    from '@material-ui/icons/BrightnessLow';
 import User             from '@material-ui/icons/AccountCircle';
 import ListItem         from '@material-ui/core/ListItem';
@@ -18,13 +19,15 @@ import ListItemText     from '@material-ui/core/ListItemText';
 import { makeStyles }   from '#context/mui';
 import IconButton       from '@material-ui/core/IconButton';
 
+
 const control = [
-    { icon: Home,               primary: 'Home',                                                    location: '/home' },
-    { icon: MusicNote,          primary: 'Music',           secondary: 'Music collection',          location: '/music' },
-    { icon: ViewComfy,          primary: 'Life',            secondary: 'Conway\'s Game of Life',    location: '/life' },
-    { icon: ImSpinner9,         primary: 'Space',           secondary: 'Gravitional Simulation',    location: '/nbody' },
-    { icon: BrightnessLow,      primary: 'Chaos',           secondary: 'The Mandlebrot Set',        location: '/chaos' },
-    { icon: User,               primary: 'authentication',                                          location: '/login'},
+    { icon: Home,               primary: 'Home',                                                    location: '/home'   },
+    { icon: MusicNote,          primary: 'Music',           secondary: 'Music collection',          location: '/music'  },
+    { icon: ViewComfy,          primary: 'Life',            secondary: 'Conway\'s Game of Life',    location: '/life'   },
+    { icon: ImSpinner9,         primary: 'Space',           secondary: 'Gravitional Simulation',    location: '/nbody'  },
+    { icon: BrightnessLow,      primary: 'Chaos',           secondary: 'The Mandlebrot Set',        location: '/chaos'  },
+    { icon: FaChessKnight,      primary: 'Knight',          secondary: 'The Knight Move Problem',   location: '/knight' },
+    { icon: User,               primary: 'authentication',                                          location: '/login'  },
 ];
 
 const expanstionTimeout = 1250;

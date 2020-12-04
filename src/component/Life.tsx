@@ -46,7 +46,7 @@ const LifeBoard: React.FC<LifeBoardProps> = ({boxWidth, boxHeight}: LifeBoardPro
         () => {
             const timer = setTimeout(
                 () => {
-                    if(move < 1103) {
+                    if(move < 1102) {
                         const context   = canvas.current!.getContext('2d')!;
                         const nextBoard = create2DArray(width, height, false);
                         board.forEach(

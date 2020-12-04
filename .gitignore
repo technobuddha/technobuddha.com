@@ -2,13 +2,14 @@ data
 node_modules
 bin
 dist
+
 *.pcss.d.ts
 *.log
 assets/.well-known/*
 !assets/.well-known/acme-challenge
 assets/.well-known/acme-challenge/*
 
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+*.code-workspace
+
+.env.*local
+

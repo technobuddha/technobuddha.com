@@ -25,8 +25,6 @@ const palette = Array.from((function*() {
     }
 })());
 
-console.log(palette);
-
 export const Chaos: React.FC = () => {
     return (
         <Size width="100%" height="100%">

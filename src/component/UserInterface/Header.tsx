@@ -35,19 +35,18 @@ export const Header: React.FC<HeaderProps> = () => {
                 </Box>
                 <Box display="flex" flexDirection="row" justifyContent="flex-end" alignItems="center" height="100%" width="50%">
                     <Box>
+                    {
+                        account &&
                         <Typography>
-                        {
-                            account &&
-                            <div>{account.first} {account.last}</div>
-                        }
+                            {account.first} {account.last}
                         </Typography>
+                    }
                     </Box>
                     <IconButton onClick={handleUserClick}>
                         <AccountCircle className={css.authorization} />
                     </IconButton> 
                 </Box>                
             </Box>
-
         </AppBar>
     );
 }

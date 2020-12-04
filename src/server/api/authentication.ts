@@ -111,7 +111,7 @@ authentication.put(
 
 authentication.use(
     (_req, res) => {
-        res.status(500).render('error/500.ejs');
+        res.status(500).render('error/500.hbs');
     }
 );
 

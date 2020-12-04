@@ -139,7 +139,7 @@ process.on('uncaughtException', exit);
 
     const app               = express();
 
-    app.set('view engine', 'ejs');
+    app.set('view engine', 'hbs');
     app.set('views',       paths.views);
 
     app.use(cookieParser());
@@ -271,18 +271,18 @@ process.on('uncaughtException', exit);
             if(userAgent && !matchesUA(userAgent, { browsers: packageJson.browserslist, allowHigherVersions: true})) {
                 if(req.cookies['peril'] !== 'accepted') {
                     logger.warn(`user-agent not supported: "${userAgent}"`);
-                    res.render('abandon-hope.ejs', { favicon, years: new Date().getFullYear() - 1314 });
+                    res.render('abandon-hope.hbs', { favicon, years: new Date().getFullYear() - 1314 });
                     return;
                 }
             }
 
-            res.render('index.ejs', { title, preload, favicon });
+            res.render('index.hbs', { title, preload, favicon });
         }
     );
 
     app.use(
         (_req, res) => {
-            res.status(404).render('error/404.ejs');
+            res.status(404).render('error/404.hbs');
         }
     );
 

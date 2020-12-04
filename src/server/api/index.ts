@@ -10,7 +10,7 @@ api.use('/music', music);
 api.use(
     (_req, res) =>
     {
-        res.status(404).render('error/404.ejs');
+        res.status(404).render('error/404.hbs');
     }
 );
 

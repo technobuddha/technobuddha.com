@@ -86,7 +86,7 @@ export const Login: React.FC = () => {
                 disabled={!isEnabled()}
                 fullWidth={true}
             >
-                {t('Login')}
+                {t('Log In')}
             </Button>
 
             {

@@ -57,7 +57,7 @@ export const Authentication: React.FC = () => {
                                     <Route path={['/login', '/forgot-password']} >
                                         <Box>
                                             <Typography variant="caption">
-                                                {t("Don't have an account?")} <Link to="/sign-up" replace>{t('Sign up')}</Link>
+                                                {t("Don't have an account?")} <Link to="/sign-up" replace>{t('Sign Up')}</Link>
                                             </Typography>
                                         </Box>
                                     </Route>
@@ -65,7 +65,7 @@ export const Authentication: React.FC = () => {
                                 <Route path={['/sign-up', '/forgot-password']}>
                                     <Box>
                                         <Typography variant="caption">
-                                        {t("Already have an account?")} <Link to="/login" replace>{t('Login')}</Link>
+                                        {t("Already have an account?")} <Link to="/login" replace>{t('Log In')}</Link>
                                         </Typography>
                                     </Box>                            
                                 </Route>

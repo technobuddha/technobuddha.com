@@ -1,19 +1,17 @@
 #!/bin/env -S ts-node -r ./config/env.ts -r tsconfig-paths/register
 //import sort  from 'gulp-sort';
-
-
-
-import fs       from 'fs-extra';
-import path     from 'path';
-import paths    from 'config/paths';
-import i18next  from '$i18next.config.json';
-import isNil    from 'lodash/isNil';
-import {TranslationServiceClient}     from '@google-cloud/translate';
-import typescriptTransform from 'i18next-scanner-typescript';
-import vfs  from 'vinyl-fs';
-import scanner, { I18NextScannerConfig } from 'i18next-scanner';
-import stream from 'stream';
-import plural from '@technobuddha/library/plural';
+import fs                                   from 'fs-extra';
+import path                                 from 'path';
+import stream                               from 'stream';
+import vfs                                  from 'vinyl-fs';
+import isNil                                from 'lodash/isNil';
+import scanner, { I18NextScannerConfig }    from 'i18next-scanner';
+import typescriptTransform                  from 'i18next-scanner-typescript';
+import {TranslationServiceClient}           from '@google-cloud/translate';
+import plural                               from '@technobuddha/library/plural';
+import {compareStrings}                     from '@technobuddha/library/compare';   // TODO seperate imports
+import paths                                from 'config/paths';
+import i18next                              from '$i18next.config.json';
 
 (async function() {
     const tsc = new TranslationServiceClient();
@@ -54,9 +52,10 @@ import plural from '@technobuddha/library/plural';
     function writeTranslations(translations: Record<string, string>, lng: string, ns: string, group?: string): void {
         const filename = path.join(paths.locales, lng, `${group ? `${ns}.${group}` : ns}.json`);
 
-        const sortedTranslations = Object.fromEntries(Object.entries(translations).sort((a, b) => a < b ? -1 : a === b ? 0 : -1));
-    
-        fs.writeFileSync(filename, JSON.stringify(sortedTranslations, undefined, 2));
+        fs.writeFileSync(
+            filename,
+            JSON.stringify(translations, Object.keys(translations).sort((a, b) => compareStrings(a, b, {caseInsensitive: true})), 2)
+        );
     }
     
     const foreign = i18next.whitelist.filter(lng => lng != 'en');
@@ -137,56 +136,55 @@ import plural from '@technobuddha/library/plural';
     }
     
     vfs.src(config.input, {buffer: false})
-        //.pipe(sort()) // Sort files in stream by path
-        .pipe(scanner(config.options, config.transform, config.flush))
-        .pipe(new stream.Transform({
-            objectMode: true,
-            transform(file, _enc, callback) {
-                const [lng, ns]             = file.path.split('/');
-                const newTranslations       = JSON.parse(file.contents.toString()) as Record<string, string>;
-                const oldTranslations       = readTranslations(lng, ns);
-                const archiveTranslations   = readTranslations(lng, ns, 'archive');
-                const promises              = [] as Promise<GoogleTranslateReturn>[];
+    //.pipe(sort()) // Sort files in stream by path
+    .pipe(scanner(config.options, config.transform, config.flush))
+    .pipe(new stream.Transform({
+        objectMode: true,
+        transform(file, _enc, callback) {
+            const [lng, ns]             = file.path.split('/');
+            const newTranslations       = JSON.parse(file.contents.toString()) as Record<string, string>;
+            const oldTranslations       = readTranslations(lng, ns);
+            const archiveTranslations   = readTranslations(lng, ns, 'archive');
+            const promises              = [] as Promise<GoogleTranslateReturn>[];
 
-                for(const [key, translation] of Object.entries(newTranslations)) {
-                    if(isNil(translation)) {
-                        if(key in oldTranslations) {
-                            newTranslations[key] = oldTranslations[key];
-                            delete oldTranslations[key];
-                        } if(key in archiveTranslations) {
-                            newTranslations[key] = archiveTranslations[key];
-                            delete archiveTranslations[key];
-                        } else {
-                            promises.push(googleTranslate(key, lng));
-                        }
-                    } else {
+            for(const [key, translation] of Object.entries(newTranslations)) {
+                if(isNil(translation)) {
+                    if(key in oldTranslations) {
+                        newTranslations[key] = oldTranslations[key];
                         delete oldTranslations[key];
+                    } if(key in archiveTranslations) {
+                        newTranslations[key] = archiveTranslations[key];
                         delete archiveTranslations[key];
+                    } else {
+                        promises.push(googleTranslate(key, lng));
                     }
+                } else {
+                    delete oldTranslations[key];
+                    delete archiveTranslations[key];
                 }
-
-                for(const [key, translation] of Object.entries(oldTranslations)) {
-                    archiveTranslations[key] = translation;
-                }
-                
-
-                Promise.all(promises)
-                .then(
-                    results => {
-                        for(const result of results) {
-                            if(result.translation)
-                                newTranslations[result.key] = result.translation;
-                        }
-
-                        writeTranslations(newTranslations, lng, ns);
-                        writeTranslations(archiveTranslations, lng, ns, 'archive');
-
-                        callback();
-                    }
-                )
             }
-        }))
-        //.pipe(vfs.dest(config.output))
+
+            for(const [key, translation] of Object.entries(oldTranslations)) {
+                archiveTranslations[key] = translation;
+            }
+            
+
+            Promise.all(promises)
+            .then(
+                results => {
+                    for(const result of results) {
+                        if(result.translation)
+                            newTranslations[result.key] = result.translation;
+                    }
+
+                    writeTranslations(newTranslations, lng, ns);
+                    writeTranslations(archiveTranslations, lng, ns, 'archive');
+
+                    callback();
+                }
+            )
+        }
+    }))
 })()
 
 

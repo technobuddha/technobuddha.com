@@ -24,6 +24,7 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "@google-cloud/translate": "^6.0.4",
     "@material-ui/core": "^4.11.1",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
@@ -92,6 +93,8 @@
     "@types/react-window": "^1.8.2",
     "@types/semver": "^7.3.4",
     "@types/uuid": "^8.3.0",
+    "@types/vinyl": "^2.0.4",
+    "@types/vinyl-fs": "^2.4.11",
     "@types/webpack": "^4.41.25",
     "@types/webpack-bundle-analyzer": "^3.9.0",
     "@types/webpack-dev-middleware": "^3.7.2",
@@ -146,6 +149,8 @@
     "typedoc": "^0.19.2",
     "typescript": "^4.1.2",
     "url": "^0.11.0",
+    "vinyl": "^2.2.1",
+    "vinyl-fs": "^3.0.3",
     "webpack": "^4.4.2",
     "webpack-bundle-analyzer": "^4.1.0",
     "webpack-dev-middleware": "^3.7.2",

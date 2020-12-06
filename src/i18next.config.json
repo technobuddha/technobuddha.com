@@ -1,6 +1,6 @@
 {
     "fallbackLng":      false,
-    "whitelist":        [ "en" ],
+    "whitelist":        [ "en", "es" ],
     "ns":               ["translation"],
     "defaultNS":        "translation",
     "debug":            false,

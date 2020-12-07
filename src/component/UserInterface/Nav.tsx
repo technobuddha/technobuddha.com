@@ -1,32 +1,23 @@
-import React            from 'react';
-import clsx             from 'clsx';
-import Menu             from '@material-ui/icons/Menu';
-import MenuOpen         from '@material-ui/icons/MenuOpen';
-import Home             from '@material-ui/icons/Home';
-import MusicNote        from '@material-ui/icons/MusicNote';
-import ViewComfy        from '@material-ui/icons/ViewComfy'
-//import FilterTiltShift  from '@material-ui/icons/FilterTiltShift';
-import {ImSpinner9}     from 'react-icons/im';
-import {FaChessKnight}  from 'react-icons/fa';
-import BrightnessLow    from '@material-ui/icons/BrightnessLow';
-import ListItem         from '@material-ui/core/ListItem';
-import useHistory       from '#context/router';
-import Box              from '@material-ui/core/Box';
-import List             from '@material-ui/core/List';
-import ListItemIcon     from '@material-ui/core/ListItemIcon';
-import ListItemText     from '@material-ui/core/ListItemText';
-import { makeStyles }   from '#context/mui';
-import IconButton       from '@material-ui/core/IconButton';
-
-
-const control = [
-    { icon: Home,               primary: 'Home',                                                    location: '/home'   },
-    { icon: MusicNote,          primary: 'Music',           secondary: 'Music collection',          location: '/music'  },
-    { icon: ViewComfy,          primary: 'Life',            secondary: 'Conway\'s Game of Life',    location: '/life'   },
-    { icon: ImSpinner9,         primary: 'Space',           secondary: 'Gravitional Simulation',    location: '/nbody'  },
-    { icon: BrightnessLow,      primary: 'Chaos',           secondary: 'The Mandlebrot Set',        location: '/chaos'  },
-    { icon: FaChessKnight,      primary: 'Knight',          secondary: 'The Knight Move Problem',   location: '/knight' },
-];
+import React                from 'react';
+import clsx                 from 'clsx';
+import Menu                 from '@material-ui/icons/Menu';
+import MenuOpen             from '@material-ui/icons/MenuOpen';
+import Home                 from '@material-ui/icons/Home';
+import MusicNote            from '@material-ui/icons/MusicNote';
+import ViewComfy            from '@material-ui/icons/ViewComfy'
+import BrightnessLow        from '@material-ui/icons/BrightnessLow';
+import {ImSpinner9}         from 'react-icons/im';
+import {FaChessKnight}      from 'react-icons/fa';
+import ListItem             from '@material-ui/core/ListItem';
+import Box                  from '@material-ui/core/Box';
+import List                 from '@material-ui/core/List';
+import ListItemIcon         from '@material-ui/core/ListItemIcon';
+import ListItemText         from '@material-ui/core/ListItemText';
+import IconButton           from '@material-ui/core/IconButton';
+import { useDerivedValue }  from '@technobuddha/react-hooks';
+import useHistory           from '#context/router';
+import { makeStyles }       from '#context/mui';
+import useTranslation       from '#context/i18n';
 
 const expanstionTimeout = 1250;
 
@@ -88,11 +79,24 @@ const useStyles = makeStyles(theme => {
 
 
 export const Nav: React.FC = () => {
-    const css                       = useStyles();
-    const history                   = useHistory();
+    const css       = useStyles();
+    const history   = useHistory();
+    const {t,i18n}  = useTranslation();
+
     const [ menuOpen, setMenuOpen ] = React.useState(false);
     const [ clicked,  setClicked ]  = React.useState(false);
     const timer                     = React.useRef<number | undefined>(undefined);
+    const control                   = useDerivedValue(
+        [
+            { icon: Home,          primary: t('Home'),                                            location: '/home'   },
+            { icon: MusicNote,     primary: t('Music'),  secondary: t('Music collection'),        location: '/music'  },
+            { icon: ViewComfy,     primary: t('Life'),   secondary: t('Conway\'s Game of Life'),  location: '/life'   },
+            { icon: ImSpinner9,    primary: t('Space'),  secondary: t('Gravitional Simulation'),  location: '/nbody'  },
+            { icon: BrightnessLow, primary: t('Chaos'),  secondary: t('The Mandlebrot Set'),      location: '/chaos'  },
+            { icon: FaChessKnight, primary: t('Knight'), secondary: t('The Knight Move Problem'), location: '/knight' },
+        ],
+        [i18n.language]
+    );
 
     const cancelTimer = () => {
         if(timer.current) {

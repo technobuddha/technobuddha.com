@@ -1,6 +1,6 @@
 {
   "name": "hill.software",
-  "version": "1.0.0",
+  "version": "9.0.0",
   "description": "Web site for hill.software",
   "scripts": {
     "start": "scripts/start.ts",

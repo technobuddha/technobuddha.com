@@ -1,6 +1,6 @@
 {
     "fallbackLng":      false,
-    "whitelist":        [ "en", "es" ],
+    "whitelist":        [ "en", "es", "chef" ],
     "ns":               ["translation"],
     "defaultNS":        "translation",
     "debug":            false,

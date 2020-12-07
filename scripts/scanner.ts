@@ -12,6 +12,7 @@ import plural                               from '@technobuddha/library/plural';
 import {compareStrings}                     from '@technobuddha/library/compare';   // TODO seperate imports
 import paths                                from 'config/paths';
 import i18next                              from '$i18next.config.json';
+const {cheferize} = require('cheferizeIt');
 
 (async function() {
     const tsc = new TranslationServiceClient();
@@ -27,6 +28,9 @@ import i18next                              from '$i18next.config.json';
 
         if(language === 'en')
             return Promise.resolve({key, language, translation: phrase});
+
+        if(language === 'chef')
+            return Promise.resolve({key, language, translation: cheferize(phrase)});
 
         const request = {
             parent: `projects/${process.env.GCLOUD_PROJECT}/locations/global`,

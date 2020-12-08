@@ -1,3 +1,4 @@
+import 'config/env';
 import process                      from 'process';
 import fs                           from 'fs-extra';
 import path                         from 'path';
@@ -31,19 +32,14 @@ import TranslationWorker            from './TranslationWorker';
 
 import packageJson                  from '~package.json';
 
-// import 'postcss.config';
-
 const exit = () => {
     pgp.end();
     process.exit(0);
 }
 
-process.on('SIGINT', exit);
-process.on('SIGTERM', exit);
-process.on('SIGHUP', exit);
-process.on('SIGQUIT', exit);
-process.on('exit', exit);
-process.on('uncaughtException', exit);
+[ 'SIGINT', 'SIGTERM', 'SIGHUP', 'SIGQUIT', 'exit', 'uncaughtException' ].forEach(
+    sig => process.on(sig, exit)
+);
 
 (async function main(){
     chalk.level = 3;
@@ -241,7 +237,9 @@ process.on('uncaughtException', exit);
     app.post(
         '/locales/*',
         (req, res) => {
-            translationWorker.translate(req.url, req.body);
+            const [,,, nsfile] = req.url.split('/');
+            const [ns]         = nsfile.split('.');
+            translationWorker.enqueue(ns, req.body);
             res.end();
         }
     );

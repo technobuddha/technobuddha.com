@@ -1,67 +1,16 @@
 #!/bin/env -S ts-node -r ./config/env.ts -r tsconfig-paths/register
 //import sort  from 'gulp-sort';
-import fs                                   from 'fs-extra';
 import path                                 from 'path';
 import stream                               from 'stream';
 import vfs                                  from 'vinyl-fs';
 import isNil                                from 'lodash/isNil';
 import scanner, { I18NextScannerConfig }    from 'i18next-scanner';
 import typescriptTransform                  from 'i18next-scanner-typescript';
-import {TranslationServiceClient}           from '@google-cloud/translate';
-import plural                               from '@technobuddha/library/plural';
-import {compareStrings}                     from '@technobuddha/library/compare';   // TODO seperate imports
 import paths                                from 'config/paths';
 import i18next                              from '$i18next.config.json';
-const {cheferize} = require('cheferizeIt');
+import {translate, readTranslations, writeTranslations, TranslateReturn } from '#util/translation';
 
 (async function() {
-    const tsc = new TranslationServiceClient();
-
-    type GoogleTranslateReturn = {
-        key: string;
-        language: string;
-        translation: string | null | undefined;
-    };
-    
-    function googleTranslate(key: string, language: string): Promise<GoogleTranslateReturn> {
-        const phrase = key.endsWith('_plural') ? plural(key.slice(0, key.length - 7)) : key;
-
-        if(language === 'en')
-            return Promise.resolve({key, language, translation: phrase});
-
-        if(language === 'chef')
-            return Promise.resolve({key, language, translation: cheferize(phrase)});
-
-        const request = {
-            parent: `projects/${process.env.GCLOUD_PROJECT}/locations/global`,
-            contents: [phrase],
-            mimeType: 'text/plain',
-            sourceLanguageCode: 'en',
-            targetLanguageCode: language,
-        };
-
-        // TODO These asserts are dangerous
-        return tsc.translateText(request).then(result => ({ key, language, translation: result[0]!.translations![0].translatedText }));
-    }
-    
-    function readTranslations(lng: string, ns: string, group?: string): Record<string, string> {
-        const filename = path.join(paths.locales, lng, `${group ? `${ns}.${group}` : ns}.json`);
-    
-        if(fs.existsSync(filename))
-            return JSON.parse(fs.readFileSync(filename).toString());
-    
-        return {};
-    }
-    
-    function writeTranslations(translations: Record<string, string>, lng: string, ns: string, group?: string): void {
-        const filename = path.join(paths.locales, lng, `${group ? `${ns}.${group}` : ns}.json`);
-
-        fs.writeFileSync(
-            filename,
-            JSON.stringify(translations, Object.keys(translations).sort((a, b) => compareStrings(a, b, {caseInsensitive: true})), 2)
-        );
-    }
-    
     const foreign = i18next.whitelist.filter(lng => lng != 'en');
     
     for(const ns of i18next.ns) {
@@ -73,7 +22,7 @@ const {cheferize} = require('cheferizeIt');
             await Promise.all(
                 Object.keys(en)
                 .filter(key => isNil(t[key]))
-                .map(key => googleTranslate(key, lng))
+                .map(key => translate(key, lng))
             )
             .then(
                 results => {
@@ -149,7 +98,7 @@ const {cheferize} = require('cheferizeIt');
             const newTranslations       = JSON.parse(file.contents.toString()) as Record<string, string>;
             const oldTranslations       = readTranslations(lng, ns);
             const archiveTranslations   = readTranslations(lng, ns, 'archive');
-            const promises              = [] as Promise<GoogleTranslateReturn>[];
+            const promises              = [] as Promise<TranslateReturn>[];
 
             for(const [key, translation] of Object.entries(newTranslations)) {
                 if(isNil(translation)) {
@@ -160,7 +109,7 @@ const {cheferize} = require('cheferizeIt');
                         newTranslations[key] = archiveTranslations[key];
                         delete archiveTranslations[key];
                     } else {
-                        promises.push(googleTranslate(key, lng));
+                        promises.push(translate(key, lng));
                     }
                 } else {
                     delete oldTranslations[key];

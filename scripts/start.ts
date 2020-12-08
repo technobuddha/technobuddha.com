@@ -4,7 +4,7 @@ import chalk                                    from 'chalk'; chalk.level = 3;  
 import { spawn, ChildProcess }                  from 'child_process';
 import repeat                                   from 'lodash/repeat';
 import { out, clearScreen, header, screenSize } from '@technobuddha/vt100';
-import { genServerWebpackConfig }               from 'server/webpack.config';
+import { genServerWebpackConfig }               from '#server/webpack.config';
 
 let serverProcess: ChildProcess | null = null;
 

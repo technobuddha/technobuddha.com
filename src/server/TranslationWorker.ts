@@ -1,13 +1,11 @@
 import process                          from 'process';
-import path                             from 'path';
-import fs                               from 'fs-extra';
 import { setTimeout, clearTimeout }     from 'timers';
 import keys                             from 'lodash/keys';
 import omit                             from 'lodash/omit';
-import each                             from 'lodash/each';
 import { Logger }                       from 'winston';
 import i18next                          from '$/i18next.config.json';
-import paths                            from 'config/paths';
+import {translate, readTranslations, writeTranslations, TranslateReturn } from '#util/translation';
+import { isNil } from 'lodash';
 
 export class TranslationWorker
 {
@@ -29,7 +27,7 @@ export class TranslationWorker
         this.run();
     }
 
-    public translate(url: string, body: { [key: string]: string }): void {
+    public enqueue(url: string, body: { [key: string]: string }): void {
         const phrases   = keys(omit(body, '_t'));
 
         this.queue[url] = (url in this.queue) ? this.queue[url].concat(phrases) : phrases;
@@ -42,44 +40,44 @@ export class TranslationWorker
     }
 
     private run() {
-        this.timer = setTimeout(() => { this.write(); this.run(); }, TranslationWorker.interval);
+        this.timer = setTimeout(() => { this.write().then(() => this.run()); }, TranslationWorker.interval);
     }
 
-    private write() {
+    private async write() {
         const myQueue       = this.queue;
         this.queue          = {};
 
-        each(
-            myQueue,
-            (phrases, _url) => {
-                if(i18next.whitelist) {
-                    for (const lng of i18next.whitelist) {
-                        const translationPath   = path.join(paths.locales, lng, 'translation.json');
-                        fs.readFile(translationPath)
-                        .then(
-                            (text) => {
-                                const translation   = JSON.parse(text.toString());
+        for(const ns of Object.keys(myQueue)) {
+            for (const lng of i18next.whitelist) {
+                const currentTranslations = readTranslations(lng, ns);
+                const archiveTranslations = readTranslations(lng, ns, 'archive');
+                const promises            = [] as Promise<TranslateReturn>[];
 
-                                each(
-                                    phrases,
-                                    (phrase) => {
-                                        if (phrase in translation)
-                                            this.logger.info(`${phrase} is already translated for ${lng}`);
-                                        else
-                                        {
-                                            translation[phrase] = lng === 'en' ? phrase : `[${lng}[${phrase}]]`;
-                                            this.logger.verbose(`${phrase} added to ${lng}`);
-                                        }
-                                    }
-                                );
-
-                                fs.writeFile(translationPath, JSON.stringify(translation, null, 2), 'utf8');    // tslint:disable-line:no-magic-numbers
-                            }
-                        );
+                for(const phrase of myQueue[ns]) {
+                    if(isNil(currentTranslations[phrase])) {
+                        if(isNil(archiveTranslations[phrase])) {
+                            promises.push(translate(phrase, lng));
+                        } else {
+                            currentTranslations[phrase] = archiveTranslations[phrase];
+                            delete archiveTranslations[phrase];
+                            this.logger.verbose(`${phrase} extracted from archive ${lng}/${ns}`);
+                        }
+                    } else {
+                        this.logger.verbose(`${phrase} is already translated for ${lng}/${ns}`);
                     }
                 }
+
+                for(const tr of await Promise.all(promises)) {
+                    if(tr.translation) {
+                        currentTranslations[tr.key] = tr.translation; 
+                        this.logger.info(`${tr.key} added to ${lng}/${ns}`);
+                    }
+                }
+
+                writeTranslations(currentTranslations, lng, ns);
+                writeTranslations(archiveTranslations, lng, ns, 'archive');
             }
-        );
+        }
     }
 }
 

@@ -7,33 +7,43 @@ import { space }                            from '@technobuddha/library/constant
 import { Size }                             from 'mui-size';
 
 const MOVES = [[1,1], [1,0], [1,-1], [0,-1], [-1,-1], [-1,0], [-1,1], [0,1]];
-const SIZE  = 8;
-const START = `
- **
-**
- *
-`;
-// const START = `
+const SIZE  = 4 ;
+const START = 
+//  **
+// **
 //  *
-//    *
-// **  ***
-// `
+// `;
+`
+ *
+   *
+**  ***
+`
 
-/*
+    /*
 DR DL UR UL
- *  * ******
-  **    **
-****** *  *
-* ** * *  *
- ****  **** 
- *  * * ** *
-  **   **** 
-* ** ** ** *
- ****   **
-*   * **  **
- ****  ****
-**  ***    * 
+ *     *   ***  ***
+  *   *      *  *
+***   ***   *    *
+
+            *    *
+xxx   xxx   **  **
+* *   * *  * *  * *
+ **   **   xxx  xxx
+ *     *
+
+
+  *   *     **   **
+* *   * *  * *  * *
+ **   ***    *    *
+
+
+x*     *x  x**   **x
+x ** ** x  x ** ** x
+x**   **x  x*     *x
+
 */
+
+
 export const Life: React.FC = () => {
     return (
         <Size width="100%" height="100%">
@@ -76,6 +86,47 @@ const LifeBoard: React.FC<LifeBoardProps> = ({boxWidth, boxHeight, start}: LifeB
             return b;
         },
         [width, height, start]
+    );
+
+    const detectGlider = React.useMemo(() => 
+        (board: boolean[][], context: CanvasRenderingContext2D) => {
+            const w = width  - 1;
+            const h = height - 1;
+
+            const kill = (x: number, y: number) => {
+                context.fillStyle = 'red';
+
+                for(let i = x; i < x+3; ++i) {
+                    for(let j = y; j < y+3; ++j) {
+                        if(board[i][j]) {
+                            board[i][j] = false;
+                            context.fillRect(i * SIZE, j * SIZE, SIZE, SIZE);
+                        }
+                    }
+                }
+            }
+
+            for(let x = 1; x < w; ++x) {
+                if(board[x][0] && board[x][1] && (board[x-1][1] !== board[x+1][1]) && board[x-1][2] && board[x+1][2]) {
+                    kill(x-1, 0);
+                }
+
+                if(board[x][h] && board[x][h-1] && (board[x-1][h-1] !== board[x+1][h-1]) && board[x-1][h-2] && board[x+1][h-2]) {
+                    kill(x-1, h-2);
+                }
+            }
+
+            for(let y = 1; y < h; ++y) {
+                if(board[0][y] && board[1][y] && (board[1][y-1] !== board[1][y+1]) && board[2][y-1] && board[2][y+1]) {
+                    kill(0, y-1);
+                }
+
+                if(board[w][y] && board[w-1][y] && (board[w-1][y-1] !== board[w-1][y+1]) && board[w-2][y-1] && board[w-2][y+1]) {
+                    kill(w-2, y-1);
+                }
+            }
+        },
+        [width, height]
     );
 
     React.useEffect(
@@ -143,32 +194,7 @@ const LifeBoard: React.FC<LifeBoardProps> = ({boxWidth, boxHeight, start}: LifeB
                             }
                         );
 
-                        context.fillStyle = 'red';
-                        for(let i = 0; i < width; ++i) {
-                            if(nextBoard[i][0]) {
-                                nextBoard[i][0] = false;
-                                context.fillRect(i * SIZE, 0 * SIZE, SIZE, SIZE);    
-                            }
-
-                            const l = height - 1;
-                            if(nextBoard[i][l]) {
-                                nextBoard[i][l] = false;
-                                context.fillRect(i * SIZE, l * SIZE, SIZE, SIZE);
-                            }
-                        }
-
-                        for(let i = 0; i < height; ++i) {
-                            if(nextBoard[0][i]) {
-                                nextBoard[0][i] = false;
-                                context.fillRect(0 * SIZE, i * SIZE, SIZE, SIZE);    
-                            }
-
-                            const l = width - 1;
-                            if(nextBoard[l][i]) {
-                                nextBoard[l][i] = false;
-                                context.fillRect(l * SIZE, i * SIZE, SIZE, SIZE);
-                            }
-                        }
+                        detectGlider(nextBoard, context);
 
                         let equal = false;
                         for(let i = 0; !equal && i < history.length; ++i) {

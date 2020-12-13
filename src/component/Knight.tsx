@@ -251,8 +251,8 @@ const useKnightSolverStyles = makeStyles(theme => ({
 
 export const KnightSolver = ({height, width, startX, startY, finishX, finishY, onSolved}: KnightSolverProps) => {
     const css                       = useKnightSolverStyles();
-    const [move, setMove]           = useDerivedState(() => 0,                              [height, width, startX, startY]);
-    const [positions, setPositions] = useDerivedState(() => [new Square(startX, startY)],    [height, width, startX, startY]);
+    const [move, setMove]           = useDerivedState(() => 0,                             [height, width, startX, startY]);
+    const [positions, setPositions] = useDerivedState(() => [new Square(startX, startY)],  [height, width, startX, startY]);
     const target                    = React.useMemo(() => new Square(finishX, finishY),    [finishX, finishY]);
     const board                     = React.useMemo(
         () => {
@@ -282,7 +282,7 @@ export const KnightSolver = ({height, width, startX, startY, finishX, finishY, o
 
             return () => undefined;
         },
-        [move, board, finishX, finishY]
+        [move, board, finishX, finishY, onSolved, positions, target.x, target.y]
     )
 
     return (

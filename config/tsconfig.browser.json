@@ -1,0 +1,15 @@
+{
+  "extends": "../config/tsconfig.base.json",
+  "compilerOptions": {
+    "target": "es5",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */
+    "lib": [ 
+      "dom", 
+      "dom.iterable", 
+      "es5", 
+      "es6", 
+      "es7", 
+      "scripthost"
+    ],                                        /* Specify library files to be included in the compilation. */
+    "jsx": "react",                           /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
+  },
+}

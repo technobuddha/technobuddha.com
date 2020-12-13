@@ -70,6 +70,7 @@
   },
   "devDependencies": {
     "@technobuddha/vt100": "file:../vt100",
+    "@tsconfig/recommended": "^1.0.1",
     "@types/browserslist": "^4.8.0",
     "@types/browserslist-useragent": "^3.0.2",
     "@types/command-line-args": "^5.0.0",

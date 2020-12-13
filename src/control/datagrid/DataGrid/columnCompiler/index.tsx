@@ -14,6 +14,25 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
+function Header<T = unknown>({data}: ColumnHeaderProps<T>) {
+    const css = useStyles();
+
+    return (
+        <MasterSelectionIndicator
+            data={data}
+            className={css.checkbox}
+        />
+    );
+}
+
+function Render<T = unknown>({datum}: ColumnRenderProps<T>) {
+    return (
+        <RowSelectionIndicator
+            datum={datum}
+        />
+    );
+}
+
 export function columnCompiler<T = unknown>(
     { getKeys, getColumnType, getShape, createDefaultColumn }: AnalyzerResults<T>,
     selection: boolean, controlWidth: number, columns?: ColumnSpecifications<T>
@@ -42,23 +61,8 @@ export function columnCompiler<T = unknown>(
     if(selection) cols.unshift({
         name: '[selection]',
         width: controlWidth,
-        header: ({data}: ColumnHeaderProps<T>) => {
-            const css = useStyles();
-
-            return (
-                <MasterSelectionIndicator
-                    data={data}
-                    className={css.checkbox}
-                />
-            );
-        },
-        render: ({datum}: ColumnRenderProps<T>) => {
-            return (
-                <RowSelectionIndicator
-                    datum={datum}
-                />
-            );
-        },
+        header: Header,
+        render: Render,
         sortBy: null,
         collate: nullCollator,
     });

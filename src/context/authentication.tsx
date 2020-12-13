@@ -51,7 +51,7 @@ export const AuthenticationProvider: React.FC = ({children}: {children?: React.R
     const killTimeout = () => {
         const handle = sessionStorage.getItem(KEY);
         if(handle) {
-            clearTimeout(Number.parseInt(handle) as unknown as NodeJS.Timeout);
+            clearTimeout(Number.parseInt(handle));
             sessionStorage.removeItem(KEY);
         }
     }
@@ -100,12 +100,16 @@ export const AuthenticationProvider: React.FC = ({children}: {children?: React.R
     }
 
     killTimeout();
-    if(loading)
-        React.useEffect(() => { initialCheck(); }, []);
-    else if(account)
-        React.useEffect(() => { periodicCheck(); });
-    else
-        React.useEffect(() => undefined);
+
+    React.useEffect(
+        () => {
+            if(loading)
+                initialCheck();
+            if(account)
+                periodicCheck();
+        },
+        []
+    );
 
     return (
         loading

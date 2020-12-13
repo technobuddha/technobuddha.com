@@ -1,5 +1,4 @@
 import React                            from 'react';
-import { useDerivedValue }              from '@technobuddha/react-hooks';
 import { useGrid }                      from './GridContext';
 import { Filter, serializeFilterValue } from './filter';
 
@@ -14,7 +13,7 @@ export type FiltererRenderProps<T = unknown> = {
 
 export function Filterer<T = unknown>({filters, children}: FiltererProps<T>) {
     const { data, filterValues } = useGrid<T>();
-    const filteredData           = useDerivedValue(
+    const filteredData           = React.useMemo(
         () => {
             console.log('Filtering...');
 

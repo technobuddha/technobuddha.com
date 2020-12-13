@@ -14,7 +14,6 @@ import List                 from '@material-ui/core/List';
 import ListItemIcon         from '@material-ui/core/ListItemIcon';
 import ListItemText         from '@material-ui/core/ListItemText';
 import IconButton           from '@material-ui/core/IconButton';
-import { useDerivedValue }  from '@technobuddha/react-hooks';
 import useHistory           from '#context/router';
 import { makeStyles }       from '#context/mui';
 import useTranslation       from '#context/i18n';
@@ -86,7 +85,7 @@ export const Nav: React.FC = () => {
     const [ menuOpen, setMenuOpen ] = React.useState(false);
     const [ clicked,  setClicked ]  = React.useState(false);
     const timer                     = React.useRef<number | undefined>(undefined);
-    const control                   = useDerivedValue(
+    const control                   = React.useMemo(() =>
         [
             { icon: Home,          primary: t('Home'),                                            location: '/home'   },
             { icon: MusicNote,     primary: t('Music'),  secondary: t('Music collection'),        location: '/music'  },

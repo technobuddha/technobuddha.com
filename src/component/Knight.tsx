@@ -1,17 +1,17 @@
-import React                                from 'react';
-import clsx                                 from 'clsx';
-import { nbsp  }                            from '@technobuddha/library/constants';
-import { create2DArray }                    from '@technobuddha/library/create2DArray';
-import { numberToLetter }                   from '@technobuddha/library/numberToLetter';
-import { useDerivedValue, useDerivedState } from '@technobuddha/react-hooks';
-import range                                from 'lodash/range';
-import Box                                  from '@material-ui/core/Box';
-import Typography                           from '@material-ui/core/Typography'
-import Select                               from '@material-ui/core/Select';
-import InputLabel                           from '@material-ui/core/InputLabel';
-import FormControl                          from '@material-ui/core/FormControl';
-import MenuItem                             from '@material-ui/core/MenuItem';
-import { makeStyles }                       from '@material-ui/core/styles';
+import React                from 'react';
+import clsx                 from 'clsx';
+import { nbsp  }            from '@technobuddha/library/constants';
+import { create2DArray }    from '@technobuddha/library/create2DArray';
+import { numberToLetter }   from '@technobuddha/library/numberToLetter';
+import { useDerivedState }  from '@technobuddha/react-hooks';
+import range                from 'lodash/range';
+import Box                  from '@material-ui/core/Box';
+import Typography           from '@material-ui/core/Typography'
+import Select               from '@material-ui/core/Select';
+import InputLabel           from '@material-ui/core/InputLabel';
+import FormControl          from '@material-ui/core/FormControl';
+import MenuItem             from '@material-ui/core/MenuItem';
+import { makeStyles }       from '@material-ui/core/styles';
 
 const blackKnight        = '♞';
 
@@ -253,8 +253,8 @@ export const KnightSolver = ({height, width, startX, startY, finishX, finishY, o
     const css                       = useKnightSolverStyles();
     const [move, setMove]           = useDerivedState(() => 0,                              [height, width, startX, startY]);
     const [positions, setPositions] = useDerivedState(() => [new Square(startX, startY)],    [height, width, startX, startY]);
-    const target                    = useDerivedValue(() => new Square(finishX, finishY),    [finishX, finishY]);
-    const board                     = useDerivedValue(
+    const target                    = React.useMemo(() => new Square(finishX, finishY),    [finishX, finishY]);
+    const board                     = React.useMemo(
         () => {
             const board = create2DArray<number | null>(width, height, null);
             board[startX][startY] = 0;

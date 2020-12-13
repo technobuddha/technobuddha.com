@@ -1,6 +1,5 @@
 import React                        from 'react';
 import isArray                      from 'lodash/isArray';
-import { useDerivedValue }          from '@technobuddha/react-hooks';
 import { OnSelectionChangedParams } from './DataGrid';
 import { useGrid }                  from './GridContext';
 
@@ -35,7 +34,7 @@ export function RowProvider<T = unknown>({selected, onSelectionChanged, children
     const { data }          = useGrid<T>();
     const [, forceUpdate]   = React.useReducer(x => x + 1, 0);
 
-    const state = useDerivedValue(
+    const state = React.useMemo(
         () => {
             let   selectedCount   = 0;
             const map             = new Map<T, RowProperties>();

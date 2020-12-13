@@ -1,7 +1,6 @@
 import React                                from 'react';
 //import clsx                                 from 'clsx';
 //import { create2DArray }                    from '@technobuddha/library/create2DArray';
-import { useDerivedValue } from '@technobuddha/react-hooks';
 import { Size }                             from 'mui-size';
 import { makeStyles }                       from '@material-ui/core/styles';
 import {pool}                               from 'workerpool';
@@ -38,8 +37,8 @@ type ChaosBoardProps = {boxWidth: number, boxHeight: number};
 const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoardProps) => {
     const css                   = useChaosStyles();
     const canvas                = React.useRef<HTMLCanvasElement>(null);
-    const width                 = useDerivedValue(() => Math.floor(boxWidth / SIZE),  [boxWidth]);
-    const height                = useDerivedValue(() => Math.floor(boxHeight / SIZE), [boxHeight]);
+    const width                 = React.useMemo(() => Math.floor(boxWidth / SIZE),  [boxWidth]);
+    const height                = React.useMemo(() => Math.floor(boxHeight / SIZE), [boxHeight]);
 
     React.useEffect(
         () => {

@@ -1,6 +1,5 @@
 import React                                    from 'react';
 import clsx                                     from 'clsx';
-import { useDerivedValue }                      from '@technobuddha/react-hooks';
 import { makeStyles }                           from '@material-ui/core/styles';
 import Filterer, { FiltererRenderProps }        from './Filterer';
 import Sorter, { SorterRenderProps }            from './Sorter';
@@ -8,7 +7,7 @@ import Frame, { FrameRenderProps }              from './Frame';
 import Grid, { GridClasses, GridStyles }        from './Grid';
 import { ColumnSpecifications }                 from './column';
 import columnCompiler                           from './columnCompiler';
-import { filterCompiler, FilterSpecification }   from './filterCompiler';
+import { filterCompiler, FilterSpecification }  from './filterCompiler';
 import { RowProvider }                          from './RowContext';
 import { MenuFactory }                          from './menu';
 import { GridProvider }                         from './GridContext';
@@ -61,12 +60,12 @@ export function DataGrid<T = unknown>(
      onSelectionChanged}: DataGridProps<T>
 ) {
     const css               = useDataGridStyles();
-    const analysis          = useDerivedValue(() => analyzer({data, columns}), [data, columns]);
-    const compiledColumns   = useDerivedValue(
+    const analysis          = React.useMemo(() => analyzer({data, columns}), [data, columns]);
+    const compiledColumns   = React.useMemo(
         () => columnCompiler<T>(analysis, selection ?? false, controlWidth ?? 40, columns),
         [analysis, selection, controlWidth, columns]
     );
-    const compiledFilters   = useDerivedValue(
+    const compiledFilters   = React.useMemo(
         () => (filters ?? []).map(f => filterCompiler(f, data, analysis)),
         [data, analysis, filters]
     );

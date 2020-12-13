@@ -1,5 +1,4 @@
 import React                            from 'react';
-import { useDerivedValue }              from '@technobuddha/react-hooks';
 import Dialog                           from '@material-ui/core/Dialog';
 import DialogTitle                      from '@material-ui/core/DialogTitle';
 import DialogActions                    from '@material-ui/core/DialogActions';
@@ -32,11 +31,11 @@ export function filterCompilerTransfer<T = unknown>({name, title, Icon}: FilterF
         Actuator({classes, styles}: FilterActuatorProps) {
             const { data, changeFilter, filterValues }  = useGrid<T>();
             const [ open, setOpen ]     = React.useState<boolean>(false);
-            const filterValue           = useDerivedValue(() => normalizeFilterArray(filterValues[name]) ?? [], [filterValues, name]);
-            const search                = useDerivedValue(() => getUniqueValues(data, name),                    [data, name]);
-            const left                  = useDerivedValue(() => not(search, filterValue),                       [search, filterValue]);
-            const right                 = useDerivedValue(() => filterValue,                                    [filterValue]);
-            const transfer              = useDerivedValue(() => ({left, right}),                                [left, right])
+            const filterValue           = React.useMemo(() => normalizeFilterArray(filterValues[name]) ?? [], [filterValues, name]);
+            const search                = React.useMemo(() => getUniqueValues(data, name),                    [data, name]);
+            const left                  = React.useMemo(() => not(search, filterValue),                       [search, filterValue]);
+            const right                 = React.useMemo(() => filterValue,                                    [filterValue]);
+            const transfer              = React.useMemo(() => ({left, right}),                                [left, right])
             const handleActuatorClick   = () => { setOpen(true); }
             const handleDialogClose     = () => { setOpen(false); }
             const handleOKClick         = () => { setOpen(false); changeFilter(name, transfer.right); }

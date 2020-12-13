@@ -1,13 +1,13 @@
-import React                                from 'react';
-import { create2DArray }                    from '@technobuddha/library/create2DArray';
-import { useDerivedState, useDerivedValue } from '@technobuddha/react-hooks';
-import splitLines                           from '@technobuddha/library/splitLines';
-import clean                                from '@technobuddha/library/clean';
-import { space }                            from '@technobuddha/library/constants';
-import { Size }                             from 'mui-size';
+import React                from 'react';
+import { create2DArray }    from '@technobuddha/library/create2DArray';
+import { useDerivedState}   from '@technobuddha/react-hooks';
+import splitLines           from '@technobuddha/library/splitLines';
+import clean                from '@technobuddha/library/clean';
+import { space }            from '@technobuddha/library/constants';
+import { Size }             from 'mui-size';
 
 const MOVES = [[1,1], [1,0], [1,-1], [0,-1], [-1,-1], [-1,0], [-1,1], [0,1]];
-const SIZE  = 4 ;
+const SIZE  = 8;
 const START = 
 //  **
 // **
@@ -18,31 +18,6 @@ const START =
    *
 **  ***
 `
-
-    /*
-DR DL UR UL
- *     *   ***  ***
-  *   *      *  *
-***   ***   *    *
-
-            *    *
-xxx   xxx   **  **
-* *   * *  * *  * *
- **   **   xxx  xxx
- *     *
-
-
-  *   *     **   **
-* *   * *  * *  * *
- **   ***    *    *
-
-
-x*     *x  x**   **x
-x ** ** x  x ** ** x
-x**   **x  x*     *x
-
-*/
-
 
 export const Life: React.FC = () => {
     return (
@@ -64,10 +39,10 @@ type LifeBoardProps = {
 
 const LifeBoard: React.FC<LifeBoardProps> = ({boxWidth, boxHeight, start}: LifeBoardProps) => {
     const canvas                = React.useRef<HTMLCanvasElement>(null);
-    const width                 = useDerivedValue(() => Math.floor(boxWidth / SIZE),  [boxWidth]);
-    const height                = useDerivedValue(() => Math.floor(boxHeight / SIZE), [boxHeight])
+    const width                 = React.useMemo(() => Math.floor(boxWidth / SIZE),  [boxWidth]);
+    const height                = React.useMemo(() => Math.floor(boxHeight / SIZE), [boxHeight])
     const [move,  setMove]      = React.useState(0);
-    const history               = useDerivedValue(() => [] as boolean[][][], [width, height, start]);
+    const history               = React.useMemo(() => [] as boolean[][][], [width, height, start]);
     const [board, setBoard]     = useDerivedState(
         () => {
             const b = create2DArray(width, height, false);

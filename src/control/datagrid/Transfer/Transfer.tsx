@@ -4,7 +4,7 @@ import Box                      from '@material-ui/core/Box';
 import { makeStyles }           from '@material-ui/core/styles';
 import { FilterSpecification }  from '../DataGrid/filterCompiler';
 import { ColumnSpecification }  from '../DataGrid/column';
-import { useDerivedState, useDerivedValue } from '@technobuddha/react-hooks';
+import { useDerivedState }      from '@technobuddha/react-hooks';
 import DataGrid, { OnSelectionChangedParams, DataGridClasses, DataGridStyles } from '../DataGrid/DataGrid';
 import TransferButtons, { DispatchFunction, TransferButtonClasses, TransferButtonStyles } from './TransferButtons';
 
@@ -58,13 +58,13 @@ export function Transfer<T = unknown>(
     {left: leftProp, right: rightProp, name, title, onTransfer, className, style, classes, styles}: TransferProps<T>) {
     const css               = useStyles();
     const dispatch          = React.useRef<DispatchFunction>(null!);
-    const [left, setLeft]   = useDerivedState(leftProp,                                                                 [leftProp]);
-    const [right, setRight] = useDerivedState(rightProp,                                                                [rightProp]);
-    const selected          = useDerivedValue({left: [] as T[], right: [] as T[]},                                      [leftProp, rightProp]);
-    const columns           = useDerivedValue([{name} as ColumnSpecification<T>],                                       [name]);
-    const filters           = useDerivedValue([{type: 'search', name, title: title ?? name} as FilterSpecification<T>], [name, title]);
-    const isLeftSelected    = React.useCallback((datum: T) => selected.left.includes(datum),                            [selected]);
-    const isRightSelected   = React.useCallback((datum: T) => selected.right.includes(datum),                           [selected]);
+    const [left, setLeft]   = useDerivedState(leftProp,                                                                     [leftProp]);
+    const [right, setRight] = useDerivedState(rightProp,                                                                    [rightProp]);
+    const selected          = React.useMemo(() => ({left: [] as T[], right: [] as T[]}),                                    [leftProp, rightProp]);
+    const columns           = React.useMemo(() => [{name} as ColumnSpecification<T>],                                       [name]);
+    const filters           = React.useMemo(() => [{type: 'search', name, title: title ?? name} as FilterSpecification<T>], [name, title]);
+    const isLeftSelected    = React.useCallback((datum: T) => selected.left.includes(datum),                                [selected]);
+    const isRightSelected   = React.useCallback((datum: T) => selected.right.includes(datum),                               [selected]);
 
     const handleSelectionChangedLeft    = React.useCallback(
         ({selectedRows, selectedCount, unselectedCount}: OnSelectionChangedParams<T>) => {

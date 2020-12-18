@@ -13,17 +13,16 @@ function out(text: string) {
     process.stdout.write(text);
 }
 
+out('--server\n');
 webpack(
     genServerWebpackConfig(false),
     (_error: Error, _stats: webpack.Stats) => {
-        out('--client');
+        out('--client\n');
         webpack(
             genClientWebpackConfig(false),
             (_error: Error, _stats: webpack.Stats) => {
-                out('--done');
+                out('--done\n');
             }
-        )
+        );
     }
 );
-
-

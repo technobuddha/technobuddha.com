@@ -17,6 +17,8 @@ export default {
     clientEntry:                resolveHome('src', 'client', 'index.tsx'),
     server:                     resolveHome('src', 'server'),
     serverEntry:                resolveHome('src', 'server', 'server.ts'),
+    worker:                     resolveHome('src', 'worker'),
+    workerEntry:                resolveHome('src', 'worker', 'index.ts'),
     views:                      resolveHome('src', 'views'),
     locales:                    resolveHome('locales'),
     bin:                        resolveHome('bin'),

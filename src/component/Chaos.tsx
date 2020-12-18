@@ -1,21 +1,18 @@
-import React                                from 'react';
-//import clsx                                 from 'clsx';
-//import { create2DArray }                    from '@technobuddha/library/create2DArray';
-import { Size }                             from 'mui-size';
-import { makeStyles }                       from '@material-ui/core/styles';
-import {pool}                               from 'workerpool';
+import React          from 'react';
+import { Size }       from 'mui-size';
+import { makeStyles } from '@material-ui/core/styles';
+import {chaos}        from '#worker/chaos';
 
 const SIZE          = 1;
 const MAX_ITERATION = 32;
 
-const useChaosStyles = makeStyles(_theme => ({
+const useChaosStyles = makeStyles({
     canvas: {
-        //border: `1px solid ${theme.palette.primary.main}`,
         border: 'none',
         padding: 0,
         margin: 0,
     },
-}));
+});
 
 const palette = Array.from((function*() {
     for(let i = 0; i < MAX_ITERATION; ++i) {
@@ -42,37 +39,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
 
     React.useEffect(
         () => {
-            // This function is serialized and send to the pool, so can't reference anything in scope
-            const p = pool();
-
-            p.exec(
-                (width: number, height: number, iterations: number) => {
-                    const res: number[][] = [];
-
-                    for(let i = 0; i < width; ++i) {
-                        res[i] = [];
-
-                        for(let j = 0; j < height; ++j) {
-                            const x0        = i * (3.5 / width)  - 2.5;
-                            const y0        = j * (2.0 / height) - 1.0;
-                            let x           = 0.0;
-                            let y           = 0.0;
-                            let iteration   = 0;
-    
-                            while(x*x + y*y <= 4 && iteration < iterations) {
-                                const t = x*x - y*y + x0;
-                                y = 2*x*y + y0;
-                                x = t;
-                                ++iteration;
-                            }
-
-                            res[i][j] = iteration - 1;
-                        }
-                    }
-                    return res;
-                },
-                [width, height, MAX_ITERATION]
-            )
+            chaos.mandelbrot(width, height, MAX_ITERATION)
             .then(grid => {
                 const context   = canvas.current!.getContext('2d')!;
                 context.translate(0.5, 0.5);
@@ -97,7 +64,6 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
                 context.putImageData(imageData, 0, 0);
             })
             .catch(err => console.error(err))
-            .always(p.terminate);
         },
         [width, height]
     )

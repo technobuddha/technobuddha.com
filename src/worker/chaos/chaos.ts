@@ -1,4 +1,4 @@
 import { expose } from 'comlink';
-import {exports} from './myClass';
+import { exports } from './api';
 
 expose(exports);

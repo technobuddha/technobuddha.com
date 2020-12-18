@@ -66,7 +66,6 @@
     "tsconfig-paths-webpack-plugin": "^3.3.0",
     "uuid": "^8.3.2",
     "winston": "^3.3.3",
-    "workerpool": "^6.0.3",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
@@ -108,7 +107,6 @@
     "@types/webpack-node-externals": "^2.5.0",
     "@types/winston": "^2.4.4",
     "@types/worker-plugin": "^4.0.0",
-    "@types/workerpool": "^6.0.0",
     "@types/zxcvbn": "^4.4.0",
     "@typescript-eslint/eslint-plugin": "^4.9.1",
     "@typescript-eslint/parser": "^4.9.1",

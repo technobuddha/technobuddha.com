@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
 
     },
     box: {
-        width: '60%',
+        width: '480px',
         margin: 'auto',
         display: 'grid',
         gridTemplateColumns: '50% 50%',
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     title: {
         gridArea: 'header',
         textAlign: 'center',
-        marginBottom: theme.spacing(3),
+        marginBottom: theme.spacing(10),
         color: theme.palette.common.white,
     },
     purpose: {
@@ -54,16 +54,13 @@ export const Home: React.FC<HomeProps> = () => {
                 <Typography variant="h4" className={css.title}>
                     technobuddha.com
                 </Typography>
-                <Typography className={css.purpose}>
-                    {t('playground of')}
+                <Typography variant="h5" className={css.purpose}>
+                    {t('The playground of')}
                 </Typography>
-                <Typography className={css.author}>
+                <Typography variant="h5" className={css.author}>
                     Phil Hill
                 </Typography>
             </Box>
-            {t('Welcome to')} technobuddha.com, {t('the playground of')} <a href="/home">Phil Hill</a>.{'  '}
-            {t('This web site exists for the sole purpose of amusing one person, it\'s author.')}{'  '}
-            {t('Here you will find a small collection of diversions that exercise different programming techniques, and serve as an educational tool.')}
         </Box>
     );
 }

@@ -5,7 +5,7 @@ import MenuOpen             from '@material-ui/icons/MenuOpen';
 import Home                 from '@material-ui/icons/Home';
 import MusicNote            from '@material-ui/icons/MusicNote';
 import ViewComfy            from '@material-ui/icons/ViewComfy'
-import BrightnessLow        from '@material-ui/icons/BrightnessLow';
+//import BrightnessLow        from '@material-ui/icons/BrightnessLow';
 import {ImSpinner9}         from 'react-icons/im';
 import {FaChessKnight}      from 'react-icons/fa';
 import ListItem             from '@material-ui/core/ListItem';
@@ -91,7 +91,7 @@ export const Nav: React.FC = () => {
             { icon: MusicNote,     primary: t('Music'),  secondary: t('Music collection'),        location: '/music'  },
             { icon: ViewComfy,     primary: t('Life'),   secondary: t('Conway\'s Game of Life'),  location: '/life'   },
             { icon: ImSpinner9,    primary: t('Space'),  secondary: t('Gravitional Simulation'),  location: '/nbody'  },
-            { icon: BrightnessLow, primary: t('Chaos'),  secondary: t('The Mandlebrot Set'),      location: '/chaos'  },
+            //{ icon: BrightnessLow, primary: t('Chaos'),  secondary: t('The Mandlebrot Set'),      location: '/chaos'  },
             { icon: FaChessKnight, primary: t('Knight'), secondary: t('The Knight Move Problem'), location: '/knight' },
         ],
         [i18n.language]

@@ -5,7 +5,7 @@ import NBody                from '#component/NBody';
 import Music                from '#component/Music';
 import Knight               from '#component/Knight';
 import Life                 from '#component/Life';
-import Chaos                from '#component/Chaos';
+//import Chaos                from '#component/Chaos';
 import Authentication       from '#component/Authentication';
 
 import { Route, Switch }    from '#context/router';
@@ -16,10 +16,9 @@ export const Content: React.FC = () => {
             <Switch>
                 <Route path="/home"     component={Home}  />
                 <Route path="/music"    component={Music} />
-                {/* <Route path="/knight"   component={Knight} /> */}
                 <Route path="/life"     component={Life} />
                 <Route path="/nbody"    component={NBody} />
-                <Route path="/chaos"    component={Chaos} />
+                {/* <Route path="/chaos"    component={Chaos} /> */}
                 <Route path="/knight"   component={Knight} />
                 <Route path={['/login', '/sign-up']} component={Authentication} />
                 <Route path="/one">

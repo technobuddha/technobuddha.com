@@ -3,6 +3,7 @@ import Typography           from '@material-ui/core/Typography';
 import Box                  from '@material-ui/core/Box';
 import { makeStyles }       from '#context/mui';
 import { useTranslation }   from '#context/i18n';
+import Color from 'color';
 
 export type HomeProps = {
     children?:  never,
@@ -10,21 +11,24 @@ export type HomeProps = {
 
 const useStyles = makeStyles(theme => ({
     root: {
-
+        width: '100%',
+        height: '100%',
+        backgroundColor: Color(theme.palette.secondary.main).fade(0.98).string()
     },
     box: {
-        width: '480px',
-        margin: 'auto',
+        width: theme.spacing(60),
+        margin: `${theme.spacing(4)}px auto`,
         display: 'grid',
         gridTemplateColumns: '50% 50%',
         gridTemplateRows: 'auto',
         gridTemplateAreas: `
             "header header"
             "left   right"`,
-        backgroundColor: theme.palette.primary.light,
-        border: `8px solid ${theme.palette.primary.dark}`,
+        backgroundColor: theme.palette.primary.main,
+        border: `8px solid ${theme.palette.primary.light}`,
         borderRadius: theme.spacing(4),
         padding: theme.spacing(2),
+        boxShadow: `0 0 0 ${theme.spacing(1)}px ${theme.palette.primary.dark}`
     },
     title: {
         gridArea: 'header',

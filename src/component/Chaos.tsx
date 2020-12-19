@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {chaos}        from '#worker/chaos';
 
 const SIZE          = 1;
-const MAX_ITERATION = 32;
+const MAX_ITERATION = 256;
 
 const useChaosStyles = makeStyles({
     canvas: {
@@ -13,13 +13,6 @@ const useChaosStyles = makeStyles({
         margin: 0,
     },
 });
-
-const palette = Array.from((function*() {
-    for(let i = 0; i < MAX_ITERATION; ++i) {
-        const c = Math.round(255 * (i / MAX_ITERATION));
-        yield {r: c, g: c, b: c};
-    }
-})());
 
 export const Chaos: React.FC = () => {
     return (
@@ -55,9 +48,9 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
                 
                 for(let i = 0; i < width; ++i) {
                     for(let j = 0; j < height; ++j) {
-                        const iteration = grid[i][j];
+                        const rgb = grid[i][j];
 
-                        setPixel(i, j, palette[iteration].r, palette[iteration].g, palette[iteration].b)
+                        setPixel(i, j, rgb.r, rgb.g, rgb.b)
                     }
                 }
 

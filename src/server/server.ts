@@ -169,7 +169,6 @@ const exit = () => {
                 compiler,
                 {
                     publicPath:     clientWebpackConfig.output?.publicPath ?? '/dist',
-                    stats:          'errors-warnings',
                 }
             )
         );

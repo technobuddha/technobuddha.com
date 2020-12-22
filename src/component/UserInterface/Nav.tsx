@@ -18,7 +18,7 @@ import useHistory           from '#context/router';
 import { makeStyles }       from '#context/mui';
 import useTranslation       from '#context/i18n';
 
-const expanstionTimeout = 1250;
+const expansionTimeout = 1250;
 
 const useStyles = makeStyles(theme => {
     const drawerClosedWidth = theme.typography.pxToRem(24 + theme.spacing(2) * 2);
@@ -91,7 +91,7 @@ export const Nav: React.FC = () => {
             { icon: MusicNote,     primary: t('Music'),  secondary: t('Music collection'),          location: '/music'  },
             { icon: ViewComfy,     primary: t('Life'),   secondary: t('Conway\'s Game of Life'),    location: '/life'   },
             { icon: ImSpinner9,    primary: t('Space'),  secondary: t('Gravitational Simulation'),  location: '/nbody'  },
-            { icon: BrightnessLow, primary: t('Chaos'),  secondary: t('The Mandlebrot Set'),        location: '/chaos'  },
+            { icon: BrightnessLow, primary: t('Chaos'),  secondary: t('The Mandelbrot Set'),        location: '/chaos'  },
             { icon: FaChessKnight, primary: t('Knight'), secondary: t('The Knight Move Problem'),   location: '/knight' },
         ],
         [i18n.language]
@@ -114,7 +114,7 @@ export const Nav: React.FC = () => {
     const handleMouseOver = () => {
         cancelTimer();
         if(!clicked)
-            timer.current = window.setTimeout(() => setMenuOpen(true), expanstionTimeout);
+            timer.current = window.setTimeout(() => setMenuOpen(true), expansionTimeout);
     }
 
     const handleMouseLeave = () => {

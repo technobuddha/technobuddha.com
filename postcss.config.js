@@ -27,9 +27,10 @@ module.exports = {
             },
         },
         'postcss-extend-rule':              {},
-        'postcss-advanced-variables': {
-            variables: mapKeys(variables, (v, key) => kebabCase(key))
-        },
+        // 'postcss-advanced-variables': {
+        //     variables: mapKeys(variables, (v, key) => kebabCase(key))
+        // },
+       // 'postcss-css-variables':            {},
         'postcss-color-function':           {},
         'postcss-atroot':                   {},
         'postcss-property-lookup':          {},

@@ -2,12 +2,12 @@ import React                from 'react';
 import clsx                 from 'clsx';
 import Menu                 from '@material-ui/icons/Menu';
 import MenuOpen             from '@material-ui/icons/MenuOpen';
-import Home                 from '@material-ui/icons/Home';
-import MusicNote            from '@material-ui/icons/MusicNote';
-import ViewComfy            from '@material-ui/icons/ViewComfy'
-import BrightnessLow        from '@material-ui/icons/BrightnessLow';
-import {ImSpinner9}         from 'react-icons/im';
-import {FaChessKnight}      from 'react-icons/fa';
+import {GiHouse}            from 'react-icons/gi';
+import {GiMusicalNotes}     from 'react-icons/gi';
+import {GiConwayLifeGlider} from 'react-icons/gi';
+import {GiOrbital}          from 'react-icons/gi';
+import {GiThornyTentacle}   from 'react-icons/gi';
+import {GiChessKnight}      from 'react-icons/gi';
 import ListItem             from '@material-ui/core/ListItem';
 import Box                  from '@material-ui/core/Box';
 import List                 from '@material-ui/core/List';
@@ -87,12 +87,12 @@ export const Nav: React.FC = () => {
     const timer                     = React.useRef<number | undefined>(undefined);
     const control                   = React.useMemo(() =>
         [
-            { icon: Home,          primary: t('Home'),                                              location: '/home'   },
-            { icon: MusicNote,     primary: t('Music'),  secondary: t('Music collection'),          location: '/music'  },
-            { icon: ViewComfy,     primary: t('Life'),   secondary: t('Conway\'s Game of Life'),    location: '/life'   },
-            { icon: ImSpinner9,    primary: t('Space'),  secondary: t('Gravitational Simulation'),  location: '/nbody'  },
-            { icon: BrightnessLow, primary: t('Chaos'),  secondary: t('The Mandelbrot Set'),        location: '/chaos'  },
-            { icon: FaChessKnight, primary: t('Knight'), secondary: t('The Knight Move Problem'),   location: '/knight' },
+            { icon: GiHouse,            primary: t('Home'),                                              location: '/home'   },
+            { icon: GiMusicalNotes,     primary: t('Music'),  secondary: t('Music collection'),          location: '/music'  },
+            { icon: GiConwayLifeGlider, primary: t('Life'),   secondary: t('Conway\'s Game of Life'),    location: '/life'   },
+            { icon: GiOrbital,          primary: t('Space'),  secondary: t('Gravitational Simulation'),  location: '/nbody'  },
+            { icon: GiThornyTentacle,   primary: t('Chaos'),  secondary: t('The Mandelbrot Set'),        location: '/chaos'  },
+            { icon: GiChessKnight,      primary: t('Knight'), secondary: t('The Knight Move Problem'),   location: '/knight' },
         ],
         [i18n.language]
     );

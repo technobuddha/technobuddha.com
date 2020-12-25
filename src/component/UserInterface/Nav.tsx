@@ -2,12 +2,7 @@ import React                from 'react';
 import clsx                 from 'clsx';
 import Menu                 from '@material-ui/icons/Menu';
 import MenuOpen             from '@material-ui/icons/MenuOpen';
-import {GiHouse}            from 'react-icons/gi';
-import {GiMusicalNotes}     from 'react-icons/gi';
-import {GiConwayLifeGlider} from 'react-icons/gi';
-import {GiOrbital}          from 'react-icons/gi';
-import {GiThornyTentacle}   from 'react-icons/gi';
-import {GiChessKnight}      from 'react-icons/gi';
+
 import ListItem             from '@material-ui/core/ListItem';
 import Box                  from '@material-ui/core/Box';
 import List                 from '@material-ui/core/List';
@@ -16,7 +11,7 @@ import ListItemText         from '@material-ui/core/ListItemText';
 import IconButton           from '@material-ui/core/IconButton';
 import useHistory           from '#context/router';
 import { makeStyles }       from '#context/mui';
-import useTranslation       from '#context/i18n';
+import usePages             from '#context/pages';
 
 const expansionTimeout = 1250;
 
@@ -80,22 +75,11 @@ const useStyles = makeStyles(theme => {
 export const Nav: React.FC = () => {
     const css       = useStyles();
     const history   = useHistory();
-    const {t,i18n}  = useTranslation();
+    const pages     = usePages();
 
     const [ menuOpen, setMenuOpen ] = React.useState(false);
     const [ clicked,  setClicked ]  = React.useState(false);
     const timer                     = React.useRef<number | undefined>(undefined);
-    const control                   = React.useMemo(() =>
-        [
-            { icon: GiHouse,            primary: t('Home'),                                              location: '/home'   },
-            { icon: GiMusicalNotes,     primary: t('Music'),  secondary: t('Music collection'),          location: '/music'  },
-            { icon: GiConwayLifeGlider, primary: t('Life'),   secondary: t('Conway\'s Game of Life'),    location: '/life'   },
-            { icon: GiOrbital,          primary: t('Space'),  secondary: t('Gravitational Simulation'),  location: '/nbody'  },
-            { icon: GiThornyTentacle,   primary: t('Chaos'),  secondary: t('The Mandelbrot Set'),        location: '/chaos'  },
-            { icon: GiChessKnight,      primary: t('Knight'), secondary: t('The Knight Move Problem'),   location: '/knight' },
-        ],
-        [i18n.language]
-    );
 
     const cancelTimer = () => {
         if(timer.current) {
@@ -140,18 +124,18 @@ export const Nav: React.FC = () => {
             >
                 <List>
                     {
-                        control.map((item, i) => {
-                            const Icon      = item.icon;
-                            const current   = history.location.pathname.startsWith(item.location);
+                        pages.map((page, i) => {
+                            const Icon      = page.icon;
+                            const current   = history.location.pathname.startsWith(page.location);
 
                             return (
-                                <ListItem button onClick={handleListClick(item.location)} key={i}>
+                                <ListItem button onClick={handleListClick(page.location)} key={i}>
                                     <ListItemIcon>
                                         <Icon className={clsx(css.icon, { [css.current]: current, [css.available]: !current })} />
                                     </ListItemIcon>
                                     <ListItemText 
-                                        primary={item.primary} 
-                                        secondary={item.secondary}
+                                        primary={page.primary} 
+                                        secondary={page.secondary}
                                         classes={{
                                             root: css.listItemText,
                                             primary: css.primary,

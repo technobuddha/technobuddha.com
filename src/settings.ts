@@ -1,8 +1,31 @@
 import { ticksPerWeek, ticksPerHour } from '@technobuddha/library/constants';
 
+
+type Settings = {
+    browser: {
+        title: string;
+        favicon: string;
+    },
+    authentication: {
+        forgotPassword: boolean;
+        signUp: boolean;
+        session: {
+            duration: number;
+            cookieAge: number;
+            keepAlive: number;
+        },
+        password: {
+            minLength?: number | null;
+            maxLength?: number | null;
+            strength?:  number | null;
+        },
+        concurrentSessions: boolean;
+    },
+}
+
 export default {
     browser: {
-        title:      'Hill Software',
+        title:      'Technobuddha',
         favicon:    '/assets/favicon.png'
     },
     authentication: {
@@ -19,5 +42,5 @@ export default {
             strength:     3
         },
         concurrentSessions: false,
-    }
-}
+    },
+} as Settings;

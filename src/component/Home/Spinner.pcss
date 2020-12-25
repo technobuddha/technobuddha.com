@@ -1,0 +1,98 @@
+.root {
+    height: 288px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .spinner {
+        width: 288px;
+        height: 288px;
+        position: relative;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .iconContainer {
+            animation: rotate 300s linear infinite;
+            transform-origin: center;
+            width: 288px;
+            height: 288px;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            .iconBox {
+                width: 144px;
+                height: 30px;
+                transform-origin: center right;
+                position: absolute;
+                top: 129px;
+
+                .iconInner {
+                    width: 30px;
+                    height: 30px;
+                    margin-left: 8px;
+
+                    .icon {
+                        background-size: cover;
+                        font-size: 20px;
+                        width: 30px;
+                        height: 30px;
+                        animation: rotate 300s linear reverse infinite;
+                        color: mui-theme(palette-common-white);
+                    }
+                }
+
+                .iconInner1  { transform: rotate(0) }
+                .iconInner2  { transform: rotate(-30deg) }
+                .iconInner3  { transform: rotate(-60deg) }
+                .iconInner4  { transform: rotate(-90deg) }
+                .iconInner5  { transform: rotate(-120deg) }
+                .iconInner6  { transform: rotate(-150deg) }
+                .iconInner7  { transform: rotate(-180deg) }
+                .iconInner8  { transform: rotate(-210deg) }
+                .iconInner9  { transform: rotate(-240deg) }
+                .iconInner10 { transform: rotate(-270deg) }
+                .iconInner11 { transform: rotate(-300deg) }
+                .iconInner12 { transform: rotate(-330deg) }
+            }
+        }
+
+        .pie {
+            height: 288px;
+            width: 288px;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            border-width: calc(var(--foo));
+            background: mui-theme(palette-primary-light);
+        
+            .segment {
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                transform: translate(0, -50%) rotate(90deg) rotate(15deg);
+                transform-origin: 50% 100%;
+                background: pink;
+                background: mui-theme(palette-primary-main);
+        
+                &:before {
+                    background: mui-theme(palette-primary-main);
+                    content: '';
+                    height: 100%;
+                    width: 100%;
+                    position: absolute;
+                    transform: translate(0, 100%) rotate(330deg);
+                    transform-origin: 50% 0;
+                }
+            }
+        }
+    }
+}
+
+@keyframes rotate {
+    0% { transform: rotateZ(0) }
+    100% { transform: rotateZ(360deg) }
+}

@@ -1,11 +1,6 @@
-:root {
-    --foo: 100px;
-}
-
 .root {
     width: '100%';
     height: '100%';
-    //backgroundColor: Color(theme.palette.secondary.main).fade(0.98).string()
 }
 
 .box {
@@ -21,26 +16,26 @@
     border: 8px solid mui-theme(palette-primary-light);
     border-radius: mui-spacing(4);
     padding: mui-spacing(2);
-    box-shadow: 0 0 0 mui-spacing(1)px mui-theme(palette-primary-dark)
-}
+    box-shadow: 0 0 0 mui-spacing(1)px mui-theme(palette-primary-dark);
 
-.title {
-    grid-area: header;
-    text-align: center;
-    margin-bottom: mui-spacing(10) !important;
-    color: mui-theme(palette-common-white);
-}
+    .title {
+        grid-area: header;
+        text-align: center;
+        margin-bottom: mui-spacing(10) !important;
+        color: mui-theme(palette-common-white);
+    }
 
-.purpose {
-    grid-area: left;
-    text-align: left;
-    color: mui-theme(palette-common-white);
-}
+    .purpose {
+            grid-area: left;
+            text-align: left;
+            color: mui-theme(palette-common-white);
+    }
 
-.author {
-    grid-area: right;
-    text-align: right;
-    color: mui-theme(palette-common-white);
+    .author {
+        grid-area: right;
+        text-align: right;
+        color: mui-theme(palette-common-white);
+    }
 }
 
 .spinnerContainer {
@@ -48,121 +43,4 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
-    .spinner {
-        width: 288px;
-        height: 288px;
-        position: relative;
-        border-radius: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .iconContainer {
-            animation: rotate 300s linear infinite;
-            transform-origin: center;
-            width: 288px;
-            height: 288px;
-            border-radius: 50%;
-            position: absolute;
-            top: 0;
-            left: 0;
-
-            .iconBox {
-                width: 144px;
-                height: 30px;
-                transform-origin: center right;
-                position: absolute;
-                top: 129px;
-
-                .iconInner {
-                    width: 30px;
-                    height: 30px;
-                    margin-left: 8px;
-
-                    .icon {
-                        background-size: cover;
-                        font-size: 20px;
-                        width: 30px;
-                        height: 30px;
-                        animation: rotate 300s linear reverse infinite;
-                        color: mui-theme(palette-common-white);
-                    }
-                }
-
-                .iconInner1  { transform: rotate(0) }
-                .iconInner2  { transform: rotate(-30deg) }
-                .iconInner3  { transform: rotate(-60deg) }
-                .iconInner4  { transform: rotate(-90deg) }
-                .iconInner5  { transform: rotate(-120deg) }
-                .iconInner6  { transform: rotate(-150deg) }
-                .iconInner7  { transform: rotate(-180deg) }
-                .iconInner8  { transform: rotate(-210deg) }
-                .iconInner9  { transform: rotate(-240deg) }
-                .iconInner10 { transform: rotate(-270deg) }
-                .iconInner11 { transform: rotate(-300deg) }
-                .iconInner12 { transform: rotate(-330deg) }
-            }
-
-            .iconBox1  { transform: rotate(0) }
-            .iconBox2  { transform: rotate(30deg) }
-            .iconBox3  { transform: rotate(60deg) }
-            .iconBox4  { transform: rotate(90deg) }
-            .iconBox5  { transform: rotate(120deg) }
-            .iconBox6  { transform: rotate(150deg) }
-            .iconBox7  { transform: rotate(180deg) }
-            .iconBox8  { transform: rotate(210deg) }
-            .iconBox9  { transform: rotate(240deg) }
-            .iconBox10 { transform: rotate(270deg) }
-            .iconBox11 { transform: rotate(300deg) }
-            .iconBox12 { transform: rotate(330deg) }
-        }
-
-        .pie {
-            height: 288px;
-            width: 288px;
-            position: relative;
-            border-radius: 50%;
-            overflow: hidden;
-            border-width: calc(var(--foo));
-            background: mui-theme(palette-primary-light);
-        
-            .segment {
-                height: 100%;
-                width: 100%;
-                position: absolute;
-                transform: translate(0, -50%) rotate(90deg) rotate(15deg);
-                transform-origin: 50% 100%;
-                background: pink;
-                background: mui-theme(palette-primary-main);
-        
-                &:before {
-                    background: mui-theme(palette-primary-main);
-                    content: '';
-                    height: 100%;
-                    width: 100%;
-                    position: absolute;
-                    transform: translate(0, 100%) rotate(330deg);
-                    transform-origin: 50% 0;
-                }
-            }
-        
-        
-            /* &:after {
-                //background: rgba(255, 255, 0, 1);
-                content: '';
-                height: 100%;
-                width: 100%;
-                position: absolute;
-                transform: translate(0, 100%) rotate(220deg);
-                transform-origin: 50% 0;
-            } */
-        }
-
-    }
-}
-
-@keyframes rotate {
-    0% { transform: rotateZ(0) }
-    100% { transform: rotateZ(360deg) }
 }

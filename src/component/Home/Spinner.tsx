@@ -11,19 +11,19 @@ export type SpinnerProps = {
 
 export const Spinner: React.FC<SpinnerProps> = ({icons}:SpinnerProps) => {
     const angle = 360 / icons.length;
-    console.log({icons, l: icons.length, angle})
 
     return (
         <Box className={css.root}>
             <Box className={css.spinner}>
                 <Box className={css.pie}>
-                    <Box className={css.segment}></Box>
+                    <Box className={css.segment} style={{transform: `translate(0, -50%) rotate(${180 + angle}deg)`}}></Box>
+                    <Box className={css.segment} style={{transform: `translate(0, -50%) rotate(${180 - angle}deg)`}}></Box>
                 </Box>
                 <Box className={css.iconContainer}>
                     {
                         icons.map((Icon, i) => (
-                            <Box key={i} className={css.iconBox} style={{transform: `rotate(${i*angle}deg)`}}>
-                        <       Box className={css.iconInner} style={{transform: `rotate(${-i*angle}deg)`}}>
+                            <Box key={i} className={css.iconBox} style={{transform: `rotate(${-(270 + i*angle)}deg)`}}>
+                        <       Box className={css.iconInner} style={{transform: `rotate(${+(270 + i*angle)}deg)`}}>
                                     <Box className={css.icon}>
                                          <Icon />
                                     </Box>

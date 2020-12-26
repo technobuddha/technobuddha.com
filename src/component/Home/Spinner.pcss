@@ -14,7 +14,13 @@
         justify-content: center;
 
         .iconContainer {
-            animation: rotate 300s linear infinite;
+            animation-name: rotate;
+            animation-direction: normal;
+            animation-duration: 60s;
+            animation-fill-mode: forwards;
+            animation-iteration-count: infinite;
+            animation-play-state: run;
+            animation-timing-function: linear;
             transform-origin: center;
             width: 288px;
             height: 288px;
@@ -36,11 +42,17 @@
                     margin-left: 8px;
 
                     .icon {
+                        animation-name: rotate;
+                        animation-direction: reverse;
+                        animation-duration: 60s;
+                        animation-fill-mode: forwards;
+                        animation-iteration-count: infinite;
+                        animation-play-state: run;
+                        animation-timing-function: linear;
                         background-size: cover;
                         font-size: 20px;
                         width: 30px;
                         height: 30px;
-                        animation: rotate 300s linear reverse infinite;
                         color: mui-theme(palette-common-white);
                     }
                 }

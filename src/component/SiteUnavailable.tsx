@@ -10,7 +10,7 @@ export const SiteUnavailable: React.FC = () => {
         <Box display="flex" alignItems="center" width="100%" height="100%">
         <Box marginX="auto">
             <Typography variant="h3" component="span">
-                {t('Site temporarly unavailable, please come back later.')}
+                {t('Site temporarily unavailable, please come back later.')}
             </Typography>
         </Box>
     </Box>

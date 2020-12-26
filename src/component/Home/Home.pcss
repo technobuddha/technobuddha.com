@@ -3,6 +3,11 @@
     height: '100%';
 }
 
+.article {
+    position: relative;
+    height: 300px;
+}
+
 .box {
     width: mui-spacing(60);
     margin: mui-spacing(4) auto;
@@ -17,6 +22,17 @@
     border-radius: mui-spacing(4);
     padding: mui-spacing(2);
     box-shadow: 0 0 0 mui-spacing(1)px mui-theme(palette-primary-dark);
+
+    position: absolute; 
+    opacity: 0;
+    animation-name: fade;
+    animation-duration: 60s;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-play-state: run;
+    animation-timing-function: linear;
+    color: white;
 
     .title {
         grid-area: header;
@@ -43,4 +59,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+@keyframes fade {
+    0%     { opacity: 0; }
+    16.66% { opacity: 0; }
+    33.33% { opacity: 0; }
+    50.00% { opacity: 0; }
+    66.66% { opacity: 0; }
+    81.66% { opacity: 0; }
+    83.33% { opacity: 1; }
+    98.33% { opacity: 1; }
+    100%   { opacity: 0; }
 }

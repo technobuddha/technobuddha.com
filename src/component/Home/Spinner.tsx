@@ -1,7 +1,6 @@
-import React                from 'react';
-import Box                  from '@material-ui/core/Box';
-import css from './Spinner.pcss';
-
+import React    from 'react';
+import Box      from '@material-ui/core/Box';
+import css      from './Spinner.pcss';
 import type { IconType } from 'react-icons';
 
 export type SpinnerProps = {
@@ -22,8 +21,8 @@ export const Spinner: React.FC<SpinnerProps> = ({icons}:SpinnerProps) => {
                 <Box className={css.iconContainer}>
                     {
                         icons.map((Icon, i) => (
-                            <Box key={i} className={css.iconBox} style={{transform: `rotate(${-(270 + i*angle)}deg)`}}>
-                        <       Box className={css.iconInner} style={{transform: `rotate(${+(270 + i*angle)}deg)`}}>
+                            <Box key={i} className={css.iconBox} style={{transform: `rotate(${-(270 + (i+0.5)*angle)}deg)`}}>
+                                <Box className={css.iconInner} style={{transform: `rotate(${+(270 + (i+0.5)*angle)}deg)`}}>
                                     <Box className={css.icon}>
                                          <Icon />
                                     </Box>

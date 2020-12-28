@@ -1,7 +1,7 @@
 import { db }                                       from './driver';
-import { Account, AccountCreate }                   from '$interface/Account';
-import { Session }                                  from '$interface/Session';
-import settings                                     from '$/settings';
+import { Account, AccountCreate }                   from '#interface/Account';
+import { Session }                                  from '#interface/Session';
+import settings                                     from '#settings/authentication';
 
 export async function getAccountById(id: number) {
     return db.oneOrNone<Account>(
@@ -85,7 +85,7 @@ export async function createSession(account_id: number) {
         VALUES      ($(account_id), NOW(), (NOW() + $(duration)::interval))
         RETURNING   id, account_id, created
         `,
-        {account_id, duration: `${settings.authentication.session.duration}ms`}
+        {account_id, duration: `${settings.session.duration}ms`}
     )
 }
 
@@ -98,7 +98,7 @@ export async function renewSession(session_id: string) {
         WHERE       id = $(session_id)
         RETURNING   id, account_id, created, expires
         `,
-        {session_id, duration: `${settings.authentication.session.duration}ms`}
+        {session_id, duration: `${settings.session.duration}ms`}
     )
 }
 

@@ -2,7 +2,7 @@ import React             from 'react';
 import Login             from './Login';
 import ForgotPassword    from './ForgotPassword';
 import SignUp            from './SignUp';
-import settings          from '$settings';
+import settings          from '#settings/authentication';
 import useTranslation    from '#context/i18n';
 import {makeStyles}      from '#context/mui';
 import { Switch, Route } from '#context/router';
@@ -42,18 +42,18 @@ export const Authentication: React.FC = () => {
                         <Switch>
                             <Route path='/login'            component={Login} />
                             {
-                                settings.authentication.signUp &&
+                                settings.signUp &&
                                 <Route path='/sign-up' component={SignUp} />
                             }
                             {
-                                settings.authentication.forgotPassword &&
+                                settings.forgotPassword &&
                                 <Route path='/forgot-password' component={ForgotPassword} />
                             }
                         </Switch>
                         <Box className={css.jump}>
                             <Switch>
                                 {
-                                    settings.authentication.signUp &&
+                                    settings.signUp &&
                                     <Route path={['/login', '/forgot-password']} >
                                         <Box>
                                             <Typography variant="caption">

@@ -3,7 +3,7 @@ import { setTimeout, clearTimeout }     from 'timers';
 import keys                             from 'lodash/keys';
 import omit                             from 'lodash/omit';
 import { Logger }                       from 'winston';
-import i18next                          from '$/i18next.config.json';
+import i18next                          from '#settings/i18next.config.json';
 import {translate, readTranslations, writeTranslations, TranslateReturn } from '#util/translation';
 import { isNil } from 'lodash';
 

@@ -6,7 +6,7 @@ import compact                  from 'lodash/compact';
 import { Dictionary }           from 'lodash';
 import MiniCssExtractPlugin          from 'mini-css-extract-plugin';
 import TsConfigPathsPlugin           from 'tsconfig-paths-webpack-plugin';
-import externalPackages              from '../external-packages';
+import externalPackages              from '../settings/external-packages';
 import paths                         from 'config/paths';
 import { CMTDWebpackPlugin, Logger } from 'css-module-type-definitions';
 //import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';

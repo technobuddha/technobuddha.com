@@ -1,8 +1,8 @@
 import React                        from 'react';
-import Account                      from '$interface/Account';
+import Account                      from '#interface/Account';
 import useAPI                       from '#context/api';
 import shallowEquals                from '@technobuddha/library/shallowEquals';
-import settings                     from '$/settings';
+import settings                     from '#settings/authentication';
 
 type AuthenticationState = {
     error:          boolean;

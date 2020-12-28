@@ -3,7 +3,7 @@ import i18n, { InitOptions }                                    from 'i18next';
 import { I18nextProvider, initReactI18next, useTranslation }    from 'react-i18next';
 import XHR                                                      from 'i18next-xhr-backend';
 import LanguageDetector                                         from 'i18next-browser-languagedetector';
-import config                                                   from '$/i18next.config.json';
+import config                                                   from '#settings/i18next.config.json';
 
 i18n
 .use(LanguageDetector)

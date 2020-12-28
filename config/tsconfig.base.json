@@ -9,7 +9,7 @@
     "lib": [                                  /* Specify library files to be included in the compilation. */                                 
       "es2020",                                  
     ],
-    // "skipLibCheck": true,                  /* Skip typecheckinging of declaration files */
+    // "skipLibCheck": true,                  /* Skip type checking of declaration files */
     "allowJs": true,                          /* Allow javascript files to be compiled. */
     // "checkJs": true,                       /* Report errors in .js files. */
     "resolveJsonModule": true,
@@ -17,7 +17,7 @@
     // "declaration": true,                   /* Generates corresponding '.d.ts' file. */
     // "declarationMap": true,                /* Generates a sourcemap for each corresponding '.d.ts' file. */
     "sourceMap": true,                        /* Generates corresponding '.map' file. */
-    // "outFile": "./bin/server.jsss",        /* Concatenate and emit output to single file. */
+    // "outFile": "./bin/server.js",          /* Concatenate and emit output to single file. */
     // "outDir": "./bin",                     /* Redirect output structure to the directory. */
     // "rootDir": "./",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     // "composite": true,                     /* Enable project compilation */
@@ -58,6 +58,8 @@
       "#server*":     [ "../src/server*"    ],
       "#worker*":     [ "../src/worker*"    ],
       "#util*":       [ "../src/util*"      ],
+      "#interface*":  [ "../src/interface*" ],
+      "#settings*":   [ "../src/settings*"  ],
       "$*":           [ "../src/*"          ],
     },                                        
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */

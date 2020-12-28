@@ -1,7 +1,7 @@
 import React                        from 'react';
 import {useTranslation}             from '#context/i18n';
 import escapeRegExp                 from 'lodash/escapeRegExp';
-import settings                     from '$/settings';
+import settings                     from '#settings/authentication';
 import useHistory                   from '#context/router';
 import {useAuthentication}          from '#context/authentication';
 import {email as emailRegExp}       from '@technobuddha/library/regexp';
@@ -124,9 +124,9 @@ export const SignUp: React.FC = () => {
                 password={password}
                 userInputs={[first, last, email]}
                 onChange={handlePasswordValidationChange}
-                minLength={settings.authentication.password.minLength}
-                maxLength={settings.authentication.password.maxLength}
-                strength={settings.authentication.password.strength}
+                minLength={settings.password.minLength}
+                maxLength={settings.password.maxLength}
+                strength={settings.password.strength}
             />
 
             <Checkbox

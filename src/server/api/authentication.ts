@@ -1,7 +1,7 @@
 import express              from 'express';
 import zxcvbn               from 'zxcvbn';
 import isUndefined          from 'lodash/isUndefined';
-import settings             from '$/settings';
+import settings             from '#settings/authentication';
 import db                   from '$db/authentication';
 
 export const authentication = express.Router();
@@ -48,13 +48,13 @@ authentication.put(
                 await db.deleteSession(sessionId);
             }
             
-            if(!settings.authentication.concurrentSessions && !account.admin) {
+            if(!settings.concurrentSessions && !account.admin) {
                 await db.deleteConcurrentSessions(account.id);
             }
             
             const session = await db.createSession(account.id);
 
-            res.cookie('session', session.id, { maxAge: settings.authentication.session.cookieAge });
+            res.cookie('session', session.id, { maxAge: settings.session.cookieAge });
             res.status(201).json(account);
         } else {
             res.clearCookie('session');

@@ -20,8 +20,8 @@ import join                         from 'lodash/join';
 import repeat                       from 'lodash/repeat';
 
 import paths                        from 'config/paths';
-import settings                     from '$/settings';
-import externalPackages             from '$/external-packages';
+import settings                     from '#settings/browser';
+import externalPackages             from '#settings/external-packages';
 import { replacer, reviver }        from '@technobuddha/library/json';
 import { space }                    from '@technobuddha/library/constants';
 import { pgp }                      from '$db/driver';
@@ -77,8 +77,8 @@ const exit = () => {
     const isDevelopment         = process.env.NODE_ENV !== 'production';
     const HTTP_PORT             = 8080;
     const HTTPS_PORT            = 8443;
-    const title                 = (settings?.browser?.title)      ?? 'Untitled';
-    const favicon               = (settings?.browser?.favicon)    ?? '/assets/favicon.ico';
+    const title                 = (settings?.title)      ?? 'Untitled';
+    const favicon               = (settings?.favicon)    ?? '/assets/favicon.ico';
     
     const clientWebpackConfig   = genClientWebpackConfig(isDevelopment, logger);
     const translationWorker     = new TranslationWorker(logger);
@@ -290,7 +290,7 @@ const exit = () => {
                 res.end()
             }
         )
-        .listen(HTTP_PORT, () => logger.verbose(`HTTP Redirector listening on port ${HTTP_PORT}`));
+        .listen(HTTP_PORT, () => logger.verbose(`HTTP Redirecter listening on port ${HTTP_PORT}`));
 
         https.createServer(credentials, app)
         .listen(HTTPS_PORT, () => logger.verbose(`HTTPS Server listening on port ${HTTPS_PORT}`));

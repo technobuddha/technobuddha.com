@@ -8,7 +8,7 @@ import isNil                        from 'lodash/isNil';
 import range                        from 'lodash/range';
 import {replacer, reviver}          from '@technobuddha/library/json';
 import fetcher, {Options as FetcherOptions}    from '@technobuddha/library/fetcher';
-import Account                      from '$interface/Account';
+import Account                      from '#interface/Account';
 //import ServerError                  from './ServerError';
 
 export type FetchAPIOptions     = Omit<FetcherOptions, 'body'> & {validStatuses?: number[]};

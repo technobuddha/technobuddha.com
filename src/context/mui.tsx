@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 import React                                                    from 'react';
-import theme, { Theme }                                         from '$/mui-theme';
+import theme, { Theme }                                         from '#settings/mui-theme';
 import { create }                                               from 'jss';
 import { useTheme as muiUseTheme, makeStyles as muiMakeStyles } from '@material-ui/core';
 import { MuiThemeProvider, StylesProvider, jssPreset }          from '@material-ui/core/styles';
@@ -35,5 +35,5 @@ export function makeStyles<Props extends object = {}, ClassKey extends string = 
     return muiMakeStyles<Theme, Props, ClassKey>(style, options)
 }
 
-export { Theme } from '$mui-theme';
+export { Theme } from 'config../src/settings/mui-theme';
 export default ThemeProvider;

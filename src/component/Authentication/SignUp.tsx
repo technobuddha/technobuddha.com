@@ -59,7 +59,7 @@ export const SignUp: React.FC = () => {
             history.push('/');
         })
         .catch(() =>
-            setErrorMessage(t('Email address already in use.'))
+            setErrorMessage(`${t('Email address already in use')}.`)
         )
     }
 
@@ -105,7 +105,7 @@ export const SignUp: React.FC = () => {
                 onChange={handlePasswordChange}
                 onValidation={setValidPassword}
                 label={t('Password')}
-                helperText={t('Password is case-sensitive.')}
+                helperText={`${t('Password is case-sensitive')}.`}
                 value={password}
                 required
             />

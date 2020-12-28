@@ -18,12 +18,7 @@ type PagesProviderProps = {
 export const PagesProvider: React.FC = ({children}: PagesProviderProps = {}) => {
     const { t, i18n } = useTranslation();
     const control     = React.useMemo<Page[]>(() => 
-        pages.map(page => ({
-            ...page,
-            primary: t(page.primary),
-            secondary: page.secondary ? t(page.secondary) : undefined,
-            todo: page.todo ? page.todo.map(todo => t(todo)) : undefined,
-        })),
+        pages(t),
         [i18n.language]
     );
 

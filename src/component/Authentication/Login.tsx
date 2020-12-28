@@ -52,7 +52,7 @@ export const Login: React.FC = () => {
                     history.push('/');
                 }
             } else {
-                setErrorMessage(t('Please enter a correct username and password.'));
+                setErrorMessage(`${t('Please enter a correct username and password')}.`);
             }
         });
     }
@@ -75,7 +75,7 @@ export const Login: React.FC = () => {
             <Box className={css.input}>
             <PasswordField
                 label={t('Password')}
-                helperText={t('Password is case-sensitive.')}
+                helperText={`${t('Password is case-sensitive')}.`}
                 onChange={handlePasswordChange}
             />
             </Box>

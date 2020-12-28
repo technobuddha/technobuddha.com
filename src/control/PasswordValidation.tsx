@@ -30,8 +30,8 @@ export const PasswordValidation: React.FC<PasswordFieldProps> = (props: Password
                 setState({
                     score:          0,
                     warning:        isNil(max)
-                                    ?   `${t('Passwords must be at least')} ${min} ${t('character', { count: min })} ${t('long.')}}`
-                                    :   `${t('Passwords must be between')} ${min} ${t('and')} ${max} ${t('character', { count: max })} ${t('long.')}`,
+                                    ?   `${t('Passwords must be at least')} ${min} ${t('character', { count: min })} ${t('long')}.`
+                                    :   `${t('Passwords must be between')} ${min} ${t('and')} ${max} ${t('character', { count: max })} ${t('long')}.`,
                 });
 
                 if(props.onChange) props.onChange(false);
@@ -39,8 +39,8 @@ export const PasswordValidation: React.FC<PasswordFieldProps> = (props: Password
                 setState({
                     score:          0,
                     warning:        isNil(min)
-                                    ?   `${t('Passwords must be shorter than')} ${max} ${t('character', { count: max })} ${t('long.')}`
-                                    :   `${t('Passwords must be between')} ${min} ${t('and')} ${max} ${t('character', { count: max })} ${t('long.')}`,
+                                    ?   `${t('Passwords must be shorter than')} ${max} ${t('character', { count: max })} ${t('long')}.`
+                                    :   `${t('Passwords must be between')} ${min} ${t('and')} ${max} ${t('character', { count: max })} ${t('long')}.`,
                 });
 
                 if(props.onChange) props.onChange(false);
@@ -62,7 +62,7 @@ export const PasswordValidation: React.FC<PasswordFieldProps> = (props: Password
             <Box display="flex" flexDirection="row">
                 <Box flexGrow={1}>
                     <Typography variant="caption">
-                        {t('Password Strength:')}
+                        {`${t('Password Strength')}:`}
                     </Typography>
                 </Box>
                 <Box>

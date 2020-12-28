@@ -61,7 +61,7 @@ import {translate, readTranslations, writeTranslations, TranslateReturn } from '
                 i18nKey: 'i18nKey',
                 defaultsKey: 'defaults',
                 extensions: ['.js', '.jsx'],
-                fallbackKey: false
+                fallbackKey: (_ns, text) => text,
             },
             lngs: i18next.whitelist,
             ns: i18next.ns,

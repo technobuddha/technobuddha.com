@@ -22,7 +22,7 @@ export const ForgotPassword: React.FC = () => {
         e.preventDefault();
 
         //if(!await authentication.login(username!, password!))
-        //    setErrorMessage(t('Please enter a correct username and password.'))
+        //    setErrorMessage(`${t('Please enter a correct username and password')}.`)
     }
 
     return (

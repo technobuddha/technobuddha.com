@@ -1,6 +1,7 @@
 .root {
     height: 100%;
-    margin: mui-spacing(4);
+    max-width: 80rem;
+    margin: mui-spacing(4) auto;
     background-color: mui-theme(palette-primary-main);
     box-shadow: 0 0 0 mui-spacing(1) mui-theme(palette-primary-dark);
     border: 8px solid mui-theme(palette-primary-light);
@@ -39,6 +40,17 @@
         .description {
             font-size: 1.1rem;
             margin-top: mui-spacing(1);
+        }
+
+        .todo {
+            font-size: 1.3rem;
+            margin-top: mui-spacing(3);
+
+            ul {
+                li {
+                    font-size: 1.1rem;
+                }
+            }
         }
     }
 }

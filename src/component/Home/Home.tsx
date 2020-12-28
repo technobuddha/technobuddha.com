@@ -1,15 +1,17 @@
-import React        from 'react';
-import memoize      from 'lodash/memoize';
-import Box          from '@material-ui/core/Box';
-import { usePages } from '#context/pages';
-import Spinner      from './Spinner';
-import css          from './Home.pcss';
+import React              from 'react';
+import memoize            from 'lodash/memoize';
+import Box                from '@material-ui/core/Box';
+import { useTranslation } from '#context/i18n';
+import { usePages }       from '#context/pages';
+import Spinner            from './Spinner';
+import css                from './Home.pcss';
 
 export type HomeProps = {
     children?:  never,
 };
 
 export const Home: React.FC<HomeProps> = () => {
+    const { t } = useTranslation();
     const pages = usePages();
     const speed = 15;
 
@@ -56,9 +58,18 @@ export const Home: React.FC<HomeProps> = () => {
                         <div className={css.description}>
                             Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Donec rutrum congue leo eget malesuada. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.
                         </div>
-                        <div className={css.description}>
+                        {/* <div className={css.description}>
                             Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Nulla porttitor accumsan tincidunt. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Cras ultricies ligula sed magna dictum porta. Nulla quis lorem ut libero malesuada feugiat. Proin eget tortor risus. Donec sollicitudin molestie malesuada. Donec rutrum congue leo eget malesuada. Pellentesque in ipsum id orci porta dapibus. Donec rutrum congue leo eget malesuada.
-                        </div>
+                        </div> */}
+                        {
+                            page.todo &&
+                            <div className={css.todo}>
+                                {t('To Do')}
+                                <ul>
+                                    {page.todo.map((td, i) => (<li key={i}>{td}</li>))}
+                                </ul>
+                            </div>
+                        }
                     </div>
                 ))
             }

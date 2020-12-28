@@ -17,11 +17,9 @@
   "homepage": "https://github.com/technobuddha/hill.software#readme",
   "license": "MIT",
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead",
-    "not ie 11",
-    "not op_mini all"
+    "supports css-variables",
+    "supports es6",
+    "supports css-grid"
   ],
   "dependencies": {
     "@google-cloud/translate": "^6.0.5",

@@ -1,74 +1,44 @@
 .root {
-    width: '100%';
-    height: '100%';
-}
-
-.article {
-    position: relative;
-    height: 300px;
-}
-
-.box {
-    width: mui-spacing(60);
-    margin: mui-spacing(4) auto;
-    display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: auto;
-    grid-template-areas: 
-        "header header"
-        "left   right";
+    height: 100%;
+    margin: mui-spacing(4);
     background-color: mui-theme(palette-primary-main);
+    box-shadow: 0 0 0 mui-spacing(1) mui-theme(palette-primary-dark);
     border: 8px solid mui-theme(palette-primary-light);
     border-radius: mui-spacing(4);
     padding: mui-spacing(2);
-    box-shadow: 0 0 0 mui-spacing(1)px mui-theme(palette-primary-dark);
 
-    position: absolute; 
-    opacity: 0;
-    animation-name: fade;
-    animation-duration: 60s;
-    animation-direction: normal;
-    animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
-    animation-play-state: run;
-    animation-timing-function: linear;
-    color: white;
-
-    .title {
-        grid-area: header;
-        text-align: center;
-        margin-bottom: mui-spacing(10) !important;
-        color: mui-theme(palette-common-white);
+    .spinnerContainer {
+        float: left;
+        height: 288px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: mui-spacing(4);
     }
 
-    .purpose {
-            grid-area: left;
-            text-align: left;
-            color: mui-theme(palette-common-white);
+    .box {
+        max-height: 0;
+        height: 100%;
+        text-align: justify;
+        animation-direction: normal;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+        animation-play-state: run;
+        animation-timing-function: linear;
+        color: white;
+
+        .primary {
+            font-size: 3rem;
+        }
+
+        .secondary {
+            margin-top: mui-spacing(1);
+            font-size: 2rem;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            margin-top: mui-spacing(1);
+        }
     }
-
-    .author {
-        grid-area: right;
-        text-align: right;
-        color: mui-theme(palette-common-white);
-    }
-}
-
-.spinnerContainer {
-    height: 288px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-@keyframes fade {
-    0%     { opacity: 0; }
-    16.66% { opacity: 0; }
-    33.33% { opacity: 0; }
-    50.00% { opacity: 0; }
-    66.66% { opacity: 0; }
-    81.66% { opacity: 0; }
-    83.33% { opacity: 1; }
-    98.33% { opacity: 1; }
-    100%   { opacity: 0; }
 }

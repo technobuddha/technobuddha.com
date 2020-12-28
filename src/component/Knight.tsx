@@ -138,7 +138,7 @@ export const Knight: React.FC = () => {
                 </Box>
                 <Box display="flex" flexDirection="row" marginBottom={1}>
                     <FormControl>
-                        <InputLabel htmlFor="startX">Start Row</InputLabel>
+                        <InputLabel htmlFor="startX">Start Column</InputLabel>
                         <Select
                             value={startX}
                             onChange={handleStartXChange}
@@ -147,11 +147,11 @@ export const Knight: React.FC = () => {
                                 id: 'startX'
                             }}
                         >
-                            {range(0, width).map(i => <MenuItem key={i} value={i}>{(i+1).toString()}</MenuItem>)}
+                            {range(0, width).map(i => <MenuItem key={i} value={i}>{numberToLetter(i+1)}</MenuItem>)}
                         </Select>
                     </FormControl>
                     <FormControl>
-                        <InputLabel htmlFor="startX">Start Column</InputLabel>
+                        <InputLabel htmlFor="startX">Start Row</InputLabel>
                        <Select
                             value={startY}
                             onChange={handleStartYChange}
@@ -160,13 +160,13 @@ export const Knight: React.FC = () => {
                                 id: 'startY'
                             }}
                         >
-                            {range(0, height).map(i => <MenuItem key={i} value={i}>{numberToLetter(i+1)}</MenuItem>)}
+                            {range(0, height).map(i => <MenuItem key={i} value={i}>{(i+1).toString()}</MenuItem>)}
                         </Select>
                     </FormControl> 
                 </Box>
                 <Box display="flex" flexDirection="row" marginBottom={1}>
                     <FormControl>
-                        <InputLabel htmlFor="finishX">finish Row</InputLabel>
+                        <InputLabel htmlFor="finishX">finish Column</InputLabel>
                         <Select
                             value={finishX}
                             onChange={handleFinishXChange}
@@ -175,11 +175,11 @@ export const Knight: React.FC = () => {
                                 id: 'finishX'
                             }}
                         >
-                            {range(0, width).map(i => <MenuItem key={i} value={i}>{(i+1).toString()}</MenuItem>)}
+                            {range(0, width).map(i => <MenuItem key={i} value={i}>{numberToLetter(i+1)}</MenuItem>)}
                         </Select>
                     </FormControl>
                     <FormControl>
-                        <InputLabel htmlFor="finishY">Finish Column</InputLabel>
+                        <InputLabel htmlFor="finishY">Finish Row</InputLabel>
                         <Select
                             value={finishY}
                             onChange={handleFinishYChange}
@@ -188,7 +188,7 @@ export const Knight: React.FC = () => {
                                 id: 'finishY'
                             }}
                         >
-                            {range(0, height).map(i => <MenuItem key={i} value={i}>{numberToLetter(i+1)}</MenuItem>)}
+                            {range(0, height).map(i => <MenuItem key={i} value={i}>{(i+1).toString()}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </Box>

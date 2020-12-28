@@ -1,5 +1,4 @@
-#!/bin/env -S ts-node -r ./config/env.ts -r tsconfig-paths/register
-//import sort  from 'gulp-sort';
+#!/bin/env -S ts-node --prefer-ts-exts -r ./config/env.ts -r tsconfig-paths/register
 import path                                 from 'path';
 import stream                               from 'stream';
 import vfs                                  from 'vinyl-fs';

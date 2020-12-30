@@ -1,7 +1,7 @@
 import webpack                      from 'webpack';
 import TsConfigPathsPlugin          from 'tsconfig-paths-webpack-plugin';
 import nodeExternals                from 'webpack-node-externals';
-import paths                        from 'config/paths';
+import paths                        from '#config/paths';
 
 const extensions    = [ '.ts', '.tsx', '.js', '.json', '.css', '.pcss' ];
 

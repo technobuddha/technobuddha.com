@@ -3,7 +3,7 @@ import { setTimeout, clearTimeout }     from 'timers';
 import keys                             from 'lodash/keys';
 import omit                             from 'lodash/omit';
 import { Logger }                       from 'winston';
-import i18next                          from '#settings/i18next.config.json';
+import i18next                          from '#settings/i18next';
 import {translate, readTranslations, writeTranslations, TranslateReturn } from '#util/translation';
 import { isNil } from 'lodash';
 
@@ -48,7 +48,7 @@ export class TranslationWorker
         this.queue          = {};
 
         for(const ns of Object.keys(myQueue)) {
-            for (const lng of i18next.whitelist) {
+            for (const lng of i18next.whitelist || []) {
                 const currentTranslations = readTranslations(lng, ns);
                 const archiveTranslations = readTranslations(lng, ns, 'archive');
                 const promises            = [] as Promise<TranslateReturn>[];

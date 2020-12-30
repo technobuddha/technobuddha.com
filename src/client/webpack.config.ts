@@ -1,14 +1,14 @@
-import webpack                  from 'webpack';
-import mapValues                from 'lodash/mapValues';
-import omitBy                   from 'lodash/omitBy';
-import isNil                    from 'lodash/isNil';
-import compact                  from 'lodash/compact';
-import { Dictionary }           from 'lodash';
-import MiniCssExtractPlugin          from 'mini-css-extract-plugin';
-import TsConfigPathsPlugin           from 'tsconfig-paths-webpack-plugin';
-import externalPackages              from '../settings/external-packages';
-import paths                         from 'config/paths';
-import { CMTDWebpackPlugin, Logger } from 'css-module-type-definitions';
+import webpack               from 'webpack';
+import mapValues             from 'lodash/mapValues';
+import omitBy                from 'lodash/omitBy';
+import isNil                 from 'lodash/isNil';
+import compact               from 'lodash/compact';
+import MiniCssExtractPlugin  from 'mini-css-extract-plugin';
+import TsConfigPathsPlugin   from 'tsconfig-paths-webpack-plugin';
+import externalPackages      from '#config/external-packages';
+import paths                 from '#config/paths';
+import { CMTDWebpackPlugin } from 'css-module-type-definitions';
+import type { Logger }       from 'css-module-type-definitions';
 //import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const extensions    = [ '.ts', '.tsx', '.js', '.json', '.css', '.pcss' ];
@@ -120,7 +120,7 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
         // https://webpack.js.org/configuration/target/
         target:         'web',
         // https://webpack.js.org/configuration/externals/
-        externals:      mapValues(omitBy(externalPackages, v => isNil(v.global)), v => v.global) as Dictionary<string>,
+        externals:      mapValues(omitBy(externalPackages, v => isNil(v.global)), v => v.global) as Record<string, string>,
         // https://webpack.js.org/configuration/performance/
         performance:    { hints: false },
         // https://webpack.js.org/configuration/stats/
@@ -132,8 +132,8 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                 chunkFilename:      '[id].css',
             }),
             (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: paths.src, globPattern: '**/*.pcss', camelCase: true, logger }) : null),
-            (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                                       : null),
-            //(isDevelopment ? new BundleAnalyzerPlugin()                                                                                     : null),
+            (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                                    : null),
+            //(isDevelopment ? new BundleAnalyzerPlugin()                                                                                  : null),
         ]),
     }
 }

@@ -1,6 +1,6 @@
 import fs                          from 'fs-extra';
 import path                        from 'path';
-import paths                       from 'config/paths';
+import paths                       from '#config/paths';
 import {TranslationServiceClient}  from '@google-cloud/translate';
 import plural                      from '@technobuddha/library/plural';
 import compareStrings              from '@technobuddha/library/compareStrings';

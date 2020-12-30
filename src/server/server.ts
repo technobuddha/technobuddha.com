@@ -1,4 +1,4 @@
-import 'config/env';
+import '#config/env';
 import process                      from 'process';
 import fs                           from 'fs-extra';
 import path                         from 'path';
@@ -19,9 +19,9 @@ import map                          from 'lodash/map';
 import join                         from 'lodash/join';
 import repeat                       from 'lodash/repeat';
 
-import paths                        from 'config/paths';
+import paths                        from '#config/paths';
 import settings                     from '#settings/browser';
-import externalPackages             from '#settings/external-packages';
+import externalPackages             from '#config/external-packages';
 import { replacer, reviver }        from '@technobuddha/library/json';
 import { space }                    from '@technobuddha/library/constants';
 import { pgp }                      from '$db/driver';

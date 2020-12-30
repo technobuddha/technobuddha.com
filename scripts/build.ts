@@ -13,16 +13,29 @@ function out(text: string) {
     process.stdout.write(text);
 }
 
-out('--server\n');
+out(`Compiling ${chalk.green('server')}\n`);
 webpack(
     genServerWebpackConfig(false),
-    (_error: Error, _stats: webpack.Stats) => {
-        out('--client\n');
-        webpack(
-            genClientWebpackConfig(false),
-            (_error: Error, _stats: webpack.Stats) => {
-                out('--done\n');
-            }
-        );
+    (error: Error, stats: webpack.Stats) => {
+        out(stats.toString())
+        if(error) {
+            console.log(error);
+            process.exit(1);
+        } else {
+            out(`Compiling ${chalk.green('client')}\n`);
+            webpack(
+                genClientWebpackConfig(false),
+                (error: Error, stats: webpack.Stats) => {
+                    out(stats.toString())
+                    if(error) {
+                        console.log(error);
+                        process.exit(1);
+                    } else {
+                        out('--done\n');
+                        process.exit(0);
+                    }
+                }
+            );
+        }  
     }
 );

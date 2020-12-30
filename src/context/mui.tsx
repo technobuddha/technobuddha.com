@@ -35,5 +35,5 @@ export function makeStyles<Props extends object = {}, ClassKey extends string = 
     return muiMakeStyles<Theme, Props, ClassKey>(style, options)
 }
 
-export { Theme } from 'config../src/settings/mui-theme';
+export { Theme } from '#settings/mui-theme';
 export default ThemeProvider;

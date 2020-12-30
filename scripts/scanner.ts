@@ -5,14 +5,14 @@ import vfs                                  from 'vinyl-fs';
 import isNil                                from 'lodash/isNil';
 import scanner, { I18NextScannerConfig }    from 'i18next-scanner';
 import typescriptTransform                  from 'i18next-scanner-typescript';
-import paths                                from 'config/paths';
+import paths                                from '#config/paths';
 import i18next                              from '#settings/i18next.config.json';
 import {translate, readTranslations, writeTranslations, TranslateReturn } from '#util/translation';
 
 (async function() {
-    const foreign = i18next.whitelist.filter(lng => lng != 'en');
-    
-    for(const ns of i18next.ns) {
+    const foreign = i18next.whitelist ? i18next.whitelist.filter(lng => lng != 'en') : [];
+
+    for(const ns of i18next.ns ?? []) {
         const en = readTranslations('en', ns, 'external');
     
         for(const lng of foreign) {
@@ -63,7 +63,7 @@ import {translate, readTranslations, writeTranslations, TranslateReturn } from '
                 extensions: ['.js', '.jsx'],
                 fallbackKey: (_ns, text) => text,
             },
-            lngs: i18next.whitelist,
+            lngs: i18next.whitelist || undefined,
             ns: i18next.ns,
             defaultLng: 'en',
             defaultNs: i18next.defaultNS,

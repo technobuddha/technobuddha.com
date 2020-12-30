@@ -1,7 +1,7 @@
 import path                 from 'path';
 import express              from 'express';
 import nReadLines           from 'n-readlines';
-import paths                from 'config/paths';
+import paths                from '#config/paths';
 
 export const music = express.Router();
 

@@ -24,8 +24,8 @@ import settings                     from '#settings/browser';
 import externalPackages             from '#config/external-packages';
 import { replacer, reviver }        from '@technobuddha/library/json';
 import { space }                    from '@technobuddha/library/constants';
-import { pgp }                      from '$db/driver';
-import { genClientWebpackConfig }   from '$client/webpack.config';
+import { pgp }                      from '#db/driver';
+import { genClientWebpackConfig }   from '#client/webpack.config';
 
 import api                          from './api';
 import TranslationWorker            from './TranslationWorker';

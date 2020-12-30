@@ -49,18 +49,19 @@
     "moduleResolution": "node",               /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
     "baseUrl": ".",                           /* Base directory to resolve non-absolute module names. */
     "paths": {                                /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
-      "~*":           [ "../*"              ],
-      "#config*":     [ "./*"               ],
+      "~*":           [ "../*"                     ],
+      "#config*":     [ "./*"                      ],
       "#context*":    [ "../src/client/context*"   ],
       "#control*":    [ "../src/client/control*"   ],
       "#component*":  [ "../src/client/component*" ],
-      "#client*":     [ "../src/client*"    ],
-      "#server*":     [ "../src/server*"    ],
-      "#worker*":     [ "../src/worker*"    ],
-      "#util*":       [ "../src/util*"      ],
-      "#interface*":  [ "../src/interface*" ],
-      "#settings*":   [ "../src/settings*"  ],
-      "$*":           [ "../src/*"          ],
+      "#client*":     [ "../src/client*"           ],
+      "#server*":     [ "../src/server*"           ],
+      "#db*":         [ "../src/db*"               ],
+      "#worker*":     [ "../src/worker*"           ],
+      "#util*":       [ "../src/util*"             ],
+      "#interface*":  [ "../src/interface*"        ],
+      "#settings*":   [ "../src/settings*"         ],
+      "$*":           [ "../src/*"                 ],
     },                                        
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     "typeRoots": [                            /* List of folders to include type definitions from. */

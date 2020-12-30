@@ -2,7 +2,7 @@ import express              from 'express';
 import zxcvbn               from 'zxcvbn';
 import isUndefined          from 'lodash/isUndefined';
 import settings             from '#settings/authentication';
-import db                   from '$db/authentication';
+import db                   from '#db/authentication';
 
 export const authentication = express.Router();
 

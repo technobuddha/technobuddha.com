@@ -2,7 +2,8 @@ import isNil        from 'lodash/isNil';
 import isNumber     from 'lodash/isNumber';
 import toString     from 'lodash/toString';
 import { Shape }    from '../analyzer';
-import { toTimestamp, toNumber } from '@technobuddha/utility';
+import toTimestamp  from '@technobuddha/library/toTimestamp';
+import toNumber     from '@technobuddha/library/toNumber';
 import { ColumnSpecification, ColumnType } from '../column';
 
 export const nullCollator = () => () => 0;

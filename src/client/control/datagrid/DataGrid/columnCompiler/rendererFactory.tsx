@@ -2,7 +2,7 @@ import React                from 'react';
 import toString             from 'lodash/toString';
 import isNumber             from 'lodash/isNumber';
 import clsx                 from 'clsx';
-import { toDateUTCString }  from '@technobuddha/utility';
+import toDateUTCString      from '@technobuddha/library/toDateUTCString';
 import Box                  from '@material-ui/core/Box';
 import { makeStyles }       from '@material-ui/core/styles';
 import { Shape }            from '../analyzer';

@@ -5,8 +5,8 @@ import isObject from 'lodash/isObject';
 import isEmpty  from 'lodash/isEmpty';
 import isNil    from 'lodash/isNil';
 import toString from 'lodash/toString';
-import { toDateUTCString }  from '@technobuddha/utility';
-import { DataType }         from './column';    // TODO data types should be moved!
+import toDateUTCString  from '@technobuddha/library/toDateUTCString';
+import type { DataType }         from './column';    // TODO data types should be moved!
 
 import { makeStyles } from '@material-ui/core/styles';
 

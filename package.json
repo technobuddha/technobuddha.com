@@ -29,7 +29,6 @@
     "@material-ui/styles": "^4.11.2",
     "@technobuddha/library": "file:../library/dist",
     "@technobuddha/react-hooks": "0.0.6",
-    "@technobuddha/utility": "^1.0.0",
     "bigfloat": "^0.1.1",
     "browserslist-useragent": "^3.0.3",
     "clsx": "^1.1.1",

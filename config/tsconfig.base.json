@@ -51,9 +51,9 @@
     "paths": {                                /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
       "~*":           [ "../*"              ],
       "#config*":     [ "./*"               ],
-      "#context*":    [ "../src/context*"   ],
-      "#control*":    [ "../src/control*"   ],
-      "#component*":  [ "../src/component*" ],
+      "#context*":    [ "../src/client/context*"   ],
+      "#control*":    [ "../src/client/control*"   ],
+      "#component*":  [ "../src/client/component*" ],
       "#client*":     [ "../src/client*"    ],
       "#server*":     [ "../src/server*"    ],
       "#worker*":     [ "../src/worker*"    ],

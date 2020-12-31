@@ -48,7 +48,7 @@ export class TranslationWorker
         this.queue          = {};
 
         for(const ns of Object.keys(myQueue)) {
-            for (const lng of i18next.whitelist || []) {
+            for (const lng of i18next.supportedLngs || []) {
                 const currentTranslations = readTranslations(lng, ns);
                 const archiveTranslations = readTranslations(lng, ns, 'archive');
                 const promises            = [] as Promise<TranslateReturn>[];

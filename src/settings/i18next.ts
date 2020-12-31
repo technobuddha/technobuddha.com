@@ -4,14 +4,17 @@ import type { InitOptions } from 'i18next';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 export default {
-    fallbackLng:      false,
-    whitelist:        [ 'en', 'chef' ],
-    ns:               ['translation'],
-    defaultNS:        'translation',
-    debug:            false,
-    keySeparator:     false,
-    nsSeparator:      false,
-    saveMissing:      isDevelopment,
+    fallbackLng:                false,
+    supportedLngs:              [ 'en', 'chef' ],
+    nonExplicitSupportedLngs:   true,
+    ns:                         ['translation'],
+    defaultNS:                  'translation',
+    debug:                      false,
+    keySeparator:               false,
+    nsSeparator:                false,
+    pluralSeparator:            '_',
+    contextSeparator:           '_',
+    saveMissing:                isDevelopment,
     interpolation: {
         escapeValue:      false,
         formatSeparator:  ','

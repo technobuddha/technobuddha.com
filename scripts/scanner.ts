@@ -1,18 +1,21 @@
-#!/bin/env -S ts-node --prefer-ts-exts -r ./config/env.ts -r tsconfig-paths/register
+#!/bin/env -S ts-node --prefer-ts-exts  -r ./config/env.ts -r tsconfig-paths/register
 import path                                 from 'path';
 import stream                               from 'stream';
 import vfs                                  from 'vinyl-fs';
+import isString                             from 'lodash/isString';
 import isNil                                from 'lodash/isNil';
-import scanner, { I18NextScannerConfig }    from 'i18next-scanner';
+import scanner                              from 'i18next-scanner';
 import typescriptTransform                  from 'i18next-scanner-typescript';
 import paths                                from '#config/paths';
 import i18next                              from '#settings/i18next';
-import {translate, readTranslations, writeTranslations, TranslateReturn } from '#util/translation';
+import {translate, readTranslations, writeTranslations } from '#util/translation';
+import type { I18NextScannerConfig }        from 'i18next-scanner';
+import type { TranslateReturn }             from '#util/translation';
 
 (async function() {
-    const foreign = i18next.whitelist ? i18next.whitelist.filter(lng => lng != 'en') : [];
+    const foreign = i18next.supportedLngs ? i18next.supportedLngs.filter(lng => lng != 'en') : [];
 
-    for(const ns of i18next.ns ?? []) {
+    for(const ns of isString(i18next.ns) ? [i18next.ns] : i18next.ns ?? ['translation']) {
         const en = readTranslations('en', ns, 'external');
     
         for(const lng of foreign) {
@@ -32,7 +35,7 @@ import {translate, readTranslations, writeTranslations, TranslateReturn } from '
                         }
                     );
                     
-                     writeTranslations(t, lng, ns, 'external');
+                    writeTranslations(t, lng, ns, 'external');
                 }
             )
         }
@@ -63,21 +66,21 @@ import {translate, readTranslations, writeTranslations, TranslateReturn } from '
                 extensions: ['.js', '.jsx'],
                 fallbackKey: (_ns, text) => text,
             },
-            lngs: i18next.whitelist || undefined,
+            lngs: i18next.supportedLngs || undefined,
             ns: i18next.ns,
             defaultLng: 'en',
             defaultNs: i18next.defaultNS,
             defaultValue: null,
             resource: {
                 loadPath: path.join(paths.locales, '{{lng}}', `{{ns}}.external.json`),
-                savePath: '{{lng}}/{{ns}}',
+                savePath: path.join('{{lng}}', '{{ns}}'),
                 jsonIndent: 2,
                 lineEnding: '\n'
             },
-            nsSeparator: false,
-            keySeparator: false,
-            pluralSeparator: '_',
-            contextSeparator: '_',
+            nsSeparator: i18next.nsSeparator,
+            keySeparator: i18next.keySeparator,
+            pluralSeparator: i18next.pluralSeparator,
+            contextSeparator: i18next.contextSeparator,
             contextDefaultValues: [],
             interpolation: {
                 prefix: '{{',
@@ -88,7 +91,6 @@ import {translate, readTranslations, writeTranslations, TranslateReturn } from '
     }
     
     vfs.src(config.input, {buffer: false})
-    //.pipe(sort()) // Sort files in stream by path
     .pipe(scanner(config.options, config.transform, config.flush))
     .pipe(new stream.Transform({
         objectMode: true,
@@ -120,7 +122,6 @@ import {translate, readTranslations, writeTranslations, TranslateReturn } from '
                 archiveTranslations[key] = translation;
             }
             
-
             Promise.all(promises)
             .then(
                 results => {
@@ -137,6 +138,4 @@ import {translate, readTranslations, writeTranslations, TranslateReturn } from '
             )
         }
     }))
-})()
-
-
+})();

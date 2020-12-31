@@ -53,8 +53,14 @@ export const Home: React.FC<HomeProps> = () => {
                     return (
                         <div key={i} className={css.box} style={articleStyle(i)}>
                             <div className={css.primary}>{page.primary}</div>
-                            <div className={css.secondary}>{page.secondary}</div>
-                            <div className={css.description}>{page.description}</div>
+                            {
+                                page.secondary &&
+                                <div className={css.secondary}>{page.secondary}</div>
+                            }
+                            {
+                                page.description &&
+                                <div className={css.description}>{page.description}</div>
+                            }
                             {
                                 page.todo &&
                                 <div className={css.todo}>

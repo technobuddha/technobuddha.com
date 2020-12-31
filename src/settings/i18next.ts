@@ -1,4 +1,7 @@
+import process              from 'process';
 import type { InitOptions } from 'i18next';
+
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 export default {
     fallbackLng:      false,
@@ -8,7 +11,7 @@ export default {
     debug:            false,
     keySeparator:     false,
     nsSeparator:      false,
-    saveMissing:      true,
+    saveMissing:      isDevelopment,
     interpolation: {
         escapeValue:      false,
         formatSeparator:  ','

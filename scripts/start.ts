@@ -1,10 +1,12 @@
 #!/bin/env -S ts-node -r ./config/env.ts -r tsconfig-paths/register
+import path                                     from 'path';
 import webpack                                  from 'webpack';
 import chalk                                    from 'chalk'; chalk.level = 3;    // Tell chalk that we support full RGB colors
 import { spawn, ChildProcess }                  from 'child_process';
 import repeat                                   from 'lodash/repeat';
 import { out, clearScreen, header, screenSize } from '@technobuddha/vt100';
 import { genServerWebpackConfig }               from '#server/webpack.config';
+import paths                                    from '#config/paths';
 
 let serverProcess: ChildProcess | null = null;
 
@@ -14,7 +16,7 @@ const startServer   = () => {
         stopServer();
     }
 
-    serverProcess = spawn('node', ['./bin/server.js'], { stdio: 'inherit'});
+    serverProcess = spawn('node', [path.join(paths.bin, 'server.js')], { stdio: 'inherit'});
 }
 
 const stopServer    = () => {

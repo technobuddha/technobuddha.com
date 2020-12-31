@@ -137,6 +137,3 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
         ]),
     }
 }
-
-const developmentConfig = genClientWebpackConfig(true);
-export default developmentConfig;

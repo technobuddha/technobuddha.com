@@ -1,7 +1,6 @@
 data
 node_modules
-bin
-dist
+deploy
 
 *.pcss.d.ts
 *.log
@@ -12,4 +11,3 @@ assets/.well-known/acme-challenge/*
 *.code-workspace
 
 .env.*local
-

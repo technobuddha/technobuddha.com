@@ -6,7 +6,7 @@ import isNil                                from 'lodash/isNil';
 import scanner, { I18NextScannerConfig }    from 'i18next-scanner';
 import typescriptTransform                  from 'i18next-scanner-typescript';
 import paths                                from '#config/paths';
-import i18next                              from '#settings/i18next.config.json';
+import i18next                              from '#settings/i18next';
 import {translate, readTranslations, writeTranslations, TranslateReturn } from '#util/translation';
 
 (async function() {

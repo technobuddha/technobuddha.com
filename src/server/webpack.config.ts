@@ -41,7 +41,3 @@ export const genServerWebpackConfig: ((isDevelopment?: boolean) => webpack.Confi
         node:           { __dirname: false, __filename: true },
     }
 };
-
-export const developmentWebpackConfig = genServerWebpackConfig();
-
-export default developmentWebpackConfig;

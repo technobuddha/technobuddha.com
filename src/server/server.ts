@@ -80,9 +80,6 @@ const exit = () => {
     const title                 = (settings?.title)      ?? 'Untitled';
     const favicon               = (settings?.favicon)    ?? '/assets/favicon.ico';
     
-    const clientWebpackConfig   = genClientWebpackConfig(isDevelopment, logger);
-    const translationWorker     = new TranslationWorker(logger);
-
     function cacheControl(days = 0) {
         const seconds = days * 24 * 60 * 60;
 
@@ -162,7 +159,8 @@ const exit = () => {
     )
 
     if (isDevelopment) {
-        const compiler = webpack(clientWebpackConfig);
+        const clientWebpackConfig   = genClientWebpackConfig(isDevelopment, logger);
+        const compiler              = webpack(clientWebpackConfig);
 
         app.use(
             devMiddleware(
@@ -211,7 +209,7 @@ const exit = () => {
 
     app.get(
         '/dist/*',
-        express.static(paths.home),
+        express.static(path.join(paths.dist, '..')),
         (_req, res) => {
             res.sendStatus(404);
         }
@@ -233,15 +231,20 @@ const exit = () => {
         }
     );
 
-    app.post(
-        '/locales/*',
-        (req, res) => {
-            const [,,, nsfile] = req.url.split('/');
-            const [ns]         = nsfile.split('.');
-            translationWorker.enqueue(ns, req.body);
-            res.end();
-        }
-    );
+    if(isDevelopment && process.env.GCLOUD_PROJECT && process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+        const translationWorker     = new TranslationWorker(logger);
+        logger.verbose(`Translation worker... ${chalk.green('RUNNING')}`);
+
+        app.post(
+            '/locales/*',
+            (req, res) => {
+                const [,,, nsfile] = req.url.split('/');
+                const [ns]         = nsfile.split('.');
+                translationWorker.enqueue(ns, req.body);
+                res.end();
+            }
+        );
+    }
 
     app.use(
        createProxyMiddleware(

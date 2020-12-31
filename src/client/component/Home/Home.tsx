@@ -19,6 +19,7 @@ export const Home: React.FC<HomeProps> = () => {
             const duration = speed * pages.length;
             const oneSecond = 100.0 / duration;
 
+            // TODO the name of the animation should be randomized
             return `
                 @keyframes fade {
                 0%                                       { opacity: 0; max-height: 0;    }

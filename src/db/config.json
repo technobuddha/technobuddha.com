@@ -1,6 +1,0 @@
-{
-    "user":       "postgres",
-    "host":       "/var/run/postgresql",
-    "database":   "technobuddha",
-    "port":       5432
-}

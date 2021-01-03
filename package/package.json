@@ -1,0 +1,14 @@
+{
+    "name": "gateway",
+    "version": "1.0.0",
+    "description": "gateway",
+    "author": "Phil Hill <phil@technobuddha.com>",
+    "license": "ISC",
+    "main": "bin/server.js",
+    "scripts": {
+        "start": "NODE_ENV=production nodemon --watch /etc/letsencrypt/live/technobuddha --ext pem bin/server.js"
+    },
+    "dependencies": {
+        "nodemon": "^2.0.6"
+    }
+}

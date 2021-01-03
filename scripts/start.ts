@@ -4,10 +4,10 @@ import webpack                                  from 'webpack';
 import chalk                                    from 'chalk'; chalk.level = 3;    // Tell chalk that we support full RGB colors
 import { spawn, ChildProcess }                  from 'child_process';
 import repeat                                   from 'lodash/repeat';
-import { out, clearScreen, header, screenSize } from '@technobuddha/vt100';
 import { genServerWebpackConfig }               from '#server/webpack.config';
 import paths                                    from '#config/paths';
 
+const esc = '\u001b';
 let serverProcess: ChildProcess | null = null;
 
 const startServer   = () => {
@@ -58,133 +58,61 @@ clearScreen();
 out(header());
 out(`${repeat('=', width)}\n`)
 
-/*
-const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-const useYarn = fs.existsSync(paths.yarnLockFile);
-const isInteractive = process.stdout.isTTY;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-// Warn and crash if required files are missing
-if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
-  process.exit(1);
+function out(text: string) {
+  process.stdout.write(text);
 }
 
-// Tools like Cloud9 rely on this.
-const DEFAULT_PORT = parseInt(process.env.PORT ?? '3000', 10);
-const HOST = process.env.HOST || '0.0.0.0';
-
-if (process.env.HOST) {
-    console.log(
-        chalk.cyan(
-            `Attempting to bind to HOST environment variable: ${chalk.yellow(chalk.bold(process.env.HOST))}`
-        )
-    );
-    console.log(
-        `If this was unintentional, check that you haven't mistakenly set it in your shell.`
-    );
-    console.log(
-        `Learn more here: ${chalk.yellow('https://cra.link/advanced-config')}`
-    );
-    console.log();
+function clearScreen() {
+  out(process.platform === 'win32' ? `${esc}[2J${esc}[0f` : `${esc}[2J${esc}[3J${esc}[H`);
 }
 
-// We require that you explicitly set browsers and do not fall back to
-// browserslist defaults.
+function screenSize() {
+  return {
+      height: process.stdout.rows,
+      width:  process.stdout.columns,
+  }
+}
 
-checkBrowsers(paths.appPath, isInteractive)
-  .then(() => {
-    // We attempt to use the default port but if it is busy, we offer the user to
-    // run on a different port. `choosePort()` Promise resolves to the next free port.
-    return choosePort(HOST, DEFAULT_PORT);
-  })
-  .then((port: number | null) => {
-    if (port == null) {
-      // We have not found a port.
-      return;
+//#region Logo
+function header() {
+    const logo = [
+        chalk.hex('#d0f2fa')('▄██▄'),
+        chalk.hex('#a3e1f6')('▄██████▄'),
+        chalk.hex('#70c0e4')('▄██████████▄'),
+        chalk.hex('#4b98ca')('▄██████████████▄'),
+        chalk.hex('#1b5ca8')('▄██████████████████▄'),
+        chalk.hex('#135490')('▄██████████████████████▄'),
+        chalk.hex('#0d3f78')('▄██████████████████████████▄'),
+        chalk.hex('#082c61')('▄██████████████████████████████▄'),
+        chalk.hex('#051f50')('▄██████████████████████████████████▄'),
+    ]
+
+    const name = [
+        '',
+        '',
+        'H     H  IIIII  L      L           SSSSS    OOOO   FFFFFF  TTTTT  W     W    AA    RRRRR   EEEEEE',
+        'H     H    I    L      L          S        O    O  F         T    W     W   A  A   R    R  E     ',
+        'H     H    I    L      L          S        O    O  F         T    W  W  w  A    A  R    R  E     ',
+        'HHHHHHH    I    L      L           SSSSS   O    O  FFF       T    W  W  W  AAAAAA  RRRRR   EEE   ',
+        'H     H    I    L      L                S  O    O  F         T    W W W W  A    A  R R     E     ',
+        'H     H    I    L      L      ..        S  O    O  F         T    W W W W  A    A  R   R   E     ',
+        'H     H  IIIII  LLLLL  LLLLL  ..   SSSSS    OOOO   F         T     W   W   A    A  R    R  EEEEEE',
+    ]
+
+
+    let output = "";
+    for(let i = 0; i < logo.length; ++i) {
+        for(let j = 8; j > i; --j) {
+            output += '  '
+        }
+        output += logo[i];
+        for(let j = 8; j > i; --j) {
+            output += '  '
+        }
+        output += '   ' + name[i] + '\n';
     }
-
-    const config = configFactory('development');
-    const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
-    const appName = require(paths.appPackageJson).name;
-
-    const useTypeScript = fs.existsSync(paths.appTsConfig);
-    const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true';
-    const urls = prepareUrls(
-      protocol,
-      HOST,
-      port,
-      paths.publicUrlOrPath.slice(0, -1)
-    );
-    const devSocket = {
-      warnings: (warnings: string) =>
-        devServer.sockWrite(devServer.sockets, 'warnings', warnings),
-      errors: (errors: string) =>
-        devServer.sockWrite(devServer.sockets, 'errors', errors),
-    };
-    // Create a webpack compiler that is configured with custom messages.
-    const compiler = createCompiler({
-      appName,
-      config,
-      devSocket,
-      urls,
-      useYarn,
-      useTypeScript,
-      tscCompileOnError,
-      webpack,
-    });
-    // Load proxy config
-    const proxySetting = require(paths.appPackageJson).proxy;
-    const proxyConfig = prepareProxy(
-      proxySetting,
-      paths.appPublic,
-      paths.publicUrlOrPath
-    );
-    // Serve webpack assets generated by the compiler over a web server.
-    const serverConfig = createDevServerConfig(
-      proxyConfig,
-      urls.lanUrlForConfig
-    );
-    const devServer = new WebpackDevServer(compiler, serverConfig);
-    // Launch WebpackDevServer.
-    devServer.listen(port, HOST, err => {
-      if (err) {
-        return console.log(err);
-      }
-      if (isInteractive) {
-        clearConsole();
-      }
-
-      if (env.raw.FAST_REFRESH && semver.lt(react.version, '16.10.0')) {
-        console.log(
-          chalk.yellow(
-            `Fast Refresh requires React 16.10 or higher. You are using React ${react.version}.`
-          )
-        );
-      }
-
-      console.log(chalk.cyan('Starting the development server...\n'));
-      openBrowser(urls.localUrlForBrowser);
-    });
-
-    ['SIGINT', 'SIGTERM'].forEach(function (sig) {
-      process.on(sig, function () {
-        devServer.close();
-        process.exit();
-      });
-    });
-
-    if (process.env.CI !== 'true') {
-      // Gracefully exit when stdin ends
-      process.stdin.on('end', function () {
-        devServer.close();
-        process.exit();
-      });
-    }
-  })
-  .catch(err => {
-    if (err && err.message) {
-      console.log(err.message);
-    }
-    process.exit(1);
-  });
-*/
+    return output;
+}
+//#endregion

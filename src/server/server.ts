@@ -158,6 +158,28 @@ const exit = () => {
         }
     )
 
+    app.use(
+        '/.well-known/',
+        express.static(path.join(paths.assets, '.well-known')),
+        (_req, res) => {
+            res.sendStatus(404);
+        }
+    )
+
+    app.use(
+        createProxyMiddleware({
+             target:         'http://mail.technobuddha.com',
+             changeOrigin:   true,
+             autoRewrite:    true,
+             logLevel:       'debug',
+             logProvider:    () => logger,
+             router: {
+                 'mail.technobuddha.com':    'http://mail.technobuddha.com',
+                 'mail.hill.software':       'http://mail.technobuddha.com',
+             }
+        })
+    )
+
     if (isDevelopment) {
         const clientWebpackConfig   = genClientWebpackConfig(isDevelopment, logger);
         const compiler              = webpack(clientWebpackConfig);
@@ -183,13 +205,7 @@ const exit = () => {
 
     app.use('/api', api);
 
-    app.use(
-        '/.well-known/',
-        express.static(path.join(paths.assets, '.well-known')),
-        (_req, res) => {
-            res.sendStatus(404);
-        }
-    )
+
 
     app.use(
         '/assets/',
@@ -245,21 +261,6 @@ const exit = () => {
             }
         );
     }
-
-    app.use(
-       createProxyMiddleware(
-           (_path, req) => {
-               return /^mail\.(technobuddha\.com|hill\.software)$/i.test(req.hostname);
-           },
-           {
-                target:         'http://mail.technobuddha.com',
-                changeOrigin:   true,
-                autoRewrite:    true,
-                logLevel:       'error',
-                logProvider:    () => logger,
-            }
-        )
-    )
 
     app.get(
         '/*',

@@ -35,7 +35,6 @@ const dependenciesWhiteList = [
     "pg-promise",
     "tsconfig-paths-webpack-plugin",
     "tslib",
-    "typescript",
     "webpack",
     "webpack-dev-middleware",
     "webpack-hot-middleware",

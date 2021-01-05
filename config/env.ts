@@ -1,4 +1,4 @@
-import fs           from 'fs';
+import fs           from 'fs-extra';
 import paths        from './paths';
 import { config }   from 'dotenv';
 import dotenvExpand from 'dotenv-expand';

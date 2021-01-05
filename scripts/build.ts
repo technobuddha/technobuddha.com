@@ -6,6 +6,7 @@ import chalk                        from 'chalk';
 import binaryUnits                  from '@technobuddha/library/binaryUnits';
 import { genServerWebpackConfig }   from '#server/webpack.config';
 import { genClientWebpackConfig }   from '#client/webpack.config';
+import type { PackageJson }         from 'type-fest';
 
 process.env.NODE_ENV = 'production';
 
@@ -14,6 +15,33 @@ chalk.level = 3;    // Tell chalk that we support full RGB colors
 function out(text: string) {
     process.stdout.write(text);
 }
+
+const dependenciesWhiteList = [
+    "@google-cloud/translate",
+    "@technobuddha/library",
+    "browserslist-useragent",
+    "cheferizeIt",
+    "cookie-parser",
+    "css-module-type-definitions",
+    "dotenv",
+    "dotenv-expand",
+    "express",
+    "fs-extra",
+    "hbs",
+    "http-proxy-middleware",
+    "mini-css-extract-plugin",
+    "n-readlines",
+    "nodemon",
+    "pg-promise",
+    "tsconfig-paths-webpack-plugin",
+    "tslib",
+    "typescript",
+    "webpack",
+    "webpack-dev-middleware",
+    "webpack-hot-middleware",
+    "winston",
+    "zxcvbn",
+];
 
 function report(error: Error, stats: webpack.Stats): void {
     if(error) {
@@ -56,6 +84,27 @@ webpack(
             genClientWebpackConfig(false),
             (error: Error, stats: webpack.Stats) => {
                 report(error, stats);
+
+                out(`\nBuilding ${chalk.blue('package.json')}`);
+
+                const pj = JSON.parse(fs.readFileSync('package.json').toString()) as PackageJson;
+
+                pj.name = 'gateway';
+                pj.description = 'gateway';
+                delete pj.repository;
+                delete pj.bugs;
+                delete pj.homepage;
+
+                pj.scripts = { start: "NODE_ENV=production nodemon --watch /etc/letsencrypt/live/technobuddha --ext pem bin/server.js" };
+                pj.dependencies = Object.fromEntries(
+                    Object.entries(pj.dependencies!)
+                    .filter(([k]) => dependenciesWhiteList.includes(k))
+                    .map(([k, v]) => [k, v.startsWith('^') ? v.slice(1) : v])
+                );
+
+                delete pj.devDependencies;
+
+                fs.writeFileSync('deploy/package.json', JSON.stringify(pj, undefined, 2), 'utf8');
                 out(`\n--${chalk.blue('done')}\n`);
                 process.exit(0);
             }

@@ -1,6 +1,6 @@
 import path from 'path';
 import fs   from 'fs-extra';
-
+const isDevelopment = process.env.NODE_ENV !== 'production';
 let   home          = fs.realpathSync(process.env.PROJECT_HOME ?? process.cwd());
 for(;;) {
     if(fs.existsSync(path.join(home, '.env'))) break;
@@ -26,6 +26,6 @@ export default {
     workerEntry:                resolveHome('src', 'worker', 'index.ts'),
     views:                      resolveHome('views'),
     locales:                    resolveHome('locales'),
-    bin:                        resolveHome('deploy', 'bin'),
-    dist:                       resolveHome('deploy', 'dist'),
+    bin:                        isDevelopment ? resolveHome('deploy', 'bin')  : resolveHome('bin'),
+    dist:                       isDevelopment ? resolveHome('deploy', 'dist') : resolveHome('dist'),
 };

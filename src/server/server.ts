@@ -118,7 +118,22 @@ const exit = () => {
     const app               = express();
 
     app.use(
-        '/owa',
+        [
+            '/Autodiscover',//
+            '/ecp',//
+            '/EWS',//
+            '/Exchange',
+            //'/Exchweb',
+            '/mapi',//
+            '/Microsoft-Server-ActiveSync',//
+            '/OAB',//
+            '/owa',//
+            '/PowerShell',//
+            //'/Public',
+            //'/PushNotifications',
+            '/Rpc',//
+            '/RpcWithCert'
+        ],
         createProxyMiddleware({
             target:         'http://mail.technobuddha.com',
             changeOrigin:   true,

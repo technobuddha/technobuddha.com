@@ -6,7 +6,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 export default {
     fallbackLng:                false,
     supportedLngs:              [ 'en', 'chef' ],
-    nonExplicitSupportedLngs:   true,
+    nonExplicitSupportedLngs:   false,
     ns:                         ['translation'],
     defaultNS:                  'translation',
     debug:                      false,

@@ -20,10 +20,11 @@
     "migrate": "node-pg-migrate --migrations-dir migrations",
     "lint": "eslint . --ext '.ts,.tsx,.js'",
     "doc": "typedoc --out docs client",
-    "build": "npm-run-all build:clean build:compile build:copy",
+    "build": "npm-run-all build:clean build:compile build:copy build:install",
     "build:clean": "rm -rf deploy && mkdir deploy deploy/bin deploy/dist",
     "build:compile": "scripts/build.ts",
-    "build:copy": "cp -r assets webroot data locales views .env package/* deploy"
+    "build:copy": "cp -r assets webroot data locales views .env package/* deploy",
+    "build:install": "npm install --prefix ./deploy"
   },
   "dependencies": {
     "@google-cloud/translate": "^6.0.5",

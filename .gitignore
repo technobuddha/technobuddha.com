@@ -4,9 +4,6 @@ deploy
 
 *.pcss.d.ts
 *.log
-assets/.well-known/*
-!assets/.well-known/acme-challenge
-assets/.well-known/acme-challenge/*
 
 *.code-workspace
 

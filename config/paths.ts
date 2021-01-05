@@ -17,6 +17,7 @@ export default {
     node_modules:               resolveHome('node_modules'),
     webpackHotMiddlewareClient: resolveHome('node_modules', 'webpack-hot-middleware', 'client.js'),
     assets:                     resolveHome('assets'),
+    webroot:                    resolveHome('webroot'),
     client:                     resolveHome('src', 'client'),
     clientEntry:                resolveHome('src', 'client', 'index.tsx'),
     server:                     resolveHome('src', 'server'),

@@ -146,7 +146,7 @@ const exit = () => {
         (req, _res, next) => {
             const { protocol, method, url, ip } = req;
 
-            logger.http(`${ip} ${protocol} ${method} ${url}`);
+            logger.http(`${ip.padEnd(45)} ${protocol} ${method} ${url}`);
             next();
         }
     );
@@ -160,7 +160,7 @@ const exit = () => {
 
     app.use(
         '/.well-known/',
-        express.static(path.join(paths.assets, '.well-known')),
+        express.static(path.join(paths.webroot, '.well-known')),
         (_req, res) => {
             res.sendStatus(404);
         }
@@ -190,8 +190,6 @@ const exit = () => {
     }
 
     app.use('/api', api);
-
-
 
     app.use(
         '/assets/',
@@ -280,7 +278,7 @@ const exit = () => {
                 res.end()
             }
         )
-        .listen(HTTP_PORT, () => logger.verbose(`HTTP Redirecter listening on port ${HTTP_PORT}`));
+        .listen(HTTP_PORT, () => logger.verbose(`HTTP Redirector listening on port ${HTTP_PORT}`));
 
         https.createServer(credentials, app)
         .listen(HTTPS_PORT, () => logger.verbose(`HTTPS Server listening on port ${HTTPS_PORT}`));

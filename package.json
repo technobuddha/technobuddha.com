@@ -23,7 +23,7 @@
     "build": "npm-run-all build:clean build:compile build:copy",
     "build:clean": "rm -rf deploy && mkdir deploy deploy/bin deploy/dist",
     "build:compile": "scripts/build.ts",
-    "build:copy": "cp -r assets data locales views .env deploy"
+    "build:copy": "cp -r assets data locales views .env package/* deploy"
   },
   "dependencies": {
     "@google-cloud/translate": "^6.0.5",

@@ -15,10 +15,6 @@ import mime                         from 'mime';
 import winston                      from 'winston';
 import { matchesUA }                from 'browserslist-useragent';
 
-import map                          from 'lodash/map';
-import join                         from 'lodash/join';
-import repeat                       from 'lodash/repeat';
-
 import paths                        from '#config/paths';
 import settings                     from '#settings/browser';
 import externalPackages             from '#config/external-packages';
@@ -58,7 +54,7 @@ const exit = () => {
             default:        colored = level;                break;
         }
 
-        return `${colored}${repeat(space, 7 - level.length)}`
+        return `${colored}${space.repeat(7 - level.length)}`;
     }
 
     const logger = winston.createLogger({
@@ -90,35 +86,24 @@ const exit = () => {
     }
 
     let preload: string;
-    // eslint-disable-next-line no-constant-condition
     if (process.env.USE_CDN === 'true') { 
         const cdn = 'https://cdnjs.cloudflare.com/ajax/libs';
-        preload =
-            join (
-                map (
-                    externalPackages,
-                    (info, packageName) => {
-                        const version   = fs.readJsonSync(path.join(paths.node_modules, packageName, 'package.json')).version;
-                        const url       = `${cdn}/${info.alias ?? packageName}/${version}/${isDevelopment ? info.development : info.production}`;
-                        return `<script type="application/javascript" src="${url}"></script>`;
-                    }
-                ),
-                ''
-            );
+        preload = Object.entries(externalPackages)
+        .map(([packageName, info]) => {
+            const version   = fs.readJsonSync(path.join(paths.node_modules, packageName, 'package.json')).version;
+            const url       = `${cdn}/${info.alias ?? packageName}/${version}/${isDevelopment ? info.development : info.production}`;
+            return `<script type="application/javascript" src="${url}"></script>`;
+        })
+        .join('\n        ');
     } else {
-        preload = join(
-            map(
-                externalPackages,
-                (info, packageName) => {
-                    const url   =
-                        info.localPath
-                        ?   path.join('/cdn', info.alias ?? packageName, info.localPath, isDevelopment ? info.development : info.production)
-                        :   path.join('/cdn', info.alias ?? packageName, isDevelopment ? info.development : info.production);
-                    return `<script type="application/javascript" src="${url}"></script>`;
-                }
-            ),
-            '\n        '
-        );
+        preload = Object.entries(externalPackages)
+        .map(([packageName, info]) => {
+            const url = info.localPath
+                    ?   path.join('/cdn', info.alias ?? packageName, info.localPath, isDevelopment ? info.development : info.production)
+                    :   path.join('/cdn', info.alias ?? packageName, isDevelopment ? info.development : info.production);
+            return `<script type="application/javascript" src="${url}"></script>`;
+        })
+        .join('\n        ');
     }
 
     const certificate_home  = process.env.CERTIFICATE_HOME ?? '/etc/letsencrypt/live';
@@ -144,9 +129,9 @@ const exit = () => {
 
     app.use(
         (req, _res, next) => {
-            const { protocol, method, url,  } = req;
+            const { protocol, method, url, ip } = req;
 
-            logger.http(`${protocol} ${method} ${url}`);
+            logger.http(`${ip} ${protocol} ${method} ${url}`);
             next();
         }
     );
@@ -167,16 +152,17 @@ const exit = () => {
     )
 
     app.use(
+        '/owa',
         createProxyMiddleware({
-             target:         'http://mail.technobuddha.com',
-             changeOrigin:   true,
-             autoRewrite:    true,
-             logLevel:       'debug',
-             logProvider:    () => logger,
-             router: {
-                 'mail.technobuddha.com':    'http://mail.technobuddha.com',
-                 'mail.hill.software':       'http://mail.technobuddha.com',
-             }
+            target:         'http://mail.technobuddha.com',
+            changeOrigin:   true,
+            autoRewrite:    true,
+            logLevel:       'debug',
+            logProvider:    () => logger,
+            // router: {
+            //     'mail.technobuddha.com':    'http://mail.technobuddha.com',
+            //     'mail.hill.software':       'http://mail.technobuddha.com',
+            // }
         })
     )
 

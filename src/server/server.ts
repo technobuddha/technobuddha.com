@@ -75,7 +75,7 @@ const exit = () => {
     const HTTPS_PORT            = isDevelopment ? 8443 : 443;
     const title                 = (settings?.title)      ?? 'Untitled';
     const favicon               = (settings?.favicon)    ?? '/assets/favicon.ico';
-    
+
     function cacheControl(days = 0) {
         const seconds = days * 24 * 60 * 60;
 
@@ -117,6 +117,21 @@ const exit = () => {
 
     const app               = express();
 
+    app.use(
+        '/owa',
+        createProxyMiddleware({
+            target:         'http://mail.technobuddha.com',
+            changeOrigin:   true,
+            autoRewrite:    true,
+            logLevel:       'debug',
+            logProvider:    () => logger,
+            // router: {
+            //     'mail.technobuddha.com':    'http://mail.technobuddha.com',
+            //     'mail.hill.software':       'http://mail.technobuddha.com',
+            // }
+        })
+    )
+
     app.set('view engine', 'hbs');
     app.set('views',       paths.views);
 
@@ -149,21 +164,6 @@ const exit = () => {
         (_req, res) => {
             res.sendStatus(404);
         }
-    )
-
-    app.use(
-        '/owa',
-        createProxyMiddleware({
-            target:         'http://mail.technobuddha.com',
-            changeOrigin:   true,
-            autoRewrite:    true,
-            logLevel:       'debug',
-            logProvider:    () => logger,
-            // router: {
-            //     'mail.technobuddha.com':    'http://mail.technobuddha.com',
-            //     'mail.hill.software':       'http://mail.technobuddha.com',
-            // }
-        })
     )
 
     if (isDevelopment) {

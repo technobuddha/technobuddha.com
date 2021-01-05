@@ -53,14 +53,14 @@ function report(error: Error, stats: webpack.Stats): void {
     if(stats.compilation.errors.length) {
         out(`${chalk.red('Errors:')}\n`);
         for(const e of stats.compilation.errors) {
-            out(` ${chalk.red('*')} ${e}\n`);
+            out(`${e.message}\n`);
         }
     }
 
     if(stats.compilation.warnings.length) {
         out(`${chalk.yellow('Warnings:')}\n`);
         for(const w of stats.compilation.warnings) {
-            out(` ${chalk.yellow('*')} ${w}\n`);
+            out(`${w.message}\n`);
         }
     }
 

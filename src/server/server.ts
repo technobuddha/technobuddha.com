@@ -115,6 +115,8 @@ const exit = () => {
     const key_authority     = fs.existsSync(file_authority) ? fs.readFileSync(file_authority, 'utf8') : null;
     const credentials       = key_private && key_public && key_authority ? { key: key_private, cert: key_public, ca: key_authority } : null;
 
+    logger.verbose(`Server booting... ${chalk.green(isDevelopment ? 'DEVELOPMENT' : 'PRODUCTION')}`);
+    
     const app               = express();
 
     app.use(
@@ -154,8 +156,6 @@ const exit = () => {
     app.use(express.json({reviver}));
     app.use(express.urlencoded({extended: true}));
     app.set('json replacer', replacer);
-
-    logger.verbose(`Server booting... ${chalk.green(isDevelopment ? 'DEVELOPMENT' : 'PRODUCTION')}`);
 
     app.use(
         (req, _res, next) => {

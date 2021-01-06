@@ -2,7 +2,7 @@ data
 node_modules
 deploy
 
-*.pcss.d.ts
+#*.pcss.d.ts
 *.log
 
 *.code-workspace

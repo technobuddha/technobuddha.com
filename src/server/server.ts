@@ -28,6 +28,8 @@ import TranslationWorker            from './TranslationWorker';
 
 import packageJson                  from '~package.json';
 
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
 const exit = () => {
     pgp.end();
     process.exit(0);
@@ -49,7 +51,7 @@ const exit = () => {
             case 'info':    colored = chalk.cyan(level);    break;
             case 'http':    colored = chalk.blue(level);    break;
             case 'verbose': colored = chalk.green(level);   break;
-            case 'debug': 
+            case 'debug':   colored = chalk.magenta(level); break;
             case 'silly':
             default:        colored = level;                break;
         }
@@ -58,7 +60,7 @@ const exit = () => {
     }
 
     const logger = winston.createLogger({
-        level:          'verbose',
+        level:          isDevelopment ? 'silly' : 'verbose',
         format:         winston.format.combine(
                             winston.format.timestamp(),
                             winston.format.printf(info => `${info.timestamp} ${logLevel(info.level)} ${info.message}`),
@@ -69,8 +71,6 @@ const exit = () => {
         ],
     });
 
-
-    const isDevelopment         = process.env.NODE_ENV !== 'production';
     const HTTP_PORT             = isDevelopment ? 8080 : 80;
     const HTTPS_PORT            = isDevelopment ? 8443 : 443;
     const title                 = (settings?.title)      ?? 'Untitled';
@@ -120,48 +120,10 @@ const exit = () => {
     const app               = express();
 
     app.use(
-        [
-            '/Autodiscover',//
-            '/ecp',//
-            '/EWS',//
-            '/Exchange',
-            //'/Exchweb',
-            '/mapi',//
-            '/Microsoft-Server-ActiveSync',//
-            '/OAB',//
-            '/owa',//
-            '/PowerShell',//
-            //'/Public',
-            //'/PushNotifications',
-            '/Rpc',//
-            '/RpcWithCert'
-        ],
-        createProxyMiddleware({
-            target:         'http://mail.technobuddha.com',
-            changeOrigin:   true,
-            autoRewrite:    true,
-            logLevel:       'debug',
-            logProvider:    () => logger,
-            // router: {
-            //     'mail.technobuddha.com':    'http://mail.technobuddha.com',
-            //     'mail.hill.software':       'http://mail.technobuddha.com',
-            // }
-        })
-    )
-
-    app.set('view engine', 'hbs');
-    app.set('views',       paths.views);
-
-    app.use(cookieParser());
-    app.use(express.json({reviver}));
-    app.use(express.urlencoded({extended: true}));
-    app.set('json replacer', replacer);
-
-    app.use(
         (req, _res, next) => {
             const { protocol, method, url, ip } = req;
 
-            logger.http(`${ip.padEnd(45)} ${protocol} ${method} ${url}`);
+            logger.http(`${protocol} ${method} ${url} [${chalk.cyan(ip)}]`);
             next();
         }
     );
@@ -181,15 +143,63 @@ const exit = () => {
         }
     )
 
+    app.use(
+        [
+            '/Autodiscover',
+            '/ecp',
+            '/EWS',
+            '/Exchange',
+            '/Exchweb',
+            '/mapi',
+            '/Microsoft-Server-ActiveSync',
+            '/OAB',
+            '/owa',
+            '/PowerShell',
+            '/Public',
+            '/PushNotifications',
+            '/Rpc',
+            '/RpcWithCert'
+        ],
+        createProxyMiddleware({
+            target:         'http://mail.technobuddha.com',
+            changeOrigin:   true,
+            autoRewrite:    true,
+            logLevel:       'debug',
+            logProvider:    () => logger,
+        })
+    )
+
+    app.set('view engine', 'hbs');
+    app.set('views',       paths.views);
+
+    app.use(cookieParser());
+    app.use(express.json({reviver}));
+    app.use(express.urlencoded({extended: true}));
+    app.set('json replacer', replacer);
+
     if (isDevelopment) {
         const clientWebpackConfig   = genClientWebpackConfig(isDevelopment, logger);
         const compiler              = webpack(clientWebpackConfig);
+
+        // The type definition for compiler.hooks is missing the infrastructureLog property
+        (compiler.hooks as any).infrastructureLog.tap(
+            'server',
+            (name: string, type: string, args: string[]) => {
+                if(type === 'error' || type === 'warn' || type === 'info' || type === 'debug') {
+                    for(const arg of args) {
+                        logger[type](`[${chalk.yellow(name)}] ${arg}`);
+                    }
+                    return false;
+                }
+                return true;
+            }
+        );
 
         app.use(
             devMiddleware(
                 compiler,
                 {
-                    publicPath:     clientWebpackConfig.output?.publicPath ?? '/dist',
+                    publicPath: clientWebpackConfig.output?.publicPath ?? '/dist',
                 }
             )
         );
@@ -198,8 +208,7 @@ const exit = () => {
             hotMiddleware(
                 compiler,
                 {
-                    log:    console.log
-                }
+                    log: logger.debug                }
             )
         );
     }
@@ -248,7 +257,6 @@ const exit = () => {
 
     if(isDevelopment && process.env.GCLOUD_PROJECT && process.env.GOOGLE_APPLICATION_CREDENTIALS) {
         const translationWorker     = new TranslationWorker(logger);
-        logger.verbose(`Translation worker... ${chalk.green('RUNNING')}`);
 
         app.post(
             '/locales/*',
@@ -293,15 +301,14 @@ const exit = () => {
                 res.end()
             }
         )
-        .listen(HTTP_PORT, () => logger.verbose(`HTTP Redirector listening on port ${HTTP_PORT}`));
+        .listen(HTTP_PORT, () => logger.info(`HTTP Redirector listening on port ${HTTP_PORT}`));
 
         https.createServer(credentials, app)
-        .listen(HTTPS_PORT, () => logger.verbose(`HTTPS Server listening on port ${HTTPS_PORT}`));
+        .listen(HTTPS_PORT, () => logger.info(`HTTPS Server listening on port ${HTTPS_PORT}`));
     } else {
         app.listen(
             HTTP_PORT,
-            () => logger.verbose(`HTTP Server listening on port ${HTTP_PORT}`)
+            () => logger.info(`HTTP Server listening on port ${HTTP_PORT}`)
         );
     }
-
 })();

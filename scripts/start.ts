@@ -80,7 +80,7 @@ function header() {
     const logo = [
         chalk.hex('#d0f2fa')('▄██▄'),
         chalk.hex('#a3e1f6')('▄██████▄'),
-        chalk.hex('#70c0e4')('▄██████████▄'),
+        chalk.hex('#70c0e4')('▄████☯ ████▄'),
         chalk.hex('#4b98ca')('▄██████████████▄'),
         chalk.hex('#1b5ca8')('▄██████████████████▄'),
         chalk.hex('#135490')('▄██████████████████████▄'),

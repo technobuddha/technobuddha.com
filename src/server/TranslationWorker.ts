@@ -20,6 +20,8 @@ export class TranslationWorker
     {
         this.logger = logger;
 
+        logger.info(`Translation worker running.`);
+
         process
         .once('SIGINT',     () => { this.exit(); process.exit(1); })
         .once('SIGTERM',    () => { this.exit(); process.exit(1); });

@@ -1,6 +1,6 @@
 import color from '@technobuddha/library/color';
 
-type RGBV = { r: number, g: number; b: number };
+export type RGBV = { r: number, g: number; b: number };
 
 
 function lerp(color1: number, color2: number, t: number): number {

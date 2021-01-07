@@ -94,7 +94,7 @@ webpack(
                 delete pj.bugs;
                 delete pj.homepage;
 
-                pj.scripts = { start: "NODE_ENV=production nodemon --watch /etc/letsencrypt/live/technobuddha --ext pem bin/server.js" };
+                pj.scripts = { start: "NODE_ENV=production nodemon --watch /etc/letsencrypt/live/technobuddha --watch bin --ext pem,js bin/server.js" };
                 pj.dependencies = Object.fromEntries(
                     Object.entries(pj.dependencies!)
                     .filter(([k]) => dependenciesWhiteList.includes(k))

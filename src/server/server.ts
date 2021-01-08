@@ -28,6 +28,8 @@ import TranslationWorker            from './TranslationWorker';
 
 import packageJson                  from '~package.json';
 
+import type { Response, Request } from 'express';
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const exit = () => {
@@ -116,6 +118,12 @@ const exit = () => {
     const credentials       = key_private && key_public && key_authority ? { key: key_private, cert: key_public, ca: key_authority } : null;
 
     logger.verbose(`Server booting... ${chalk.green(isDevelopment ? 'DEVELOPMENT' : 'PRODUCTION')}`);
+
+    function status404(req: Request, res: Response) {
+        const { originalUrl, url, } = req;
+        res.statusMessage = 'NOT FOUND';
+        res.status(404).render('error/404.hbs', { favicon, url: originalUrl ?? url });
+    }
     
     const app               = express();
 
@@ -143,12 +151,24 @@ const exit = () => {
                 autoRewrite:    true,
                 logLevel:       'debug',
                 logProvider:    () => logger,
-            }),
-            (req, _res) => {
-                const { protocol, method, url, ip } = req;
-    
-                logger.http(`${chalk.yellow('proxy')} ${protocol} ${method} ${url} [${chalk.cyan(ip)}]`);
-            }
+                // onProxyReq:     (proxyReq, req, _res) => {
+                //     const { host, protocol: protocolProxy } = proxyReq;
+                //     const { protocol, method, url, ip } = req;
+                //     logger.http(`${protocol}:${method} ${chalk.yellow('==>')} ${protocolProxy}${host} ${url} [${chalk.cyan(ip)}]`);
+                // },
+                onProxyRes:     (proxyRes, req, _res) => {
+                    {
+                        const { statusCode, statusMessage } = proxyRes;
+                        const { protocol, method, url, ip } = req;
+                        logger.http(`${protocol}:${method.padEnd(10)} ${statusCode} ${statusMessage} ${url} [${chalk.cyan(ip)}]`) 
+                    }
+                },
+                onError:        (err, req, _res) => {
+                    const { protocol, method, url, ip } = req;
+                    logger.http(`${protocol}:${method.padEnd(10)} ${url} [${chalk.cyan(ip)}]`);
+                    logger.error(err.message);
+                }
+            })
         );
     }
 
@@ -161,10 +181,20 @@ const exit = () => {
     app.set('json replacer', replacer);
 
     app.use(
-        (req, _res, next) => {
-            const { protocol, method, url, ip } = req;
+        (req, res, next) => {
+            const start = Date.now();
 
-            logger.http(`${protocol} ${method} ${url} [${chalk.cyan(ip)}]`);
+            const end   = res.end;
+            res.end = function(...args: any[]) {
+                const { protocol, method, originalUrl, url, ip } = req;
+                const { statusCode, statusMessage } = res;
+                const duration = Date.now() - start;
+                logger.http(`${protocol}:${method} ${statusCode} ${statusMessage ? `${statusMessage} ` : ``}${chalk.green(`${duration}ms`)} ${originalUrl ?? url} [${chalk.cyan(ip)}]`);
+
+                res.end = end;
+                res.end(...args);
+            }
+
             next();
         }
     );
@@ -179,9 +209,7 @@ const exit = () => {
     app.use(
         '/.well-known/',
         express.static(path.join(paths.webroot, '.well-known')),
-        (_req, res) => {
-            res.sendStatus(404);
-        }
+        status404
     )
 
     if (isDevelopment) {
@@ -226,25 +254,19 @@ const exit = () => {
     app.use(
         '/assets/',
         express.static(paths.assets),
-        (_req, res) => {
-            res.sendStatus(404);
-        }
+        status404
     );
 
     app.get(
         '/favicon.ico',
         express.static(paths.assets),
-        (_req, res) => {
-            res.sendStatus(404);
-        }      
+        status404
     )
 
     app.get(
-        '/dist/*',
-        express.static(path.join(paths.dist, '..')),
-        (_req, res) => {
-            res.sendStatus(404);
-        }
+        '/dist',
+        express.static(paths.dist),
+        status404
     );
 
     app.get(
@@ -258,9 +280,7 @@ const exit = () => {
     app.get(
         '/locales/*',
         express.static(paths.home),
-        (_req, res) => {
-            res.sendStatus(404);
-        }
+        status404
     );
 
     if(isDevelopment && process.env.GCLOUD_PROJECT && process.env.GOOGLE_APPLICATION_CREDENTIALS) {
@@ -285,11 +305,11 @@ const exit = () => {
 
             const userAgent = req.headers['user-agent'];
             if(userAgent && !matchesUA(userAgent, { browsers: packageJson.browserslist, allowHigherVersions: true})) {
-                if(req.cookies['peril'] !== 'accepted') {
-                    logger.warn(`user-agent not supported: "${userAgent}"`);
-                    res.render('abandon-hope.hbs', { favicon, years: new Date().getFullYear() - 1314 });
-                    return;
-                }
+                // if(req.cookies['peril'] !== 'accepted') {
+                //     logger.warn(`user-agent not supported: "${userAgent}"`);
+                //     res.render('abandon-hope.hbs', { favicon, years: new Date().getFullYear() - 1314 });
+                //     return;
+                // }
             }
 
             res.render('index.hbs', { title, preload, favicon });
@@ -297,9 +317,7 @@ const exit = () => {
     );
 
     app.use(
-        (_req, res) => {
-            res.status(404).render('error/404.hbs');
-        }
+        status404
     );
 
     if(credentials) {

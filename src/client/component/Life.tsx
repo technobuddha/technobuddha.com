@@ -7,7 +7,7 @@ import { space }            from '@technobuddha/library/constants';
 import { Size }             from 'mui-size';
 
 const MOVES = [[1,1], [1,0], [1,-1], [0,-1], [-1,-1], [-1,0], [-1,1], [0,1]];
-const SIZE  = 8;
+const SIZE  = 4;
 const START = 
 //  **
 // **

@@ -119,6 +119,42 @@ const exit = () => {
     
     const app               = express();
 
+    if(!isDevelopment) {
+        app.use(
+            [
+                '/Autodiscover',
+                '/ecp',
+                '/EWS',
+                '/Exchange',
+                '/Exchweb',
+                '/mapi',
+                '/Microsoft-Server-ActiveSync',
+                '/OAB',
+                '/owa',
+                '/PowerShell',
+                '/Public',
+                '/PushNotifications',
+                '/Rpc',
+                '/RpcWithCert'
+            ],
+            createProxyMiddleware({
+                target:         'http://mail.technobuddha.com',
+                changeOrigin:   true,
+                autoRewrite:    true,
+                logLevel:       'debug',
+                logProvider:    () => logger,
+            })
+        );
+    }
+
+    app.set('view engine', 'hbs');
+    app.set('views',       paths.views);
+
+    app.use(cookieParser());
+    app.use(express.json({reviver}));
+    app.use(express.urlencoded({extended: true}));
+    app.set('json replacer', replacer);
+
     app.use(
         (req, _res, next) => {
             const { protocol, method, url, ip } = req;
@@ -142,40 +178,6 @@ const exit = () => {
             res.sendStatus(404);
         }
     )
-
-    app.use(
-        [
-            '/Autodiscover',
-            '/ecp',
-            '/EWS',
-            '/Exchange',
-            '/Exchweb',
-            '/mapi',
-            '/Microsoft-Server-ActiveSync',
-            '/OAB',
-            '/owa',
-            '/PowerShell',
-            '/Public',
-            '/PushNotifications',
-            '/Rpc',
-            '/RpcWithCert'
-        ],
-        createProxyMiddleware({
-            target:         'http://mail.technobuddha.com',
-            changeOrigin:   true,
-            autoRewrite:    true,
-            logLevel:       'debug',
-            logProvider:    () => logger,
-        })
-    )
-
-    app.set('view engine', 'hbs');
-    app.set('views',       paths.views);
-
-    app.use(cookieParser());
-    app.use(express.json({reviver}));
-    app.use(express.urlencoded({extended: true}));
-    app.set('json replacer', replacer);
 
     if (isDevelopment) {
         const clientWebpackConfig   = genClientWebpackConfig(isDevelopment, logger);
@@ -208,7 +210,8 @@ const exit = () => {
             hotMiddleware(
                 compiler,
                 {
-                    log: logger.debug                }
+                    log: (message: string) => logger.debug(`[${chalk.yellow('webpack-hot-middleware')}] ${message}`)
+                }
             )
         );
     }

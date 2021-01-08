@@ -143,7 +143,12 @@ const exit = () => {
                 autoRewrite:    true,
                 logLevel:       'debug',
                 logProvider:    () => logger,
-            })
+            }),
+            (req, _res) => {
+                const { protocol, method, url, ip } = req;
+    
+                logger.http(`${chalk.yellow('proxy')} ${protocol} ${method} ${url} [${chalk.cyan(ip)}]`);
+            }
         );
     }
 

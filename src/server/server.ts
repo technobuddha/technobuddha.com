@@ -5,7 +5,7 @@ import path                         from 'path';
 import http                         from 'http';
 import https                        from 'https';
 import express                      from 'express';
-import createProxyMiddleware        from 'http-proxy-middleware';
+import { createProxyMiddleware }    from 'http-proxy-middleware';
 import chalk                        from 'chalk';
 import cookieParser                 from 'cookie-parser';
 import webpack                      from 'webpack';

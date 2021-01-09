@@ -208,7 +208,7 @@ import type { IncomingMessage } from 'http';
         '/.well-known/',
         express.static(path.join(paths.webroot, '.well-known')),
         status404
-    )
+    );
 
     if (isDevelopment) {
         const clientWebpackConfig   = genClientWebpackConfig(isDevelopment, logger);
@@ -243,7 +243,7 @@ import type { IncomingMessage } from 'http';
                     log: (message: string) => logger.debug(`[${chalk.yellow('webpack-hot-middleware')}] ${message}`)
                 }
             )
-        )
+        );
 
         if(process.env.GCLOUD_PROJECT && process.env.GOOGLE_APPLICATION_CREDENTIALS) {
             const translationWorker     = new TranslationWorker(logger);

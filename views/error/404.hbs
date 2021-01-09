@@ -21,6 +21,7 @@
                 width: 100%;
                 height: 100%;
                 position: relative;
+                padding: 12px;
             }
 
             div.main:after {
@@ -32,19 +33,37 @@
             }
 
             img {
-                margin: 10px;
                 float: left;
                 position: relative;
+            }
+
+            div.title {
+                font-size: 150%;
+                padding-top: 72px;
+            }
+
+            div.message {
+                font-size: 125%;
+                margin-bottom: 18px;
+                clear: left;
+                max-width: 1024px;
+                text-align: center;
+            }
+
+            div.nav {
+                font-size: 75%;
+                margin-bottom: 18px;
+                max-width: 1024px;
+                text-align: center;
             }
         </style>
     </head>
     <body>
         <div class="main">
             <img src="/assets/logo.png" />
-            <div style="font-size: 150%; padding-top: 72px;">Page Not Found</div>
-            <div style="font-size: 125%; margin-bottom: 18px; clear: left; max-width: 1024px;">You will have to seek for what you desire elsewhere, for it does not exist here.</div>
-            <div style="font-size: 75%;  margin-bottom: 18px; max-width: 1024px;">You can always try the <a href="/home">Home Page</a>.</div>
-            <div style="border-top: 1px solid black; font-size: 50%">Page requested: "{{url}}"</div>
+            <div class="title">Page Not Found</div>
+            <div class="message">You will have to seek for what you desire elsewhere, for it does not exist here.</div>
+            <div class="nav">You can always try the <a href="/home">Home Page</a>.</div>
         </div>
     </body>
 </html>

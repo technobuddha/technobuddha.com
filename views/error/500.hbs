@@ -3,23 +3,73 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link href="/assets/favicon.png" rel="icon" type="image/x-icon" />
-        <title>Internal Server Error (500)</title>
+        <link href="{{favicon}}" rel="icon" type="image/x-icon" />
+        <title>Internal Serve Error (404)</title>
         <style type="text/css">
-            .error-page {
+            body, html {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                border: none;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 42px;
+                font-weight: bold;
+            }
+
+            div.main {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                padding: 12px;
+            }
+
+            div.main:after {
+                content: '500';
+                color: white;
+                position: absolute;
+                top: 180px;
+                left: 190px;
+            }
+
+            img {
+                float: left;
+                position: relative;
+            }
+
+            div.title {
+                font-size: 150%;
+                padding-top: 72px;
+            }
+
+            div.message {
+                font-size: 125%;
+                margin-bottom: 18px;
+                clear: left;
+                max-width: 1024px;
                 text-align: center;
-                padding: 50px 0;
-                border-bottom: 1px solid #000;
-                line-height: 80px;
+            }
+
+            div.nav {
+                font-size: 75%;
+                margin-bottom: 18px;
+                max-width: 1024px;
+                text-align: center;
+            }
+
+            div.summary {
+                margin-top: 120px;
+                border-top: 1px solid black;
+                font-size: 50%;
             }
         </style>
     </head>
     <body>
-        <article class="error-page">
-            <img src="/assets/error/500.png" alt="404" />
-            <h2>
-                The API has crashed
-            </h2>
-        </article>
+        <div class="main">
+            <img src="/assets/logo.png" />
+            <div class="title">Internal Server Error</div>
+            <div class="message">You must learn not to rely upon others, for they are sure to fail you when you have need of their aid.</div>
+            <div class="nav">You can always try the <a href="/home">Home Page</a>.</div>
+         </div>
     </body>
 </html>

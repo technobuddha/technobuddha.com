@@ -18,6 +18,7 @@ import { matchesUA }                from 'browserslist-useragent';
 import paths                        from '#config/paths';
 import settings                     from '#settings/browser';
 import externalPackages             from '#config/external-packages';
+import splitLines                   from '@technobuddha/library/splitLines';
 import { replacer, reviver }        from '@technobuddha/library/json';
 import { space }                    from '@technobuddha/library/constants';
 import { pgp }                      from '#db/driver';
@@ -28,22 +29,12 @@ import TranslationWorker            from './TranslationWorker';
 
 import packageJson                  from '~package.json';
 
-import type { Response, Request } from 'express';
-
-const isDevelopment = process.env.NODE_ENV !== 'production';
-
-const exit = () => {
-    pgp.end();
-    process.exit(0);
-}
-
-[ 'SIGINT', 'SIGTERM', 'SIGHUP', 'SIGQUIT', 'exit', 'uncaughtException' ].forEach(
-    sig => process.on(sig, exit)
-);
+import type { Response, Request, NextFunction } from 'express';
+import type { IncomingMessage } from 'http';
 
 (async function main(){
-    chalk.level = 3;
-    
+    const isDevelopment = process.env.NODE_ENV !== 'production';
+
     const logLevel = (level: string) => {
         let colored: string;
 
@@ -72,6 +63,22 @@ const exit = () => {
             new winston.transports.File({ filename: '/var/log/technobuddha/server.log' }),
         ],
     });
+
+    const exit = () => {
+        pgp.end();
+        process.exit(0);
+    }
+    process.on('exit', exit);
+
+    [ 'SIGINT', 'SIGTERM', 'SIGHUP', 'SIGQUIT', 'uncaughtException' ].forEach(
+        sig => process.on(
+            sig,
+            () => {
+                logger.error(sig);
+                exit()
+            }
+        )
+    );
 
     const HTTP_PORT             = isDevelopment ? 8080 : 80;
     const HTTPS_PORT            = isDevelopment ? 8443 : 443;
@@ -119,15 +126,20 @@ const exit = () => {
 
     logger.verbose(`Server booting... ${chalk.green(isDevelopment ? 'DEVELOPMENT' : 'PRODUCTION')}`);
 
-    function status404(req: Request, res: Response) {
-        const { originalUrl, url, } = req;
+    function status404(_req: Request, res: Response) {
         res.statusMessage = 'NOT FOUND';
-        res.status(404).render('error/404.hbs', { favicon, url: originalUrl ?? url });
+        res.status(404).render('error/404.hbs', { favicon });
     }
     
-    const app               = express();
+    const app = express();
 
     if(!isDevelopment) {
+        const logProxy = (req: Request, res: Response | IncomingMessage) => {
+            const { statusCode, statusMessage } = res;
+            const { protocol, method, url, ip } = req;
+            logger.http(`${protocol}:${method} ${statusCode} ${statusMessage} ${url} [${chalk.cyan(ip)}]`) 
+        }
+
         app.use(
             [
                 '/Autodiscover',
@@ -151,36 +163,23 @@ const exit = () => {
                 autoRewrite:    true,
                 logLevel:       'debug',
                 logProvider:    () => logger,
-                // onProxyReq:     (proxyReq, req, _res) => {
-                //     const { host, protocol: protocolProxy } = proxyReq;
-                //     const { protocol, method, url, ip } = req;
-                //     logger.http(`${protocol}:${method} ${chalk.yellow('==>')} ${protocolProxy}${host} ${url} [${chalk.cyan(ip)}]`);
-                // },
-                onProxyRes:     (proxyRes, req, _res) => {
-                    {
-                        const { statusCode, statusMessage } = proxyRes;
-                        const { protocol, method, url, ip } = req;
-                        logger.http(`${protocol}:${method.padEnd(10)} ${statusCode} ${statusMessage} ${url} [${chalk.cyan(ip)}]`) 
-                    }
-                },
-                onError:        (err, req, _res) => {
-                    const { protocol, method, url, ip } = req;
-                    logger.http(`${protocol}:${method.padEnd(10)} ${url} [${chalk.cyan(ip)}]`);
+                onProxyRes:     (proxyRes, req, _res) => logProxy(req, proxyRes),
+                onError:        (err, req, res) => {
+                    logProxy(req, res);
                     logger.error(err.message);
                 }
             })
         );
     }
 
-    app.set('view engine', 'hbs');
-    app.set('views',       paths.views);
-
-    app.use(cookieParser());
-    app.use(express.json({reviver}));
-    app.use(express.urlencoded({extended: true}));
-    app.set('json replacer', replacer);
-
-    app.use(
+    app
+    .set('view engine', 'hbs')
+    .set('views',       paths.views)
+    .use(cookieParser())
+    .use(express.json({reviver}))
+    .use(express.urlencoded({extended: true}))
+    .set('json replacer', replacer)
+    .use(
         (req, res, next) => {
             const start = Date.now();
 
@@ -197,16 +196,15 @@ const exit = () => {
 
             next();
         }
-    );
-
-    app.get(
+    )
+    .get(
         '/oeoaa',
         (_req, res) => {
-            res.send('Ting Tang Walla Walla Bing Bang\n')
+            throw new Error('Ting Tang Walla Walla Bing Bang');
+            res.send('Ting Tang Walla Walla Bing Bang\n');
         }
     )
-
-    app.use(
+    .use(
         '/.well-known/',
         express.static(path.join(paths.webroot, '.well-known')),
         status404
@@ -237,67 +235,61 @@ const exit = () => {
                     publicPath: clientWebpackConfig.output?.publicPath ?? '/dist',
                 }
             )
-        );
-
-        app.use(
+        )
+        .use(
             hotMiddleware(
                 compiler,
                 {
                     log: (message: string) => logger.debug(`[${chalk.yellow('webpack-hot-middleware')}] ${message}`)
                 }
             )
-        );
+        )
+
+        if(process.env.GCLOUD_PROJECT && process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+            const translationWorker     = new TranslationWorker(logger);
+
+            app.post(
+                '/locales/*',
+                (req, res) => {
+                    const [,,, nsfile] = req.url.split('/');
+                    const [ns]         = nsfile.split('.');
+                    translationWorker.enqueue(ns, req.body);
+                    res.end();
+                }
+            );
+        }
     }
 
-    app.use('/api', api);
-
-    app.use(
+    app
+    .use('/api', api)
+    .use(
         '/assets/',
         express.static(paths.assets),
         status404
-    );
-
-    app.get(
+    )
+    .get(
         '/favicon.ico',
         express.static(paths.assets),
         status404
     )
-
-    app.get(
+    .get(
         '/dist',
         express.static(paths.dist),
         status404
-    );
-
-    app.get(
+    )
+    .get(
         '/cdn/*',
         (req, res) => {
             const name = req.url.substr(5);         // 5 is the length of '/cdn/'
             res.sendFile(path.join(paths.node_modules, name));
         }
-    );
-
-    app.get(
+    )
+    .get(
         '/locales/*',
         express.static(paths.home),
         status404
-    );
-
-    if(isDevelopment && process.env.GCLOUD_PROJECT && process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-        const translationWorker     = new TranslationWorker(logger);
-
-        app.post(
-            '/locales/*',
-            (req, res) => {
-                const [,,, nsfile] = req.url.split('/');
-                const [ns]         = nsfile.split('.');
-                translationWorker.enqueue(ns, req.body);
-                res.end();
-            }
-        );
-    }
-
-    app.get(
+    )
+    .get(
         '/*',
         (req, res) => {
             res.setHeader('Content-Type',   mime.getType('index.html') ?? 'text/html');
@@ -314,16 +306,26 @@ const exit = () => {
 
             res.render('index.hbs', { title, preload, favicon });
         }
-    );
+    )
+    .use(status404)
+    .use(
+        (err: Error, _req: Request, res: Response, _next: NextFunction) => {
+            logger.error(`Error: ${err.message}`);
+            if(err.stack) {
+                for(const stack of splitLines(err.stack).slice(1)) {
+                    logger.debug(stack);
+                }
+            }
 
-    app.use(
-        status404
+            res.status(500).render('error/500.hbs', { favicon });
+        }
     );
 
     if(credentials) {
         http.createServer(
             (req, res) => {
-                res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+                const host = req.headers.host?.split(':')[0];
+                res.writeHead(301, { Location: `https://${host}${HTTPS_PORT === 443 ? '' : `:${HTTPS_PORT}`}${req.url}` });
                 res.end()
             }
         )
@@ -332,6 +334,15 @@ const exit = () => {
         https.createServer(credentials, app)
         .listen(HTTPS_PORT, () => logger.info(`HTTPS Server listening on port ${HTTPS_PORT}`));
     } else {
+        http.createServer(
+            (req, res) => {
+                const host = req.headers.host?.split(':')[0];
+                res.writeHead(301, { Location: `http://${host}${HTTP_PORT === 80 ? '' : `:${HTTP_PORT}`}${req.url}` });
+                res.end()
+            }
+        )
+        .listen(HTTPS_PORT, () => logger.info(`HTTPS Redirector listening on port ${HTTPS_PORT}`));
+        
         app.listen(
             HTTP_PORT,
             () => logger.info(`HTTP Server listening on port ${HTTP_PORT}`)

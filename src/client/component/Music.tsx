@@ -29,19 +29,19 @@ export const Music: React.FC = () => {
                 rowHeight={32}
                 selection={true}
                 columns={[
-                    {name: 'Artist',        type: 'array',  sortBy: ['Artist', 'Album', 'PartOfSet', 'TrackNumber']},
-                    {name: 'Album',         type: 'string', sortBy: ['Album', 'PartOfSet', 'TrackNumber']},
-                    {name: 'PartOfSet',     type: 'string', width: 32, header: '#'},
-                    {name: 'TrackNumber',   type: 'number', width: 32, header: '#'},
-                    {name: 'Title',         type: 'string'},
-                    {name: 'Genre',         type: 'array'},
+                    {name: 'artist',        type: 'array',  sortBy: ['artist', 'album', 'partofset', 'tracknumber']},
+                    {name: 'album',         type: 'string', sortBy: ['album', 'partofset', 'tracknumber']},
+                    {name: 'partofset',     type: 'string', width: 32, header: '#'},
+                    {name: 'tracknumber',   type: 'number', width: 32, header: '#'},
+                    {name: 'title',         type: 'string'},
+                    {name: 'genre',         type: 'array'},
                 ]}
                 filters={[
-                    {type: 'transfer',      name: 'Artist', Icon: Group},
-                    {type: 'checkbox-list', name: 'Album',  Icon: Album},
-                    {type: 'checkbox-list', name: 'Genre',  Icon: MusicNote},
+                    {type: 'transfer',      name: 'artist', Icon: Group},
+                    {type: 'checkbox-list', name: 'album',  Icon: Album},
+                    {type: 'checkbox-list', name: 'genre',  Icon: MusicNote},
                 ]}
-                defaultSort="Artist"
+                defaultSort="artist"
                 useLocation={true}
             />
         );

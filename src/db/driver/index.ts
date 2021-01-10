@@ -2,7 +2,7 @@ import process   from 'process';
 import pgPromise from 'pg-promise';
 
 export const pgp = pgPromise({
-    capSQL:             true,   
+    capSQL:     true,   
 });
 
 export const db = pgp({

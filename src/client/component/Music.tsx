@@ -29,10 +29,10 @@ export const Music: React.FC = () => {
                 rowHeight={32}
                 selection={true}
                 columns={[
-                    {name: 'artist',        type: 'array',  sortBy: ['artist', 'album', 'partofset', 'tracknumber']},
-                    {name: 'album',         type: 'string', sortBy: ['album', 'partofset', 'tracknumber']},
-                    {name: 'partofset',     type: 'string', width: 32, header: '#'},
-                    {name: 'tracknumber',   type: 'number', width: 32, header: '#'},
+                    {name: 'artist',        type: 'array',  sortBy: ['artist', 'album', 'discNumber', 'trackNumber']},
+                    {name: 'album',         type: 'string', sortBy: ['album', 'discNumber', 'trackNumber']},
+                    {name: 'discNumber',    type: 'number', width: 32, header: '#'},
+                    {name: 'trackNumber',   type: 'number', width: 32, header: '#'},
                     {name: 'title',         type: 'string'},
                     {name: 'genre',         type: 'array'},
                 ]}

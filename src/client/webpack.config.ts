@@ -9,7 +9,7 @@ import externalPackages      from '#config/external-packages';
 import paths                 from '#config/paths';
 import { CMTDWebpackPlugin } from 'css-module-type-definitions';
 import type { Logger }       from 'css-module-type-definitions';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+//import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const extensions    = [ '.ts', '.tsx', '.js', '.json', '.css', '.pcss' ];
 
@@ -133,7 +133,7 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
             }),
             (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: paths.src, globPattern: '**/*.pcss', camelCase: true, logger }) : null),
             (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                                    : null),
-            (isDevelopment ? new BundleAnalyzerPlugin()                                                                                  : null),
+            //(isDevelopment ? new BundleAnalyzerPlugin()                                                                                  : null),
         ]),
     }
 }

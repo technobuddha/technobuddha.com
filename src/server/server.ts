@@ -273,8 +273,8 @@ import type { IncomingMessage } from 'http';
         status404
     )
     .get(
-        '/dist',
-        express.static(paths.dist),
+        '/dist/*',
+        express.static(paths.home),
         status404
     )
     .get(

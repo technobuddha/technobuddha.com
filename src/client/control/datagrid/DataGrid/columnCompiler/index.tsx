@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     checkbox: {
         color: theme.palette.primary.contrastText,
     }
-}))
+}));
 
 function Header<T = unknown>({data}: ColumnHeaderProps<T>) {
     const css = useStyles();
@@ -39,22 +39,21 @@ export function columnCompiler<T = unknown>(
 ): Column<T>[] {
     const cols = columns
     ?   columns.map(column => {
-            if(isString(column)) {
+            if(isString(column))
                 return createDefaultColumn(column);
-            } else {
-                const columnName    = column.name.toString();
-                const shape         = getShape();
-                const type          = getColumnType(columnName);
 
-                return {
-                    name:    columnName,
-                    width:   column.width ?? '*',
-                    header:  headerFactory(column, type, shape),
-                    render:  rendererFactory(column, type, shape),
-                    sortBy:  column.sortBy === null ? null : (column.sortBy ?? [column.name]),
-                    collate: collatorFactory(column, type, shape),
-                } as Column<T>
-            }
+            const columnName    = column.name.toString();
+            const shape         = getShape();
+            const type          = getColumnType(columnName);
+
+            return {
+                name:    columnName,
+                width:   column.width ?? '*',
+                header:  headerFactory(column, type, shape),
+                render:  rendererFactory(column, type, shape),
+                sortBy:  column.sortBy === null ? null : (column.sortBy ?? [column.name]),
+                collate: collatorFactory(column, type, shape),
+            } as Column<T>
         })
     :   getKeys().map(key => createDefaultColumn(key));
 
@@ -70,4 +69,7 @@ export function columnCompiler<T = unknown>(
     return cols;
 }
 
+export { collatorFactory } from './collatorFactory';
+export { headerFactory   } from './headerFactory';
+export { rendererFactory } from './rendererFactory';
 export default columnCompiler;

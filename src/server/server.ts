@@ -1,32 +1,30 @@
 import '#config/env';
-import process                      from 'process';
-import fs                           from 'fs-extra';
-import path                         from 'path';
-import http                         from 'http';
-import https                        from 'https';
-import express                      from 'express';
-import { createProxyMiddleware }    from 'http-proxy-middleware';
+import { space }                    from '@technobuddha/library/constants';
+import { replacer, reviver }        from '@technobuddha/library/json';
+import splitLines                   from '@technobuddha/library/splitLines';
+import { matchesUA }                from 'browserslist-useragent';
 import chalk                        from 'chalk';
 import cookieParser                 from 'cookie-parser';
+import express                      from 'express';
+import fs                           from 'fs-extra';
+import hbs                          from 'hbs';
+import http                         from 'http';
+import { createProxyMiddleware }    from 'http-proxy-middleware';
+import https                        from 'https';
+import mime                         from 'mime';
+import path                         from 'path';
+import process                      from 'process';
 import webpack                      from 'webpack';
 import devMiddleware                from 'webpack-dev-middleware';
 import hotMiddleware                from 'webpack-hot-middleware';
-import mime                         from 'mime';
 import winston                      from 'winston';
-import { matchesUA }                from 'browserslist-useragent';
-
-import paths                        from '#config/paths';
-import settings                     from '#settings/browser';
-import externalPackages             from '#config/external-packages';
-import splitLines                   from '@technobuddha/library/splitLines';
-import { replacer, reviver }        from '@technobuddha/library/json';
-import { space }                    from '@technobuddha/library/constants';
-import { pgp }                      from '#db/driver';
 import { genClientWebpackConfig }   from '#client/webpack.config';
-
+import paths                        from '#config/paths';
+import externalPackages             from '#config/external-packages';
+import { pgp }                      from '#db/driver';
+import settings                     from '#settings/browser';
 import api                          from './api';
 import TranslationWorker            from './TranslationWorker';
-
 import packageJson                  from '~package.json';
 
 import type { Response, Request, NextFunction } from 'express';
@@ -173,7 +171,7 @@ import type { IncomingMessage } from 'http';
     }
 
     app
-    .set('view engine', 'hbs')
+    .set('view engine', hbs)
     .set('views',       paths.views)
     .use(cookieParser())
     .use(express.json({reviver}))
@@ -273,8 +271,8 @@ import type { IncomingMessage } from 'http';
         status404
     )
     .get(
-        '/dist/*',
-        express.static(paths.home),
+        '/dist/',
+        express.static(paths.dist),
         status404
     )
     .get(

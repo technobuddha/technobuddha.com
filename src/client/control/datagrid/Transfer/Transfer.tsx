@@ -2,11 +2,14 @@ import React                    from 'react';
 import clsx                     from 'clsx';
 import Box                      from '@material-ui/core/Box';
 import { makeStyles }           from '@material-ui/core/styles';
-import { FilterSpecification }  from '../DataGrid/filterCompiler';
-import { ColumnSpecification }  from '../DataGrid/column';
 import { useDerivedState }      from '@technobuddha/react-hooks';
-import DataGrid, { OnSelectionChangedParams, DataGridClasses, DataGridStyles } from '../DataGrid/DataGrid';
-import TransferButtons, { DispatchFunction, TransferButtonClasses, TransferButtonStyles } from './TransferButtons';
+import DataGrid from '../DataGrid/DataGrid';
+import TransferButtons from './TransferButtons';
+import type { OnSelectionChangedParams, DataGridClasses, DataGridStyles } from '../DataGrid/DataGrid';
+import type { DispatchFunction, TransferButtonClasses, TransferButtonStyles } from './TransferButtons';
+import type { FilterSpecification }  from '../DataGrid/filterCompiler';
+import type { ColumnSpecification }  from '../DataGrid/column';
+import type { SortKey } from '../DataGrid/Sorter';
 
 function not<T = unknown>(a: T[], b: T[]) {
     return a.filter(value => b.indexOf(value) === -1);
@@ -17,6 +20,7 @@ export type TransferProps<T = unknown> = {
     style?:         React.CSSProperties;
     classes?:       TransferClasses;
     styles?:        TransferStyles;
+    rowHeight?:     number;
     left:           T[];
     right:          T[];
     name:           string;
@@ -55,14 +59,17 @@ const useStyles = makeStyles({
 });
 
 export function Transfer<T = unknown>(
-    {left: leftProp, right: rightProp, name, title, onTransfer, className, style, classes, styles}: TransferProps<T>) {
+    {left: leftProp, right: rightProp, rowHeight, name, title, onTransfer, className, style, classes, styles}: TransferProps<T>) {
     const css               = useStyles();
     const dispatch          = React.useRef<DispatchFunction>(null!);
     const [left, setLeft]   = useDerivedState(leftProp,                                                                     [leftProp]);
     const [right, setRight] = useDerivedState(rightProp,                                                                    [rightProp]);
     const selected          = React.useMemo(() => ({left: [] as T[], right: [] as T[]}),                                    [leftProp, rightProp]);
     const columns           = React.useMemo(() => [{name} as ColumnSpecification<T>],                                       [name]);
-    const filters           = React.useMemo(() => [{type: 'search', name, title: title ?? name} as FilterSpecification<T>], [name, title]);
+    const clearR            = React.useRef<() => void>();
+    const clearL            = React.useRef<() => void>();
+    const filtersR          = React.useMemo(() => [{type: 'search', name, title: title ?? name, clear: clearR} as FilterSpecification<T>], [name, title]);
+    const filtersL          = React.useMemo(() => [{type: 'search', name, title: title ?? name, clear: clearL} as FilterSpecification<T>], [name, title]);
     const isLeftSelected    = React.useCallback((datum: T) => selected.left.includes(datum),                                [selected]);
     const isRightSelected   = React.useCallback((datum: T) => selected.right.includes(datum),                               [selected]);
 
@@ -72,7 +79,7 @@ export function Transfer<T = unknown>(
             dispatch.current?.({
                 rAll: (selectedCount + unselectedCount) === 0,
                 rSel: selectedCount === 0,
-            })
+            });
         },
         [selected]
     );
@@ -98,6 +105,7 @@ export function Transfer<T = unknown>(
             selected.left   = [];
 
             onTransfer?.(newLeft, newRight);
+            clearR.current?.();
         },
         [left, right, selected, onTransfer]
     );
@@ -113,10 +121,10 @@ export function Transfer<T = unknown>(
             selected.left  = [];
 
             onTransfer?.(newLeft, newRight);
+            clearL.current?.();
         },
         [left, right, selected, onTransfer]
     );
-
     const handleSelectedLeft            = React.useCallback(
         () => {
             const newLeft:  T[] = [...left, ...selected.right];
@@ -129,6 +137,7 @@ export function Transfer<T = unknown>(
             selected.right = [];
 
             onTransfer?.(newLeft, newRight);
+            clearR.current?.();
         },
         [left, right, selected, onTransfer]
     );
@@ -144,6 +153,7 @@ export function Transfer<T = unknown>(
             selected.right = [];
 
             onTransfer?.(newLeft, newRight);
+            clearL.current?.();
         },
         [left, right, selected, onTransfer]
     );
@@ -160,13 +170,14 @@ export function Transfer<T = unknown>(
             >
                 <DataGrid
                     classes={classes?.grid}
+                    rowHeight={rowHeight}
                     styles={styles?.grid}
                     selection={true}
                     selected={isLeftSelected}
                     data={left}
                     columns={columns}
-                    filters={filters}
-                    defaultSort={name}
+                    filters={filtersR}
+                    defaultSort={name as SortKey<T>}
                     onSelectionChanged={handleSelectionChangedLeft}
                 />
             </Box>
@@ -190,13 +201,14 @@ export function Transfer<T = unknown>(
             >
                 <DataGrid
                     classes={classes?.grid}
+                    rowHeight={rowHeight}
                     styles={styles?.grid}
                     selection={true}
                     selected={isRightSelected}
                     data={right}
                     columns={columns}
-                    filters={filters}
-                    defaultSort={name}
+                    filters={filtersL}
+                    defaultSort={name as SortKey<T>}
                     onSelectionChanged={handleSelectionChangedRight}
                 />
             </Box>

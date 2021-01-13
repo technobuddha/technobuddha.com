@@ -1,11 +1,11 @@
 import isNil    from 'lodash/isNil';
 import isArray  from 'lodash/isArray';
 
-export function getUniqueValues<T = unknown>(data: T[], name: string) {
+export function getUniqueValues<T = unknown>(data: T[], name: keyof T) {
     const set    = new Set<string>();
     data.forEach(
         datum => {
-            const v = (datum as Record<string, unknown>)[name];
+            const v = datum[name];
 
             if(!isNil(v)) {
                 if(isArray(v)) {

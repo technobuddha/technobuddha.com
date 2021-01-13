@@ -17,14 +17,14 @@ import { arrayIndicator }                       from './indicators';
 
 import { getUniqueValues }  from './util';
 
-export type FilterFactoryCheckboxOptions = {
+export type FilterFactoryCheckboxOptions<T = unknown> = {
     type:           'checkbox-list';
-    name:           string;
+    name:           keyof T;
     title?:         string;
     Icon?:          React.ComponentType<{className?: string; style?: React.CSSProperties;}>;
 };
 
-export function filterCompilerCheckbox<T = unknown>({name, title, Icon}: FilterFactoryCheckboxOptions, data: T[], { getShape }: AnalyzerResults<T>): Filter<T> {
+export function filterCompilerCheckbox<T = unknown>({name, title, Icon}: FilterFactoryCheckboxOptions<T>, data: T[], { getShape }: AnalyzerResults<T>): Filter<T> {
     const search = getUniqueValues(data, name);
 
     return {
@@ -51,7 +51,7 @@ export function filterCompilerCheckbox<T = unknown>({name, title, Icon}: FilterF
                         classes={classes}
                         styles={styles}
                         Icon={Icon}
-                        title={title ?? name}
+                        title={title ?? (name as string)}
                         onButtonClick={handleActuatorClick}
                     />
                     <Dialog
@@ -66,9 +66,9 @@ export function filterCompilerCheckbox<T = unknown>({name, title, Icon}: FilterF
                                     data={search}
                                     selection={true}
                                     selected={(datum: string) => filterValue.current === null || filterValue.current.includes(toString(datum))}
-                                    columns={[{name}]}
-                                    filters={[{type: 'search', name, title: title ?? name}]}
-                                    defaultSort={name}
+                                    columns={[{name: name as string}]}
+                                    filters={[{type: 'search', name: 0, title: title ?? (name as string)}]}
+                                    defaultSort={0}
                                     onSelectionChanged={handleSelectionChanged}
                                 />
                             </Box>

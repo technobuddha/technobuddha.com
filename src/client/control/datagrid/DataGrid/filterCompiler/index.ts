@@ -7,9 +7,9 @@ import { filterCompilerSearch,   FilterFactorySearchOptions }   from './search';
 
 export type FilterSpecification<T = unknown> =  
     FilterFactoryCustomOptions<T>   |
-    FilterFactoryCheckboxOptions    |
-    FilterFactoryTransferOptions    |
-    FilterFactorySearchOptions;
+    FilterFactoryCheckboxOptions<T> |
+    FilterFactoryTransferOptions<T> |
+    FilterFactorySearchOptions<T>;
 
 export function filterCompiler<T = unknown>(options: FilterSpecification<T>, data: T[], analysis: AnalyzerResults<T>): Filter<T>
 {

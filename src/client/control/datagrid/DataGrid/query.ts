@@ -1,10 +1,13 @@
-import mapValues                    from 'lodash/mapValues';
-import isArray                      from 'lodash/isArray';
-import queryString, { ParsedQuery } from 'query-string';
+import mapValues   from 'lodash/mapValues';
+import isArray     from 'lodash/isArray';
+import queryString from 'query-string';
+
+import type { ParsedQuery } from 'query-string';
+import type { SortKey }     from './Sorter';
 
 const KEY_SORT = 'sort';
 
-export function getSortFromQueryString() {
+export function getSortFromQueryString<T = unknown>() {
     let { [KEY_SORT]: sort } = queryString.parse(location.search);
 
     if(sort === null || sort == undefined)
@@ -16,13 +19,13 @@ export function getSortFromQueryString() {
             sort = sort[0];
     }
 
-    return sort;
+    return sort as SortKey<T>;
 }
 
-export function setSortInQueryString(sort: string | null) {
+export function setSortInQueryString<T = unknown>(sort: SortKey<T> | null) {
     const search = queryString.parse(location.search);
 
-    search[KEY_SORT] = sort;
+    search[KEY_SORT] = sort as string;
     history.pushState(null, '', `${location.pathname}?${queryString.stringify(search)}${location.hash}`);
 }
 

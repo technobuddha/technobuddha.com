@@ -4,14 +4,14 @@ import useGrid                  from '../GridContext';
 import { FilterIndicatorProps } from '../filter';
 import { normalizeFilterArray } from './normalization';
 
-type IndicatorArgs = {
-    name: string;
+type IndicatorArgs<T = unknown> = {
+    name: keyof T;
     title?: string;
     Icon?: React.ComponentType<{className?: string; style?: React.CSSProperties;}>;
 }
 
 
-export function arrayIndicator<T = unknown>({Icon, name, title}: IndicatorArgs) {
+export function arrayIndicator<T = unknown>({Icon, name, title}: IndicatorArgs<T>) {
     return function({classes, styles}: FilterIndicatorProps) {
         const { filterValues, changeFilter }  = useGrid<T>();
         const filterValue                     = normalizeFilterArray(filterValues[name]);

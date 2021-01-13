@@ -1,17 +1,23 @@
-import React                                    from 'react';
-import clsx                                     from 'clsx';
-import { makeStyles }                           from '@material-ui/core/styles';
-import Filterer, { FiltererRenderProps }        from './Filterer';
-import Sorter, { SorterRenderProps }            from './Sorter';
-import Frame, { FrameRenderProps }              from './Frame';
-import Grid, { GridClasses, GridStyles }        from './Grid';
-import { ColumnSpecifications }                 from './column';
-import columnCompiler                           from './columnCompiler';
-import { filterCompiler, FilterSpecification }  from './filterCompiler';
-import { RowProvider }                          from './RowContext';
-import { MenuFactory }                          from './menu';
-import { GridProvider }                         from './GridContext';
-import analyzer                                 from './analyzer';
+import React            from 'react';
+import clsx             from 'clsx';
+import { makeStyles }   from '@material-ui/core/styles';
+import Filterer         from './Filterer';
+import Sorter           from './Sorter';
+import Frame            from './Frame';
+import Grid             from './Grid';
+import columnCompiler   from './columnCompiler';
+import analyzer         from './analyzer';
+import filterCompiler   from './filterCompiler';
+import { GridProvider } from './GridContext';
+import { RowProvider }  from './RowContext';
+
+import type { FiltererRenderProps }         from './Filterer';
+import type { SorterRenderProps, SortKey }  from './Sorter';
+import type { FrameRenderProps }            from './Frame';
+import type { GridClasses, GridStyles }     from './Grid';
+import type { ColumnSpecifications }        from './column';
+import type { FilterSpecification }         from './filterCompiler';
+import type { MenuFactory }                 from './menu';
 
 export type DataGridProps<T = unknown> = {
     data:                   T[];
@@ -24,7 +30,7 @@ export type DataGridProps<T = unknown> = {
     selected?:              (datum: T) => boolean;
     filters?:               FilterSpecification<T>[];
     menu?:                  MenuFactory<T>;
-    defaultSort?:           string;
+    defaultSort?:           SortKey<T>;
     rowHeight?:             number;
     controlWidth?:          number;
     useLocation?:           boolean;

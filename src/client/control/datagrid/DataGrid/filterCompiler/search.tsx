@@ -10,10 +10,11 @@ import { AnalyzerResults }      from '../analyzer';
 import { searchExecute }        from './execution';
 import { normalizeFilterValue } from './normalization';
 
-export type FilterFactorySearchOptions = {
+export type FilterFactorySearchOptions<T = unknown> = {
     type:       'search';
-    name:       string;
+    name:       keyof T;
     title:      string;
+    clear?:     React.MutableRefObject<() => void>;     // TODO implement clear for other types...  maybe make it a base type member
 };
 
 const useSearchStyles = makeStyles(theme => ({
@@ -41,7 +42,7 @@ const useSearchStyles = makeStyles(theme => ({
     }
 }));
 
-export function filterCompilerSearch<T = unknown>({name, title}: FilterFactorySearchOptions, { getShape }: AnalyzerResults<T>): Filter<T> {
+export function filterCompilerSearch<T = unknown>({name, title, clear}: FilterFactorySearchOptions<T>, { getShape }: AnalyzerResults<T>): Filter<T> {
     return {
         name,
         Actuator:  () => {
@@ -70,6 +71,8 @@ export function filterCompilerSearch<T = unknown>({name, title}: FilterFactorySe
                 changeFilter(name, '');
                 setSearch('');
             }
+            if(clear)
+                clear.current = handleClearClick;
 
             return (
                 <Grid

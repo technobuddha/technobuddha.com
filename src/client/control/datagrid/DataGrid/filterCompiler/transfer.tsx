@@ -14,9 +14,9 @@ import { normalizeFilterArray }         from './normalization';
 import { equalityExecute }              from './execution';
 import { arrayIndicator }               from './indicators';
 
-export type FilterFactoryTransferOptions = {
+export type FilterFactoryTransferOptions<T = unknown> = {
     type:           'transfer';
-    name:           string;
+    name:           keyof T;
     title?:         string;
     Icon?:          React.ComponentType<{className?: string; style?: React.CSSProperties;}>;
 };
@@ -25,7 +25,7 @@ function not<T>(a: T[], b: T[]) {
     return a.filter(value => b.indexOf(value) === -1);
 }
 
-export function filterCompilerTransfer<T = unknown>({name, title, Icon}: FilterFactoryTransferOptions, { getShape }: AnalyzerResults<T>): Filter<T> {
+export function filterCompilerTransfer<T = unknown>({name, title, Icon}: FilterFactoryTransferOptions<T>, { getShape }: AnalyzerResults<T>): Filter<T> {
     return {
         name,
         Actuator({classes, styles}: FilterActuatorProps) {
@@ -51,7 +51,7 @@ export function filterCompilerTransfer<T = unknown>({name, title, Icon}: FilterF
                         classes={classes}
                         styles={styles}
                         Icon={Icon}
-                        title={title ?? name}
+                        title={title ?? (name as string)}
                         onButtonClick={handleActuatorClick}
                     />
                     <Dialog
@@ -62,8 +62,9 @@ export function filterCompilerTransfer<T = unknown>({name, title, Icon}: FilterF
                         <DialogTitle>{title ?? name}</DialogTitle>
                         <DialogContent>
                             <Transfer 
-                                name={name}
+                                name={name as string}
                                 title={title}
+                                rowHeight={24}
                                 left={left}
                                 right={right}
                                 onTransfer={handleTransfer}

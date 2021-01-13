@@ -5,7 +5,7 @@ import { FilterValue }          from '../filter';
 import { Shape }                from '../analyzer';
 import { normalizeFilterValue, normalizeFilterArray } from './normalization';
 
-export function searchExecute<T = unknown>(name: string, shape: Shape) {
+export function searchExecute<T = unknown>(name: keyof T, shape: Shape) {
     switch(shape) {
         case 'key-value':{
             return (data: T[], value: FilterValue) => {
@@ -16,7 +16,7 @@ export function searchExecute<T = unknown>(name: string, shape: Shape) {
 
                     return data.filter(
                         datum => {
-                            const field = (datum as Record<string, unknown>)[name];
+                            const field = datum[name];
 
                             return (
                                 isArray(field)
@@ -31,7 +31,7 @@ export function searchExecute<T = unknown>(name: string, shape: Shape) {
         }
 
         case 'array': {
-            const key = parseInt(name);
+            const key = parseInt(name as string);
 
             return (data: T[], value: FilterValue) => {
                 const filterValue = normalizeFilterValue(value);
@@ -70,7 +70,7 @@ export function searchExecute<T = unknown>(name: string, shape: Shape) {
     }
 }
 
-export function equalityExecute<T = unknown>(name: string, shape: Shape) {
+export function equalityExecute<T = unknown>(name: keyof T, shape: Shape) {
     switch(shape) {
         case 'key-value':{
             return (data: T[], value: FilterValue) => {
@@ -79,7 +79,7 @@ export function equalityExecute<T = unknown>(name: string, shape: Shape) {
                 if(filterValue)
                     return data.filter(
                         datum => {
-                            const field = (datum as Record<string, any>)[name];
+                            const field = datum[name];
             
                             return (
                                 isArray(field)
@@ -94,7 +94,7 @@ export function equalityExecute<T = unknown>(name: string, shape: Shape) {
         }
 
         case 'array': {
-            const key = parseInt(name);
+            const key = parseInt(name as string);
 
             return (data: T[], value: FilterValue) => {
                 const filterValue   = normalizeFilterArray(value);

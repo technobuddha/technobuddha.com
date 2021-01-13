@@ -4,6 +4,8 @@ import compact          from 'lodash/compact';
 import { Column }       from './column';
 import { useGrid }      from './GridContext';
 
+export type SortKey<T = unknown> = keyof T | `~${string & keyof T}`;
+
 type SorterProps<T = unknown> = {
     data:               T[];
     columns:            Column<T>[];

@@ -3,14 +3,14 @@ import isArray      from 'lodash/isArray';
 import mapValues    from 'lodash/mapValues';
 
 export type Filter<T = unknown> = {
-    name:       string;
+    name:       keyof T;
     Actuator:   React.ComponentType<FilterActuatorProps>;
     Indicator?: React.ComponentType<FilterIndicatorProps>;
     execute:    (data: T[], value: FilterValue) => T[];
 }
 
-export type FilterValue  = string | string[] | null;
-export type FilterValues = Record<string, FilterValue>;
+export type FilterValue               = string | string[] | null;
+export type FilterValues<T = unknown> = Record<keyof T, FilterValue>;
 
 export type FilterActuatorProps = {
     classes?:   FilterActuatorClasses;
@@ -35,7 +35,7 @@ export type FilterIndicatorClasses = {
 }
 export type FilterIndicatorStyles = {[key in keyof FilterIndicatorClasses]: React.CSSProperties};
 
-export function serializeFilterValue(filterValues: FilterValues) {
+export function serializeFilterValue<T = unknown>(filterValues: FilterValues<T>) {
     return JSON.stringify(mapValues(filterValues, filterValue => {
         if(filterValue === null)
             return null;

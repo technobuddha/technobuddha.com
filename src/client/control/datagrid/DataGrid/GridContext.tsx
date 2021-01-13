@@ -1,9 +1,9 @@
-import React            from 'react';
-import isUndefined      from 'lodash/isUndefined';
+import React       from 'react';
+import isUndefined from 'lodash/isUndefined';
 import { getSortFromQueryString, setSortInQueryString, getFiltersFromQueryString, setFiltersInQueryString } from './query';
 
 import type { FilterValue, FilterValues } from './filter';
-import type { SortKey } from './Sorter';
+import type { SortKey }                   from './Sorter';
 
 type GridState<T = unknown> = {
     data:               T[];
@@ -34,7 +34,7 @@ function parseSort<T = unknown>(sort: string) {
 
 function buildSort<T = unknown>(column: keyof T, ascending: boolean) {
     if(ascending)
-        return column as string;
+        return column;
     else
         return `-${column}`;
 }

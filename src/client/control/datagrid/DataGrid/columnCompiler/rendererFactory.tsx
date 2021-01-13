@@ -1,13 +1,14 @@
 import React                from 'react';
-import toString             from 'lodash/toString';
-import isNumber             from 'lodash/isNumber';
-import clsx                 from 'clsx';
 import toDateUTCString      from '@technobuddha/library/toDateUTCString';
 import Box                  from '@material-ui/core/Box';
 import { makeStyles }       from '@material-ui/core/styles';
-import { Shape }            from '../analyzer';
+import clsx                 from 'clsx';
+import isNumber             from 'lodash/isNumber';
+import toString             from 'lodash/toString';
 import { Anything }         from '../Anything';
-import { ColumnSpecification, ColumnType, ColumnRenderProps } from '../column';
+
+import type { Shape }                                              from '../analyzer';
+import type { ColumnSpecification, ColumnType, ColumnRenderProps } from '../column';
 
 const useCellStyles = makeStyles(_theme => ({
     cell: {

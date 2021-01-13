@@ -1,9 +1,10 @@
-import isArray                  from 'lodash/isArray';
-import some                     from 'lodash/some';
-import toString                 from 'lodash/toString';
-import { FilterValue }          from '../filter';
-import { Shape }                from '../analyzer';
+import isArray                                        from 'lodash/isArray';
+import some                                           from 'lodash/some';
+import toString                                       from 'lodash/toString';
 import { normalizeFilterValue, normalizeFilterArray } from './normalization';
+
+import type { FilterValue } from '../filter';
+import type { Shape }       from '../analyzer';
 
 export function searchExecute<T = unknown>(name: keyof T, shape: Shape) {
     switch(shape) {

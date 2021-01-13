@@ -1,10 +1,11 @@
-import isDate           from 'lodash/isDate';
-import isArray          from 'lodash/isArray';
-import isString         from 'lodash/isString';
-import isObject         from 'lodash/isObject';
-import isNumber         from 'lodash/isNumber';
-import { rendererFactory, headerFactory, collatorFactory }  from './columnCompiler';
-import { Column, ColumnType, ColumnSpecifications } from './column';
+import isArray  from 'lodash/isArray';
+import isDate   from 'lodash/isDate';
+import isNumber from 'lodash/isNumber';
+import isObject from 'lodash/isObject';
+import isString from 'lodash/isString';
+import { rendererFactory, headerFactory, collatorFactory } from './columnCompiler';
+
+import type { Column, ColumnType, ColumnSpecifications } from './column';
 
 export type IdentifiedType = 'string' | 'number' | 'boolean' | 'symbol' | 'object' | 'function' | 'undefined' | 'iso-date' | 'null' | 'date' | 'array';
 export type Shape          = 'key-value' | 'array' | 'primitive' | 'polymorphic';

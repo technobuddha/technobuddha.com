@@ -1,14 +1,16 @@
 import React                    from 'react';
-import TextField                from '@material-ui/core/TextField';
 import Grid                     from '@material-ui/core/Grid';
+import TextField                from '@material-ui/core/TextField';
+import { makeStyles }           from '@material-ui/core/styles';
 import Search                   from '@material-ui/icons/Search';
 import Clear                    from '@material-ui/icons/Clear';
-import { makeStyles }           from '@material-ui/core/styles';
 import { useGrid }              from '../GridContext';
-import { Filter }               from '../filter';
-import { AnalyzerResults }      from '../analyzer';
 import { searchExecute }        from './execution';
 import { normalizeFilterValue } from './normalization';
+
+import type { AnalyzerResults } from '../analyzer';
+import type { Filter }          from '../filter';
+
 
 export type FilterFactorySearchOptions<T = unknown> = {
     type:       'search';

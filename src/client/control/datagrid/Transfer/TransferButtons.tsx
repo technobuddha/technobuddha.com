@@ -1,10 +1,10 @@
 import React            from 'react';
-import clsx             from 'clsx';
-import isUndefined      from 'lodash/isUndefined';
-import { makeStyles }   from '@material-ui/core/styles';
 import Box              from '@material-ui/core/Box';
 import Button           from '@material-ui/core/Button';
 import Divider          from '@material-ui/core/Divider';
+import { makeStyles }   from '@material-ui/core/styles';
+import clsx             from 'clsx';
+import isUndefined      from 'lodash/isUndefined';
   
 type TransferButtonsProps = {
     classes?:       TransferButtonClasses,

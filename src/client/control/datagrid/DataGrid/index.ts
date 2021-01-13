@@ -1,4 +1,6 @@
-export { default, DataGrid, DataGridClasses, DataGridStyles }   from './DataGrid';
-export { ColumnSpecification }                                  from './column';
-export { FilterSpecification }                                  from './filterCompiler';
-export { MenuFactory }                                          from './menu';
+export { default, DataGrid } from './DataGrid';
+
+export type { ColumnSpecification }             from './column';
+export type { DataGridClasses, DataGridStyles } from './DataGrid';
+export type { FilterSpecification }             from './filterCompiler';
+export type { MenuFactory }                     from './menu';

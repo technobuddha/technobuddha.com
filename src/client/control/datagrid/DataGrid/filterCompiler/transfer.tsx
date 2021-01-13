@@ -1,18 +1,19 @@
 import React                            from 'react';
+import Button                           from '@material-ui/core/Button';
 import Dialog                           from '@material-ui/core/Dialog';
-import DialogTitle                      from '@material-ui/core/DialogTitle';
 import DialogActions                    from '@material-ui/core/DialogActions';
 import DialogContent                    from '@material-ui/core/DialogContent';
-import Button                           from '@material-ui/core/Button';
+import DialogTitle                      from '@material-ui/core/DialogTitle';
 import Transfer                         from '../../Transfer';
 import { useGrid }                      from '../GridContext';
-import { AnalyzerResults }              from '../analyzer';
-import { Filter, FilterActuatorProps }  from '../filter';
-import FilterActuator                   from './FilterActuator';
-import { getUniqueValues }              from './util';
-import { normalizeFilterArray }         from './normalization';
 import { equalityExecute }              from './execution';
+import FilterActuator                   from './FilterActuator';
 import { arrayIndicator }               from './indicators';
+import { normalizeFilterArray }         from './normalization';
+import { getUniqueValues }              from './util';
+
+import type { AnalyzerResults }             from '../analyzer';
+import type { Filter, FilterActuatorProps } from '../filter';
 
 export type FilterFactoryTransferOptions<T = unknown> = {
     type:           'transfer';

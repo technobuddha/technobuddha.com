@@ -1,16 +1,18 @@
 import React            from 'react';
-import clsx             from 'clsx';
-import isString         from 'lodash/isString';
-import isUndefined      from 'lodash/isUndefined';
 import { makeStyles }   from '@material-ui/core/styles';
 import Button           from '@material-ui/core/Button';
 import Box              from '@material-ui/core/Box';
 import SortNone         from '@material-ui/icons/UnfoldMore';
 import SortDesc         from '@material-ui/icons/ExpandLess';
 import SortAsc          from '@material-ui/icons/ExpandMore';
-import { Shape }        from '../analyzer';
+import clsx             from 'clsx';
+import isString         from 'lodash/isString';
+import isUndefined      from 'lodash/isUndefined';
 import { useGrid }      from '../GridContext';
-import { ColumnSpecification, ColumnType, ColumnHeaderProps } from '../column';
+
+import type { Shape }                                              from '../analyzer';
+import type { ColumnSpecification, ColumnType, ColumnHeaderProps } from '../column';
+import type { SortKey }                                            from '../Sorter';
 
 const useHeaderStyles = makeStyles(theme => ({
     button: {
@@ -52,7 +54,7 @@ export function headerFactory<T = unknown>(column: ColumnSpecification<T>, _type
                     size="small"
                     variant="contained"
                     color="primary"
-                    onClick={column.sortBy === null ? undefined : (() => changeSort(column.name.toString()))}
+                    onClick={column.sortBy === null ? undefined : (() => changeSort(column.name.toString() as SortKey<T>))}
                 >
                     <Box
                         className={clsx(css.buttonContents, classes?.buttonContents)}

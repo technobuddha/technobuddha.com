@@ -1,5 +1,5 @@
-import isNil    from 'lodash/isNil';
 import isArray  from 'lodash/isArray';
+import isNil    from 'lodash/isNil';
 
 export function getUniqueValues<T = unknown>(data: T[], name: keyof T) {
     const set    = new Set<string>();

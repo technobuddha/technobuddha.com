@@ -1,23 +1,23 @@
 import React            from 'react';
-import clsx             from 'clsx';
 import { makeStyles }   from '@material-ui/core/styles';
+import clsx             from 'clsx';
+import analyzer         from './analyzer';
+import columnCompiler   from './columnCompiler';
+import filterCompiler   from './filterCompiler';
 import Filterer         from './Filterer';
-import Sorter           from './Sorter';
 import Frame            from './Frame';
 import Grid             from './Grid';
-import columnCompiler   from './columnCompiler';
-import analyzer         from './analyzer';
-import filterCompiler   from './filterCompiler';
 import { GridProvider } from './GridContext';
 import { RowProvider }  from './RowContext';
+import Sorter           from './Sorter';
 
-import type { FiltererRenderProps }         from './Filterer';
-import type { SorterRenderProps, SortKey }  from './Sorter';
-import type { FrameRenderProps }            from './Frame';
-import type { GridClasses, GridStyles }     from './Grid';
 import type { ColumnSpecifications }        from './column';
 import type { FilterSpecification }         from './filterCompiler';
+import type { FiltererRenderProps }         from './Filterer';
+import type { FrameRenderProps }            from './Frame';
+import type { GridClasses, GridStyles }     from './Grid';
 import type { MenuFactory }                 from './menu';
+import type { SorterRenderProps, SortKey }  from './Sorter';
 
 export type DataGridProps<T = unknown> = {
     data:                   T[];

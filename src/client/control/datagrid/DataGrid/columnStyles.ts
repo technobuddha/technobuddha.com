@@ -1,5 +1,5 @@
-import React            from 'react';
-import { makeStyles }   from '@material-ui/core/styles';
+import React          from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 
 type RowClassnames = {
     root?:                  string;
@@ -18,7 +18,7 @@ export type HeaderClasses = {
     button:                 string;
     buttonContents:         string;
     buttonTitle:            string;
-    buttonSortIndicator :   string;
+    buttonSortIndicator:    string;
     [key: string]:          string;
 }
 export type HeaderStyles = {[key in keyof HeaderClasses]: React.CSSProperties};

@@ -1,4 +1,4 @@
-import { Filter } from '../filter';
+import type { Filter } from '../filter';
 
 export type FilterFactoryCustomOptions<T = unknown> = {   
     type:   'custom',

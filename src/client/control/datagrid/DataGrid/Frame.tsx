@@ -1,7 +1,9 @@
-import React        from 'react';
-import isNumber     from 'lodash/isNumber';
-import { Column }   from './column';
-import { SizeScrollbar, SizeScrollbarProps, SizeScrollbarRenderProps } from 'mui-size';
+import React             from 'react';
+import isNumber          from 'lodash/isNumber';
+import { SizeScrollbar } from 'mui-size';
+
+import type { SizeScrollbarProps, SizeScrollbarRenderProps } from 'mui-size';
+import type { Column }                                       from './column';
 
 export type FrameProps<T = unknown> = Omit<SizeScrollbarProps, 'children'> & {
     className?:     string;

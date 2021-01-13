@@ -1,1 +1,3 @@
-export {default, Transfer, TransferProps } from './Transfer';
+export { default, Transfer } from './Transfer';
+
+export type { TransferProps } from './Transfer';

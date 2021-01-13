@@ -1,12 +1,13 @@
 import React                    from 'react';
-import isString                 from 'lodash/isString';
 import { makeStyles }           from '@material-ui/core/styles';
-import { rendererFactory }      from './rendererFactory';
-import { headerFactory }        from './headerFactory';
-import { AnalyzerResults }      from '../analyzer';
-import { RowSelectionIndicator, MasterSelectionIndicator }   from '../selectionIndictors';
-import { collatorFactory, nullCollator } from './collatorFactory';
-import { Column, ColumnSpecifications, ColumnHeaderProps, ColumnRenderProps } from '../column';
+import isString                 from 'lodash/isString';
+import { RowSelectionIndicator, MasterSelectionIndicator } from '../selectionIndictors';
+import { collatorFactory, nullCollator }                   from './collatorFactory';
+import { headerFactory }                                   from './headerFactory';
+import { rendererFactory }                                 from './rendererFactory';
+
+import type { AnalyzerResults }                                                    from '../analyzer';
+import type { Column, ColumnSpecifications, ColumnHeaderProps, ColumnRenderProps } from '../column';
 
 const useStyles = makeStyles(theme => ({
     checkbox: {

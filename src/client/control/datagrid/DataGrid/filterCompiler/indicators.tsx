@@ -1,8 +1,10 @@
 import React                    from 'react';
 import Chip                     from '@material-ui/core/Chip';
 import useGrid                  from '../GridContext';
-import { FilterIndicatorProps } from '../filter';
 import { normalizeFilterArray } from './normalization';
+
+import type { FilterIndicatorProps } from '../filter';
+
 
 type IndicatorArgs<T = unknown> = {
     name: keyof T;

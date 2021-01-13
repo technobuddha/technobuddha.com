@@ -1,9 +1,10 @@
-import React                                            from 'react';
-import clsx                                             from 'clsx';
-import { makeStyles }                                   from '@material-ui/core/styles';
-import Box                                              from '@material-ui/core/Box';
-import Button                                           from '@material-ui/core/Button';
-import { FilterActuatorClasses, FilterActuatorStyles }  from '../filter';
+import React          from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Box            from '@material-ui/core/Box';
+import Button         from '@material-ui/core/Button';
+import clsx           from 'clsx';
+
+import type { FilterActuatorClasses, FilterActuatorStyles }  from '../filter';
 
 export type FilterActuatorProps = {
     classes?:           FilterActuatorClasses;

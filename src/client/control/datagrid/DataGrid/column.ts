@@ -1,5 +1,6 @@
-import React                            from 'react';
-import { HeaderClasses, HeaderStyles }  from './columnStyles';
+import React from 'react';
+
+import type { HeaderClasses, HeaderStyles } from './columnStyles';
 
 export type Column<T = unknown>  = {
     name:       string;

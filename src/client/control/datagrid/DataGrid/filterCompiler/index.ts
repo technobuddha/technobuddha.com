@@ -1,9 +1,14 @@
-import { Filter }                                               from '../filter';
-import { AnalyzerResults }                                      from '../analyzer';
-import { filterCompilerCustom,   FilterFactoryCustomOptions }   from './custom';
-import { filterCompilerCheckbox, FilterFactoryCheckboxOptions } from './checkbox-list';
-import { filterCompilerTransfer, FilterFactoryTransferOptions } from './transfer';
-import { filterCompilerSearch,   FilterFactorySearchOptions }   from './search';
+import { filterCompilerCheckbox } from './checkbox-list';
+import { filterCompilerCustom }   from './custom';
+import { filterCompilerSearch }   from './search';
+import { filterCompilerTransfer } from './transfer';
+
+import type { Filter }                       from '../filter';
+import type { AnalyzerResults }              from '../analyzer';
+import type { FilterFactoryCustomOptions }   from './custom';
+import type { FilterFactoryCheckboxOptions } from './checkbox-list';
+import type { FilterFactoryTransferOptions } from './transfer';
+import type { FilterFactorySearchOptions }   from './search';
 
 export type FilterSpecification<T = unknown> =  
     FilterFactoryCustomOptions<T>   |

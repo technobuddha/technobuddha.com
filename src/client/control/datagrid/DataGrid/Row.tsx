@@ -1,11 +1,13 @@
-import React            from 'react';
-import clsx             from 'clsx';
-import Box              from '@material-ui/core/Box';
-import IconButton       from '@material-ui/core/IconButton';
-import MenuIcon         from '@material-ui/icons/MoreVert';
-import { Column }       from './column';
-import { MenuFactory }  from './menu';
-import { useColumnStyles, RowClasses, RowStyles } from './columnStyles';
+import React               from 'react';
+import Box                 from '@material-ui/core/Box';
+import IconButton          from '@material-ui/core/IconButton';
+import MenuIcon            from '@material-ui/icons/MoreVert';
+import clsx                from 'clsx';
+import { useColumnStyles } from './columnStyles';
+
+import type { Column }                from './column';
+import type { RowClasses, RowStyles } from './columnStyles';
+import type { MenuFactory }           from './menu';
 
 type RowProps<T = unknown> = {
     header:                 boolean;

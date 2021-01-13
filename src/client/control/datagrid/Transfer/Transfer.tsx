@@ -1,15 +1,16 @@
 import React                    from 'react';
-import clsx                     from 'clsx';
 import Box                      from '@material-ui/core/Box';
 import { makeStyles }           from '@material-ui/core/styles';
 import { useDerivedState }      from '@technobuddha/react-hooks';
-import DataGrid from '../DataGrid/DataGrid';
-import TransferButtons from './TransferButtons';
-import type { OnSelectionChangedParams, DataGridClasses, DataGridStyles } from '../DataGrid/DataGrid';
+import clsx                     from 'clsx';
+import DataGrid                 from '../DataGrid/DataGrid';
+import TransferButtons          from './TransferButtons';
+
+import type { OnSelectionChangedParams, DataGridClasses, DataGridStyles }     from '../DataGrid/DataGrid';
+import type { FilterSpecification }                                           from '../DataGrid/filterCompiler';
+import type { ColumnSpecification }                                           from '../DataGrid/column';
+import type { SortKey }                                                       from '../DataGrid/Sorter';
 import type { DispatchFunction, TransferButtonClasses, TransferButtonStyles } from './TransferButtons';
-import type { FilterSpecification }  from '../DataGrid/filterCompiler';
-import type { ColumnSpecification }  from '../DataGrid/column';
-import type { SortKey } from '../DataGrid/Sorter';
 
 function not<T = unknown>(a: T[], b: T[]) {
     return a.filter(value => b.indexOf(value) === -1);

@@ -1,6 +1,6 @@
-import React        from 'react';
-import isArray      from 'lodash/isArray';
-import mapValues    from 'lodash/mapValues';
+import React     from 'react';
+import isArray   from 'lodash/isArray';
+import mapValues from 'lodash/mapValues';
 
 export type Filter<T = unknown> = {
     name:       keyof T;

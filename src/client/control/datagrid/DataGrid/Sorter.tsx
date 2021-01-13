@@ -1,10 +1,11 @@
-import React            from 'react';
-import isUndefined      from 'lodash/isUndefined';
-import compact          from 'lodash/compact';
-import { Column }       from './column';
-import { useGrid }      from './GridContext';
+import React       from 'react';
+import compact     from 'lodash/compact';
+import isUndefined from 'lodash/isUndefined';
+import { useGrid } from './GridContext';
 
-export type SortKey<T = unknown> = keyof T | `~${string & keyof T}`;
+import type { Column } from './column';
+
+export type SortKey<T = unknown> = T extends string ? boolean : (keyof T | `~${string & keyof T}`);
 
 type SorterProps<T = unknown> = {
     data:               T[];

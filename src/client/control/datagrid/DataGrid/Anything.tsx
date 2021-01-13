@@ -1,14 +1,14 @@
-import React    from 'react';
-import clsx     from 'clsx';
-import isArray  from 'lodash/isArray';
-import isObject from 'lodash/isObject';
-import isEmpty  from 'lodash/isEmpty';
-import isNil    from 'lodash/isNil';
-import toString from 'lodash/toString';
-import toDateUTCString  from '@technobuddha/library/toDateUTCString';
-import type { DataType }         from './column';    // TODO data types should be moved!
+import React           from 'react';
+import { makeStyles }  from '@material-ui/core/styles';
+import toDateUTCString from '@technobuddha/library/toDateUTCString';
+import clsx            from 'clsx';
+import isArray         from 'lodash/isArray';
+import isEmpty         from 'lodash/isEmpty';
+import isNil           from 'lodash/isNil';
+import isObject        from 'lodash/isObject';
+import toString        from 'lodash/toString';
 
-import { makeStyles } from '@material-ui/core/styles';
+import type { DataType } from './column';    // TODO data types should be moved!
 
 export type AnythingParams = {
     className?: string;
@@ -64,12 +64,12 @@ const useStyles = makeStyles(theme => ({
     null: {
 
     },
-    primative: {
+    primitive: {
         paddingRight: theme.spacing(0.25),
         paddingLeft: theme.spacing(0.25),
 
         display: 'flex',
-        justifyCOntent: 'flex-end',
+        justifyContent: 'flex-end',
         alignItems: 'center',
 
         "&:not($member, $value)": {
@@ -113,12 +113,12 @@ export function Anything({children, type, className, top = true}: AnythingParams
 
     switch(type) {
         case 'number':
-            return <div className={clsx(className, css.primative, css.right)}>{toString(children)}</div>;
+            return <div className={clsx(className, css.primitive, css.right)}>{toString(children)}</div>;
     
         case 'date':
-            return <div className={clsx(className, css.primative, css.left)}>{toDateUTCString(children)}</div>;
+            return <div className={clsx(className, css.primitive, css.left)}>{toDateUTCString(children)}</div>;
 
         default:
-            return <div className={clsx(className, css.primative, css.left)}>{toString(children)}</div>;
+            return <div className={clsx(className, css.primitive, css.left)}>{toString(children)}</div>;
     }
 }

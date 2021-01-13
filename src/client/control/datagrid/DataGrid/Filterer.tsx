@@ -1,6 +1,8 @@
-import React                            from 'react';
-import { useGrid }                      from './GridContext';
-import { Filter, serializeFilterValue } from './filter';
+import React                    from 'react';
+import { useGrid }              from './GridContext';
+import { serializeFilterValue } from './filter';
+
+import type { Filter } from './filter';
 
 type FiltererProps<T = unknown> = {
     filters:    Filter<T>[];

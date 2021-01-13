@@ -1,7 +1,8 @@
-import React                        from 'react';
-import isArray                      from 'lodash/isArray';
-import { OnSelectionChangedParams } from './DataGrid';
-import { useGrid }                  from './GridContext';
+import React       from 'react';
+import isArray     from 'lodash/isArray';
+import { useGrid } from './GridContext';
+
+import type { OnSelectionChangedParams } from './DataGrid';
 
 type RowState<T = unknown> = {
     selectedCount:      number;

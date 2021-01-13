@@ -1,10 +1,11 @@
+import toNumber     from '@technobuddha/library/toNumber';
+import toTimestamp  from '@technobuddha/library/toTimestamp';
 import isNil        from 'lodash/isNil';
 import isNumber     from 'lodash/isNumber';
 import toString     from 'lodash/toString';
-import { Shape }    from '../analyzer';
-import toTimestamp  from '@technobuddha/library/toTimestamp';
-import toNumber     from '@technobuddha/library/toNumber';
-import { ColumnSpecification, ColumnType } from '../column';
+
+import type { Shape }                           from '../analyzer';
+import type { ColumnSpecification, ColumnType } from '../column';
 
 export const nullCollator = () => () => 0;
 const intlCollator = new Intl.Collator(undefined, { sensitivity: 'base' });

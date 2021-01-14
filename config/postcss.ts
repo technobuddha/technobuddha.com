@@ -1,16 +1,16 @@
-const path          = require('path');
-const process       = require('process');
-const mapKeys       = require('lodash/mapKeys');
-const kebabCase     = require('lodash/kebabCase');
-const parser        = require('postcss-comment');
-const theme         = require('./src/settings/mui-theme')
-const variables     = require('./src/settings/css-variables.js');
+import path          from 'path';
+import process       from 'process';
+import mapKeys       from 'lodash/mapKeys';
+import kebabCase     from 'lodash/kebabCase';
+import parser        from 'postcss-comment';
+import theme         from '#settings/mui-theme';
+import variables     from '#settings/css-variables';
 
-module.exports = {
+export default {
     parser:     parser,
     plugins: {
         'postcss-import': {
-            resolve(id, basedir) {
+            resolve(id: string, basedir: string) {
                 if (/^\$/.test(id))    return path.join(process.cwd(), 'client', 'style', id.slice(1)); //TODO we shouldn't be using cwd()
 
                 return path.resolve(basedir, id);
@@ -22,7 +22,7 @@ module.exports = {
                 'custom-properties': {
                     preserve:   true,
                     importFrom:[{
-                        customProperties:   mapKeys(variables, (v, key) => `--${kebabCase(key)}`)
+                        customProperties:   mapKeys(variables, (_, key) => `--${kebabCase(key)}`)
                     }],
                 },
                 // 'all-property': true,

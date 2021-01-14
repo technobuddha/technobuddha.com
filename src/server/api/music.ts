@@ -10,5 +10,12 @@ music.get(
         res.status(200).json(tracks);
     }
 )
+.get(
+    '/newAlbums',
+    async (_req, res) => {
+        const albums = await db.getNewAlbums();
+        res.status(200).json(albums);
+    }
+);
 
 export default music;

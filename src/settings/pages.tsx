@@ -7,9 +7,10 @@ import {GiConwayLifeGlider} from 'react-icons/gi';
 import {GiOrbital}          from 'react-icons/gi';
 import {GiThornyTentacle}   from 'react-icons/gi';
 import {GiChessKnight}      from 'react-icons/gi';
-import Home                 from '#component/Home';
+import Home                 from '~src/client/component/home';
 import NBody                from '#component/NBody';
-import Music                from '#component/Music';
+import { Tracks }           from '#component/music';
+import { NewAlbums }        from '#component/music';
 import Knight               from '#component/Knight';
 import Life                 from '#component/Life';
 import Chaos                from '#component/Chaos';
@@ -38,11 +39,21 @@ export const pages: (t: TFunction<string>) => Page[] = (t) => [
         ]
     },
     { 
+        icon: GiMusicalNotes,   //TODO better icon
+        primary: t('New Albums'),
+        secondary: t('Recently Acquired Albums'),
+        location: '/albums',
+        component: NewAlbums,
+        todo: [
+            t('Merge with the Music Collection'),
+        ]
+    },
+    { 
         icon: GiMusicalNotes,
         primary: t('Music'),
         secondary: t('Music collection'),
         location: '/music',
-        component: Music,
+        component: Tracks,
         todo: [
             t('Add a description to this page'),
             t('Increase functionality to show individual artists/albums/genres'),

@@ -8,7 +8,7 @@ import MusicNote from '@material-ui/icons/MusicNote';
 import Group from '@material-ui/icons/Group';
 import DelayedCircularProgress from '#control/DelayedCircularProgress';
 
-export const Music: React.FC = () => {
+export const Tracks: React.FC = () => {
     const api   = useApi();
     const [ dataset, setDataset ]   = React.useState<any[]>(null!);
 
@@ -51,4 +51,4 @@ export const Music: React.FC = () => {
 
 }
 
-export default Music;
+export default Tracks;

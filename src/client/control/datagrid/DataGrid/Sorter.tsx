@@ -5,7 +5,7 @@ import { useGrid } from './GridContext';
 
 import type { Column } from './column';
 
-export type SortKey<T = unknown> = T extends string ? boolean : (keyof T | `~${string & keyof T}`);
+export type SortKey<T = unknown> = T extends string ? ('*' | '~*') : (keyof T | `~${string & keyof T}`);
 
 type SorterProps<T = unknown> = {
     data:               T[];

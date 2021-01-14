@@ -78,7 +78,7 @@ const useStyles = makeStyles(theme => ({
         },
     },
     left: {
-        justifyContent: 'flex-begin',
+        justifyContent: 'flex-start',
     },
     right: {
         justifyContent: 'flex-end',

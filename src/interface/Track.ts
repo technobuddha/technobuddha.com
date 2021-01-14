@@ -1,11 +1,14 @@
+// TODO create classes from one master Master create
 export type Track = {
-    contentid:          number;
+    contentID:          string;
     artist:             string[];
     album:              string;
-    partofset:          string;
-    tracknumber:        string;
+    discNumber:         number;
+    trackNumber:        number;
     title:              string;
     genre:              string[];
+    subgenre:           string[];
+    year:               number;
 };
 
 export default Track;

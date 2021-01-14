@@ -69,7 +69,7 @@ export function filterCompilerCheckbox<T = unknown>({name, title, Icon}: FilterF
                                     selected={(datum: string) => filterValue.current === null || filterValue.current.includes(toString(datum))}
                                     columns={[{name: name as string}]}
                                     filters={[{type: 'search', name: 0, title: title ?? (name as string)}]}
-                                    defaultSort={true}
+                                    defaultSort="*"
                                     onSelectionChanged={handleSelectionChanged}
                                 />
                             </Box>

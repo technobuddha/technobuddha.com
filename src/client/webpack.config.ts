@@ -8,6 +8,7 @@ import TsConfigPathsPlugin   from 'tsconfig-paths-webpack-plugin';
 import externalPackages      from '#config/external-packages';
 import paths                 from '#config/paths';
 import { CMTDWebpackPlugin } from 'css-module-type-definitions';
+import postcss_config        from '#config/postcss';
 import type { Logger }       from 'css-module-type-definitions';
 //import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
@@ -66,7 +67,12 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                                 importLoaders:      1,
                             },
                         },
-                        'postcss-loader',
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                postcssOptions: postcss_config,
+                            }
+                        },
                     ],
                 },
                 {
@@ -131,7 +137,7 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                 filename:           '[name].css',
                 chunkFilename:      '[id].css',
             }),
-            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: paths.src, globPattern: '**/*.pcss', camelCase: true, logger }) : null),
+            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: paths.src, globPattern: '**/*.pcss', camelCase: true, logger, config: postcss_config }) : null),
             (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                                    : null),
             //(isDevelopment ? new BundleAnalyzerPlugin()                                                                                  : null),
         ]),

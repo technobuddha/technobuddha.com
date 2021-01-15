@@ -19,7 +19,7 @@ exports.up = pgm => {
             admin:              {type: 'boolean',       notNull: true,  default: false},
             disabled:           {type: 'boolean',       notNull: true,  default: false},
             confirmed:          {type: 'timestamptz'},
-            failed_logins:      {type: 'integer',       notNull: true, default: 0},
+            failed_logins:      {type: 'integer',       notNull: true,  default: 0},
             locked:             {type: 'timestamptz'},
             created:            {type: 'timestamptz'},
             updated:            {type: 'timestamptz'},

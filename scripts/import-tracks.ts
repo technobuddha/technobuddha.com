@@ -1,7 +1,7 @@
 #!/bin/env -S ts-node --prefer-ts-exts  -r ./config/env.ts -r tsconfig-paths/register
 import path        from 'path';
 import paths       from '#config/paths';
-import { db }      from '#db/driver';
+import { db }      from '#server/db/driver';
 import nReadLines  from 'n-readlines';
 import cliProgress from 'cli-progress';
 import chalk       from 'chalk';

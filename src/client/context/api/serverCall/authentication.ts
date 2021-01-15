@@ -1,6 +1,6 @@
 import fetchAPI from '../fetchAPI';
 
-import type { Account } from '#interface/Account';
+import type { Account } from '~src/schema/account';
 
 type CPS = {score: number, warning: string, suggestions: string[]};
 export const authentication = {

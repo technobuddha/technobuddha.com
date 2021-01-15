@@ -1,5 +1,5 @@
 import React                        from 'react';
-import Account                      from '#interface/Account';
+import { Account }                  from '#schema/';
 import useAPI                       from '#context/api';
 import shallowEquals                from '@technobuddha/library/shallowEquals';
 import settings                     from '#settings/authentication';
@@ -61,11 +61,11 @@ export const AuthenticationProvider: React.FC = ({children}: {children?: React.R
             killTimeout();
 
             await checkLogin();
-            sessionStorage.setItem(KEY, setTimeout(checker, settings.authentication.session.keepAlive).toString());
+            sessionStorage.setItem(KEY, setTimeout(checker, settings.session.keepAlive).toString());
         }
 
         killTimeout();
-        sessionStorage.setItem(KEY, setTimeout(checker, settings.authentication.session.keepAlive).toString());
+        sessionStorage.setItem(KEY, setTimeout(checker, settings.session.keepAlive).toString());
 
         return () => {
             killTimeout();

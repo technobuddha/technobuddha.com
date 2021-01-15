@@ -1,6 +1,6 @@
 import { db }                                       from './driver';
-import { Account, AccountCreate }                   from '#interface/Account';
-import { Session }                                  from '#interface/Session';
+import { Account, AccountCreate }                   from '~src/schema/account';
+import { Session }                                  from '~src/schema/session';
 import settings                                     from '#settings/authentication';
 
 export async function getAccountById(id: number) {

@@ -1,5 +1,5 @@
 import express  from 'express';
-import db       from '#db/music';
+import db       from '#server/db/music';
 
 export const music = express.Router();
 
@@ -18,4 +18,5 @@ music.get(
     }
 );
 
+export type { GetTracks, GetNewAlbums } from '#server/db/music';
 export default music;

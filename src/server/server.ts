@@ -21,9 +21,9 @@ import winston                      from 'winston';
 import { genClientWebpackConfig }   from '#client/webpack.config';
 import paths                        from '#config/paths';
 import externalPackages             from '#config/external-packages';
-import { pgp }                      from '#db/driver';
+import { pgp }                      from '#server/db/driver';
 import settings                     from '#settings/browser';
-import api                          from './api';
+import api                          from './api/router';
 import TranslationWorker            from './TranslationWorker';
 import packageJson                  from '~package.json';
 

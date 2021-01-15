@@ -8,7 +8,7 @@ import TsConfigPathsPlugin   from 'tsconfig-paths-webpack-plugin';
 import externalPackages      from '#config/external-packages';
 import paths                 from '#config/paths';
 import { CMTDWebpackPlugin } from 'css-module-type-definitions';
-import postcss_config        from '#config/postcss';
+import postcss_config        from '#config/postcss.config';
 import type { Logger }       from 'css-module-type-definitions';
 //import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
@@ -57,7 +57,7 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                                     mode:                       'local',
                                     auto:                       /\.pcss$/,
                                     exportGlobals:              true,
-                                    localIdentName:             isDevelopment ? '[local][path][name]' : '[hash:base64]',
+                                    localIdentName:             isDevelopment ? '[local]-[path][name]' : '[hash:base64]',
                                     localIdentContext:          paths.client,
                                     localIdentHashPrefix:       'technobuddha',
                                     exportLocalsConvention:     'camelCase',
@@ -72,21 +72,6 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                             options: {
                                 postcssOptions: postcss_config,
                             }
-                        },
-                    ],
-                },
-                {
-                    test:       /\.css$/,
-                    use: [
-                        'css-hot-loader',
-                        MiniCssExtractPlugin.loader,
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                modules:            false,
-                                sourceMap:          true,
-                                importLoaders:      1,
-                            },
                         },
                     ],
                 },

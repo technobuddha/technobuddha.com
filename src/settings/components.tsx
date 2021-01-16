@@ -62,7 +62,7 @@ export const components: (t: TFunction<string>) => Component[] = (t) => [
         icon: GiMusicalNotes,
         primary: t('Music'),
         secondary: t('Music collection'),
-        location: '/music',
+        location: '/tracks',
         component: Tracks,
         todo: [
             t('Add a description to this component'),

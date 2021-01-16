@@ -4,7 +4,7 @@ import type { Track } from '#schema/';
 
 type DBTrack = {[Key in keyof Track as SnakeCase<Key>]: Track[Key]};
 
-type GetTrackPick = 'contentId'  | 'artist' | 'album' | 'discNumber'  | 'trackNumber'  | 'genre';
+type GetTrackPick = 'contentId'  | 'artist' | 'album' | 'discNumber'  | 'trackNumber'  | 'title' | 'genre';
 type GetTracksInput = Pick<DBTrack, SnakeCase<GetTrackPick>>;
 export type GetTracks = Pick<Track, GetTrackPick>;
 export async function getTracks(): Promise<GetTracks[]> {
@@ -20,6 +20,7 @@ export async function getTracks(): Promise<GetTracks[]> {
         album: row.album,
         discNumber: row.disc_number,
         trackNumber: row.track_number,
+        title: row.title,
         genre: row.genre,
     })));
 }

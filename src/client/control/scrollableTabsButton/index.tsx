@@ -1,1 +1,1 @@
-export { ScrollableTabsButton } from './ScrollableTabsButton';
+export { default, ScrollableTabsButton } from './ScrollableTabsButton';

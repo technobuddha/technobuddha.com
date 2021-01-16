@@ -15,23 +15,27 @@ type TabPanelProps = {
 const TabPanel: React.FC<TabPanelProps> = ({ content: Content, value, index, ...other }) => {
 
   return (
-      <div
-          className={css.panel}
-          role="tabpanel"
-          hidden={value !== index}
-          id={`scrollable-force-tabpanel-${index}`}
-          aria-labelledby={`scrollable-force-tab-${index}`}
-          {...other}
-      >
-          {value === index && <Content />}
-      </div>
+      value === index  
+      ?
+          <div
+            className={css.panel}
+            role="tabpanel"
+            hidden={value !== index}
+            id={`scrollable-tabpanel-${index}`}
+            aria-labelledby={`scrollable-tab-${index}`}
+            {...other}
+        >
+            <Content />
+        </div>
+      :
+        null
   );
 }
 
 function a11yProps(index: number) {
     return {
-        id: `scrollable-force-tab-${index}`,
-        'aria-controls': `scrollable-force-tabpanel-${index}`,
+        id: `scrollable-tab-${index}`,
+        'aria-controls': `scrollable-tabpanel-${index}`,
     };
 }
 

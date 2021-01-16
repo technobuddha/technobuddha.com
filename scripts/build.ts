@@ -16,32 +16,6 @@ function out(text: string) {
     process.stdout.write(text);
 }
 
-const dependenciesWhiteList = [
-    "@google-cloud/translate",
-    "@technobuddha/library",
-    "browserslist-useragent",
-    "cheferizeIt",
-    "cookie-parser",
-    "css-module-type-definitions",
-    "dotenv",
-    "dotenv-expand",
-    "express",
-    "fs-extra",
-    "hbs",
-    "http-proxy-middleware",
-    "mini-css-extract-plugin",
-    "n-readlines",
-    "nodemon",
-    "pg-promise",
-    "tsconfig-paths-webpack-plugin",
-    "tslib",
-    "webpack",
-    "webpack-dev-middleware",
-    "webpack-hot-middleware",
-    "winston",
-    "zxcvbn",
-];
-
 function report(error: Error, stats: webpack.Stats): void {
     if(error) {
         out(`\n${chalk.red(error)}\n`);
@@ -97,11 +71,12 @@ webpack(
                 pj.scripts = { start: "NODE_ENV=production nodemon --watch /etc/letsencrypt/live/technobuddha --watch bin --ext pem,js bin/server.js" };
                 pj.dependencies = Object.fromEntries(
                     Object.entries(pj.dependencies!)
-                    .filter(([k]) => dependenciesWhiteList.includes(k))
                     .map(([k, v]) => [k, v.startsWith('^') ? v.slice(1) : v])
                 );
-
-                delete pj.devDependencies;
+                pj.devDependencies = Object.fromEntries(
+                    Object.entries(pj.devDependencies!)
+                    .map(([k, v]) => [k, v.startsWith('^') ? v.slice(1) : v])
+                );
 
                 fs.writeFileSync('deploy/package.json', JSON.stringify(pj, undefined, 2), 'utf8');
                 out(`\n--${chalk.blue('done')}\n`);

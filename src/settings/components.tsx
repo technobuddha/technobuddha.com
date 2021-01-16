@@ -49,27 +49,6 @@ export const components: (t: TFunction<string>) => Component[] = (t) => [
         ]
     },
     {
-        icon: GiMusicalNotes,   //TODO better icon
-        primary: t('New Albums'),
-        secondary: t('Recently Acquired Albums'),
-        location: '/albums',
-        component: NewAlbums,
-        todo: [
-            t('Merge with the Music Collection'),
-        ]
-    },
-    { 
-        icon: GiMusicalNotes,
-        primary: t('Music'),
-        secondary: t('Music collection'),
-        location: '/tracks',
-        component: Tracks,
-        todo: [
-            t('Add a description to this component'),
-            t('Increase functionality to show individual artists/albums/genres'),
-        ]
-    },
-    {
         icon: GiConwayLifeGlider,
         primary: t('Life'),
         secondary: t('Conway\'s Game of Life'),

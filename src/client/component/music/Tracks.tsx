@@ -27,7 +27,6 @@ export const Tracks: React.FC = () => {
             <DataGrid
                 data={dataset}
                 rowHeight={32}
-                selection={true}
                 columns={[
                     {name: 'artist',        type: 'array',  sortBy: ['artist', 'album', 'discNumber', 'trackNumber']},
                     {name: 'album',         type: 'string', sortBy: ['album', 'discNumber', 'trackNumber']},

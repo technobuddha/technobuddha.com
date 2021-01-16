@@ -41,6 +41,6 @@ export const useHistory = () => {
 }
 
 export { Location }                                 from 'history';
-export { Route, Switch, Redirect, useLocation }     from 'react-router-dom';
+export { Route, Switch, Redirect, useLocation, useParams, useRouteMatch }     from 'react-router-dom';
 
 export default useHistory;

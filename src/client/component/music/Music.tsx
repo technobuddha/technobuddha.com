@@ -1,5 +1,5 @@
 import React from 'react';
-import ScrollableTabsButton from '#control/scrollableTabsButton';
+import TabbedRouter from '#control/tabbedRouter';
 import NewAlbums from './NewAlbums';
 import Tracks from './Tracks';
 import { GiMusicSpell, GiMusicalScore } from 'react-icons/gi';
@@ -13,11 +13,11 @@ import { GiMusicSpell, GiMusicalScore } from 'react-icons/gi';
 
 export const Music: React.FC = () => {
     return (
-        <ScrollableTabsButton
+        <TabbedRouter
             tabs={[
                 //TODO translate
-                {label: 'New Albums', content: NewAlbums,  icon: <GiMusicSpell/>},
-                {label: 'All Tracks', content: Tracks,     icon: <GiMusicalScore />},
+                {url: 'new_albums',  label: 'New Albums', content: NewAlbums,  icon: <GiMusicSpell/>},
+                {url: 'all_tracks', label: 'All Tracks', content: Tracks,     icon: <GiMusicalScore />},
             ]}
         />
     );

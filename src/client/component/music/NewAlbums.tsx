@@ -1,9 +1,9 @@
-import React from 'react';
-import DataGrid from '#control/datagrid/DataGrid'; // TODO 'datagrid';
-import useApi from '#context/api';
-import Box from '@material-ui/core/Box';
-import MusicNote from '@material-ui/icons/MusicNote';
+import React                   from 'react';
+import Box                     from '@material-ui/core/Box';
+import MusicNote               from '@material-ui/icons/MusicNote';
 import DelayedCircularProgress from '#control/DelayedCircularProgress';
+import DataGrid                from '#control/datagrid';
+import useApi                  from '#context/api';
 
 export const NewAlbums: React.FC = () => {
     const api   = useApi();
@@ -21,7 +21,6 @@ export const NewAlbums: React.FC = () => {
             <DataGrid
                 data={dataset}
                 rowHeight={32}
-                selection={true}
                 columns={[
                     {name: 'artist',        type: 'array',  sortBy: ['artist', 'album']},
                     {name: 'album',         type: 'string', sortBy: ['album']},

@@ -11,7 +11,7 @@ import ListItemText         from '@material-ui/core/ListItemText';
 import IconButton           from '@material-ui/core/IconButton';
 import useHistory           from '#context/router';
 import { makeStyles }       from '#context/mui';
-import usePages             from '#context/pages';
+import usePages             from '#context/component';
 
 const expansionTimeout = 1250;
 
@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => {
 export const Nav: React.FC = () => {
     const css       = useStyles();
     const history   = useHistory();
-    const pages     = usePages();
+    const components     = usePages();
 
     const [ menuOpen, setMenuOpen ] = React.useState(false);
     const [ clicked,  setClicked ]  = React.useState(false);
@@ -124,18 +124,18 @@ export const Nav: React.FC = () => {
             >
                 <List>
                     {
-                        pages.map((page, i) => {
-                            const Icon      = page.icon;
-                            const current   = history.location.pathname.startsWith(page.location);
+                        components.map((component, i) => {
+                            const Icon      = component.icon;
+                            const current   = history.location.pathname.startsWith(component.location);
 
                             return (
-                                <ListItem button onClick={handleListClick(page.location)} key={i}>
+                                <ListItem button onClick={handleListClick(component.location)} key={i}>
                                     <ListItemIcon>
                                         <Icon className={clsx(css.icon, { [css.current]: current, [css.available]: !current })} />
                                     </ListItemIcon>
                                     <ListItemText 
-                                        primary={page.primary} 
-                                        secondary={page.secondary}
+                                        primary={component.primary} 
+                                        secondary={component.secondary}
                                         classes={{
                                             root: css.listItemText,
                                             primary: css.primary,

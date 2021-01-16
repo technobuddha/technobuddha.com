@@ -8,7 +8,7 @@ import { SnackbarProvider }                 from '#context/snackbar';
 import { APIProvider }                      from '#context/api';
 import { AuthenticationProvider }           from '#context/authentication';
 import { Router }                           from '#context/router';
-import { PagesProvider }                    from '#context/pages';
+import { PagesProvider }                    from '#context/component';
 import UserInterface                        from '#component/userInterface';
 import AppLoading                           from '#component/AppLoading';
 

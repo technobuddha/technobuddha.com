@@ -2,7 +2,7 @@ import React              from 'react';
 import memoize            from 'lodash/memoize';
 import Box                from '@material-ui/core/Box';
 import { useTranslation } from '#context/i18n';
-import { usePages }       from '#context/pages';
+import { usePages }       from '#context/component';
 import Spinner            from './Spinner';
 import css                from './Home.pcss';
 
@@ -12,11 +12,11 @@ export type HomeProps = {
 
 export const Home: React.FC<HomeProps> = () => {
     const { t } = useTranslation();
-    const pages = usePages();
+    const components = usePages();
     const speed = 15;
 
     const keyframes = React.useMemo(() => {
-            const duration = speed * pages.length;
+            const duration = speed * components.length;
             const oneSecond = 100.0 / duration;
 
             // TODO the name of the animation should be randomized
@@ -30,14 +30,14 @@ export const Home: React.FC<HomeProps> = () => {
                 }
             `;
         },
-        [speed, pages]
+        [speed, components]
     )
 
     const articleStyle = React.useMemo(() =>
         memoize<(i: number) => React.CSSProperties>(i => ({
             animationName: 'fade',
-            animationDuration: `${pages.length * speed}s`,
-            animationDelay: `${-(pages.length - i - 1) * speed}s`,
+            animationDuration: `${components.length * speed}s`,
+            animationDelay: `${-(components.length - i - 1) * speed}s`,
         })),
         [speed]
     );
@@ -46,27 +46,27 @@ export const Home: React.FC<HomeProps> = () => {
         <Box className={css.root}>
             <style type="text/css">{keyframes}</style>
             <Box className={css.spinnerContainer}>
-                <Spinner speed={speed} icons={pages.map(page => page.icon)} />
+                <Spinner speed={speed} icons={components.map(component => component.icon)} />
             </Box>
             {
-                pages.map((page, i) => {
+                components.map((component, i) => {
                     return (
                         <div key={i} className={css.box} style={articleStyle(i)}>
-                            <div className={css.primary}>{page.primary}</div>
+                            <div className={css.primary}>{component.primary}</div>
                             {
-                                page.secondary &&
-                                <div className={css.secondary}>{page.secondary}</div>
+                                component.secondary &&
+                                <div className={css.secondary}>{component.secondary}</div>
                             }
                             {
-                                page.description &&
-                                <div className={css.description}>{page.description}</div>
+                                component.description &&
+                                <div className={css.description}>{component.description}</div>
                             }
                             {
-                                page.todo &&
+                                component.todo &&
                                 <div className={css.todo}>
                                     {t('To Do')}
                                     <ul>
-                                        {page.todo.map((td, i) => (<li key={i}>{td}</li>))}
+                                        {component.todo.map((td, i) => (<li key={i}>{td}</li>))}
                                     </ul>
                                 </div>
                             }

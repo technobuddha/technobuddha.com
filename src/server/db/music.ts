@@ -10,7 +10,7 @@ export type GetTracks = Pick<Track, GetTrackPick>;
 export async function getTracks(): Promise<GetTracks[]> {
     return db.manyOrNone<GetTracksInput>(
         `
-        SELECT  content_id, artist, album, disc_number, trackNumber, title, genre
+        SELECT  content_id, artist, album, disc_number, track_number, title, genre
         FROM    track;
         `
     )

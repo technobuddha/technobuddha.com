@@ -1,11 +1,12 @@
-import React                        from 'react';
-import {useTranslation}             from '#context/i18n';
-import pages                        from '#settings/pages';
-import type { Page }                from '#settings/pages';
+import React            from 'react';
+import {useTranslation} from '#context/i18n';
+import components       from '#settings/components';
 
-export type { Page } from '#settings/pages';
+import type { Component } from '#settings/components';
 
-const PagesContext = React.createContext<Page[]>(null!);
+export type { Component } from '#settings/components';
+
+const PagesContext = React.createContext<Component[]>(null!);
 
 export function usePages() {
    return React.useContext(PagesContext);
@@ -17,8 +18,8 @@ type PagesProviderProps = {
 
 export const PagesProvider: React.FC = ({children}: PagesProviderProps = {}) => {
     const { t, i18n } = useTranslation();
-    const control     = React.useMemo<Page[]>(() => 
-        pages(t),
+    const control     = React.useMemo<Component[]>(() => 
+        components(t),
         [i18n.language]
     );
 

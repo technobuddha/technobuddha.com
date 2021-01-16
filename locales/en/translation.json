@@ -1,6 +1,7 @@
 {
   "A word by itself is easy to guess": "A word by itself is easy to guess",
   "Add a \"What's new\" section.": "Add a \"What's new\" section.",
+  "Add a description to this component": "Add a description to this component",
   "Add a description to this page": "Add a description to this page",
   "Add ability to add a new body": "Add ability to add a new body",
   "Add ability to specify starting configuration": "Add ability to specify starting configuration",
@@ -44,6 +45,7 @@
   "Merge with the Music Collection": "Merge with the Music Collection",
   "Music": "Music",
   "Music collection": "Music collection",
+  "Music Collection": "Music Collection",
   "Names and surnames by themselves are easy to guess": "Names and surnames by themselves are easy to guess",
   "New Albums": "New Albums",
   "No need for symbols, digits, or uppercase letters": "No need for symbols, digits, or uppercase letters",

@@ -8,15 +8,15 @@ export type { Component } from '#settings/components';
 
 const PagesContext = React.createContext<Component[]>(null!);
 
-export function usePages() {
+export function useComponents() {
    return React.useContext(PagesContext);
 }
 
-type PagesProviderProps = {
+type ComponentsProviderProps = {
     children?: React.ReactNode;
 }
 
-export const PagesProvider: React.FC = ({children}: PagesProviderProps = {}) => {
+export const ComponentsProvider: React.FC = ({children}: ComponentsProviderProps = {}) => {
     const { t, i18n } = useTranslation();
     const control     = React.useMemo<Component[]>(() => 
         components(t),
@@ -30,4 +30,4 @@ export const PagesProvider: React.FC = ({children}: PagesProviderProps = {}) => 
     )
 }
 
-export default usePages;
+export default useComponents;

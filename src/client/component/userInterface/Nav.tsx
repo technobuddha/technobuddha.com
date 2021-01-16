@@ -11,7 +11,7 @@ import ListItemText         from '@material-ui/core/ListItemText';
 import IconButton           from '@material-ui/core/IconButton';
 import useHistory           from '#context/router';
 import { makeStyles }       from '#context/mui';
-import usePages             from '#context/component';
+import useComponents        from '#context/component';
 
 const expansionTimeout = 1250;
 
@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => {
 export const Nav: React.FC = () => {
     const css       = useStyles();
     const history   = useHistory();
-    const components     = usePages();
+    const components     = useComponents();
 
     const [ menuOpen, setMenuOpen ] = React.useState(false);
     const [ clicked,  setClicked ]  = React.useState(false);

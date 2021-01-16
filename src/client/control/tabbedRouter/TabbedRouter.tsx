@@ -2,7 +2,7 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { } from '#context/router';
+import { Switch, Route, Redirect, useRouteMatch, useHistory } from '#context/router';
 import css from './TabbedRouter.module.pcss';
 
 type TabPanelProps = {
@@ -37,7 +37,7 @@ type TabbedRouterProps = {
     }[];
 }
 
-import { Route, Redirect, useRouteMatch, useHistory } from '#context/router';
+
 
 export const TabbedRouter: React.FC<TabbedRouterProps> = ({tabs}) => {
   const [value, setValue] = React.useState(0);
@@ -64,16 +64,20 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({tabs}) => {
                 {tabs.map(({label, icon: Icon}, i) => <Tab key={i} label={label} icon={Icon}/>)}
             </Tabs>
         </AppBar>
-        <Redirect path={`${match.url}`} to={`${match.url}/new_albums`} />
         <div className={css.panel}>
-            {tabs.map(({content, url}, i) => {
-                console.log(url, match.url);
-                return (
-                <Route key={url} path={`${match.url}/${url}`}>
-                  <TabPanel  value={value} index={i} content={content} />
+            <Switch>
+                <Route path={`${match.url}/`} exact>
+                    <Redirect to={`${match.url}/${tabs[0].url}`} />
                 </Route>
-                )
-            })}
+                {tabs.map(({content, url}, i) => (
+                    <Route key={url} path={`${match.url}/${url}`}>
+                        <TabPanel  value={value} index={i} content={content} />
+                    </Route>
+                ))}
+                <Route>
+                    Catch-all route
+                </Route>
+            </Switch>
         </div>
     </div>
   );

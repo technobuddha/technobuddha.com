@@ -1,12 +1,12 @@
 import React from 'react';
 //import range from 'lodash/range';
-import DataGrid from '#control/datagrid/DataGrid'; // TODO 'datagrid';
+import DataGrid from '#control/datagrid'; // TODO 'datagrid';
 import useApi from '#context/api';
 import Box from '@material-ui/core/Box';
 import Album    from '@material-ui/icons/Album';
 import MusicNote from '@material-ui/icons/MusicNote';
 import Group from '@material-ui/icons/Group';
-import DelayedCircularProgress from '#control/DelayedCircularProgress';
+import DelayedCircularProgress from '#control/delayedCircularProgress';
 
 export const Tracks: React.FC = () => {
     const api   = useApi();

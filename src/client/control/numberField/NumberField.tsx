@@ -12,3 +12,5 @@ export const NumberField: React.FC<NumberFieldProps> = (props: NumberFieldProps)
     const {id, name, min, max, children, ...rest} = props;
     return <TextField {...rest} inputProps={{id, name, min, max}}>{children}</TextField>
 }
+
+export default NumberField;

@@ -2,7 +2,7 @@ import React              from 'react';
 import memoize            from 'lodash/memoize';
 import Box                from '@material-ui/core/Box';
 import { useTranslation } from '#context/i18n';
-import { usePages }       from '#context/component';
+import useComponents      from '#context/component';
 import Spinner            from './Spinner';
 import css                from './Home.pcss';
 
@@ -12,7 +12,7 @@ export type HomeProps = {
 
 export const Home: React.FC<HomeProps> = () => {
     const { t } = useTranslation();
-    const components = usePages();
+    const components = useComponents();
     const speed = 15;
 
     const keyframes = React.useMemo(() => {

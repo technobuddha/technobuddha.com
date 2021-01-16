@@ -2,7 +2,7 @@ import React                from 'react';
 import Box                  from '@material-ui/core/Box';
 import { Route, Switch }    from '#context/router';
 import { makeStyles }       from '#context/mui';
-import usePages             from '#context/component';
+import useComponents        from '#context/component';
 
 type MainProps = {
     children?: never;
@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 
 export const Content: React.FC<MainProps> = () => {
     const css   = useStyles();
-    const components = usePages();
+    const components = useComponents();
 
     return (
         <Box className={css.root}>

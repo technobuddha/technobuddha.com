@@ -1,7 +1,7 @@
 import React                   from 'react';
 import Box                     from '@material-ui/core/Box';
 import MusicNote               from '@material-ui/icons/MusicNote';
-import DelayedCircularProgress from '#control/DelayedCircularProgress';
+import DelayedCircularProgress from '#control/delayedCircularProgress';
 import DataGrid                from '#control/datagrid';
 import useApi                  from '#context/api';
 

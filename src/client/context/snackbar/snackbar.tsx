@@ -8,3 +8,5 @@ export const SnackbarProvider: React.FC = ({children}: {children?: React.ReactNo
         </NotiSnack>
     )
 }
+
+export default SnackbarProvider;

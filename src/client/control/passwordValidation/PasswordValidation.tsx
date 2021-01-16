@@ -5,7 +5,7 @@ import Box                      from '@material-ui/core/Box';
 import Typography               from '@material-ui/core/Typography';
 import useAPI                   from '#context/api';
 
-type PasswordFieldProps =
+type PasswordValidationProps =
     {
         password:       string;
         barColors?:     [string, string, string, string, string];
@@ -17,7 +17,7 @@ type PasswordFieldProps =
         onChange?:      (valid: boolean) => void;
     };
 
-export const PasswordValidation: React.FC<PasswordFieldProps> = (props: PasswordFieldProps) => {
+export const PasswordValidation: React.FC<PasswordValidationProps> = (props: PasswordValidationProps) => {
     const {t}                   = useTranslation();
     const {authentication}      = useAPI();
     const [state, setState]     = React.useState<{score: number, warning: string}>({score: 0, warning: ''});

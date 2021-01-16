@@ -40,7 +40,7 @@ export const useHistory = () => {
     return routerUseHistory() as History<HistoryState>;
 }
 
-export { Location }                                 from 'history';
+export type { Location } from 'history';
 export { Route, Switch, Redirect, useLocation, useParams, useRouteMatch }     from 'react-router-dom';
 
 export default useHistory;

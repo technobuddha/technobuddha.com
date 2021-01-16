@@ -7,12 +7,12 @@ import {GiConwayLifeGlider} from 'react-icons/gi';
 import {GiOrbital}          from 'react-icons/gi';
 import {GiThornyTentacle}   from 'react-icons/gi';
 import {GiChessKnight}      from 'react-icons/gi';
-import Home                 from '~src/client/component/home';
-import NBody                from '#component/NBody';
-import { Tracks, NewAlbums, Music } from '#component/music';
-import Knight               from '#component/Knight';
-import Life                 from '#component/Life';
-import Chaos                from '#component/Chaos';
+import Home                 from '#component/home';
+import NBody                from '#component/nBody';
+import Music                from '#component/music';
+import Knight               from '#component/knight';
+import Life                 from '#component/life';
+import Chaos                from '#component/chaos';
 
 export type Component = {
     icon: IconType;
@@ -22,7 +22,6 @@ export type Component = {
     component: React.ComponentType;
     description?: React.ReactElement,
     todo?: string[];
-
 }
 
 export const components: (t: TFunction<string>) => Component[] = (t) => [

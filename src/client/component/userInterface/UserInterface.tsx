@@ -37,9 +37,9 @@ export const UserInterface: React.FC = () => {
             <CssBaseLine />
             <Box className={css.root}>
                 <Switch>
+                    <Route exact path='/'><Redirect to="/home"/></Route>
                     {/* <ErrorRoute component={SiteUnavailable} /> */}
                     <Route exact path={['/login', '/sign-up', '/forgot-password']} component={Authentication}/>
-                    <Route exact path='/'><Redirect to="/home"/></Route>
                     <Route>
                         <Nav />
                         <Box className={css.frame}>

@@ -16,7 +16,21 @@ music.get(
         const albums = await db.getNewAlbums();
         res.status(200).json(albums);
     }
+)
+.get(
+    '/artists',
+    async (_req, res) => {
+        const artists = await db.getArtists();
+        res.status(200).json(artists);
+    }
+)
+.get(
+    '/genres',
+    async (_req, res) => {
+        const artists = await db.getGenres();
+        res.status(200).json(artists);
+    }
 );
 
-export type { GetTracks, GetNewAlbums } from '#server/db/music';
+export type { GetTracks, GetNewAlbums, GetArtists, GetGenres } from '#server/db/music';
 export default music;

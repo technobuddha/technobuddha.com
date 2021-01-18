@@ -6,8 +6,6 @@ import { Switch, Route, Redirect, useRouteMatch, useHistory } from '#context/rou
 import css from './TabbedRouter.module.pcss';
 
 type TabPanelProps = {
-    index: number;
-    value: number;
     content: React.ComponentType;
     children?: never;
     [key: string]: unknown;
@@ -40,47 +38,51 @@ type TabbedRouterProps = {
 
 
 export const TabbedRouter: React.FC<TabbedRouterProps> = ({tabs}) => {
-  const [value, setValue] = React.useState(0);
-  const match = useRouteMatch();
-  const history = useHistory();
+    const match = useRouteMatch();
+    const history = useHistory();
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  const handleChange = (_event: React.ChangeEvent<{}>, newValue: any) => {
-      setValue(newValue);
-      history.push(`${match.url}/${tabs[newValue].url}`)
-  };
+    console.log(match);
 
-  return (
-    <div className={css.root}>
-        <AppBar position="static" color="default">
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              variant="scrollable"
-              scrollButtons="on"
-              indicatorColor="primary"
-              textColor="primary"
-            >
-                {tabs.map(({label, icon: Icon}, i) => <Tab key={i} label={label} icon={Icon}/>)}
-            </Tabs>
-        </AppBar>
-        <div className={css.panel}>
-            <Switch>
-                <Route path={`${match.url}/`} exact>
-                    <Redirect to={`${match.url}/${tabs[0].url}`} />
-                </Route>
-                {tabs.map(({content, url}, i) => (
-                    <Route key={url} path={`${match.url}/${url}`}>
-                        <TabPanel  value={value} index={i} content={content} />
-                    </Route>
-                ))}
-                <Route>
-                    Catch-all route
-                </Route>
-            </Switch>
-        </div>
-    </div>
-  );
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    const handleChange = (_event: React.ChangeEvent<{}>, newValue: any) => {
+        history.push(newValue)
+    };
+
+    return (
+        <Switch>
+            <Route exact path={match.path}>
+                <Redirect to={`${match.path}/${tabs[0].url}`} />
+            </Route>
+            <Route path={tabs.map(({url}) => `${match.path}/${url}`)}>
+                <div className={css.root}>
+                    <AppBar position="static" color="default">
+                        <Tabs
+                        value={history.location.pathname}
+                        onChange={handleChange}
+                        variant="scrollable"
+                        scrollButtons="on"
+                        indicatorColor="primary"
+                        textColor="primary"
+                        >
+                            {tabs.map(({label, icon: Icon, url}, i) => <Tab key={i} value={`${match.path}/${url}`} label={label} icon={Icon}/>)}
+                        </Tabs>
+                    </AppBar>
+                    <div className={css.panel}>
+                        <Switch>
+                            {tabs.map(({content, url}) => (
+                                <Route key={url} path={`${match.path}/${url}`}>
+                                    <TabPanel content={content} />
+                                </Route>
+                            ))}
+                        </Switch>
+                    </div>
+                </div>
+            </Route>
+            <Route>
+                catch-all route
+            </Route>
+        </Switch>
+    );
 }
 
 export default TabbedRouter;

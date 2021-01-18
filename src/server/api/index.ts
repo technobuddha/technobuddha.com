@@ -1,1 +1,1 @@
-export type { GetTracks, GetNewAlbums } from './music';
+export type { GetTracks, GetNewAlbums, GetArtists, GetGenres } from './music';

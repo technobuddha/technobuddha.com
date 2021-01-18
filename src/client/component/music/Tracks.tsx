@@ -17,7 +17,7 @@ export const Tracks: React.FC = () => {
            //const dumdum  = range(250).map(i => (i % 9 ? new Date(i * 10000000000) : null));
            //const dumdum  = range(25).map(i => ({xx: 69, sx: [1,2,3], anything: { phil: 'hello', object: { i: i, j: i*2, k: [i*3,i*4,i*5]} , array: [i*6, i*7, i*8]}}));
            //setDataset(dumdum);
-           api.music.readTracks().then(tracks => setDataset(tracks.payload));
+           api.music.tracks().then(tracks => setDataset(tracks.payload));
         },
         []
     );

@@ -2,7 +2,8 @@ import { db }         from './driver';
 import { SnakeCase }  from 'type-fest';
 import type { Track } from '#schema/';
 
-type DBTrack = {[Key in keyof Track as SnakeCase<Key>]: Track[Key]};
+type DBTrack                     = {[Key in keyof Track as SnakeCase<Key>]: Track[Key]};
+type Scalar<T extends unknown[]> = T[0];
 
 type GetTrackPick = 'contentId'  | 'artist' | 'album' | 'discNumber'  | 'trackNumber'  | 'title' | 'genre';
 type GetTracksInput = Pick<DBTrack, SnakeCase<GetTrackPick>>;
@@ -40,4 +41,29 @@ export async function getNewAlbums(): Promise<GetNewAlbums[]> {
     );
 }
 
-export default { getTracks, getNewAlbums }
+
+type GetArtistsPick = 'album' | 'year' | 'genre' | 'subgenre';
+type GetArtistsInput = Pick<DBTrack, SnakeCase<GetArtistsPick>> & {artist: Scalar<DBTrack['artist']>};
+export type GetArtists = Pick<Track,   GetArtistsPick> & {artist: Scalar<Track['artist']>}; 
+export async function getArtists(): Promise<GetArtists[]> {
+    return db.manyOrNone<GetArtistsInput>(
+        `
+        SELECT      DISTINCT ON (UNNEST(track.artist), album) UNNEST(track.artist) AS artist, track.album, track.year, track.genre, track.subgenre
+        FROM        track
+        `
+    );
+}
+
+type GetGenresPick = 'artist' | 'album' | 'year' | 'subgenre';
+type GetGenresInput = Pick<DBTrack, SnakeCase<GetGenresPick>> & {artist: Scalar<DBTrack['genre']>};
+export type GetGenres = Pick<Track,   GetGenresPick> & {artist: Scalar<Track['genre']>}; 
+export async function getGenres(): Promise<GetGenres[]> {
+    return db.manyOrNone<GetGenresInput>(
+        `
+        SELECT      DISTINCT ON (UNNEST(track.genre)) UNNEST(track.genre) AS genre, track.subgenre, track.album, track.year, track.genre
+        FROM        track
+        `
+    );
+}
+
+export default { getTracks, getNewAlbums, getArtists, getGenres }

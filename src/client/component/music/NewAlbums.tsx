@@ -5,6 +5,8 @@ import DelayedCircularProgress from '#control/delayedCircularProgress';
 import DataGrid                from '#control/datagrid';
 import useApi                  from '#context/api';
 
+//import type { RowRenderer } from '#control/datagrid/DataGrid/Row'; //TODO path
+
 export const NewAlbums: React.FC = () => {
     const api   = useApi();
     const [ dataset, setDataset ]   = React.useState<any[]>(null!);
@@ -15,6 +17,8 @@ export const NewAlbums: React.FC = () => {
         },
         []
     );
+
+    //const rowRenderer: RowRenderer = ({datum}) => (<div>{JSON.stringify(datum)}</div>);
 
     if(dataset) {
         return (
@@ -28,6 +32,7 @@ export const NewAlbums: React.FC = () => {
                     {name: 'genre',         type: 'array',  sortBy: ['genre', 'subgenre']},
                     {name: 'subgenre',      type: 'array',  sortBy: ['subgenre']}
                 ]}
+                //rowRenderer={rowRenderer}
                 filters={[
                     {type: 'checkbox-list', name: 'genre',    Icon: MusicNote},
                     {type: 'checkbox-list', name: 'subgenre', Icon: MusicNote},

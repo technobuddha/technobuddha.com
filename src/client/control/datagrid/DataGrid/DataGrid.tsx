@@ -17,15 +17,17 @@ import type { FiltererRenderProps }         from './Filterer';
 import type { FrameRenderProps }            from './Frame';
 import type { GridClasses, GridStyles }     from './Grid';
 import type { MenuFactory }                 from './menu';
+import type { RowRenderer }                 from './Row';
 import type { SorterRenderProps, SortKey }  from './Sorter';
 
 export type DataGridProps<T = unknown> = {
-    data:                   T[];
-    columns?:               ColumnSpecifications<T>;
     className?:             string;
     style?:                 React.CSSProperties;
     classes?:               DataGridClasses;
     styles?:                DataGridStyles;
+    data:                   T[];
+    columns?:               ColumnSpecifications<T>;
+    rowRenderer?:           RowRenderer;
     selection?:             boolean;
     selected?:              (datum: T) => boolean;
     filters?:               FilterSpecification<T>[];
@@ -62,7 +64,7 @@ const useDataGridStyles = makeStyles(theme => ({
 }));
 
 export function DataGrid<T = unknown>(
-    {data, columns, className, style, classes, styles, selection, selected, filters, menu, defaultSort, rowHeight, controlWidth, useLocation,
+    {data, columns, rowRenderer, className, style, classes, styles, selection, selected, filters, menu, defaultSort, rowHeight, controlWidth, useLocation,
      onSelectionChanged}: DataGridProps<T>
 ) {
     const css               = useDataGridStyles();
@@ -107,6 +109,7 @@ export function DataGrid<T = unknown>(
                                             <Grid
                                                 data={sorter.data}
                                                 columns={compiledColumns}
+                                                rowRenderer={rowRenderer}
                                                 columnWidths={frame.columnWidths}
                                                 rowHeight={rowHeight}
                                                 controlWidth={controlWidth ?? 40}

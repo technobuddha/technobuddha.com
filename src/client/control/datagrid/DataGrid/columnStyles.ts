@@ -11,8 +11,8 @@ type RowClassnames = {
     menuIconHeader?:        string;
     stub?:                  string;
 }
-export type RowClasses = RowClassnames & {header: HeaderClasses};
-export type RowStyles  = {[key in keyof RowClassnames]: React.CSSProperties} & {header: HeaderStyles};
+export type RowClasses = RowClassnames & {header: HeaderClasses; column?: Record<string, string>};
+export type RowStyles  = {[key in keyof RowClassnames]: React.CSSProperties} & {header: HeaderStyles, column?: Record<string, React.CSSProperties>};
 
 export type HeaderClasses = {
     button:                 string;

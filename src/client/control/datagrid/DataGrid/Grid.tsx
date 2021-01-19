@@ -6,10 +6,12 @@ import { Size }                                   from 'mui-size';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { MenuFactory }                            from './menu';
 import Row                                        from './Row';
+import RowHeader from './RowHeader';
 
 import type { Column }                from './column';
 import type { RowClasses, RowStyles } from './columnStyles';
 import type { Filter, FilterActuatorClasses, FilterActuatorStyles, FilterIndicatorClasses, FilterIndicatorStyles } from './filter';
+import type { RowRenderer }           from './Row';
 
 const useGridStyles = makeStyles(theme => ({
     actuators: {
@@ -33,6 +35,7 @@ export type GridProps<T = unknown> = {
     styles?:                GridStyles;
     data:                   T[];
     columns:                Column<T>[];
+    rowRenderer?:           RowRenderer;
     columnWidths:           number[];
     scrollbarWidth:         number;
     controlWidth:           number;
@@ -49,7 +52,7 @@ export type GridClasses = {
     },
     area:   GridAreaClasses;
     row:    RowClasses;
-    column: Record<string, string>;
+    column: RowClasses['column'];
 }
 
 export type GridStyles = {
@@ -59,7 +62,7 @@ export type GridStyles = {
     }
     area:   GridAreaStyles;
     row:    RowStyles;
-    column: Record<string, React.CSSProperties>;
+    column: RowStyles['column'];
 }
 
 type GridAreaClasses = {
@@ -70,12 +73,10 @@ type GridAreaClasses = {
 }
 type GridAreaStyles = {[key in keyof GridAreaClasses]: React.CSSProperties};
 
-type RowProps = ListChildComponentProps;
-
-function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlWidth, data, columns, columnWidths, filters, menu}: GridProps<T>) {
+function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlWidth, data, columns, rowRenderer, columnWidths, filters, menu}: GridProps<T>) {
     const css = useGridStyles();
 
-    const GridRow = (rowProps: RowProps) => {
+    const GridRow = (rowProps: ListChildComponentProps) => {
         const datum     = data[rowProps.index];
 
         return (
@@ -84,18 +85,15 @@ function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlW
                 styles={styles?.row}
                 style={rowProps.style}
                 index={rowProps.index}
-                header={false}
-                data={data}
                 datum={datum}
                 columns={columns}
+                rowRenderer={rowRenderer}
                 columnWidths={columnWidths}
                 rowHeight={rowHeight}
                 controlWidth={controlWidth}
                 scrollbarWidth={scrollbarWidth}
                 menu={menu}
-            >
-                {({column}) => column.render({datum, classes: classes?.column, styles: styles?.column})}
-            </Row>
+            />
         );
     };
 
@@ -133,10 +131,9 @@ function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlW
                     </Box>
                 </>
             }
-            <Row
+            <RowHeader
                 classes={classes?.row}
                 styles={styles?.row}
-                header={true}
                 data={data}
                 columns={columns}
                 columnWidths={columnWidths}
@@ -144,10 +141,7 @@ function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlW
                 rowHeight={rowHeight}
                 controlWidth={controlWidth}
                 menu={menu}
-                stub={true}
-            >
-                {({column}) => column.header({data, classes: classes?.row?.header, styles: styles?.row?.header})}
-            </Row>
+            />
             <Size flexGrow={1}>
                 {({width, height}) => (
                     rowHeight
@@ -160,25 +154,23 @@ function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlW
                         >
                           {GridRow}
                         </FixedSizeList>
-                    :   <Box width={width} height={height} style={{overflowX: 'auto'}}>
-                            {data.map((datum, index) => (
-                                <Row
-                                    key={index}
-                                    classes={classes?.row}
-                                    styles={styles?.row}
-                                    header={false}
-                                    data={data}
-                                    datum={datum}
-                                    columns={columns}
-                                    columnWidths={columnWidths}
-                                    controlWidth={controlWidth}
-                                    scrollbarWidth={scrollbarWidth}
-                                    menu={menu}
-                                >
-                                    {({column}) => column.render({datum, classes: classes?.column, styles: styles?.column})}
-                                </Row>)
-                            )}
-                        </Box>
+                    :   
+                    <Box width={width} height={height} style={{overflowX: 'auto'}}>
+                        {data.map((datum, index) => (
+                            <Row
+                                key={index}
+                                classes={classes?.row}
+                                styles={styles?.row}
+                                datum={datum}
+                                columns={columns}
+                                rowRenderer={rowRenderer}
+                                columnWidths={columnWidths}
+                                controlWidth={controlWidth}
+                                scrollbarWidth={scrollbarWidth}
+                                menu={menu}
+                            />
+                        ))}
+                    </Box>
                 )}
             </Size>
 

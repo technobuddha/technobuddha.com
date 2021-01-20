@@ -288,6 +288,15 @@ import type { IncomingMessage } from 'http';
         status404
     )
     .get(
+        '/art/:id',
+        (req, _res, next) => {
+            req.url = `AlbumArt_{${req.params.id.toUpperCase()}}_Large.jpg`;
+            next();
+        },
+        express.static(path.join(paths.home, '../artwork/')),
+        status404
+    )
+    .get(
         '/*',
         (req, res) => {
             res.setHeader('Content-Type',   mime.getType('index.html') ?? 'text/html');

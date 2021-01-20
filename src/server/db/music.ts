@@ -27,18 +27,25 @@ export async function getTracks(): Promise<GetTracks[]> {
 }
 
 
-type GetNewAlbumsPick = 'artist' | 'album' | 'year' | 'genre' | 'subgenre';
+type GetNewAlbumsPick = 'artist' | 'album' | 'collectionGroupId' | 'year' | 'genre' | 'subgenre';
 type GetNewAlbumsInput = Pick<DBTrack, SnakeCase<GetNewAlbumsPick>>;
 export type GetNewAlbums = Pick<Track,   GetNewAlbumsPick>; 
 export async function getNewAlbums(): Promise<GetNewAlbums[]> {
     return db.manyOrNone<GetNewAlbumsInput>(
         `
-        SELECT      DISTINCT ON (track.artist, track.album) track.artist, track.album, track.year, track.genre, track.subgenre
+        SELECT      DISTINCT ON (track.artist, track.album) track.artist, track.album, track.collection_group_id, track.year, track.genre, track.subgenre
         FROM        track
         LEFT JOIN   track_old ON track.content_id = track_old.content_id
         WHERE       track_old.content_id IS NULL;
         `
-    );
+    ).then(data => data.map(row => ({
+        artist: row.artist,
+        album: row.album,
+        collectionGroupId: row.collection_group_id,
+        year: row.year,
+        genre: row.genre,
+        subgenre: row.subgenre,
+    })));
 }
 
 

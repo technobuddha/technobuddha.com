@@ -138,7 +138,7 @@ function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlW
                 columns={columns}
                 columnWidths={columnWidths}
                 scrollbarWidth={scrollbarWidth}
-                rowHeight={rowHeight}
+                rowHeight={32}
                 controlWidth={controlWidth}
                 menu={menu}
             />

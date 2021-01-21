@@ -4,6 +4,7 @@ import MusicNote               from '@material-ui/icons/MusicNote';
 import DelayedCircularProgress from '#control/delayedCircularProgress';
 import DataGrid                from '#control/datagrid';
 import useApi                  from '#context/api';
+import css                     from './NewAlbums.module.pcss';
 
 import type { RowRenderer } from '#control/datagrid/DataGrid/Row'; //TODO path
 
@@ -20,13 +21,18 @@ export const NewAlbums: React.FC = () => {
 
     //todo translate
     const rowRenderer: RowRenderer = ({datum}: {datum: any}) => (
-        <div style={{width: '100%', height: '100%'}}>
-            <img style={{width: 100, height: 100, margin: 5, float: 'left'}} alt="Album Artwork" src={`/art/${datum.collectionGroupId.toUpperCase()}`} ></img>
-            <div style={{fontSize: '125%'}}>{datum.artist.join('; ')}</div>
-            <div style={{fontSize: '115%'}}>{datum.album}</div>
-            <div>{datum.year}</div>
-            <div>{datum.genre?.join('; ')}</div>
-            <div>{datum.subgenre?.join('; ')}</div>
+        <div className={css.row}>
+            <img className={css.img}alt="Album Artwork" src={`/art/${datum.collectionGroupId.toUpperCase()}`} ></img>
+            <div className={css.artist}>{datum.artist.join('; ')}</div>
+            <div className={css.album}>{datum.album}</div>
+            <div className={css.year}>{datum.year}</div>
+            <div className={css.genre}>{datum.genre?.join('; ')}</div>
+            <div className={css.subgenre}>{datum.subgenre?.join('; ')}</div>
+            <div className={css.title}>
+                {datum.title?.sort().map((title: any, i: number) => (
+                    <div key={i}>{title}</div>
+                ))}
+            </div>
         </div>
     );
 
@@ -34,7 +40,7 @@ export const NewAlbums: React.FC = () => {
         return (
             <DataGrid
                 data={dataset}
-                rowHeight={110}
+                rowHeight={136}
                 columns={[
                     {name: 'artist',        type: 'array',  sortBy: ['artist', 'album']},
                     {name: 'album',         type: 'string', sortBy: ['album']},

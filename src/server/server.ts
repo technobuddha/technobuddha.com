@@ -261,7 +261,8 @@ import type { IncomingMessage } from 'http';
     app
     .use('/api', api)
     .use(
-        '/assets/',
+        '/assets/*',
+        (req, _res, next) => { req.url = req.url.slice(8); next(); },
         express.static(paths.assets),
         status404
     )
@@ -271,7 +272,8 @@ import type { IncomingMessage } from 'http';
         status404
     )
     .get(
-        '/dist/',
+        '/dist/*',
+        (req, _res, next) => { req.url = req.url.slice(6); next(); },
         express.static(paths.dist),
         status404
     )

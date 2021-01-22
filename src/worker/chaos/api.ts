@@ -1,38 +1,33 @@
 import color from '@technobuddha/library/color';
 import lerp  from '@technobuddha/library/lerp';
 
+export type MandelbrotReturn = { colors: RGBV[][], x_min: number, x_max: number, y_min: number, y_max: number };
 export type RGBV = { r: number, g: number; b: number };
 
-
-function mandelbrot(width: number, height: number, iterations: number): RGBV[][] {
+function mandelbrot(width: number, height: number, x_min: number, x_max: number, y_min: number, y_max: number, iterations: number): MandelbrotReturn {
     const counts: number[][] = [];
     const histo = new Array(iterations).fill(0);
 
-    let X_MIN = -2.00;
-    let X_MAX = +0.75;
-    let Y_MIN = -1.25;
-    let Y_MAX = +1.25;
-
-    const desired_width  = X_MAX - X_MIN;
-    const desired_height = Y_MAX - Y_MIN;
+    const desired_width  = x_max - x_min;
+    const desired_height = y_max - y_min;
     const ratio          = ((width / height) / (desired_width / desired_height));
 
     if(ratio < 1) {
-        const center = Y_MIN + desired_height / 2;
-        Y_MIN        = center - (desired_height/2) / ratio;
-        Y_MAX        = center + (desired_height/2) / ratio;
+        const center = y_min + desired_height / 2;
+        y_min        = center - (desired_height/2) / ratio;
+        y_max        = center + (desired_height/2) / ratio;
     } else {
-        const center = X_MIN + desired_width / 2;
-        X_MIN        = center - (desired_width/2) * ratio;
-        X_MAX        = center + (desired_width/2) * ratio;
+        const center = x_min + desired_width / 2;
+        x_min        = center - (desired_width/2) * ratio;
+        x_max        = center + (desired_width/2) * ratio;
     }
     
     for(let i = 0; i < width; ++i) {
         counts[i] = [];
 
         for(let j = 0; j < height; ++j) {
-            const x0        = i * 1 * ((X_MAX - X_MIN) / width)  + X_MIN;
-            const y0        = j * 1 * ((Y_MAX - Y_MIN) / height) + Y_MIN;
+            const x0        = i * 1 * ((x_max - x_min) / width)  + x_min;
+            const y0        = j * 1 * ((y_max - y_min) / height) + y_min;
             let x           = 0.0;
             let y           = 0.0;
             let iteration   = 0;
@@ -84,7 +79,7 @@ function mandelbrot(width: number, height: number, iterations: number): RGBV[][]
         }
     }
 
-    return colors;
+    return { colors, x_min, x_max, y_min, y_max };
 }
 
 export const exports = {

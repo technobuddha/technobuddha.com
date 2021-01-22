@@ -68,13 +68,57 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
     const [ mode, setMode ]     = useDerivedState<Mode>('compute', [width, height]);
     const grid                  = React.useRef<RGBV[][]>([]);
 
+    const x_min                 = React.useRef(-2.00);
+    const x_max                 = React.useRef(+0.75);
+    const y_min                 = React.useRef(-1.25);
+    const y_max                 = React.useRef(+1.25);
+
+    const mouseIsDown           = React.useRef(false);
+    const corner                = React.useRef({x: 0, y: 0});
+
+    const coordinates = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+        const { top, left, width, height } = canvas.current!.getBoundingClientRect();
+        const clientX = event.clientX - left;
+        const clientY = event.clientY - top;
+        const x = x_min.current + (clientX / width)  * (x_max.current - x_min.current);
+        const y = y_min.current + (clientY / height) * (y_max.current - y_min.current);
+        return {x, y};
+    }
+
+    const handleMouseDown       = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+        if(mode === 'display') {
+            mouseIsDown.current = true;
+            corner.current      = coordinates(event);
+        }
+    }
+
+    const handleMouseUp         = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+        if(mode === 'display') {
+            if(mouseIsDown.current) {
+                const { x, y } = coordinates(event);
+
+                x_min.current = Math.min(corner.current.x, x);
+                x_max.current = Math.max(corner.current.x, x);
+                y_min.current = Math.min(corner.current.y, y);
+                y_max.current = Math.max(corner.current.y, y);
+                mouseIsDown.current = false;
+                setMode('compute');
+            }
+        }
+    };
+
     React.useEffect(
         () => {
             if(mode === 'compute') {
-                chaos.mandelbrot(width, height, MAX_ITERATION)
-                .then(chaosGrid => {
+                chaos.mandelbrot(width, height, x_min.current, x_max.current, y_min.current, y_max.current, MAX_ITERATION)
+                .then(result => {
+                    grid.current = result.colors;
+                    x_min.current = result.x_min;
+                    x_max.current = result.x_max;
+                    y_min.current = result.y_min;
+                    y_max.current = result.y_max;
+                    console.log(x_min.current, x_max.current, y_min.current, y_max.current);
                     setMode('display');
-                    grid.current = chaosGrid;
                 })
                 .catch(err => console.error(err));
             } else if(mode === 'display') {
@@ -123,7 +167,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
                     <LinearProgress style={{width: '50%'}} color="primary" />
                 </div>
             }
-            <canvas ref={canvas} className={css.canvas} width={boxWidth} height={boxHeight}>
+            <canvas ref={canvas} className={css.canvas} width={boxWidth} height={boxHeight} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
             </canvas>
         </div>
     );

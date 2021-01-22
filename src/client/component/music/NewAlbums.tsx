@@ -3,7 +3,7 @@ import MusicNote      from '@material-ui/icons/MusicNote';
 import DelayedLoading from '#control/delayedLoading';
 import DataGrid       from '#control/datagrid';
 import useApi         from '#context/api';
-import css            from './NewAlbums.module.pcss';
+import css            from './NewAlbums.module.css';
 
 import type { RowRenderer } from '#control/datagrid/DataGrid/Row'; //TODO path
 

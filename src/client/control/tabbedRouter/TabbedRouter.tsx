@@ -3,7 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { Switch, Route, Redirect, useRouteMatch, useHistory } from '#context/router';
-import css from './TabbedRouter.module.pcss';
+import css from './TabbedRouter.module.css';
 
 type TabPanelProps = {
     content: React.ComponentType;
@@ -40,8 +40,6 @@ type TabbedRouterProps = {
 export const TabbedRouter: React.FC<TabbedRouterProps> = ({tabs}) => {
     const match = useRouteMatch();
     const history = useHistory();
-
-    console.log(match);
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     const handleChange = (_event: React.ChangeEvent<{}>, newValue: any) => {

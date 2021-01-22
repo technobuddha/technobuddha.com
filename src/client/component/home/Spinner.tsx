@@ -1,7 +1,7 @@
 import React    from 'react';
 import memoize  from 'lodash/memoize';
 import Box      from '@material-ui/core/Box';
-import css      from './Spinner.pcss';
+import css      from './Spinner.module.css';
 import type { IconType } from '%icons';
 
 export type SpinnerProps = {

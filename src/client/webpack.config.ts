@@ -45,7 +45,7 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                     exclude:    /node-modules/,
                 },
                 {
-                    test:       /\.pcss$/,
+                    test:       /\.p?css$/,
                     use: [
                         'css-hot-loader',
                         MiniCssExtractPlugin.loader,
@@ -55,7 +55,7 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                                 modules: {
                                     compileType:                'module',
                                     mode:                       'local',
-                                    auto:                       /\.pcss$/,
+                                    auto:                       /\.p?css$/,
                                     exportGlobals:              true,
                                     localIdentName:             isDevelopment ? '[local]-[path][name]' : '[hash:base64]',
                                     localIdentContext:          paths.client,
@@ -122,7 +122,7 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                 filename:           '[name].css',
                 chunkFilename:      '[id].css',
             }),
-            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: paths.src, globPattern: '**/*.pcss', camelCase: true, logger, config: postcss_config }) : null),
+            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: paths.src, globPattern: '**/*.css', camelCase: true, logger, config: postcss_config }) : null),
             (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                                    : null),
             //(isDevelopment ? new BundleAnalyzerPlugin()                                                                                  : null),
         ]),

@@ -5,7 +5,7 @@ import TextField        from '~src/client/control/textField/TextField';
 import IconButton       from '@material-ui/core/IconButton';
 import Search           from '@material-ui/icons/Search';
 import Cancel           from '@material-ui/icons/Cancel';
-import css              from './SearchInput.pcss';
+import css              from './SearchInput.module.css';
 
 type SearchInputProps =
     {

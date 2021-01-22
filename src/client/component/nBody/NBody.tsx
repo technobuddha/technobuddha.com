@@ -1,5 +1,5 @@
 import React from 'react';
-import css   from './NBody.module.pcss';
+import css   from './NBody.module.css';
 
 export const NBody: React.FC = () => {
     const div = React.useRef<HTMLDivElement>(null);

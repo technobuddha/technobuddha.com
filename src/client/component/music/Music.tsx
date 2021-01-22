@@ -1,11 +1,14 @@
-import React            from 'react';
-import useTranslation   from '#context/i18n';
-import TabbedRouter     from '#control/tabbedRouter';
-import NewAlbums        from './NewAlbums';
-import Tracks           from './Tracks';
-import Artists          from './Artists';
-import Genres           from './Genres';
-import { GiMusicSpell, GiMusicalScore, GiMeepleGroup, GiMusicalKeyboard } from 'react-icons/gi';
+import React               from 'react';
+import useTranslation      from '#context/i18n';
+import TabbedRouter        from '#control/tabbedRouter';
+import NewAlbums           from './NewAlbums';
+import Tracks              from './Tracks';
+import Artists             from './Artists';
+import Genres              from './Genres';
+import {GiMusicSpell}      from '%icons/gi/GiMusicSpell';
+import {GiMusicalScore }   from '%icons/gi/GiMusicalScore';
+import {GiMeepleGroup}     from '%icons/gi/GiMeepleGroup';
+import {GiMusicalKeyboard} from '%icons/gi/GiMusicalKeyboard';
 
 /**
  * GiMusicalKeyboard

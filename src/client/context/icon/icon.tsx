@@ -1,5 +1,5 @@
-import React            from 'react';
-import { IconContext }  from 'react-icons';
+import React           from 'react';
+import { IconContext } from '%icons';
 
 type IconProviderProps = {
     children: React.ReactNode;
@@ -7,7 +7,7 @@ type IconProviderProps = {
 
 export const IconProvider: React.FC<IconProviderProps> = ({children}: IconProviderProps) => {
     return (
-        <IconContext.Provider value={{ size: '1.5em' }}>
+        <IconContext.Provider value={{ size: '1.5em', color: 'white' }}>
             {children}
         </IconContext.Provider>
     );

@@ -1,18 +1,20 @@
-import React from 'react';
-import type { IconType }            from 'react-icons';
-import type { TFunction } from 'react-i18next';
-import {GiHouse}            from 'react-icons/gi';
-import {GiMusicalNotes}     from 'react-icons/gi';
-import {GiConwayLifeGlider} from 'react-icons/gi';
-import {GiOrbital}          from 'react-icons/gi';
-import {GiThornyTentacle}   from 'react-icons/gi';
-import {GiChessKnight}      from 'react-icons/gi';
+import React                from 'react';
+
+import {GiHouse}            from '%icons/gi/GiHouse';
+import {GiMusicalNotes}     from '%icons/gi/GiMusicalNotes';
+import {GiConwayLifeGlider} from '%icons/gi/GiConwayLifeGlider';
+import {GiOrbital}          from '%icons/gi/GiOrbital';
+import {GiThornyTentacle}   from '%icons/gi/GiThornyTentacle';
+import {GiChessKnight}      from '%icons/gi/GiChessKnight';
 import Home                 from '#component/home';
 import NBody                from '#component/nBody';
 import Music                from '#component/music';
 import Knight               from '#component/knight';
 import Life                 from '#component/life';
 import Chaos                from '#component/chaos';
+
+import type { IconType }  from '%icons';
+import type { TFunction } from 'react-i18next';
 
 export type Component = {
     icon: IconType;

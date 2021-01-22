@@ -1,22 +1,38 @@
 import color from '@technobuddha/library/color';
+import lerp  from '@technobuddha/library/lerp';
 
 export type RGBV = { r: number, g: number; b: number };
 
 
-function lerp(color1: number, color2: number, t: number): number {
-    return color1 * (1 - t) + color2 * t;
-}
-
 function mandelbrot(width: number, height: number, iterations: number): RGBV[][] {
     const counts: number[][] = [];
     const histo = new Array(iterations).fill(0);
+
+    let X_MIN = -2.00;
+    let X_MAX = +0.75;
+    let Y_MIN = -1.25;
+    let Y_MAX = +1.25;
+
+    const desired_width  = X_MAX - X_MIN;
+    const desired_height = Y_MAX - Y_MIN;
+    const ratio          = ((width / height) / (desired_width / desired_height));
+
+    if(ratio < 1) {
+        const center = Y_MIN + desired_height / 2;
+        Y_MIN        = center - (desired_height/2) / ratio;
+        Y_MAX        = center + (desired_height/2) / ratio;
+    } else {
+        const center = X_MIN + desired_width / 2;
+        X_MIN        = center - (desired_width/2) * ratio;
+        X_MAX        = center + (desired_width/2) * ratio;
+    }
     
     for(let i = 0; i < width; ++i) {
         counts[i] = [];
 
         for(let j = 0; j < height; ++j) {
-            const x0        = i * (3.0 / width)  - 2.0;
-            const y0        = j * (2.0 / height) - 1.0;
+            const x0        = i * 1 * ((X_MAX - X_MIN) / width)  + X_MIN;
+            const y0        = j * 1 * ((Y_MAX - Y_MIN) / height) + Y_MIN;
             let x           = 0.0;
             let y           = 0.0;
             let iteration   = 0;

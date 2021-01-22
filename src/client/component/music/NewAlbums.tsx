@@ -1,10 +1,9 @@
-import React                   from 'react';
-import Box                     from '@material-ui/core/Box';
-import MusicNote               from '@material-ui/icons/MusicNote';
-import DelayedCircularProgress from '#control/delayedCircularProgress';
-import DataGrid                from '#control/datagrid';
-import useApi                  from '#context/api';
-import css                     from './NewAlbums.module.pcss';
+import React          from 'react';
+import MusicNote      from '@material-ui/icons/MusicNote';
+import DelayedLoading from '#control/delayedLoading';
+import DataGrid       from '#control/datagrid';
+import useApi         from '#context/api';
+import css            from './NewAlbums.module.pcss';
 
 import type { RowRenderer } from '#control/datagrid/DataGrid/Row'; //TODO path
 
@@ -58,7 +57,7 @@ export const NewAlbums: React.FC = () => {
             />
         );
     } else {
-        return <Box display="flex" flexGrow={1} justifyContent="center" alignItems="center"><DelayedCircularProgress /></Box>;
+        return <DelayedLoading />;
     }
 
 }

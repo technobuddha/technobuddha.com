@@ -1,9 +1,7 @@
-import React                   from 'react';
-import Box                     from '@material-ui/core/Box';
-//import MusicNote               from '@material-ui/icons/MusicNote';
-import DelayedCircularProgress from '#control/delayedCircularProgress';
-import DataGrid                from '#control/datagrid';
-import useApi                  from '#context/api';
+import React           from 'react';
+import DelayedLoading  from '#control/delayedLoading';
+import DataGrid        from '#control/datagrid';
+import useApi          from '#context/api';
 
 export const NewAlbums: React.FC = () => {
     const api   = useApi();
@@ -37,7 +35,7 @@ export const NewAlbums: React.FC = () => {
             />
         );
     } else {
-        return <Box display="flex" flexGrow={1} justifyContent="center" alignItems="center"><DelayedCircularProgress /></Box>;
+        return <DelayedLoading />;
     }
 
 }

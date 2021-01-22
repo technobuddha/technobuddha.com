@@ -1,4 +1,5 @@
 import React from 'react';
+import css   from './NBody.module.pcss';
 
 export const NBody: React.FC = () => {
     const div = React.useRef<HTMLDivElement>(null);
@@ -215,14 +216,7 @@ export const NBody: React.FC = () => {
     
 
     return (
-        <div ref={div} style={{ 
-            width: '100%',
-            height: '100%',
-            backgroundImage: 'url("/assets/stars/space-the-final-frontier.jpg',
-            backgroundRepeat: 'repeat',
-            position: 'relative'
-        }}>
-
+        <div ref={div} className={css.space}>
         </div>
     )
 }

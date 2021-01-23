@@ -178,6 +178,16 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
                     <LinearProgress style={{width: '50%'}} color="primary" />
                 </div>
             }
+            {
+                mode === 'display' &&
+                <div className={css.legend}>
+                    <div className={css.title}>{t('Controls')}</div>
+                    <div>{t('Zoom in')}</div>
+                    <div>{t('Left-click and drag')}</div>
+                    <div>{t('Zoom out')}</div>
+                    <div>{t('Right-click')}</div>
+                </div>
+            }
             <canvas ref={canvas} className={css.canvas} width={boxWidth} height={boxHeight} />
             <canvas
                 ref={overlay}

@@ -24,6 +24,7 @@
   "Clean up the UI": "Clffun up zee UI",
   "Common names and surnames are easy to guess": "Cummun nemffs und soornemffs ere-a iesy tu gooffss",
   "Computing": "Cumpooooeeng",
+  "Controls": "Cunooruls",
   "Conway's Game of Life": "Cunwey's Geme-a ooff Leeffe-a",
   "Create Account": "Crffeooe-a Eccuoonoo",
   "Dates are often easy to guess": "Deooffs ere-a ooffooffn iesy tu gooffss",
@@ -39,6 +40,7 @@
   "Increase functionality to show individual artists/albums/genres": "Incrffese-a fooncshuneleeooy tu shoo indeevudooel erooeesoos/elbooms/gffnrffs",
   "Knight": "Kneeghoo",
   "Last Name": "Lesoo Neme-a",
+  "Left-click and drag": "Lffffoo-cleeck und dreg",
   "Life": "Leeffe-a",
   "Log In": "Lug In",
   "long": "lung",
@@ -62,6 +64,7 @@
   "Reset Password": "Rffsffoo Pesswurd",
   "Reset Your Password": "Rffsffoo Yuoor Pesswurd",
   "Reversed words aren't much harder to guess": "Rffvffrsffd wurds erffn't mooch herdffr tu gooffss",
+  "Right-click": "Reeghoo-cleeck",
   "Sequences like abc or 6543 are easy to guess": "Sffqooffncffs leeke-a ebc oor 6543 ere-a iesy tu gooffss",
   "Server error": "Sffrvffr irrur",
   "Short keyboard patterns are easy to guess": "Shuroo kffybuerd peooooffrns ere-a iesy tu gooffss",
@@ -80,5 +83,7 @@
   "Use a few words, avoid common phrases": "Use-a a foo wurds, evueed cummun phresffs",
   "Use a longer keyboard pattern with more turns": "Use-a a lungffr kffybuerd peooooffrn weeooh mure-a toorns",
   "Verify Password": "Vffreeffy Pesswurd",
-  "Version": "Vffrseeun"
+  "Version": "Vffrseeun",
+  "Zoom in": "Zuum in",
+  "Zoom out": "Zuum oooooo"
 }

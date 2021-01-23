@@ -32,6 +32,34 @@
         }
     }
 
+    .legend {
+        position: absolute;
+        top: mui-spacing(2);
+        left: mui-spacing(2);
+        z-index: 12;
+        width: 20rem;
+        height: 6rem;
+        background-color: mui-theme(palette-primary-main);
+        border: mui-spacing(0.75) solid mui-theme(palette-primary-light);
+        color: mui-theme(palette-primary-contrastText);
+        display: grid;
+        padding: mui-spacing(1);
+        grid-template-columns: 40% 60%;
+        grid-template-areas:
+            "title title"
+            "left  right";
+
+       .title {
+           grid-area: title;
+           font-size: 1.1em;
+           font-weight: bold;
+           text-align: center;
+           background-color: mui-theme(palette-primary-dark);
+           padding-top: mui-spacing(0.5);
+           margin-bottom: mui-spacing(0.5);
+       }
+    }
+
     .canvas {
         position: absolute;
         border: none;

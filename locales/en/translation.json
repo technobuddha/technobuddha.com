@@ -26,6 +26,7 @@
   "Clean up the UI": "Clean up the UI",
   "Common names and surnames are easy to guess": "Common names and surnames are easy to guess",
   "Computing": "Computing",
+  "Controls": "Controls",
   "Conway's Game of Life": "Conway's Game of Life",
   "Create Account": "Create Account",
   "Dates are often easy to guess": "Dates are often easy to guess",
@@ -41,6 +42,7 @@
   "Increase functionality to show individual artists/albums/genres": "Increase functionality to show individual artists/albums/genres",
   "Knight": "Knight",
   "Last Name": "Last Name",
+  "Left-click and drag": "Left-click and drag",
   "Life": "Life",
   "Log In": "Log In",
   "long": "long",
@@ -64,6 +66,7 @@
   "Reset Password": "Reset Password",
   "Reset Your Password": "Reset Your Password",
   "Reversed words aren't much harder to guess": "Reversed words aren't much harder to guess",
+  "Right-click": "Right-click",
   "Sequences like abc or 6543 are easy to guess": "Sequences like abc or 6543 are easy to guess",
   "Server error": "Server error",
   "Short keyboard patterns are easy to guess": "Short keyboard patterns are easy to guess",
@@ -82,5 +85,7 @@
   "Use a few words, avoid common phrases": "Use a few words, avoid common phrases",
   "Use a longer keyboard pattern with more turns": "Use a longer keyboard pattern with more turns",
   "Verify Password": "Verify Password",
-  "Version": "Version"
+  "Version": "Version",
+  "Zoom in": "Zoom in",
+  "Zoom out": "Zoom out"
 }

@@ -35,8 +35,6 @@ type TabbedRouterProps = {
     }[];
 }
 
-
-
 export const TabbedRouter: React.FC<TabbedRouterProps> = ({tabs}) => {
     const match = useRouteMatch();
     const history = useHistory();
@@ -55,12 +53,12 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({tabs}) => {
                 <div className={css.root}>
                     <AppBar position="static" color="default">
                         <Tabs
-                        value={history.location.pathname}
-                        onChange={handleChange}
-                        variant="scrollable"
-                        scrollButtons="on"
-                        indicatorColor="primary"
-                        textColor="primary"
+                            value={history.location.pathname}
+                            onChange={handleChange}
+                            variant="scrollable"
+                            scrollButtons="on"
+                            indicatorColor="primary"
+                            textColor="primary"
                         >
                             {tabs.map(({label, icon: Icon, url}, i) => <Tab key={i} value={`${match.path}/${url}`} label={label} icon={Icon}/>)}
                         </Tabs>

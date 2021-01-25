@@ -7,7 +7,7 @@ type IconProviderProps = {
 
 export const IconProvider: React.FC<IconProviderProps> = ({children}: IconProviderProps) => {
     return (
-        <IconContext.Provider value={{ size: '1.5em', color: 'white' }}>
+        <IconContext.Provider value={{ size: '1.5em' }}>
             {children}
         </IconContext.Provider>
     );

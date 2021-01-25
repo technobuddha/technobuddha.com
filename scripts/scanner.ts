@@ -1,16 +1,18 @@
 #!/bin/env -S ts-node --prefer-ts-exts  -r ./config/env.ts -r tsconfig-paths/register
-import path                                 from 'path';
-import stream                               from 'stream';
-import vfs                                  from 'vinyl-fs';
-import isString                             from 'lodash/isString';
-import isNil                                from 'lodash/isNil';
-import scanner                              from 'i18next-scanner';
-import typescriptTransform                  from 'i18next-scanner-typescript';
-import paths                                from '#config/paths';
-import i18next                              from '#settings/i18next';
+import chalk               from 'chalk';
+import path                from 'path';
+import stream              from 'stream';
+import vfs                 from 'vinyl-fs';
+import isString            from 'lodash/isString';
+import isNil               from 'lodash/isNil';
+import scanner             from 'i18next-scanner';
+import typescriptTransform from 'i18next-scanner-typescript';
+import paths               from '#config/paths';
+import i18next             from '#settings/i18next';
 import {translate, readTranslations, writeTranslations } from '#util/translation';
-import type { I18NextScannerConfig }        from 'i18next-scanner';
-import type { TranslateReturn }             from '#util/translation';
+
+import type { I18NextScannerConfig } from 'i18next-scanner';
+import type { TranslateReturn }      from '#util/translation';
 
 (async function() {
     const foreign = i18next.supportedLngs ? i18next.supportedLngs.filter(lng => lng != 'en') : [];
@@ -30,8 +32,10 @@ import type { TranslateReturn }             from '#util/translation';
                 results => {
                     results.forEach(
                         result => {
-                            if(!isNil(result.translation))
+                            if(!isNil(result.translation)) {
+                                console.log(`${chalk.green('translated')} ${chalk.grey(`${ns} ${lng}`)} ${result.key}`);
                                 t[result.key] = result.translation;
+                            }
                         }
                     );
                     
@@ -106,9 +110,10 @@ import type { TranslateReturn }             from '#util/translation';
                     if(key in oldTranslations) {
                         newTranslations[key] = oldTranslations[key];
                         delete oldTranslations[key];
-                    } if(key in archiveTranslations) {
+                    } else if(key in archiveTranslations) {
                         newTranslations[key] = archiveTranslations[key];
                         delete archiveTranslations[key];
+                        console.log(`${chalk.cyanBright('reinstated')} ${chalk.grey(`${ns} ${lng}`)} ${key}`);
                     } else {
                         promises.push(translate(key, lng));
                     }
@@ -120,14 +125,17 @@ import type { TranslateReturn }             from '#util/translation';
 
             for(const [key, translation] of Object.entries(oldTranslations)) {
                 archiveTranslations[key] = translation;
+                console.log(`${chalk.cyan('archived')} ${chalk.grey(`${ns} ${lng}`)} ${key}`);
             }
             
             Promise.all(promises)
             .then(
                 results => {
                     for(const result of results) {
-                        if(result.translation)
+                        if(result.translation) {
                             newTranslations[result.key] = result.translation;
+                            console.log(`${chalk.green('translated+')} ${chalk.grey(`${ns} ${lng}`)} ${result.key}`);
+                        }
                     }
 
                     writeTranslations(newTranslations, lng, ns);

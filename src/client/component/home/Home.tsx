@@ -10,6 +10,8 @@ export type HomeProps = {
     children?:  never;
 };
 
+const FADE = (Math.random() * 0xFFFFFFFF >>> 0).toString(16);
+
 export const Home: React.FC<HomeProps> = () => {
     const { t } = useTranslation();
     const components = useComponents();
@@ -20,9 +22,8 @@ export const Home: React.FC<HomeProps> = () => {
             const duration = speed * components.length;
             const oneSecond = 100.0 / duration;
 
-            // TODO the name of the animation should be randomized
             return `
-                @keyframes fade {
+                @keyframes ${FADE} {
                     0%                                       { opacity: 0; max-height: 0;    }
                     ${((duration - speed) + 0) * oneSecond}% { opacity: 0; max-height: 0;    }
                     ${((duration - speed) + 1) * oneSecond}% { opacity: 1; max-height: 100%; }
@@ -37,7 +38,7 @@ export const Home: React.FC<HomeProps> = () => {
     const articleStyle = React.useMemo(
         () => {
             return memoize<(i: number) => React.CSSProperties>(i => ({
-                animationName: 'fade',
+                animationName: FADE,
                 animationDuration: `${components.length * speed}s`,
                 animationDelay: `${-(components.length - i - 1) * speed}s`,
             }));

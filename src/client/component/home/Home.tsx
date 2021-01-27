@@ -10,7 +10,7 @@ export type HomeProps = {
     children?:  never;
 };
 
-const FADE = (Math.random() * 0xFFFFFFFF >>> 0).toString(16);
+const FADE = `fade${(Math.random() * 0xFFFFFFFF >>> 0).toString(16)}`;
 
 export const Home: React.FC<HomeProps> = () => {
     const { t } = useTranslation();

@@ -8,7 +8,7 @@ import isNil           from 'lodash/isNil';
 import isObject        from 'lodash/isObject';
 import toString        from 'lodash/toString';
 
-import type { DataType } from './DataGrid/column';    // TODO data types should be moved!
+import type { DataType } from './DataGrid';
 
 export type AnythingParams = {
     className?: string;

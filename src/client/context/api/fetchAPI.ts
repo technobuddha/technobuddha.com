@@ -1,9 +1,9 @@
-import fetcher             from '@technobuddha/library/fetcher';
+import fetcher               from '@technobuddha/library/fetcher';
 import { replacer, reviver } from '@technobuddha/library/json';
-import isArray             from 'lodash/isArray';
-import every               from 'lodash/every';
-import isNil               from 'lodash/isNil';
-import range               from 'lodash/range';
+import isArray               from 'lodash/isArray';
+import every                 from 'lodash/every';
+import isNil                 from 'lodash/isNil';
+import range                 from 'lodash/range';
 
 import type { Options as FetcherOptions }    from '@technobuddha/library/fetcher';
 

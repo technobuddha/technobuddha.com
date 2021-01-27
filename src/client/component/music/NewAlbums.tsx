@@ -5,7 +5,7 @@ import DataGrid       from '#control/datagrid';
 import useApi         from '#context/api';
 import css            from './NewAlbums.module.css';
 
-import type { RowRenderer } from '#control/datagrid/DataGrid/Row'; //TODO path
+import type { RowRenderer } from '#control/datagrid';
 
 export const NewAlbums: React.FC = () => {
     const api   = useApi();

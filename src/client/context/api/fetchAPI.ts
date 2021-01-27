@@ -54,8 +54,7 @@ export async function fetchAPI<T>(url: string, options: FetchAPIOptions, json?: 
                     })
                 );
             } else {
-                // TODO TRANSLATE OUTSIDE OF CONTEXT
-                throw Error(`Status code: ${response.status} ${response.statusText}`);
+                throw Error(`${response.status} ${response.statusText}`);
             }
         }
     ).catch(err => {

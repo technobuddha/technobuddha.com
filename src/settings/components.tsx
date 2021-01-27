@@ -13,7 +13,7 @@ import Chaos                from '#component/chaos';
 
 import type React         from 'react';
 import type { IconType }  from '%icons';
-import type { TFunction } from 'react-i18next';
+import type { TFunction } from '#context/i18n';
 
 export type Component = {
     icon: IconType;
@@ -25,7 +25,7 @@ export type Component = {
     todo?: string[];
 };
 
-export const components: (t: TFunction<string>) => Component[] = (t) => [
+export const components: (t: TFunction) => Component[] = (t) => [
     {
         icon: GiHouse,
         primary: t('Home'),

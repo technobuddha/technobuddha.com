@@ -34,7 +34,7 @@
     "@material-ui/styles": "^4.11.2",
     "@react-icons/all-files": "^4.1.0",
     "@technobuddha/library": "^1.0.1-3",
-    "@technobuddha/react-hooks": "0.0.6",
+    "@technobuddha/react-hooks": "^1.0.0",
     "bigfloat": "^0.1.1",
     "browserslist-useragent": "^3.0.3",
     "cheferizeIt": "^1.0.4",

@@ -1,5 +1,5 @@
 import React                from 'react';
-import { LinearProgress }   from '@material-ui/core';
+import LinearProgress       from '@material-ui/core/LinearProgress';
 import { useDerivedState }  from '@technobuddha/react-hooks';
 import { Size }             from 'mui-size';
 import { useTranslation }   from '#context/i18n';
@@ -23,23 +23,24 @@ type ChaosBoardProps = {boxWidth: number, boxHeight: number};
 type Mode = 'compute' | 'display';
 
 const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoardProps) => {
-    const { t }                 = useTranslation();
-    const canvas                = React.useRef<HTMLCanvasElement>(null);
-    const overlay               = React.useRef<HTMLCanvasElement>(null);
-    const width                 = React.useMemo(() => Math.floor(boxWidth / SIZE),  [boxWidth]);
-    const height                = React.useMemo(() => Math.floor(boxHeight / SIZE), [boxHeight]);
-    const [ mode, setMode ]     = useDerivedState<Mode>('compute', [width, height]);
-    const grid                  = React.useRef<RGBV[][]>([]);
+    const { t }                         = useTranslation();
+    const canvas                        = React.useRef<HTMLCanvasElement>(null);
+    const overlay                       = React.useRef<HTMLCanvasElement>(null);
+    const width                         = React.useMemo(() => Math.floor(boxWidth / SIZE),  [boxWidth]);
+    const height                        = React.useMemo(() => Math.floor(boxHeight / SIZE), [boxHeight]);
+    const [ mode, setMode ]             = useDerivedState<Mode>('compute', [width, height]);
+    const [ showLegend, setShowLegend ] = React.useState(true);
+    const grid                          = React.useRef<RGBV[][]>([]);
 
-    const x_min                 = React.useRef(-2.00);
-    const x_max                 = React.useRef(+0.75);
-    const y_min                 = React.useRef(-1.25);
-    const y_max                 = React.useRef(+1.25);
+    const x_min                         = React.useRef(-2.00);
+    const x_max                         = React.useRef(+0.75);
+    const y_min                         = React.useRef(-1.25);
+    const y_max                         = React.useRef(+1.25);
 
-    const mouseIsDown           = React.useRef(false);
-    const corner                = React.useRef({x: 0, y: 0});
+    const mouseIsDown                   = React.useRef(false);
+    const corner                        = React.useRef({x: 0, y: 0});
 
-    const coordinates = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    const coordinates = (event: React.MouseEvent<HTMLCanvasElement>) => {
         const { top, left } = canvas.current!.getBoundingClientRect();
         const x = event.clientX - left;
         const y = event.clientY - top;
@@ -53,12 +54,14 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
     }
 
     const clearOverlay = () => {
+        overlay.current!.focus();
+
         const context   = overlay.current!.getContext('2d')!;
         context.clearRect(0, 0, width, height);
         return context;
     }
 
-    const handleMouseDown       = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    const handleMouseDown       = (event: React.MouseEvent<HTMLCanvasElement>) => {
         if(mode === 'display') {
             event.stopPropagation();
             event.preventDefault();
@@ -81,7 +84,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
         }
     }
 
-    const handleMouseUp         = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    const handleMouseUp         = (event: React.MouseEvent<HTMLCanvasElement>) => {
         if(mode === 'display') {
             if(mouseIsDown.current) {
                 const click  = coordinates(event);
@@ -103,7 +106,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
         }
     };
 
-    const handleMouseMove       = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    const handleMouseMove       = (event: React.MouseEvent<HTMLCanvasElement>) => {
         if(mode === 'display' && mouseIsDown.current) {
             const { x, y }  = coordinates(event);
             const context   = clearOverlay();
@@ -112,9 +115,15 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
         }
     }
 
-    const handleContextMenu     = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const handleContextMenu     = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         return false;
+    }
+
+    const handleKeyUp           = (event: React.KeyboardEvent<HTMLCanvasElement>) => {
+        if(event.key === 'Escape') {
+            setShowLegend(show => !show);
+        }
     }
 
     React.useEffect(
@@ -179,9 +188,11 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
                 </div>
             }
             {
-                mode === 'display' &&
+                mode === 'display' && showLegend &&
                 <div className={css.legend}>
                     <div className={css.title}>{t('Controls')}</div>
+                    <div>{t('Show/hide legend')}</div>
+                    <div>{t('ESC')}</div>
                     <div>{t('Zoom in')}</div>
                     <div>{t('Left-click and drag')}</div>
                     <div>{t('Zoom out')}</div>
@@ -192,11 +203,13 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
             <canvas
                 ref={overlay}
                 className={css.overlay}
+                tabIndex={0}
                 width={boxWidth}
                 height={boxHeight}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
                 onMouseMove={handleMouseMove}
+                onKeyUp={handleKeyUp}
                 onContextMenu={handleContextMenu}
             />
 

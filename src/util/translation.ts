@@ -31,8 +31,7 @@ export function translate(key: string, language: string): Promise<TranslateRetur
         targetLanguageCode: language,
     };
 
-    // TODO These asserts are dangerous
-    return tsc.translateText(request).then(result => ({ key, language, translation: result[0]!.translations![0].translatedText }));
+    return tsc.translateText(request).then(result => ({ key, language, translation: result[0]?.translations?.[0].translatedText ?? null }));
 }
 
 export function readTranslations(lng: string, ns: string, group?: string): Record<string, string> {

@@ -9,29 +9,29 @@ type RowState<T = unknown> = {
     unselectedCount:    number;
     setSelected:        (datum: T, selected: boolean) => void;
     getSelected:        (datum: T) => boolean;
-    countSelected:      (data: T[]) => {selected: number, unselected: number}
-}
+    countSelected:      (data: T[]) => {selected: number; unselected: number};
+};
 
 type RowProperties = {
     selected:   boolean;
-}
+};
 
 const RowContext = React.createContext<RowState<any>>(null!);
 export function useRow<T = unknown>() {
-   return React.useContext(RowContext) as RowState<T>;
+    return React.useContext(RowContext) as RowState<T>;
 }
 
 type RowProviderProps<T = unknown> = {
     selected?:              (datum: T) => boolean;
     onSelectionChanged?:    (params: OnSelectionChangedParams<T>) => void;
     children?:              React.ReactNode;
-}
+};
 
 function defaultRowProperties(selected = false) {
-    return {selected};
+    return { selected };
 }
 
-export function RowProvider<T = unknown>({selected, onSelectionChanged, children}: RowProviderProps<T>) {
+export function RowProvider<T = unknown>({ selected, onSelectionChanged, children }: RowProviderProps<T>) {
     const { data }          = useGrid<T>();
     const [, forceUpdate]   = React.useReducer(x => x + 1, 0);
 
@@ -39,7 +39,7 @@ export function RowProvider<T = unknown>({selected, onSelectionChanged, children
         () => {
             let   selectedCount   = 0;
             const map             = new Map<T, RowProperties>();
-    
+
             data.forEach(
                 datum => {
                     const datumSelected = !!selected?.(datum);
@@ -47,10 +47,10 @@ export function RowProvider<T = unknown>({selected, onSelectionChanged, children
                     map.set(datum, defaultRowProperties(datumSelected));
                 }
             );
-    
-            console.log('Row Provider initialized with ', selectedCount, data.length)
 
-            return {map, selectedCount, unselectedCount: data.length - selectedCount, now: Date.now() };
+            console.log('Row Provider initialized with ', selectedCount, data.length);
+
+            return { map, selectedCount, unselectedCount: data.length - selectedCount, now: Date.now() };
         },
         [data, selected]
     );
@@ -64,15 +64,15 @@ export function RowProvider<T = unknown>({selected, onSelectionChanged, children
             return false;
         },
         [state]
-    )
+    );
 
     const setDatumSelected = React.useCallback(
-        (datum: T, selected: boolean) => {
+        (datum: T, isSelected: boolean) => {
             const current = state.map.get(datum);
             if(current) {
-                if(current.selected !== selected) {
-                    current.selected = selected;
-                    if(selected) {
+                if(current.selected !== isSelected) {
+                    current.selected = isSelected;
+                    if(isSelected) {
                         state.selectedCount++;
                         state.unselectedCount--;
                         forceUpdate();
@@ -90,49 +90,49 @@ export function RowProvider<T = unknown>({selected, onSelectionChanged, children
     );
 
     const setSelected = React.useCallback(
-        (row: T | T[], selected: boolean) => {
-            if(isArray(row)) 
-                row.forEach(datum => setDatumSelected(datum, selected));
+        (row: T | T[], isSelected: boolean) => {
+            if(isArray(row))
+                row.forEach(datum => setDatumSelected(datum, isSelected));
             else
-                setDatumSelected(row, selected);
+                setDatumSelected(row, isSelected);
         },
         [setDatumSelected]
     );
 
     const countSelected = React.useCallback(
-        (data: T[]) => {
-            let selected    = 0;
-            let unselected  = 0;
-            data.forEach(datum => {
+        (rows: T[]) => {
+            let cntSelected    = 0;
+            let cntUnselected  = 0;
+            rows.forEach(datum => {
                 const datumState = state.map.get(datum);
                 if(datumState) {
-                    if(datumState.selected) selected++; else unselected++;
+                    if(datumState.selected) cntSelected++; else cntUnselected++;
                 } else {
                     console.error('Row is not in the WeakMap');
                 }
             });
 
-            return {selected, unselected};
+            return { selected: cntSelected, unselected: cntUnselected };
         },
         [state]
-    )
+    );
 
     React.useEffect(
         () => {
             onSelectionChanged?.({
                 selectedRows:   data.filter(datum => getSelected(datum)),
                 selectedCount:  state.selectedCount,
-                unselectedCount: state.unselectedCount
+                unselectedCount: state.unselectedCount,
             });
         },
         [state, state.selectedCount, state.unselectedCount]
     );
-    
+
     return (
-        <RowContext.Provider value={{selectedCount: state.selectedCount, unselectedCount: state.unselectedCount, getSelected, setSelected, countSelected} as RowState<T>}>
+        <RowContext.Provider value={{ selectedCount: state.selectedCount, unselectedCount: state.unselectedCount, getSelected, setSelected, countSelected } as RowState<T>}>
             {children}
         </RowContext.Provider>
-    )
+    );
 }
 
 export default useRow;

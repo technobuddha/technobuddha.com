@@ -1,14 +1,14 @@
 import React                from 'react';
 import { create2DArray }    from '@technobuddha/library/create2DArray';
-import { useDerivedState}   from '@technobuddha/react-hooks';
+import { useDerivedState }   from '@technobuddha/react-hooks';
 import splitLines           from '@technobuddha/library/splitLines';
 import clean                from '@technobuddha/library/clean';
 import { space }            from '@technobuddha/library/constants';
 import { Size }             from 'mui-size';
 
-const MOVES = [[1,1], [1,0], [1,-1], [0,-1], [-1,-1], [-1,0], [-1,1], [0,1]];
+const MOVES = [[1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1], [0, 1]];
 const SIZE  = 4;
-const START = 
+const START =
 //  **
 // **
 //  *
@@ -17,18 +17,18 @@ const START =
  *
    *
 **  ***
-`
+`;
 
 export const Life: React.FC = () => {
     return (
         <Size width="100%" height="100%">
             {
-                ({width, height}) => 
+                ({ width, height }) =>
                     <LifeBoard start={START} boxWidth={width} boxHeight={height} />
             }
         </Size>
-    )
-}
+    );
+};
 
 type LifeBoardProps = {
     start: string;
@@ -37,10 +37,10 @@ type LifeBoardProps = {
     children?: never;
 };
 
-const LifeBoard: React.FC<LifeBoardProps> = ({boxWidth, boxHeight, start}: LifeBoardProps) => {
+const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: LifeBoardProps) => {
     const canvas                = React.useRef<HTMLCanvasElement>(null);
     const width                 = React.useMemo(() => Math.floor(boxWidth / SIZE),  [boxWidth]);
-    const height                = React.useMemo(() => Math.floor(boxHeight / SIZE), [boxHeight])
+    const height                = React.useMemo(() => Math.floor(boxHeight / SIZE), [boxHeight]);
     const [move,  setMove]      = React.useState(0);
     const history               = React.useMemo(() => [] as boolean[][][], [width, height, start]);
     const [board, setBoard]     = useDerivedState(
@@ -63,43 +63,45 @@ const LifeBoard: React.FC<LifeBoardProps> = ({boxWidth, boxHeight, start}: LifeB
         [width, height, start]
     );
 
-    const detectGlider = React.useMemo(() => 
-        (board: boolean[][], context: CanvasRenderingContext2D) => {
-            const w = width  - 1;
-            const h = height - 1;
+    const detectGlider = React.useMemo(
+        () => {
+            return (activeBoard: boolean[][], context: CanvasRenderingContext2D) => {
+                const w = width  - 1;
+                const h = height - 1;
 
-            const kill = (x: number, y: number) => {
-                context.fillStyle = 'red';
+                const kill = (x: number, y: number) => {
+                    context.fillStyle = 'red';
 
-                for(let i = x; i < x+3; ++i) {
-                    for(let j = y; j < y+3; ++j) {
-                        if(board[i][j]) {
-                            board[i][j] = false;
-                            context.fillRect(i * SIZE, j * SIZE, SIZE, SIZE);
+                    for(let i = x; i < x + 3; ++i) {
+                        for(let j = y; j < y + 3; ++j) {
+                            if(activeBoard[i][j]) {
+                                activeBoard[i][j] = false;
+                                context.fillRect(i * SIZE, j * SIZE, SIZE, SIZE);
+                            }
                         }
                     }
-                }
-            }
+                };
 
-            for(let x = 1; x < w; ++x) {
-                if(board[x][0] && board[x][1] && (board[x-1][1] !== board[x+1][1]) && board[x-1][2] && board[x+1][2]) {
-                    kill(x-1, 0);
-                }
+                for(let x = 1; x < w; ++x) {
+                    if(activeBoard[x][0] && activeBoard[x][1] && (activeBoard[x - 1][1] !== activeBoard[x + 1][1]) && activeBoard[x - 1][2] && activeBoard[x + 1][2]) {
+                        kill(x - 1, 0);
+                    }
 
-                if(board[x][h] && board[x][h-1] && (board[x-1][h-1] !== board[x+1][h-1]) && board[x-1][h-2] && board[x+1][h-2]) {
-                    kill(x-1, h-2);
-                }
-            }
-
-            for(let y = 1; y < h; ++y) {
-                if(board[0][y] && board[1][y] && (board[1][y-1] !== board[1][y+1]) && board[2][y-1] && board[2][y+1]) {
-                    kill(0, y-1);
+                    if(activeBoard[x][h] && activeBoard[x][h - 1] && (activeBoard[x - 1][h - 1] !== activeBoard[x + 1][h - 1]) && activeBoard[x - 1][h - 2] && activeBoard[x + 1][h - 2]) {
+                        kill(x - 1, h - 2);
+                    }
                 }
 
-                if(board[w][y] && board[w-1][y] && (board[w-1][y-1] !== board[w-1][y+1]) && board[w-2][y-1] && board[w-2][y+1]) {
-                    kill(w-2, y-1);
+                for(let y = 1; y < h; ++y) {
+                    if(activeBoard[0][y] && activeBoard[1][y] && (activeBoard[1][y - 1] !== activeBoard[1][y + 1]) && activeBoard[2][y - 1] && activeBoard[2][y + 1]) {
+                        kill(0, y - 1);
+                    }
+
+                    if(activeBoard[w][y] && activeBoard[w - 1][y] && (activeBoard[w - 1][y - 1] !== activeBoard[w - 1][y + 1]) && activeBoard[w - 2][y - 1] && activeBoard[w - 2][y + 1]) {
+                        kill(w - 2, y - 1);
+                    }
                 }
-            }
+            };
         },
         [width, height]
     );
@@ -120,9 +122,9 @@ const LifeBoard: React.FC<LifeBoardProps> = ({boxWidth, boxHeight, start}: LifeB
                                 row.forEach(
                                     (cell, j) => {
                                         if(cell)
-                                            context.fillRect(i * SIZE, j * SIZE, SIZE, SIZE); 
+                                            context.fillRect(i * SIZE, j * SIZE, SIZE, SIZE);
                                     }
-                                )
+                                );
                             }
                         );
 
@@ -137,7 +139,7 @@ const LifeBoard: React.FC<LifeBoardProps> = ({boxWidth, boxHeight, start}: LifeB
                                             (acc, [deltaX, deltaY]) => {
                                                 const newX = i + deltaX;
                                                 const newY = j + deltaY;
-                                
+
                                                 return acc + ((newX >= 0 && newX < width && newY >= 0 && newY < height && board[newX][newY]) ? 1 : 0);
                                             },
                                             0
@@ -159,13 +161,13 @@ const LifeBoard: React.FC<LifeBoardProps> = ({boxWidth, boxHeight, start}: LifeB
                                             case 3:
                                                 if(!cell) {
                                                     context.fillStyle = 'black';
-                                                    context.fillRect(i * SIZE, j * SIZE, SIZE, SIZE);    
+                                                    context.fillRect(i * SIZE, j * SIZE, SIZE, SIZE);
                                                 }
                                                 nextBoard[i][j] = true;
                                                 break;
                                         }
                                     }
-                                )
+                                );
                             }
                         );
 
@@ -187,7 +189,7 @@ const LifeBoard: React.FC<LifeBoardProps> = ({boxWidth, boxHeight, start}: LifeB
 
                         if(!equal) {
                             setBoard(nextBoard);
-                            setMove(move => move + 1);
+                            setMove(m => m + 1);
                         }
                     }
                 },
@@ -197,12 +199,12 @@ const LifeBoard: React.FC<LifeBoardProps> = ({boxWidth, boxHeight, start}: LifeB
             return () => clearTimeout(timer);
         },
         [board, move]
-    )
+    );
 
     return (
         <canvas ref={canvas} width={boxWidth} height={boxHeight}>
         </canvas>
     );
-}
+};
 
 export default Life;

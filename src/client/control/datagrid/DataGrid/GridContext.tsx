@@ -11,11 +11,11 @@ type GridState<T = unknown> = {
     changeSort:         (sort: SortKey<T>) => void;
     filterValues:       FilterValues<T>;
     changeFilter:       (name: keyof T, value: FilterValue) => void;
-}
+};
 
 const GridContext = React.createContext<GridState>(null!);
 export function useGrid<T = unknown>() {
-   return React.useContext(GridContext) as GridState<T>;
+    return React.useContext(GridContext) as GridState<T>;
 }
 
 type GridProviderProps<T = unknown> = {
@@ -39,9 +39,9 @@ function buildSort<T = unknown>(column: keyof T, ascending: boolean) {
         return `-${column}`;
 }
 
-export function GridProvider<T = unknown>({data, defaultSort, useLocation, children}: GridProviderProps<T>) {
+export function GridProvider<T = unknown>({ data, defaultSort, useLocation, children }: GridProviderProps<T>) {
     const baseSort                  = React.useCallback(() => useLocation ? (getSortFromQueryString() ?? defaultSort) : defaultSort, []);
-    const [ sortCode, setSortCode ] = React.useState<(SortKey<T> | undefined)>(baseSort)
+    const [ sortCode, setSortCode ] = React.useState<(SortKey<T> | undefined)>(baseSort);
     const changeSort                = React.useCallback(
         (columnName: string) => {
             let newSort: string;
@@ -64,7 +64,7 @@ export function GridProvider<T = unknown>({data, defaultSort, useLocation, child
     const [ filterValues, setFilterValues ] = React.useState<FilterValues>(baseFilterValues);
     const changeFilter                      = React.useCallback(
         (name: keyof T, value: FilterValue) => {
-            const newFilterValues = {...filterValues, [name]: value};
+            const newFilterValues = { ...filterValues, [name]: value };
             setFilterValues(newFilterValues);
             if(useLocation)
                 setFiltersInQueryString(newFilterValues);
@@ -79,14 +79,14 @@ export function GridProvider<T = unknown>({data, defaultSort, useLocation, child
         },
         []
     );
-    
+
     React.useEffect(
         () => {
             if(useLocation)
                 window.addEventListener('popstate', handlePopState);
             return () => {
                 if(useLocation)
-                    window.removeEventListener('popstate', handlePopState)
+                    window.removeEventListener('popstate', handlePopState);
             };
         },
         [useLocation]
@@ -94,10 +94,10 @@ export function GridProvider<T = unknown>({data, defaultSort, useLocation, child
 
     const sort = sortCode === undefined ? undefined : parseSort(sortCode);
     return (
-        <GridContext.Provider value={{data, sort, changeSort, filterValues, changeFilter}}>
+        <GridContext.Provider value={{ data, sort, changeSort, filterValues, changeFilter }}>
             {children}
         </GridContext.Provider>
-    )
+    );
 }
 
 export default useGrid;

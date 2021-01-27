@@ -29,7 +29,7 @@ module.exports = createMuiTheme(
         overrides: {
             MuiLink: {
                 root: {
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
                 },
             },
         },

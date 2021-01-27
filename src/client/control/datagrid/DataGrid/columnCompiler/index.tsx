@@ -12,10 +12,10 @@ import type { Column, ColumnSpecifications, ColumnHeaderProps, ColumnRenderProps
 const useStyles = makeStyles(theme => ({
     checkbox: {
         color: theme.palette.primary.contrastText,
-    }
+    },
 }));
 
-function Header<T = unknown>({data}: ColumnHeaderProps<T>) {
+function Header<T = unknown>({ data }: ColumnHeaderProps<T>) {
     const css = useStyles();
 
     return (
@@ -26,7 +26,7 @@ function Header<T = unknown>({data}: ColumnHeaderProps<T>) {
     );
 }
 
-function Render<T = unknown>({datum}: ColumnRenderProps<T>) {
+function Render<T = unknown>({ datum }: ColumnRenderProps<T>) {
     return (
         <RowSelectionIndicator
             datum={datum}
@@ -39,24 +39,24 @@ export function columnCompiler<T = unknown>(
     selection: boolean, controlWidth: number, columns?: ColumnSpecifications<T>
 ): Column<T>[] {
     const cols = columns
-    ?   columns.map(column => {
-            if(isString(column))
-                return createDefaultColumn(column);
+        ?   columns.map(column => {
+                if(isString(column))
+                    return createDefaultColumn(column);
 
-            const columnName    = column.name.toString();
-            const shape         = getShape();
-            const type          = getColumnType(columnName);
+                const columnName    = column.name.toString();
+                const shape         = getShape();
+                const type          = getColumnType(columnName);
 
-            return {
-                name:    columnName,
-                width:   column.width ?? '*',
-                header:  headerFactory(column, type, shape),
-                render:  rendererFactory(column, type, shape),
-                sortBy:  column.sortBy === null ? null : (column.sortBy ?? [column.name]),
-                collate: collatorFactory(column, type, shape),
-            } as Column<T>
-        })
-    :   getKeys().map(key => createDefaultColumn(key));
+                return {
+                    name:    columnName,
+                    width:   column.width ?? '*',
+                    header:  headerFactory(column, type, shape),
+                    render:  rendererFactory(column, type, shape),
+                    sortBy:  column.sortBy === null ? null : (column.sortBy ?? [column.name]),
+                    collate: collatorFactory(column, type, shape),
+                } as Column<T>;
+            })
+        :   getKeys().map(key => createDefaultColumn(key));
 
     if(selection) cols.unshift({
         name: '[selection]',

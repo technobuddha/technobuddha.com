@@ -2,7 +2,7 @@ import React              from 'react';
 import useTranslation     from '#context/i18n';
 import useAuthentication  from '#context/authentication';
 import useHistory         from '#context/router';
-import {makeStyles}       from '#context/mui';
+import { makeStyles }       from '#context/mui';
 import PasswordField      from '#control/passwordField';
 import TextField          from '#control/textField';
 import Email              from '@material-ui/icons/Email';
@@ -21,12 +21,12 @@ const useStyles = makeStyles(theme => ({
     },
     message: {
         margin: `${theme.spacing(1)} 0`,
-    }
+    },
 }));
 
 export const Login: React.FC = () => {
     const css                                   = useStyles();
-    const {t}                                   = useTranslation();
+    const { t }                                   = useTranslation();
     const authentication                        = useAuthentication();
     const history                               = useHistory();
     const [username, setUsername]               = React.useState<string>('');
@@ -36,13 +36,13 @@ export const Login: React.FC = () => {
     const handleUsernameChange      = (text: string) => { setUsername(text); setErrorMessage(null); };
     const handlePasswordChange      = (text: string) => { setPassword(text); setErrorMessage(null); };
     const isEnabled                 = () => Boolean(username && password);
-    const handleExecute             = (event: React.MouseEvent<HTMLButtonElement>) => { event.preventDefault(); handleLogin(); }
-    const handleKeyPress            = (event: React.KeyboardEvent<HTMLElement>)    => { 
+    const handleExecute             = (event: React.MouseEvent<HTMLButtonElement>) => { event.preventDefault(); handleLogin(); };
+    const handleKeyPress            = (event: React.KeyboardEvent<HTMLElement>)    => {
         if(isEnabled() && event.key == 'Enter') {
             event.preventDefault();
             handleLogin();
         }
-    }
+    };
     const handleLogin               = () => {
         authentication.login(username!, password!).then(response => {
             if(response) {
@@ -55,7 +55,7 @@ export const Login: React.FC = () => {
                 setErrorMessage(`${t('Please enter a correct username and password')}.`);
             }
         });
-    }
+    };
 
     return (
         <Box className={css.login} onKeyPress={handleKeyPress}>
@@ -73,11 +73,11 @@ export const Login: React.FC = () => {
                 />
             </Box>
             <Box className={css.input}>
-            <PasswordField
-                label={t('Password')}
-                helperText={`${t('Password is case-sensitive')}.`}
-                onChange={handlePasswordChange}
-            />
+                <PasswordField
+                    label={t('Password')}
+                    helperText={`${t('Password is case-sensitive')}.`}
+                    onChange={handlePasswordChange}
+                />
             </Box>
             <Button
                 onClick={handleExecute}

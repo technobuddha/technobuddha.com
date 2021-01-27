@@ -1,10 +1,10 @@
-import { Theme as MuiTheme } from '@material-ui/core/styles';
+import type { Theme as MuiTheme } from '@material-ui/core/styles';
 
 export type Theme = MuiTheme & {
-    iconSize:               number,
+    iconSize:               number;
     userInterface: {
-        headerHeight:       string,
-    },
-}
+        headerHeight:       string;
+    };
+};
 
 declare const theme: Theme;

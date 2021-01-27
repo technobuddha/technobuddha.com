@@ -1,7 +1,8 @@
-import { db }                                       from './driver';
-import { Account, AccountCreate }                   from '~src/schema/account';
-import { Session }                                  from '~src/schema/session';
-import settings                                     from '#settings/authentication';
+import { db }   from './driver';
+import settings from '#settings/authentication';
+
+import type { Account, AccountCreate } from '#schema/account';
+import type { Session }                from '#schema/session';
 
 export async function getAccountById(id: number) {
     return db.oneOrNone<Account>(
@@ -10,8 +11,8 @@ export async function getAccountById(id: number) {
                 created, updated, policy_accepted
         FROM account WHERE id = $(id)
         `,
-        {id}
-    )
+        { id }
+    );
 }
 
 export async function getAccountByEmail(email: string) {
@@ -21,8 +22,8 @@ export async function getAccountByEmail(email: string) {
                 created, updated, policy_accepted
         FROM account WHERE email = $(email)
         `,
-        {email}
-    )
+        { email }
+    );
 }
 
 export async function createAccount(account: AccountCreate) {
@@ -64,7 +65,7 @@ export async function verifyPassword(email: string, password: string) {
                 created, updated, policy_accepted
         FROM    account WHERE email = $(email) AND CRYPT($(password), password) = password;
         `,
-        {email, password}
+        { email, password }
     );
 }
 
@@ -74,7 +75,7 @@ export async function getSession(id: string) {
         SELECT id, account_id, created, expires
         FROM    session WHERE id = $(id)
         `,
-        {id}
+        { id }
     );
 }
 
@@ -85,10 +86,9 @@ export async function createSession(account_id: number) {
         VALUES      ($(account_id), NOW(), (NOW() + $(duration)::interval))
         RETURNING   id, account_id, created
         `,
-        {account_id, duration: `${settings.session.duration}ms`}
-    )
+        { account_id, duration: `${settings.session.duration}ms` }
+    );
 }
-
 
 export async function renewSession(session_id: string) {
     return db.one<Session>(
@@ -98,8 +98,8 @@ export async function renewSession(session_id: string) {
         WHERE       id = $(session_id)
         RETURNING   id, account_id, created, expires
         `,
-        {session_id, duration: `${settings.session.duration}ms`}
-    )
+        { session_id, duration: `${settings.session.duration}ms` }
+    );
 }
 
 export async function deleteSession(id: string) {
@@ -107,8 +107,8 @@ export async function deleteSession(id: string) {
         `
         DELETE FROM session WHERE id = $(id);
         `,
-        {id}
-    )
+        { id }
+    );
 }
 
 export async function deleteConcurrentSessions(account_id: number) {
@@ -116,8 +116,8 @@ export async function deleteConcurrentSessions(account_id: number) {
         `
         DELETE FROM session WHERE account_id = $(account_id)
         `,
-        {account_id}
-    )
+        { account_id }
+    );
 }
 
-export default { getAccountById, getAccountByEmail, createAccount, verifyPassword, getSession, createSession, renewSession, deleteSession, deleteConcurrentSessions }
+export default { getAccountById, getAccountByEmail, createAccount, verifyPassword, getSession, createSession, renewSession, deleteSession, deleteConcurrentSessions };

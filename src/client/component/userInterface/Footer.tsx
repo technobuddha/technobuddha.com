@@ -7,6 +7,6 @@ export const Footer: React.FC = () => {
         <AppBar position="static" elevation={0} component="footer">
         </AppBar>
     );
-}
+};
 
 export default Footer;

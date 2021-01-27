@@ -10,16 +10,16 @@ export type FilterActuatorProps = {
     classes?:           FilterActuatorClasses;
     styles?:            FilterActuatorStyles;
     onButtonClick?:     () => void;
-    Icon?:              React.ComponentType<{className?: string; style?: React.CSSProperties;}>;
+    Icon?:              React.ComponentType<{className?: string; style?: React.CSSProperties}>;
     title:              string;
-}
+};
 
 const useFilterActuatorStyles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(0.5),
-        "&:not(:first-child)": {
+        '&:not(:first-child)': {
             marginLeft: theme.spacing(0.25),
-        }
+        },
     },
     button: {
         border: `solid 1px ${theme.palette.grey[900]}`,
@@ -33,16 +33,16 @@ const useFilterActuatorStyles = makeStyles(theme => ({
         color: theme.palette.grey[200],
         marginRight: theme.spacing(0.5),
         marginLeft: theme.spacing(1),
-    }
+    },
 }));
 
-export const FilterActuator = ({classes, styles, Icon, onButtonClick, title}: FilterActuatorProps) => {
+export const FilterActuator = ({ classes, styles, Icon, onButtonClick, title }: FilterActuatorProps) => {
     const css = useFilterActuatorStyles();
 
-    const handleButtonClick = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => { onButtonClick?.(); }
+    const handleButtonClick = (_event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => { onButtonClick?.(); };
 
     return (
-        <Box 
+        <Box
             className={clsx(css.root, classes?.root)}
             style={styles?.root}
         >
@@ -52,7 +52,7 @@ export const FilterActuator = ({classes, styles, Icon, onButtonClick, title}: Fi
                 onClick={handleButtonClick}
             >
                 {Icon &&
-                    <Icon 
+                    <Icon
                         className={clsx(css.icon, classes?.icon)}
                         style={styles?.icon}
                     />
@@ -66,7 +66,6 @@ export const FilterActuator = ({classes, styles, Icon, onButtonClick, title}: Fi
             </Button>
         </Box>
     );
-}
-
+};
 
 export default FilterActuator;

@@ -11,7 +11,6 @@ import { normalizeFilterValue } from './normalization';
 import type { AnalyzerResults } from '../analyzer';
 import type { Filter }          from '../filter';
 
-
 export type FilterFactorySearchOptions<T = unknown> = {
     type:       'search';
     name:       keyof T;
@@ -22,7 +21,7 @@ export type FilterFactorySearchOptions<T = unknown> = {
 const useSearchStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.paper,
-        border: `1px solid ${theme.palette.divider}`
+        border: `1px solid ${theme.palette.divider}`,
     },
     gridIcon: {
         position: 'relative',
@@ -33,7 +32,7 @@ const useSearchStyles = makeStyles(theme => ({
     },
     textfield: {
         width: '100%',
-        "& fieldset": {
+        '& fieldset': {
             border: 'none',
         },
     },
@@ -41,17 +40,17 @@ const useSearchStyles = makeStyles(theme => ({
         fontSize: '1.0rem',
         marginBottom: '0.25rem',
         cursor: 'pointer',
-    }
+    },
 }));
 
-export function filterCompilerSearch<T = unknown>({name, title, clear}: FilterFactorySearchOptions<T>, { getShape }: AnalyzerResults<T>): Filter<T> {
+export function filterCompilerSearch<T = unknown>({ name, title, clear }: FilterFactorySearchOptions<T>, { getShape }: AnalyzerResults<T>): Filter<T> {
     return {
         name,
         Actuator:  () => {
             const css                               = useSearchStyles();
             const { changeFilter, filterValues }    = useGrid<T>();
             const [ search, setSearch ]             = React.useState(normalizeFilterValue(filterValues[name]));
-            const timer                             = React.useRef<number>()
+            const timer                             = React.useRef<number>();
 
             const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                 const value = event.target.value ?? undefined;
@@ -67,12 +66,12 @@ export function filterCompilerSearch<T = unknown>({name, title, clear}: FilterFa
                     },
                     1000
                 );
-            }
+            };
 
             const handleClearClick = () => {
                 changeFilter(name, '');
                 setSearch('');
-            }
+            };
             if(clear)
                 clear.current = handleClearClick;
 
@@ -96,7 +95,7 @@ export function filterCompilerSearch<T = unknown>({name, title, clear}: FilterFa
                             variant="outlined"
                             onChange={handleChange}
                             value={search}
-                        />  
+                        />
                     </Grid>
                     <Grid
                         className={css.gridIcon}
@@ -114,8 +113,7 @@ export function filterCompilerSearch<T = unknown>({name, title, clear}: FilterFa
             );
         },
         execute: searchExecute(name, getShape()),
-    }
+    };
 }
-    
 
 export default filterCompilerSearch;

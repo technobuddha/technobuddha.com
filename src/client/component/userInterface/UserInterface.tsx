@@ -1,7 +1,6 @@
-
 import React                        from 'react';
 import { makeStyles }               from '#context/mui';
-import {Route, Switch/*, ErrorRoute */, Redirect}  from '#context/router';
+import { Route, Switch/*, ErrorRoute */, Redirect }  from '#context/router';
 import Box                          from '@material-ui/core/Box';
 import Nav                          from './Nav';
 import Header                       from './Header';
@@ -26,8 +25,8 @@ const useStyles = makeStyles({
         height: '100%',
         width: '100%',
         overflow: 'hidden',
-    }
-})
+    },
+});
 
 export const UserInterface: React.FC = () => {
     const css = useStyles();
@@ -37,7 +36,9 @@ export const UserInterface: React.FC = () => {
             <CssBaseLine />
             <Box className={css.root}>
                 <Switch>
-                    <Route exact path='/'><Redirect to="/home"/></Route>
+                    <Route exact path="/">
+                        <Redirect to="/home" />
+                    </Route>
                     {/* <ErrorRoute component={SiteUnavailable} /> */}
                     <Route exact path={['/login', '/sign-up', '/forgot-password']} component={Authentication}/>
                     <Route>
@@ -45,7 +46,7 @@ export const UserInterface: React.FC = () => {
                         <Box className={css.frame}>
                             <Header />
                             <Main />
-                            <Footer/>            
+                            <Footer/>
                         </Box>
                     </Route>
                 </Switch>
@@ -53,6 +54,6 @@ export const UserInterface: React.FC = () => {
         </>
 
     );
-}
+};
 
 export default UserInterface;

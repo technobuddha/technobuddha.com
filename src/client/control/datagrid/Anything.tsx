@@ -8,36 +8,36 @@ import isNil           from 'lodash/isNil';
 import isObject        from 'lodash/isObject';
 import toString        from 'lodash/toString';
 
-import type { DataType } from './column';    // TODO data types should be moved!
+import type { DataType } from './DataGrid/column';    // TODO data types should be moved!
 
 export type AnythingParams = {
     className?: string;
     type?:      DataType;
     top?:       boolean;
     children:   unknown;
-}
+};
 
 const useStyles = makeStyles(theme => ({
     array: {
         display: 'flex',
         flexDirection: 'row',
 
-        "&:not($top) > *": {
+        '&:not($top) > *': {
             backgroundColor: theme.palette.divider,
-        }
+        },
     },
     object: {
         display: 'flex',
         flexDirection: 'row',
 
-        "&:not($top) > *": {
+        '&:not($top) > *': {
             backgroundColor: theme.palette.divider,
-        }
+        },
     },
     member: {
         padding: `0 ${theme.spacing(0.25)}`,
 
-        "&:not(:last-child)": {
+        '&:not(:last-child)': {
             borderRight: `1px dashed ${theme.palette.divider}`,
         },
     },
@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
 
-        "&:not(:last-child)": {
+        '&:not(:last-child)': {
             borderRight: `1px dotted ${theme.palette.divider}`,
         },
     },
@@ -54,12 +54,12 @@ const useStyles = makeStyles(theme => ({
         fontStyle: 'italic',
     },
     value: {
-        "&:not(:last-child)": {
+        '&:not(:last-child)': {
             borderRight: `1px dotted ${theme.palette.divider}`,
-        }
+        },
     },
     top: {
-        
+
     },
     null: {
 
@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'flex-end',
         alignItems: 'center',
 
-        "&:not($member, $value)": {
+        '&:not($member, $value)': {
             paddingTop: theme.spacing(0.25),
             paddingBottom: theme.spacing(0.25),
         },
@@ -82,10 +82,10 @@ const useStyles = makeStyles(theme => ({
     },
     right: {
         justifyContent: 'flex-end',
-    }
+    },
 }));
 
-export function Anything({children, type, className, top = true}: AnythingParams) {
+export function Anything({ children, type, className, top = true }: AnythingParams) {
     const css = useStyles();
 
     if(isNil(children) || (isObject(children) && isEmpty(children))) {
@@ -114,7 +114,7 @@ export function Anything({children, type, className, top = true}: AnythingParams
     switch(type) {
         case 'number':
             return <div className={clsx(className, css.primitive, css.right)}>{toString(children)}</div>;
-    
+
         case 'date':
             return <div className={clsx(className, css.primitive, css.left)}>{toDateUTCString(children)}</div>;
 

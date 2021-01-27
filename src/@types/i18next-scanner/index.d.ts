@@ -1,7 +1,5 @@
-
-declare module 'i18next-scanner'
-{
-    import File from 'vinyl';
+declare module 'i18next-scanner' {
+    import type File from 'vinyl';
 
     export type I18NextScannerOptions = {
         debug?:                 boolean;
@@ -15,13 +13,13 @@ declare module 'i18next-scanner'
             list?:              string[];
             extensions?:        string[];
         };
-        trans?:                 false | { 
+        trans?:                 false | {
             component?:         string;
             i18nKey?:           string;
             defaultsKey?:       string;
             extensions?:        string[];
             fallbackKey?:       false | ((ns: string, value: string) => string);
-        },
+        };
         lngs?:                  string[];
         ns?:                    string | string[];
         defaultLng?:            string;
@@ -46,7 +44,7 @@ declare module 'i18next-scanner'
             prefix?:        string;
             suffix?:        string;
         };
-    }
+    };
 
     export type I18NextScannerConfig = {
         input:      string[];
@@ -54,10 +52,9 @@ declare module 'i18next-scanner'
         options:    I18NextScannerOptions;
         transform?: (file: File, enc: string, done: () => void) => void;
         flush?:     (done: () => void) => void;
-    }
+    };
 
-    export class Parser
-    {
+    export class Parser {
         options:    I18NextScannerOptions;
         resStore:   { [key: string]: string };
         resScan:    { [key: string]: string };
@@ -87,8 +84,8 @@ declare module 'i18next-scanner'
 
     export function createStream(
         options: I18NextScannerOptions,
-         customTransform?: I18NextScannerConfig['transform'],
-         customFlush?: I18NextScannerConfig['flush']
+        customTransform?: I18NextScannerConfig['transform'],
+        customFlush?: I18NextScannerConfig['flush']
     ): NodeJS.ReadWriteStream;
 
     export default createStream;

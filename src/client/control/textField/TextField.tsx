@@ -31,7 +31,6 @@ export const TextField: React.FC<TextFieldProps> = (props: TextFieldProps) => {
         const newText           = event.target.value;
         let   isValid           = true;
 
- 
         if(props.required && newText.trim().length === 0) {
             isValid = false;
         } else if(props.validation) {
@@ -43,7 +42,7 @@ export const TextField: React.FC<TextFieldProps> = (props: TextFieldProps) => {
 
         setText(newText);
         props.onChange?.(newText);
-    }
+    };
 
     return (
         <MuiTextField
@@ -77,6 +76,6 @@ export const TextField: React.FC<TextFieldProps> = (props: TextFieldProps) => {
             }}
         />
     );
-}
+};
 
 export default TextField;

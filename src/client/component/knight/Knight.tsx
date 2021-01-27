@@ -6,7 +6,7 @@ import { numberToLetter }   from '@technobuddha/library/numberToLetter';
 import { useDerivedState }  from '@technobuddha/react-hooks';
 import range                from 'lodash/range';
 import Box                  from '@material-ui/core/Box';
-import Typography           from '@material-ui/core/Typography'
+import Typography           from '@material-ui/core/Typography';
 import Select               from '@material-ui/core/Select';
 import InputLabel           from '@material-ui/core/InputLabel';
 import FormControl          from '@material-ui/core/FormControl';
@@ -15,10 +15,10 @@ import { makeStyles }       from '@material-ui/core/styles';
 
 const blackKnight        = '♞';
 
-const MOVES = [[1,2], [2,1], [-1,2], [-2,1], [1, -2], [2,-1], [-1,-2], [-2,-1]];
+const MOVES = [[1, 2], [2, 1], [-1, 2], [-2, 1], [1, -2], [2, -1], [-1, -2], [-2, -1]];
 
 class Square {
-    constructor(public x: number, public y:number) {
+    constructor(public x: number, public y: number) {
     }
 
     public moves(board: (number | null)[][], move: number): Square[] {
@@ -33,7 +33,7 @@ class Square {
                     board[newX][newY] = move;
                     yield new Square(newX, newY);
                 }
-            } 
+            }
         })(this.x, this.y));
     }
 
@@ -50,8 +50,8 @@ const useKnightStyles = makeStyles({
     solution: {
         fontSize: 'x-large',
         textAlign: 'center',
-    }
-})
+    },
+});
 
 export const Knight: React.FC = () => {
     const css                        = useKnightStyles();
@@ -63,47 +63,47 @@ export const Knight: React.FC = () => {
     const [finishY,  setFinishY]     = React.useState(1);
     const [solution, setSolution]    = React.useState<null | number>(null);
 
-    type OnChangeEvent = React.ChangeEvent<{name?: string; value: unknown;}>;
+    type OnChangeEvent = React.ChangeEvent<{name?: string; value: unknown}>;
 
     const handleWidthChange = (event: OnChangeEvent) => {
         const newValue = Number.parseInt(event.target.value as string);
         setWidth(newValue);
-        if(startX  >= newValue) setStartX(newValue-1);
-        if(finishX >= newValue) setFinishX(newValue-1);
+        if(startX  >= newValue) setStartX(newValue - 1);
+        if(finishX >= newValue) setFinishX(newValue - 1);
         setSolution(null);
-    }
+    };
 
     const handleHeightChange = (event: OnChangeEvent) => {
         const newValue = Number.parseInt(event.target.value as string);
         setHeight(newValue);
-        if(startY  >= newValue) setStartY(newValue-1);
-        if(finishY >= newValue) setFinishY(newValue-1);
+        if(startY  >= newValue) setStartY(newValue - 1);
+        if(finishY >= newValue) setFinishY(newValue - 1);
         setSolution(null);
-    }
+    };
 
     const handleStartXChange = (event: OnChangeEvent) => {
         const newValue = Number.parseInt(event.target.value as string);
         setStartX(newValue);
         setSolution(null);
-    }
+    };
 
     const handleFinishXChange = (event: OnChangeEvent) => {
         const newValue = Number.parseInt(event.target.value as string);
         setFinishX(newValue);
         setSolution(null);
-    }
+    };
 
     const handleStartYChange = (event: OnChangeEvent) => {
         const newValue = Number.parseInt(event.target.value as string);
         setStartY(newValue);
         setSolution(null);
-    }
+    };
 
     const handleFinishYChange = (event: OnChangeEvent) => {
         const newValue = Number.parseInt(event.target.value as string);
         setFinishY(newValue);
         setSolution(null);
-    }
+    };
 
     return (
         <Box display="flex" flexDirection="row">
@@ -116,7 +116,7 @@ export const Knight: React.FC = () => {
                             onChange={handleWidthChange}
                             inputProps={{
                                 name: 'width',
-                                id: 'width'
+                                id: 'width',
                             }}
                         >
                             {range(1, 26).map(i => <MenuItem key={i} value={i}>{i.toString()}</MenuItem>)}
@@ -129,7 +129,7 @@ export const Knight: React.FC = () => {
                             onChange={handleHeightChange}
                             inputProps={{
                                 name: 'height',
-                                id: 'height'
+                                id: 'height',
                             }}
                         >
                             {range(1, 26).map(i => <MenuItem key={i} value={i}>{i.toString()}</MenuItem>)}
@@ -144,25 +144,25 @@ export const Knight: React.FC = () => {
                             onChange={handleStartXChange}
                             inputProps={{
                                 name: 'startX',
-                                id: 'startX'
+                                id: 'startX',
                             }}
                         >
-                            {range(0, width).map(i => <MenuItem key={i} value={i}>{numberToLetter(i+1)}</MenuItem>)}
+                            {range(0, width).map(i => <MenuItem key={i} value={i}>{numberToLetter(i + 1)}</MenuItem>)}
                         </Select>
                     </FormControl>
                     <FormControl>
                         <InputLabel htmlFor="startX">Start Row</InputLabel>
-                       <Select
+                        <Select
                             value={startY}
                             onChange={handleStartYChange}
                             inputProps={{
                                 name: 'startY',
-                                id: 'startY'
+                                id: 'startY',
                             }}
                         >
-                            {range(0, height).map(i => <MenuItem key={i} value={i}>{(i+1).toString()}</MenuItem>)}
+                            {range(0, height).map(i => <MenuItem key={i} value={i}>{(i + 1).toString()}</MenuItem>)}
                         </Select>
-                    </FormControl> 
+                    </FormControl>
                 </Box>
                 <Box display="flex" flexDirection="row" marginBottom={1}>
                     <FormControl>
@@ -172,10 +172,10 @@ export const Knight: React.FC = () => {
                             onChange={handleFinishXChange}
                             inputProps={{
                                 name: 'finishX',
-                                id: 'finishX'
+                                id: 'finishX',
                             }}
                         >
-                            {range(0, width).map(i => <MenuItem key={i} value={i}>{numberToLetter(i+1)}</MenuItem>)}
+                            {range(0, width).map(i => <MenuItem key={i} value={i}>{numberToLetter(i + 1)}</MenuItem>)}
                         </Select>
                     </FormControl>
                     <FormControl>
@@ -185,24 +185,24 @@ export const Knight: React.FC = () => {
                             onChange={handleFinishYChange}
                             inputProps={{
                                 name: 'finishY',
-                                id: 'finishY'
+                                id: 'finishY',
                             }}
                         >
-                            {range(0, height).map(i => <MenuItem key={i} value={i}>{(i+1).toString()}</MenuItem>)}
+                            {range(0, height).map(i => <MenuItem key={i} value={i}>{(i + 1).toString()}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </Box>
                 <Box>
                     <div>Number of Moves</div>
                     <div className={css.solution}>{solution === null ? nbsp : solution}</div>
-                </Box>           
+                </Box>
             </Box>
             <Box>
                 <KnightSolver width={width} height={height} startX={startX} startY={startY} finishX={finishX} finishY={finishY} onSolved={setSolution} />
             </Box>
         </Box>
     );
-}
+};
 
 export type KnightSolverProps = {
     width:      number;
@@ -212,8 +212,8 @@ export type KnightSolverProps = {
     finishX:    number;
     finishY:    number;
     onSolved?:  (moves: number | null) => void;
-    children?:  never,
-}
+    children?:  never;
+};
 
 const useKnightSolverStyles = makeStyles(theme => ({
     board: {
@@ -221,7 +221,7 @@ const useKnightSolverStyles = makeStyles(theme => ({
         display: 'inline-flex',
         flexDirection: 'row',
     },
-    column: { 
+    column: {
         display: 'flex',
         flexDirection:'column',
     },
@@ -243,22 +243,22 @@ const useKnightSolverStyles = makeStyles(theme => ({
     moves: {
         fontWeight: 'bold',
         color: theme.palette.primary.main,
-        "&$target": {
+        '&$target': {
             color: theme.palette.secondary.main,
-        }
-    }
-}))
+        },
+    },
+}));
 
-export const KnightSolver = ({height, width, startX, startY, finishX, finishY, onSolved}: KnightSolverProps) => {
+export const KnightSolver: React.FC<KnightSolverProps> = ({ height, width, startX, startY, finishX, finishY, onSolved }) => {
     const css                       = useKnightSolverStyles();
     const [move, setMove]           = useDerivedState(() => 0,                             [height, width, startX, startY]);
     const [positions, setPositions] = useDerivedState(() => [new Square(startX, startY)],  [height, width, startX, startY]);
     const target                    = React.useMemo(() => new Square(finishX, finishY),    [finishX, finishY]);
     const board                     = React.useMemo(
         () => {
-            const board = create2DArray<number | null>(width, height, null);
-            board[startX][startY] = 0;
-            return board;
+            const b = create2DArray<number | null>(width, height, null);
+            b[startX][startY] = 0;
+            return b;
         },
         [height, width, startX, startY]
     );
@@ -269,7 +269,7 @@ export const KnightSolver = ({height, width, startX, startY, finishX, finishY, o
                 positions.forEach(pos => { board[pos.x][pos.y] = move; });
                 const timer = setTimeout(
                     () => {
-                        setPositions(positions.flatMap(pos => pos.moves(board, move+1)));
+                        setPositions(positions.flatMap(pos => pos.moves(board, move + 1)));
                         setMove(move + 1);
                     },
                     250
@@ -283,23 +283,23 @@ export const KnightSolver = ({height, width, startX, startY, finishX, finishY, o
             return () => undefined;
         },
         [move, board, finishX, finishY, onSolved, positions, target.x, target.y]
-    )
+    );
 
     return (
         <Box className={css.board}>
             <Box key="X" className={css.column}>
                 <Typography className={clsx(css.square, css.legend)}></Typography >
                 {
-                    range(0, height).map(i => <Typography key={i} className={clsx(css.square, css.legend)}>{i+1}</Typography >)
+                    range(0, height).map(i => <Typography key={i} className={clsx(css.square, css.legend)}>{i + 1}</Typography >)
                 }
             </Box>
             {
                 board.map(
                     (row, i) => (
                         <Box key={i} className={css.column}>
-                            <Typography className={clsx(css.square, css.legend)}>{numberToLetter(i+1)}</Typography >
+                            <Typography className={clsx(css.square, css.legend)}>{numberToLetter(i + 1)}</Typography >
                             {
-                                
+
                                 row.map(
                                     (moves, j) => {
                                         const point     = new Square(i, j);
@@ -316,9 +316,9 @@ export const KnightSolver = ({height, width, startX, startY, finishX, finishY, o
                         </Box>
                     )
                 )
-            }          
+            }
         </Box>
     );
-}
+};
 
 export default Knight;

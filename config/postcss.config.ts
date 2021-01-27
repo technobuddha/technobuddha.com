@@ -13,7 +13,7 @@ export default {
                 'custom-properties': {
                     preserve:   true,
                     importFrom:[{
-                        customProperties:   mapKeys(variables, (_, key) => `--${kebabCase(key)}`)
+                        customProperties:   mapKeys(variables, (_, key) => `--${kebabCase(key)}`),
                     }],
                 },
             },
@@ -23,6 +23,6 @@ export default {
         // },
         'postcss-nested':                   {},
         'postcss-property-lookup':          {},
-        'postcss-mui-theme':                {theme},
-    }
-}
+        'postcss-mui-theme':                { theme },
+    },
+};

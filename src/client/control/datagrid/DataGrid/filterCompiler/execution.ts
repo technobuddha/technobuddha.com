@@ -21,14 +21,14 @@ export function searchExecute<T = unknown>(name: keyof T, shape: Shape) {
 
                             return (
                                 isArray(field)
-                                ?   some(field, f => toString(f).toLocaleLowerCase().includes(search))
-                                :   toString(field).toLocaleLowerCase().includes(search)
+                                    ?   some(field, f => toString(f).toLocaleLowerCase().includes(search))
+                                    :   toString(field).toLocaleLowerCase().includes(search)
                             );
                         }
-                    )
+                    );
                 } else
                     return data;
-            }
+            };
         }
 
         case 'array': {
@@ -46,14 +46,14 @@ export function searchExecute<T = unknown>(name: keyof T, shape: Shape) {
 
                             return (
                                 isArray(field)
-                                ?   some(field, f => toString(f).toLocaleLowerCase().includes(search))
-                                :   toString(field).toLocaleLowerCase().includes(search)
+                                    ?   some(field, f => toString(f).toLocaleLowerCase().includes(search))
+                                    :   toString(field).toLocaleLowerCase().includes(search)
                             );
                         }
-                    )
+                    );
                 } else
                     return data;
-            }
+            };
         }
 
         case 'primitive':
@@ -66,7 +66,7 @@ export function searchExecute<T = unknown>(name: keyof T, shape: Shape) {
                     return data.filter(datum => toString(datum).toLocaleLowerCase().includes(search));
                 } else
                     return data;
-            }
+            };
         }
     }
 }
@@ -76,22 +76,22 @@ export function equalityExecute<T = unknown>(name: keyof T, shape: Shape) {
         case 'key-value':{
             return (data: T[], value: FilterValue) => {
                 const filterValue   = normalizeFilterArray(value);
-            
+
                 if(filterValue)
                     return data.filter(
                         datum => {
                             const field = datum[name];
-            
+
                             return (
                                 isArray(field)
-                                ?   some(field, f => filterValue.includes(toString(f)))
-                                :   filterValue.includes(toString(field))
+                                    ?   some(field, f => filterValue.includes(toString(f)))
+                                    :   filterValue.includes(toString(field))
                             );
                         }
-                    )
+                    );
                 else
                     return data;
-            }
+            };
         }
 
         case 'array': {
@@ -99,22 +99,22 @@ export function equalityExecute<T = unknown>(name: keyof T, shape: Shape) {
 
             return (data: T[], value: FilterValue) => {
                 const filterValue   = normalizeFilterArray(value);
-            
+
                 if(filterValue)
                     return data.filter(
                         datum => {
                             const field = (datum as unknown as unknown[])[key];
-            
+
                             return (
                                 isArray(field)
-                                ?   some(field, f => filterValue.includes(toString(f)))
-                                :   filterValue.includes(toString(field))
+                                    ?   some(field, f => filterValue.includes(toString(f)))
+                                    :   filterValue.includes(toString(field))
                             );
                         }
-                    )
+                    );
                 else
                     return data;
-            }
+            };
         }
 
         case 'primitive':
@@ -126,7 +126,7 @@ export function equalityExecute<T = unknown>(name: keyof T, shape: Shape) {
                     return data.filter(datum => filterValue.includes(toString(datum)));
                 else
                     return data;
-            }
+            };
         }
     }
 }

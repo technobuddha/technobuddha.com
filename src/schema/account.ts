@@ -1,4 +1,4 @@
-import { SetRequired }   from 'type-fest';
+import type { SetRequired } from 'type-fest';
 
 export type Account = {
     id:                 number;

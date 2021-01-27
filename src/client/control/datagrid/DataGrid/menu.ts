@@ -1,7 +1,7 @@
-import React from 'react';
+import type React from 'react';
 
 export type MenuParams<T> = {
-    event:      React.MouseEvent<HTMLElement, MouseEvent>,
+    event:      React.MouseEvent<HTMLElement, MouseEvent>;
     data?:      T[];
     datum?:     T;
     index?:     number;

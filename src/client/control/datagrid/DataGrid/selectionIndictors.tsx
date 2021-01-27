@@ -5,14 +5,14 @@ import { useRow }   from './RowContext';
 type BaseSelectionIndicatorProps = {
     className?:     string;
     style?:         React.CSSProperties;
-    children?:      never
-}
+    children?:      never;
+};
 
 export type RowSelectionIndicatorProps<T = unknown> = BaseSelectionIndicatorProps & {
     datum:          T;
-}
+};
 
-export function RowSelectionIndicator<T = unknown>({datum, className, style}: RowSelectionIndicatorProps<T>) {
+export function RowSelectionIndicator<T = unknown>({ datum, className, style }: RowSelectionIndicatorProps<T>) {
     const { setSelected, getSelected } = useRow();
 
     const handleCheckboxChange = React.useCallback(
@@ -29,16 +29,16 @@ export function RowSelectionIndicator<T = unknown>({datum, className, style}: Ro
             checked={getSelected(datum)}
             color="secondary"
         />
-    )
+    );
 }
 
 export type MasterSelectionIndicatorProps<T = unknown> = BaseSelectionIndicatorProps & {
     data: T[];
-}
+};
 
-export function MasterSelectionIndicator<T = unknown>({data, className, style}: MasterSelectionIndicatorProps<T>) {
+export function MasterSelectionIndicator<T = unknown>({ data, className, style }: MasterSelectionIndicatorProps<T>) {
     const { setSelected, countSelected }    = useRow();
-    const {selected, unselected}            = countSelected(data);
+    const { selected, unselected }            = countSelected(data);
 
     const handleMasterChange = React.useCallback(
         (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => setSelected(data!, checked),
@@ -55,5 +55,5 @@ export function MasterSelectionIndicator<T = unknown>({data, className, style}: 
             indeterminate={selected > 0 && unselected > 0}
             color="secondary"
         />
-    )
+    );
 }

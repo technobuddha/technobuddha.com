@@ -4,8 +4,7 @@ import App          from '#component/app';
 
 document.addEventListener(
     'DOMContentLoaded',
-    () =>
-    {
+    () => {
         const content           = document.createElement('div');
         content.style.position  = 'relative';
         content.style.width     = '100vw';

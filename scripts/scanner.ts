@@ -9,7 +9,7 @@ import scanner             from 'i18next-scanner';
 import typescriptTransform from 'i18next-scanner-typescript';
 import paths               from '#config/paths';
 import i18next             from '#settings/i18next';
-import {translate, readTranslations, writeTranslations } from '#util/translation';
+import { translate, readTranslations, writeTranslations } from '#util/translation';
 
 import type { I18NextScannerConfig } from 'i18next-scanner';
 import type { TranslateReturn }      from '#util/translation';
@@ -19,10 +19,10 @@ import type { TranslateReturn }      from '#util/translation';
 
     for(const ns of isString(i18next.ns) ? [i18next.ns] : i18next.ns ?? ['translation']) {
         const en = readTranslations('en', ns, 'external');
-    
+
         for(const lng of foreign) {
             const t = readTranslations(lng, ns, 'external');
-    
+
             await Promise.all(
                 Object.keys(en)
                 .filter(key => isNil(t[key]))
@@ -38,10 +38,10 @@ import type { TranslateReturn }      from '#util/translation';
                             }
                         }
                     );
-                    
+
                     writeTranslations(t, lng, ns, 'external');
                 }
-            )
+            );
         }
     }
 
@@ -57,11 +57,11 @@ import type { TranslateReturn }      from '#util/translation';
             sort: false,
             attr: {
                 list: ['data-i18n'],
-                extensions: ['.html', '.htm']
+                extensions: ['.html', '.htm'],
             },
             func: {
                 list: ['i18next.t', 'i18n.t', 't'],
-                extensions: ['.js', '.jsx']
+                extensions: ['.js', '.jsx'],
             },
             trans: {
                 component: 'Trans',
@@ -76,10 +76,10 @@ import type { TranslateReturn }      from '#util/translation';
             defaultNs: i18next.defaultNS,
             defaultValue: null,
             resource: {
-                loadPath: path.join(paths.locales, '{{lng}}', `{{ns}}.external.json`),
+                loadPath: path.join(paths.locales, '{{lng}}', '{{ns}}.external.json'),
                 savePath: path.join('{{lng}}', '{{ns}}'),
                 jsonIndent: 2,
-                lineEnding: '\n'
+                lineEnding: '\n',
             },
             nsSeparator: i18next.nsSeparator,
             keySeparator: i18next.keySeparator,
@@ -88,13 +88,13 @@ import type { TranslateReturn }      from '#util/translation';
             contextDefaultValues: [],
             interpolation: {
                 prefix: '{{',
-                suffix: '}}'
+                suffix: '}}',
             },
         },
-        transform: typescriptTransform({ extensions: [".ts", ".tsx"] })
-    }
-    
-    vfs.src(config.input, {buffer: false})
+        transform: typescriptTransform({ extensions: ['.ts', '.tsx'] }),
+    };
+
+    vfs.src(config.input, { buffer: false })
     .pipe(scanner(config.options, config.transform, config.flush))
     .pipe(new stream.Transform({
         objectMode: true,
@@ -127,7 +127,7 @@ import type { TranslateReturn }      from '#util/translation';
                 archiveTranslations[key] = translation;
                 console.log(`${chalk.cyan('archived')} ${chalk.grey(`${ns} ${lng}`)} ${key}`);
             }
-            
+
             Promise.all(promises)
             .then(
                 results => {
@@ -143,7 +143,7 @@ import type { TranslateReturn }      from '#util/translation';
 
                     callback();
                 }
-            )
-        }
-    }))
+            );
+        },
+    }));
 })();

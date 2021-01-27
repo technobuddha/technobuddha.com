@@ -58,6 +58,7 @@
       "#server*":     [ "../src/server*"           ],
       "#worker*":     [ "../src/worker*"           ],
       "#util*":       [ "../src/util*"             ],
+      "#schema":      [ "../src/schema"            ],
       "#schema*":     [ "../src/schema*"           ],
       "#settings*":   [ "../src/settings*"         ],
       "$*":           [ "../src/*"                 ],

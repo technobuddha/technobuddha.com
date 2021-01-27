@@ -6,14 +6,14 @@ import useComponents        from '#context/component';
 
 type MainProps = {
     children?: never;
-}
+};
 
 const useStyles = makeStyles({
     root: {
         display: 'flex',
         flexDirection: 'column',
         flexGrow: 1,
-    }
+    },
 });
 
 export const Content: React.FC<MainProps> = () => {
@@ -34,6 +34,6 @@ export const Content: React.FC<MainProps> = () => {
             </Switch>
         </Box>
     );
-}
+};
 
 export default Content;

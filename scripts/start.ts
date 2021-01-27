@@ -1,35 +1,37 @@
 #!/bin/env -S ts-node -r ./config/env.ts -r tsconfig-paths/register
-import path                                     from 'path';
-import webpack                                  from 'webpack';
-import chalk                                    from 'chalk'; chalk.level = 3;    // Tell chalk that we support full RGB colors
-import { spawn, ChildProcess }                  from 'child_process';
-import repeat                                   from 'lodash/repeat';
-import { genServerWebpackConfig }               from '#server/webpack.config';
-import paths                                    from '#config/paths';
+import path                       from 'path';
+import webpack                    from 'webpack';
+import chalk                      from 'chalk'; chalk.level = 3;    // Tell chalk that we support full RGB colors
+import { spawn }                  from 'child_process';
+import repeat                     from 'lodash/repeat';
+import { genServerWebpackConfig } from '#server/webpack.config';
+import paths                      from '#config/paths';
+
+import type { ChildProcess } from 'child_process';
 
 const esc = '\u001b';
 let serverProcess: ChildProcess | null = null;
 
 const startServer   = () => {
     if(serverProcess) {
-        out(chalk.red(`\n\nServer changed, restarting...\n\n`));
+        out(chalk.red('\nServer changed, restarting...\n\n'));
         stopServer();
     }
 
-    serverProcess = spawn('node', [path.join(paths.bin, 'server.js')], { stdio: 'inherit'});
-}
+    serverProcess = spawn('node', [path.join(paths.bin, 'server.js')], { stdio: 'inherit' });
+};
 
 const stopServer    = () => {
     if(serverProcess) {
         serverProcess.kill();
         serverProcess = null;
     }
-}
+};
 
 const exit = () => {
     stopServer();
     process.exit(0);
-}
+};
 
 ['SIGINT', 'SIGTERM', 'SIGHUP', 'SIGQUIT', 'exit', 'uncaughtexception'].forEach(
     sig => process.on(sig, exit)
@@ -39,40 +41,40 @@ const exit = () => {
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
 process.on('unhandledRejection', err => {
-  throw err;
+    throw err;
 });
 
 webpack(genServerWebpackConfig(true)).watch(
     {},
     (error: Error, stats: webpack.Stats) => {
-       if(error ?? stats.hasErrors())
-           process.stdout.write(`${stats.toString('errors-only')}\n`);
-       else
-           startServer();
+        if(error ?? stats.hasErrors())
+            process.stdout.write(`${stats.toString('errors-only')}\n`);
+        else
+            startServer();
     }
 );
 
-const {width} = screenSize();
+const { width } = screenSize();
 
 clearScreen();
 out(header());
-out(`${repeat('=', width)}\n`)
+out(`${repeat('=', width)}\n`);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function out(text: string) {
-  process.stdout.write(text);
+    process.stdout.write(text);
 }
 
 function clearScreen() {
-  out(process.platform === 'win32' ? `${esc}[2J${esc}[0f` : `${esc}[2J${esc}[3J${esc}[H`);
+    out(process.platform === 'win32' ? `${esc}[2J${esc}[0f` : `${esc}[2J${esc}[3J${esc}[H`);
 }
 
 function screenSize() {
-  return {
-      height: process.stdout.rows,
-      width:  process.stdout.columns,
-  }
+    return {
+        height: process.stdout.rows,
+        width:  process.stdout.columns,
+    };
 }
 
 //#region Logo
@@ -87,7 +89,7 @@ function header() {
         chalk.hex('#0d3f78')('▄██████████████████████████▄'),
         chalk.hex('#082c61')('▄██████████████████████████████▄'),
         chalk.hex('#051f50')('▄██████████████████████████████████▄'),
-    ]
+    ];
 
     const name = [
         '',
@@ -99,19 +101,18 @@ function header() {
         'H     H    I    L      L                S  O    O  F         T    W W W W  A    A  R R     E     ',
         'H     H    I    L      L      ..        S  O    O  F         T    W W W W  A    A  R   R   E     ',
         'H     H  IIIII  LLLLL  LLLLL  ..   SSSSS    OOOO   F         T     W   W   A    A  R    R  EEEEEE',
-    ]
+    ];
 
-
-    let output = "";
+    let output = '';
     for(let i = 0; i < logo.length; ++i) {
         for(let j = 8; j > i; --j) {
-            output += '  '
+            output += '  ';
         }
         output += logo[i];
         for(let j = 8; j > i; --j) {
-            output += '  '
+            output += '  ';
         }
-        output += '   ' + name[i] + '\n';
+        output += `   ${name[i]}\n`;
     }
     return output;
 }

@@ -1,17 +1,18 @@
 import React                                      from 'react';
 import Box                                        from '@material-ui/core/Box';
-import { makeStyles }                             from '@material-ui/core/styles';
-import clsx                                       from 'clsx';
-import { Size }                                   from 'mui-size';
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import { MenuFactory }                            from './menu';
-import Row                                        from './Row';
-import RowHeader from './RowHeader';
+import { makeStyles }    from '@material-ui/core/styles';
+import clsx              from 'clsx';
+import { Size }          from 'mui-size';
+import { FixedSizeList } from 'react-window';
+import Row               from './Row';
+import RowHeader         from './RowHeader';
 
-import type { Column }                from './column';
-import type { RowClasses, RowStyles } from './columnStyles';
+import type { ListChildComponentProps } from 'react-window';
+import type { MenuFactory }             from './menu';
+import type { Column }                  from './column';
+import type { RowClasses, RowStyles }   from './columnStyles';
+import type { RowRenderer }             from './Row';
 import type { Filter, FilterActuatorClasses, FilterActuatorStyles, FilterIndicatorClasses, FilterIndicatorStyles } from './filter';
-import type { RowRenderer }           from './Row';
 
 const useGridStyles = makeStyles(theme => ({
     actuators: {
@@ -24,10 +25,10 @@ const useGridStyles = makeStyles(theme => ({
         flexDirection: 'row',
         border: `3px solid ${theme.palette.grey[700]}`,
         padding: theme.spacing(1),
-        "&:empty": {
+        '&:empty': {
             display: 'none',
-        }
-    }
+        },
+    },
 }));
 
 export type GridProps<T = unknown> = {
@@ -40,40 +41,40 @@ export type GridProps<T = unknown> = {
     scrollbarWidth:         number;
     controlWidth:           number;
     rowHeight?:             number;
-    filters?:               Filter<T>[],
+    filters?:               Filter<T>[];
     menu?:                  MenuFactory<T>;
     children?:              never;
-}
+};
 
 export type GridClasses = {
     filter: {
         actuator:   FilterActuatorClasses;
         indicator:  FilterIndicatorClasses;
-    },
+    };
     area:   GridAreaClasses;
     row:    RowClasses;
     column: RowClasses['column'];
-}
+};
 
 export type GridStyles = {
     filter: {
         actuator:   FilterActuatorStyles;
         indicator:  FilterIndicatorStyles;
-    }
+    };
     area:   GridAreaStyles;
     row:    RowStyles;
     column: RowStyles['column'];
-}
+};
 
 type GridAreaClasses = {
     actuators:      string;
     indicators:     string;
     header:         string;
     detail:         string;
-}
+};
 type GridAreaStyles = {[key in keyof GridAreaClasses]: React.CSSProperties};
 
-function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlWidth, data, columns, rowRenderer, columnWidths, filters, menu}: GridProps<T>) {
+function Grid<T = unknown>({ classes, styles, rowHeight, scrollbarWidth, controlWidth, data, columns, rowRenderer, columnWidths, filters, menu }: GridProps<T>) {
     const css = useGridStyles();
 
     const GridRow = (rowProps: ListChildComponentProps) => {
@@ -97,7 +98,7 @@ function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlW
         );
     };
 
-    console.log('Grid rendering...')
+    console.log('Grid rendering...');
 
     return (
         <>
@@ -121,12 +122,12 @@ function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlW
                     >
                         {filters.flatMap((filter, index) => (
                             filter.Indicator
-                            ?   <filter.Indicator 
-                                    key={index}
-                                    classes={classes?.filter?.indicator}
-                                    styles={styles?.filter?.indicator}
-                                />
-                            :   []
+                                ?   <filter.Indicator
+                                        key={index}
+                                        classes={classes?.filter?.indicator}
+                                        styles={styles?.filter?.indicator}
+                                    />
+                                :   []
                         ))}
                     </Box>
                 </>
@@ -143,39 +144,38 @@ function Grid<T = unknown>({classes, styles, rowHeight, scrollbarWidth, controlW
                 menu={menu}
             />
             <Size flexGrow={1}>
-                {({width, height}) => (
+                {({ width, height }) => (
                     rowHeight
-                    ?   <FixedSizeList
-                            height={height}
-                            width={width}
-                            itemCount={data.length}
-                            itemSize={rowHeight}
-                            layout="vertical"
-                        >
-                          {GridRow}
-                        </FixedSizeList>
-                    :   
-                    <Box width={width} height={height} style={{overflowX: 'auto'}}>
-                        {data.map((datum, index) => (
-                            <Row
-                                key={index}
-                                classes={classes?.row}
-                                styles={styles?.row}
-                                datum={datum}
-                                columns={columns}
-                                rowRenderer={rowRenderer}
-                                columnWidths={columnWidths}
-                                controlWidth={controlWidth}
-                                scrollbarWidth={scrollbarWidth}
-                                menu={menu}
-                            />
-                        ))}
-                    </Box>
+                        ?   <FixedSizeList
+                                height={height}
+                                width={width}
+                                itemCount={data.length}
+                                itemSize={rowHeight}
+                                layout="vertical"
+                            >
+                                {GridRow}
+                            </FixedSizeList>
+                        :   <Box width={width} height={height} style={{ overflowX: 'auto' }}>
+                                {data.map((datum, index) => (
+                                    <Row
+                                        key={index}
+                                        classes={classes?.row}
+                                        styles={styles?.row}
+                                        datum={datum}
+                                        columns={columns}
+                                        rowRenderer={rowRenderer}
+                                        columnWidths={columnWidths}
+                                        controlWidth={controlWidth}
+                                        scrollbarWidth={scrollbarWidth}
+                                        menu={menu}
+                                    />
+                                ))}
+                            </Box>
                 )}
             </Size>
 
         </>
-    )
+    );
 
 }
 

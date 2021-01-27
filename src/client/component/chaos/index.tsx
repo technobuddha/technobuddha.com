@@ -12,7 +12,7 @@ export const Chaos = () => {
         <Suspense fallback={<DelayedLoading />}>
             <LazyChaos />
         </Suspense>
-    )
-}
+    );
+};
 
 export default Chaos;

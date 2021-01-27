@@ -1,5 +1,4 @@
-import React from 'react';
-
+import type React from 'react';
 import type { HeaderClasses, HeaderStyles } from './columnStyles';
 
 export type Column<T = unknown>  = {
@@ -18,21 +17,21 @@ export type ColumnRenderProps<T = unknown> = {
     datum:          T;
     classes?:       Record<string, string>;
     styles?:        Record<string, React.CSSProperties>;
-}
+};
 
 export type ColumnHeaderProps<T = unknown> = {
     data:           T[];
     classes?:       HeaderClasses;
     styles?:        HeaderStyles;
-}
+};
 
-export type SortProperties = { sortBy: string, sortAscending: boolean; };
+export type SortProperties = { sortBy: string; sortAscending: boolean };
 
 export type DataType = 'string' | 'number' | 'date' | 'object' | 'array' | 'unknown';
 export type ColumnType = {
     dataType:   DataType;
     nullable:   boolean;
-}
+};
 
 export type ColumnSpecifications<T = unknown> = ColumnSpecification<T>[];
 export type ColumnSpecification<T = unknown>  = {
@@ -43,6 +42,6 @@ export type ColumnSpecification<T = unknown>  = {
     render?:    Column<T>['render'];
     sortBy?:    null | ColumnName[];
     collate?:   Column<T>['collate'];
-}
+};
 
 export default Column;

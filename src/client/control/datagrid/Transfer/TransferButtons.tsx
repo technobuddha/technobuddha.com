@@ -5,26 +5,26 @@ import Divider          from '@material-ui/core/Divider';
 import { makeStyles }   from '@material-ui/core/styles';
 import clsx             from 'clsx';
 import isUndefined      from 'lodash/isUndefined';
-  
+
 type TransferButtonsProps = {
-    classes?:       TransferButtonClasses,
-    styles?:        TransferButtonStyles,
+    classes?:       TransferButtonClasses;
+    styles?:        TransferButtonStyles;
     dispatch:       React.MutableRefObject<DispatchFunction>;
     onRAllClick?:   () => void;
     onRSelClick?:   () => void;
     onLSelClick?:   () => void;
     onLAllClick?:   () => void;
     children?:      never;
-}
+};
 
 export type TransferButtonClasses = {
     root:       string;
     button:     string;
     divider:    string;
-}
+};
 export type TransferButtonStyles = {[key in keyof TransferButtonClasses]: React.CSSProperties};
 
-export type DispatchFunction = (args: {rAll?: boolean, rSel?: boolean, lAll?: boolean, lSel?: boolean}) => void;
+export type DispatchFunction = (args: {rAll?: boolean; rSel?: boolean; lAll?: boolean; lSel?: boolean}) => void;
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -36,15 +36,15 @@ const useStyles = makeStyles(theme => ({
         height: '100%',
     },
     button: {
-      margin: theme.spacing(0.5, 0),
+        margin: theme.spacing(0.5, 0),
     },
     divider: {
         margin: theme.spacing(3, 0),
         width: '100%',
-    }
+    },
 }));
 
-const TransferButtons = ({classes, styles, dispatch, onRAllClick, onRSelClick, onLSelClick, onLAllClick}: TransferButtonsProps) => {
+const TransferButtons = ({ classes, styles, dispatch, onRAllClick, onRSelClick, onLSelClick, onLAllClick }: TransferButtonsProps) => {
     const css                               = useStyles();
     const [rAllDisabled, setRAllDisabled]   = React.useState(true);
     const [rSelDisabled, setRSelDisabled]   = React.useState(true);
@@ -55,12 +55,12 @@ const TransferButtons = ({classes, styles, dispatch, onRAllClick, onRSelClick, o
     const handleLSelClick                   = React.useCallback(() => onLSelClick?.(), [onLSelClick]);
     const handleLAllClick                   = React.useCallback(() => onLAllClick?.(), [onLAllClick]);
 
-    dispatch.current = ({rAll, rSel, lAll, lSel}: Parameters<DispatchFunction>[0]) => {
+    dispatch.current = ({ rAll, rSel, lAll, lSel }: Parameters<DispatchFunction>[0]) => {
         if(!isUndefined(rAll)) setRAllDisabled(rAll);
         if(!isUndefined(rSel)) setRSelDisabled(rSel);
         if(!isUndefined(lSel)) setLSelDisabled(lSel);
         if(!isUndefined(lAll)) setLAllDisabled(lAll);
-    }
+    };
 
     return (
         <Box
@@ -89,7 +89,7 @@ const TransferButtons = ({classes, styles, dispatch, onRAllClick, onRSelClick, o
             >
                 &gt;
             </Button>
-            <Divider 
+            <Divider
                 className={clsx(css.divider, classes?.divider)}
                 style={styles?.divider}
             />
@@ -116,7 +116,7 @@ const TransferButtons = ({classes, styles, dispatch, onRAllClick, onRSelClick, o
                 ≪
             </Button>
         </Box>
-    )
-}
+    );
+};
 
 export default TransferButtons;

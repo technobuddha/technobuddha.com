@@ -1,6 +1,7 @@
 import { db }         from './driver';
-import { SnakeCase }  from 'type-fest';
-import type { Track } from '#schema/';
+
+import type { SnakeCase }  from 'type-fest';
+import type { Track }      from '#schema/track';
 
 type DBTrack                     = {[Key in keyof Track as SnakeCase<Key>]: Track[Key]};
 type Scalar<T extends unknown[]> = T[0];
@@ -15,7 +16,7 @@ export async function getTracks(): Promise<GetTracks[]> {
         FROM    track;
         `
     )
-    .then(data => data.map(row => ({ 
+    .then(data => data.map(row => ({
         contentId: row.content_id,
         artist: row.artist,
         album: row.album,
@@ -26,10 +27,9 @@ export async function getTracks(): Promise<GetTracks[]> {
     })));
 }
 
-
 type GetNewAlbumsPick = 'artist' | 'album' | 'collectionGroupId' | 'year' | 'genre' | 'subgenre';
 type GetNewAlbumsInput = Pick<DBTrack, SnakeCase<GetNewAlbumsPick>> & {title: string[]};
-export type GetNewAlbums = Pick<Track,   GetNewAlbumsPick> & {title: string[]}; 
+export type GetNewAlbums = Pick<Track,   GetNewAlbumsPick> & {title: string[]};
 export async function getNewAlbums(): Promise<GetNewAlbums[]> {
     return db.manyOrNone<GetNewAlbumsInput>(
         `
@@ -51,10 +51,9 @@ export async function getNewAlbums(): Promise<GetNewAlbums[]> {
     })));
 }
 
-
 type GetArtistsPick = 'album' | 'year' | 'genre' | 'subgenre';
 type GetArtistsInput = Pick<DBTrack, SnakeCase<GetArtistsPick>> & {artist: Scalar<DBTrack['artist']>};
-export type GetArtists = Pick<Track,   GetArtistsPick> & {artist: Scalar<Track['artist']>}; 
+export type GetArtists = Pick<Track,   GetArtistsPick> & {artist: Scalar<Track['artist']>};
 export async function getArtists(): Promise<GetArtists[]> {
     return db.manyOrNone<GetArtistsInput>(
         `
@@ -66,7 +65,7 @@ export async function getArtists(): Promise<GetArtists[]> {
 
 type GetGenresPick = 'artist' | 'album' | 'year' | 'subgenre';
 type GetGenresInput = Pick<DBTrack, SnakeCase<GetGenresPick>> & {artist: Scalar<DBTrack['genre']>};
-export type GetGenres = Pick<Track,   GetGenresPick> & {artist: Scalar<Track['genre']>}; 
+export type GetGenres = Pick<Track,   GetGenresPick> & {artist: Scalar<Track['genre']>};
 export async function getGenres(): Promise<GetGenres[]> {
     return db.manyOrNone<GetGenresInput>(
         `
@@ -76,4 +75,4 @@ export async function getGenres(): Promise<GetGenres[]> {
     );
 }
 
-export default { getTracks, getNewAlbums, getArtists, getGenres }
+export default { getTracks, getNewAlbums, getArtists, getGenres };

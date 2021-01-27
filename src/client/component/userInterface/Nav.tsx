@@ -67,10 +67,9 @@ const useStyles = makeStyles(theme => {
         },
         secondary: {
             color: `${theme.palette.common.white} !important`,
-        }
-    }
+        },
+    };
 });
-
 
 export const Nav: React.FC = () => {
     const css       = useStyles();
@@ -85,27 +84,27 @@ export const Nav: React.FC = () => {
         if(timer.current) {
             clearTimeout(timer.current);
             timer.current = undefined;
-        }        
-    }
+        }
+    };
 
     const handleListClick = (location: string) => () => {
         setMenuOpen(false);
         setClicked(true);
         history.push(location);
         cancelTimer();
-    }
+    };
 
     const handleMouseOver = () => {
         cancelTimer();
         if(!clicked)
             timer.current = window.setTimeout(() => setMenuOpen(true), expansionTimeout);
-    }
+    };
 
     const handleMouseLeave = () => {
         setMenuOpen(false);
         setClicked(false);
         cancelTimer();
-    }
+    };
 
     const handleMenuClick = () => setMenuOpen(m => !m);
 
@@ -114,7 +113,7 @@ export const Nav: React.FC = () => {
             <Box className={css.buttonBox} >
                 <IconButton onClick={handleMenuClick}>
                     {menuOpen ? <MenuOpen className={css.buttonIcon} /> : <Menu className={css.buttonIcon} />}
-                </IconButton>   
+                </IconButton>
             </Box>
             <Box
                 component="nav"
@@ -133,13 +132,13 @@ export const Nav: React.FC = () => {
                                     <ListItemIcon>
                                         <Icon className={clsx(css.icon, { [css.current]: current, [css.available]: !current })} />
                                     </ListItemIcon>
-                                    <ListItemText 
-                                        primary={component.primary} 
+                                    <ListItemText
+                                        primary={component.primary}
                                         secondary={component.secondary}
                                         classes={{
                                             root: css.listItemText,
                                             primary: css.primary,
-                                            secondary: css.secondary
+                                            secondary: css.secondary,
                                         }}
                                     />
                                 </ListItem>
@@ -150,6 +149,6 @@ export const Nav: React.FC = () => {
             </Box>
         </Box>
     );
-}
+};
 
 export default Nav;

@@ -5,28 +5,26 @@ import Lock                         from '@material-ui/icons/Lock';
 import Visibility                   from '@material-ui/icons/Visibility';
 import VisibilityOff                from '@material-ui/icons/VisibilityOff';
 
-type PasswordFieldProps =
-    {
-        className?:     string;
-        label?:         string;
-        helperText?:    string;
-        error?:         boolean;
-        value?:         string;
-        required?:      boolean;
-        validation?:    RegExp;
-        onChange?:      (text: string) => void;
-        onValidation?:  (valid: boolean) => void;
-    };
+type PasswordFieldProps = {
+    className?:     string;
+    label?:         string;
+    helperText?:    string;
+    error?:         boolean;
+    value?:         string;
+    required?:      boolean;
+    validation?:    RegExp;
+    onChange?:      (text: string) => void;
+    onValidation?:  (valid: boolean) => void;
+};
 
 export const PasswordField: React.FC<PasswordFieldProps> = (props: PasswordFieldProps) => {
     const [ password, setPassword ]             = React.useState<string>(props.value ?? '');
     const [ showPassword, setShowPassword ]     = React.useState<boolean>(false);
 
-    const handleChange           = (text: string) =>
-    {
+    const handleChange           = (text: string) => {
         setPassword(text);
         props.onChange?.(text);
-    }
+    };
 
     const handleVisibility        = () => setShowPassword(!showPassword);
 
@@ -50,6 +48,6 @@ export const PasswordField: React.FC<PasswordFieldProps> = (props: PasswordField
             }
         />
     );
-}
+};
 
 export default PasswordField;

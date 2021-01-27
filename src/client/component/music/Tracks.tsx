@@ -12,7 +12,7 @@ export const Tracks: React.FC = () => {
 
     React.useEffect(
         () => {
-           api.music.tracks().then(tracks => setDataset(tracks.payload));
+            api.music.tracks().then(tracks => setDataset(tracks.payload));
         },
         []
     );
@@ -23,17 +23,17 @@ export const Tracks: React.FC = () => {
                 data={dataset}
                 rowHeight={32}
                 columns={[
-                    {name: 'artist',        type: 'array',  sortBy: ['artist', 'album', 'discNumber', 'trackNumber']},
-                    {name: 'album',         type: 'string', sortBy: ['album', 'discNumber', 'trackNumber']},
-                    {name: 'discNumber',    type: 'number', width: 32, header: '#'},
-                    {name: 'trackNumber',   type: 'number', width: 32, header: '#'},
-                    {name: 'title',         type: 'string'},
-                    {name: 'genre',         type: 'array'},
+                    { name: 'artist',        type: 'array',  sortBy: ['artist', 'album', 'discNumber', 'trackNumber'] },
+                    { name: 'album',         type: 'string', sortBy: ['album', 'discNumber', 'trackNumber'] },
+                    { name: 'discNumber',    type: 'number', width: 32, header: '#' },
+                    { name: 'trackNumber',   type: 'number', width: 32, header: '#' },
+                    { name: 'title',         type: 'string' },
+                    { name: 'genre',         type: 'array' },
                 ]}
                 filters={[
-                    {type: 'transfer',      name: 'artist', Icon: Group},
-                    {type: 'checkbox-list', name: 'album',  Icon: Album},
-                    {type: 'checkbox-list', name: 'genre',  Icon: MusicNote},
+                    { type: 'transfer',      name: 'artist', Icon: Group },
+                    { type: 'checkbox-list', name: 'album',  Icon: Album },
+                    { type: 'checkbox-list', name: 'genre',  Icon: MusicNote },
                 ]}
                 defaultSort="artist"
                 useLocation={true}
@@ -43,6 +43,6 @@ export const Tracks: React.FC = () => {
         return <DelayedLoading />;
     }
 
-}
+};
 
 export default Tracks;

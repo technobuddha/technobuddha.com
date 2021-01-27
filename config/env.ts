@@ -4,7 +4,7 @@ import { config }   from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 
 if(!process.env.NODE_ENV) {
-    process.env.NODE_ENV = 'development'
+    process.env.NODE_ENV = 'development';
 }
 
 [

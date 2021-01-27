@@ -1,7 +1,10 @@
-import React, {AnchorHTMLAttributes}                                    from 'react';
-import MuiLink, { LinkProps as MuiLinkProps }    from '@material-ui/core/Link';
-import {LinkProps as RouterLinkProps }          from 'react-router-dom';
-import useHistory                               from '#context/router';
+import React      from 'react';
+import MuiLink    from '@material-ui/core/Link';
+import useHistory from '#context/router';
+
+import type { AnchorHTMLAttributes }        from 'react';
+import type { LinkProps as MuiLinkProps }   from '@material-ui/core/Link';
+import type { LinkProps as RouterLinkProps } from 'react-router-dom';
 
 export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
     to:                 string;
@@ -11,7 +14,7 @@ export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
     TypographyClasses?: MuiLinkProps['TypographyClasses'];
     underline?:         MuiLinkProps['underline'];
     variant?:           MuiLinkProps['variant'];
-}
+};
 
 export const Link: React.FC<LinkProps> = (props: LinkProps) => {
     const history = useHistory();
@@ -25,12 +28,11 @@ export const Link: React.FC<LinkProps> = (props: LinkProps) => {
         } else {
             history.push(props.to);
         }
-    }
-
+    };
 
     return (
         <MuiLink {...myProps} href={to} onClick={handleClick} />
-    )
-}
+    );
+};
 
 export default Link;

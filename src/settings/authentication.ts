@@ -7,14 +7,14 @@ type Settings = {
         duration: number;
         cookieAge: number;
         keepAlive: number;
-    },
+    };
     password: {
         minLength?: number | null;
         maxLength?: number | null;
         strength?:  number | null;
-    },
+    };
     concurrentSessions: boolean;
-}
+};
 
 export default {
     forgotPassword:   false,
@@ -27,7 +27,7 @@ export default {
     password: {
         minLength: null,
         maxLength:   72,
-        strength:     3
+        strength:     3,
     },
     concurrentSessions: false,
 } as Settings;

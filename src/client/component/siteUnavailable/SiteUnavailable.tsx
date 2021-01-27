@@ -8,13 +8,13 @@ export const SiteUnavailable: React.FC = () => {
 
     return (
         <Box display="flex" alignItems="center" width="100%" height="100%">
-        <Box marginX="auto">
-            <Typography variant="h3" component="span">
-                {`${t('Site temporarily unavailable, please come back later')}.`}
-            </Typography>
+            <Box marginX="auto">
+                <Typography variant="h3" component="span">
+                    {`${t('Site temporarily unavailable, please come back later')}.`}
+                </Typography>
+            </Box>
         </Box>
-    </Box>
-    )
-}
+    );
+};
 
 export default SiteUnavailable;

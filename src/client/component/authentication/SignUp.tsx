@@ -1,11 +1,11 @@
 import React                        from 'react';
-import {useTranslation}             from '#context/i18n';
+import { useTranslation }             from '#context/i18n';
 import escapeRegExp                 from 'lodash/escapeRegExp';
 import settings                     from '#settings/authentication';
 import useHistory                   from '#context/router';
-import {useAuthentication}          from '#context/authentication';
-import {email as emailRegExp}       from '@technobuddha/library/regexp';
-import {nbsp}                       from '@technobuddha/library/constants';
+import { useAuthentication }          from '#context/authentication';
+import { email as emailRegExp }       from '@technobuddha/library/regexp';
+import { nbsp }                       from '@technobuddha/library/constants';
 import Button                       from '@material-ui/core/Button';
 import Box                          from '@material-ui/core/Box';
 import Alert                        from '@material-ui/lab/Alert';
@@ -19,7 +19,7 @@ import Person                       from '@material-ui/icons/Person';
 import Email                        from '@material-ui/icons/Email';
 
 export const SignUp: React.FC = () => {
-    const {t}                                                           = useTranslation();
+    const { t }                                                           = useTranslation();
     const authentication                                                = useAuthentication();
     const history                                                       = useHistory();
     const [first,                       setFirst]                       = React.useState<string>('');
@@ -41,17 +41,17 @@ export const SignUp: React.FC = () => {
     const handleEmailChange                 = (text: string)        => { setEmail(text);                  setErrorMessage(''); };
     const handlePasswordChange              = (text: string)        => { setPassword(text);               setErrorMessage(''); };
     const handlePasswordConfirmationChange  = (text: string)        => { setPasswordConfirmation(text);   setErrorMessage(''); };
-    const handlePasswordValidationChange    = (valid: boolean)      => { setPasswordValidation(valid); }
+    const handlePasswordValidationChange    = (valid: boolean)      => { setPasswordValidation(valid); };
     const handleTosAcceptedChange           = (checked: boolean)    => { setTosAccepted(checked);         setErrorMessage(''); };
 
     const isEnabled                         = () => validFirst && validLast && validEmail && validPassword && validPasswordConfirmation && passwordValidation && tosAccepted;
-    const handleExecute                     = (event: React.MouseEvent<HTMLButtonElement>) => { event.preventDefault(); handleSignup(); }
-    const handleKeyPress                    = (event: React.KeyboardEvent<HTMLElement>)    => { 
+    const handleExecute                     = (event: React.MouseEvent<HTMLButtonElement>) => { event.preventDefault(); handleSignup(); };
+    const handleKeyPress                    = (event: React.KeyboardEvent<HTMLElement>)    => {
         if(isEnabled() && event.key == 'Enter') {
             event.preventDefault();
             handleSignup();
         }
-    }
+    };
     const handleSignup = () => {
         authentication.createAccount(first, last, email, password)
         .then(async () => {
@@ -60,13 +60,13 @@ export const SignUp: React.FC = () => {
         })
         .catch(() =>
             setErrorMessage(`${t('Email address already in use')}.`)
-        )
-    }
+        );
+    };
 
     return (
-        
+
         <Box onKeyPress={handleKeyPress}>
-             <Typography variant="h5">
+            <Typography variant="h5">
                 {t('Sign Up')}
             </Typography>
             <TextField
@@ -89,7 +89,7 @@ export const SignUp: React.FC = () => {
                 name="last"
                 required
             />
-        
+
             <TextField
                 onChange={handleEmailChange}
                 onValidation={setValidEmail}
@@ -117,7 +117,7 @@ export const SignUp: React.FC = () => {
                 value={passwordConfirmation}
                 helperText={validPasswordConfirmation ? nbsp : t('Passwords must match')}
                 required
-                validation={new RegExp(`^${escapeRegExp(password)}$`)}
+                validation={new RegExp(`^${escapeRegExp(password)}$`, 'u')}
             />
 
             <PasswordValidation
@@ -130,13 +130,13 @@ export const SignUp: React.FC = () => {
             />
 
             <Checkbox
-               label={
-                   <Typography variant="caption">
+                label={
+                    <Typography variant="caption">
                         {t('I\'ve read and accepted the')} <Link to="/tos">{t('Terms of Service')}</Link>
-                   </Typography>
-               }
-               checked={tosAccepted}
-               onChange={handleTosAcceptedChange} 
+                    </Typography>
+                }
+                checked={tosAccepted}
+                onChange={handleTosAcceptedChange}
             />
 
             <Box marginTop={1}>

@@ -1,8 +1,8 @@
 import color from '@technobuddha/library/color';
 import lerp  from '@technobuddha/library/lerp';
 
-export type MandelbrotReturn = { colors: RGBV[][], x_min: number, x_max: number, y_min: number, y_max: number };
-export type RGBV = { r: number, g: number; b: number };
+export type MandelbrotReturn = { colors: RGBV[][]; x_min: number; x_max: number; y_min: number; y_max: number };
+export type RGBV = { r: number; g: number; b: number };
 
 function mandelbrot(width: number, height: number, x_min: number, x_max: number, y_min: number, y_max: number, iterations: number): MandelbrotReturn {
     const counts: number[][] = [];
@@ -14,14 +14,14 @@ function mandelbrot(width: number, height: number, x_min: number, x_max: number,
 
     if(ratio < 1) {
         const center = y_min + desired_height / 2;
-        y_min        = center - (desired_height/2) / ratio;
-        y_max        = center + (desired_height/2) / ratio;
+        y_min        = center - (desired_height / 2) / ratio;
+        y_max        = center + (desired_height / 2) / ratio;
     } else {
         const center = x_min + desired_width / 2;
-        x_min        = center - (desired_width/2) * ratio;
-        x_max        = center + (desired_width/2) * ratio;
+        x_min        = center - (desired_width / 2) * ratio;
+        x_max        = center + (desired_width / 2) * ratio;
     }
-    
+
     for(let i = 0; i < width; ++i) {
         counts[i] = [];
 
@@ -32,23 +32,22 @@ function mandelbrot(width: number, height: number, x_min: number, x_max: number,
             let y           = 0.0;
             let iteration   = 0;
 
-            while(x*x + y*y <= 4 && iteration < iterations) {
-                const t = x*x - y*y + x0;
-                y = 2*x*y + y0;
+            while(x * x + y * y <= 4 && iteration < iterations) {
+                const t = x * x - y * y + x0;
+                y = 2 * x * y + y0;
                 x = t;
                 ++iteration;
             }
 
             if(iteration < iterations) {
-                const logzn = Math.log(x*x + y*y) / 2;
+                const logzn = Math.log(x * x + y * y) / 2;
                 const nu    = Math.log(logzn / Math.LN2) / Math.LN2;
-    
+
                 const count  = iteration + 1 - nu;
                 counts[i][j] = count;
                 if(count < iterations - 1)
                     histo[Math.floor(count)]++;
-            }
-            else
+            } else
                 counts[i][j] = iterations;
         }
     }
@@ -56,7 +55,7 @@ function mandelbrot(width: number, height: number, x_min: number, x_max: number,
     const hues = Array(iterations).fill(0);
 
     let total = 0;
-    for(let i = 0; i < iterations; ++i) 
+    for(let i = 0; i < iterations; ++i)
         total += histo[i];
 
     let t = 0;
@@ -67,13 +66,13 @@ function mandelbrot(width: number, height: number, x_min: number, x_max: number,
 
     const colors: RGBV[][] = [];
     for(let i = 0; i < width; ++i) {
-        colors[i] = []
+        colors[i] = [];
         for(let j = 0; j < height; ++j) {
             const m = counts[i][j];
             const h = 1 - lerp(hues[Math.floor(m)], hues[Math.ceil(m)], m % 1);
             const s = 1;
             const v = m < iterations ? 1 : 0;
-            const rgb = (new color.HSV(h, s, v).toRGB())
+            const rgb = (new color.HSV(h, s, v).toRGB());
 
             colors[i][j] = { r: rgb.r, g: rgb.g, b: rgb.b };
         }
@@ -83,7 +82,7 @@ function mandelbrot(width: number, height: number, x_min: number, x_max: number,
 }
 
 export const exports = {
-    mandelbrot
+    mandelbrot,
 };
 
 export type ChaosAPI = typeof exports;

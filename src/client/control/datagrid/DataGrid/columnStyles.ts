@@ -1,4 +1,4 @@
-import React          from 'react';
+import type React     from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 type RowClassnames = {
@@ -10,9 +10,9 @@ type RowClassnames = {
     menuIcon?:              string;
     menuIconHeader?:        string;
     stub?:                  string;
-}
+};
 export type RowClasses = RowClassnames & {header: HeaderClasses; column?: Record<string, string>};
-export type RowStyles  = {[key in keyof RowClassnames]: React.CSSProperties} & {header: HeaderStyles, column?: Record<string, React.CSSProperties>};
+export type RowStyles  = {[key in keyof RowClassnames]: React.CSSProperties} & {header: HeaderStyles; column?: Record<string, React.CSSProperties>};
 
 export type HeaderClasses = {
     button:                 string;
@@ -20,7 +20,7 @@ export type HeaderClasses = {
     buttonTitle:            string;
     buttonSortIndicator:    string;
     [key: string]:          string;
-}
+};
 export type HeaderStyles = {[key in keyof HeaderClasses]: React.CSSProperties};
 
 const ucs = makeStyles(theme => ({
@@ -39,8 +39,8 @@ const ucs = makeStyles(theme => ({
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        "&:not(:first-child)": {
-            borderLeft: `1px solid ${theme.palette.divider}`
+        '&:not(:first-child)': {
+            borderLeft: `1px solid ${theme.palette.divider}`,
         },
     },
     cellHeader: {
@@ -74,9 +74,9 @@ const ucs = makeStyles(theme => ({
         width: (props: Record<string, unknown>) => `${props.scrollbarWidth}px`,
         userSelect: 'none',
         height: '100%',
-    }
+    },
 }));
 
-export const useColumnStyles: ((args: {scrollbarWidth: number, controlWidth: number}) => ReturnType<typeof ucs>) = ucs;
+export const useColumnStyles: ((args: {scrollbarWidth: number; controlWidth: number}) => ReturnType<typeof ucs>) = ucs;
 
 export default useColumnStyles;

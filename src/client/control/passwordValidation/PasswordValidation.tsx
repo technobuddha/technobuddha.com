@@ -11,27 +11,27 @@ type PasswordValidationProps =
         barColors?:     [string, string, string, string, string];
         scoreWords?:    [string, string, string, string, string];
         minLength?:     number | null;
-        maxLength?:     number | null; 
-        strength?:      number | null,   
+        maxLength?:     number | null;
+        strength?:      number | null;
         userInputs?:    string[];
         onChange?:      (valid: boolean) => void;
     };
 
 export const PasswordValidation: React.FC<PasswordValidationProps> = (props: PasswordValidationProps) => {
-    const {t}                   = useTranslation();
-    const {authentication}      = useAPI();
-    const [state, setState]     = React.useState<{score: number, warning: string}>({score: 0, warning: ''});
+    const { t }                   = useTranslation();
+    const { authentication }      = useAPI();
+    const [state, setState]     = React.useState<{score: number; warning: string}>({ score: 0, warning: '' });
 
     React.useEffect(
         () => {
-            const {minLength: min, maxLength: max} = props;
+            const { minLength: min, maxLength: max } = props;
 
             if(!isNil(min) && props.password.length < min) {
                 setState({
                     score:          0,
                     warning:        isNil(max)
-                                    ?   `${t('Passwords must be at least')} ${min} ${t('character', { count: min })} ${t('long')}.`
-                                    :   `${t('Passwords must be between')} ${min} ${t('and')} ${max} ${t('character', { count: max })} ${t('long')}.`,
+                        ?   `${t('Passwords must be at least')} ${min} ${t('character', { count: min })} ${t('long')}.`
+                        :   `${t('Passwords must be between')} ${min} ${t('and')} ${max} ${t('character', { count: max })} ${t('long')}.`,
                 });
 
                 if(props.onChange) props.onChange(false);
@@ -39,8 +39,8 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = (props: Pas
                 setState({
                     score:          0,
                     warning:        isNil(min)
-                                    ?   `${t('Passwords must be shorter than')} ${max} ${t('character', { count: max })} ${t('long')}.`
-                                    :   `${t('Passwords must be between')} ${min} ${t('and')} ${max} ${t('character', { count: max })} ${t('long')}.`,
+                        ?   `${t('Passwords must be shorter than')} ${max} ${t('character', { count: max })} ${t('long')}.`
+                        :   `${t('Passwords must be between')} ${min} ${t('and')} ${max} ${t('character', { count: max })} ${t('long')}.`,
                 });
 
                 if(props.onChange) props.onChange(false);
@@ -49,8 +49,8 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = (props: Pas
                 .then(value => {
                     const score = value.payload.score;
 
-                    setState({score, warning: t(value.payload.warning)});
-                    props.onChange?.(isNil(props.strength) || score >= props.strength)
+                    setState({ score, warning: t(value.payload.warning) });
+                    props.onChange?.(isNil(props.strength) || score >= props.strength);
                 });
             }
         },
@@ -87,11 +87,11 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = (props: Pas
             </Box>
         </Box>
     );
-}
+};
 
 PasswordValidation.defaultProps = {
     barColors:      ['#dddddd', '#ef4836', '#f6b44d', '#2b90ef', '#25c281'],
     scoreWords:     ['very weak', 'weak', 'average', 'strong', 'very strong'],
-}
+};
 
 export default PasswordValidation;

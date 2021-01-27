@@ -14,15 +14,15 @@ const MAX_ITERATION = 1024;
 export const Chaos: React.FC = () => {
     return (
         <Size width="100%" height="100%">
-            {({width, height}) => <ChaosBoard boxWidth={width} boxHeight={height} />}
+            {({ width, height }) => <ChaosBoard boxWidth={width} boxHeight={height} />}
         </Size>
-    )
-}
+    );
+};
 
-type ChaosBoardProps = {boxWidth: number, boxHeight: number};
+type ChaosBoardProps = {boxWidth: number; boxHeight: number};
 type Mode = 'compute' | 'display';
 
-const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoardProps) => {
+const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoardProps) => {
     const { t }                         = useTranslation();
     const canvas                        = React.useRef<HTMLCanvasElement>(null);
     const overlay                       = React.useRef<HTMLCanvasElement>(null);
@@ -38,20 +38,20 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
     const y_max                         = React.useRef(+1.25);
 
     const mouseIsDown                   = React.useRef(false);
-    const corner                        = React.useRef({x: 0, y: 0});
+    const corner                        = React.useRef({ x: 0, y: 0 });
 
     const coordinates = (event: React.MouseEvent<HTMLCanvasElement>) => {
         const { top, left } = canvas.current!.getBoundingClientRect();
         const x = event.clientX - left;
         const y = event.clientY - top;
-        return {x, y};
-    }
+        return { x, y };
+    };
 
-    const scaledCoordinates = ({x: clientX, y: clientY}: {x: number, y: number}) => {
+    const scaledCoordinates = ({ x: clientX, y: clientY }: {x: number; y: number}) => {
         const x = x_min.current + (clientX / width)  * (x_max.current - x_min.current);
         const y = y_min.current + (clientY / height) * (y_max.current - y_min.current);
-        return {x, y};
-    }
+        return { x, y };
+    };
 
     const clearOverlay = () => {
         overlay.current!.focus();
@@ -59,7 +59,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
         const context   = overlay.current!.getContext('2d')!;
         context.clearRect(0, 0, width, height);
         return context;
-    }
+    };
 
     const handleMouseDown       = (event: React.MouseEvent<HTMLCanvasElement>) => {
         if(mode === 'display') {
@@ -82,7 +82,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
                 corner.current      = coordinates(event);
             }
         }
-    }
+    };
 
     const handleMouseUp         = (event: React.MouseEvent<HTMLCanvasElement>) => {
         if(mode === 'display') {
@@ -113,18 +113,18 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
             context.strokeStyle = 'white';
             context.strokeRect(x, y, corner.current.x - x, corner.current.y - y);
         }
-    }
+    };
 
     const handleContextMenu     = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         return false;
-    }
+    };
 
     const handleKeyUp           = (event: React.KeyboardEvent<HTMLCanvasElement>) => {
         if(event.key === 'Escape') {
             setShowLegend(show => !show);
         }
-    }
+    };
 
     React.useEffect(
         () => {
@@ -147,34 +147,34 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
                         const context   = canvas.current!.getContext('2d')!;
                         context.translate(0.5, 0.5);
                         const imageData = context.getImageData(0, 0, canvas.current!.width, canvas.current!.height);
-        
+
                         const setPixel = (x: number, y: number, r: number, g: number, b: number) => {
                             const offset = (x * 4) + (y * imageData.width * 4);
                             imageData.data[offset + 0] = r;
                             imageData.data[offset + 1] = g;
                             imageData.data[offset + 2] = b;
                             imageData.data[offset + 3] = 255;
-                        }
-                        
+                        };
+
                         for(let i = 0; i < width; ++i) {
                             for(let j = 0; j < height; ++j) {
                                 const rgb = grid.current[i][j];
-        
+
                                 setPixel(i, j, rgb.r, rgb.g, rgb.b);
                             }
                         }
-        
+
                         context.putImageData(imageData, 0, 0);
-                    }
-                ),
-                0
+                    },
+                    0
+                );
             }
         },
         [mode]
-    )
+    );
 
     return (
-        <div className={css.chaos} style={{width: boxWidth, height: height}} onContextMenu={handleContextMenu}>
+        <div className={css.chaos} style={{ width: boxWidth, height: height }} onContextMenu={handleContextMenu}>
             {
                 mode === 'compute' &&
                 <div className={css.compute}>
@@ -184,7 +184,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
                     <div className={css.text}>
                         {t('The Mandelbrot Set')}
                     </div>
-                    <LinearProgress style={{width: '50%'}} color="primary" />
+                    <LinearProgress style={{ width: '50%' }} color="primary" />
                 </div>
             }
             {
@@ -215,6 +215,6 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({boxWidth, boxHeight}: ChaosBoard
 
         </div>
     );
-}
+};
 
 export default Chaos;

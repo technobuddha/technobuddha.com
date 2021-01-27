@@ -5,16 +5,14 @@ import { normalizeFilterArray } from './normalization';
 
 import type { FilterIndicatorProps } from '../filter';
 
-
 type IndicatorArgs<T = unknown> = {
     name: keyof T;
     title?: string;
-    Icon?: React.ComponentType<{className?: string; style?: React.CSSProperties;}>;
-}
+    Icon?: React.ComponentType<{className?: string; style?: React.CSSProperties}>;
+};
 
-
-export function arrayIndicator<T = unknown>({Icon, name, title}: IndicatorArgs<T>) {
-    return function({classes, styles}: FilterIndicatorProps) {
+export function arrayIndicator<T = unknown>({ Icon, name, title }: IndicatorArgs<T>) {
+    return function({ classes, styles }: FilterIndicatorProps) {
         const { filterValues, changeFilter }  = useGrid<T>();
         const filterValue                     = normalizeFilterArray(filterValues[name]);
 
@@ -29,10 +27,10 @@ export function arrayIndicator<T = unknown>({Icon, name, title}: IndicatorArgs<T
                     break;
                 }
             }
-            
+
             const handleFilterDelete = () => {
                 changeFilter(name, null);
-            }
+            };
 
             return (
                 <Chip
@@ -43,8 +41,8 @@ export function arrayIndicator<T = unknown>({Icon, name, title}: IndicatorArgs<T
                     label={`${title ?? name}: ${str}`}
                     onDelete={handleFilterDelete}
                 />
-            )
+            );
         } else
             return <></>;
-    }
+    };
 }

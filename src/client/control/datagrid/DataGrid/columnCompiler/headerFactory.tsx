@@ -41,12 +41,12 @@ export function headerFactory<T = unknown>(column: ColumnSpecification<T>, _type
     if(isString(column.header) || isUndefined(column.header)) {
         const text = column.header ?? column.name;
 
-        return ({classes, styles}: ColumnHeaderProps<T>) => {
+        return ({ classes, styles }: ColumnHeaderProps<T>) => {
             const css                   = useHeaderStyles();
             const { sort, changeSort }  = useGrid<T>();
 
             return (
-                <Button 
+                <Button
                     className={clsx(css.button, classes?.button)}
                     style={styles?.button}
                     fullWidth
@@ -68,24 +68,24 @@ export function headerFactory<T = unknown>(column: ColumnSpecification<T>, _type
                         </Box>
                         {column.sortBy !== null && (
                             sort?.sortBy === column.name
-                            ?   sort?.sortAscending
-                                ?   <SortAsc
+                                ?   sort?.sortAscending
+                                        ?   <SortAsc
+                                                className={clsx(css.buttonSortIndicator, classes?.buttonSortIndicator)}
+                                                style={styles?.buttonSortIndicator}
+                                            />
+                                        :   <SortDesc
+                                                className={clsx(css.buttonSortIndicator, classes?.buttonSortIndicator)}
+                                                style={styles?.buttonSortIndicator}
+                                            />
+                                :   <SortNone
                                         className={clsx(css.buttonSortIndicator, classes?.buttonSortIndicator)}
                                         style={styles?.buttonSortIndicator}
                                     />
-                                :   <SortDesc
-                                        className={clsx(css.buttonSortIndicator, classes?.buttonSortIndicator)}
-                                        style={styles?.buttonSortIndicator}
-                                    />
-                            :   <SortNone
-                                    className={clsx(css.buttonSortIndicator, classes?.buttonSortIndicator)}
-                                    style={styles?.buttonSortIndicator}
-                                />
                         )}
                     </Box>
                 </Button>
             );
-        }
+        };
     } else
         return column.header;
 }

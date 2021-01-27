@@ -1,11 +1,9 @@
-import React                from 'react';
-
-import {GiHouse}            from '%icons/gi/GiHouse';
-import {GiMusicalNotes}     from '%icons/gi/GiMusicalNotes';
-import {GiConwayLifeGlider} from '%icons/gi/GiConwayLifeGlider';
-import {GiOrbital}          from '%icons/gi/GiOrbital';
-import {GiThornyTentacle}   from '%icons/gi/GiThornyTentacle';
-import {GiChessKnight}      from '%icons/gi/GiChessKnight';
+import { GiHouse }            from '%icons/gi/GiHouse';
+import { GiMusicalNotes }     from '%icons/gi/GiMusicalNotes';
+import { GiConwayLifeGlider } from '%icons/gi/GiConwayLifeGlider';
+import { GiOrbital }          from '%icons/gi/GiOrbital';
+import { GiThornyTentacle }   from '%icons/gi/GiThornyTentacle';
+import { GiChessKnight }      from '%icons/gi/GiChessKnight';
 import Home                 from '#component/home';
 import NBody                from '#component/nBody';
 import Music                from '#component/music';
@@ -13,6 +11,7 @@ import Knight               from '#component/knight';
 import Life                 from '#component/life';
 import Chaos                from '#component/chaos';
 
+import type React         from 'react';
 import type { IconType }  from '%icons';
 import type { TFunction } from 'react-i18next';
 
@@ -22,9 +21,9 @@ export type Component = {
     secondary?: string;
     location: string;
     component: React.ComponentType;
-    description?: React.ReactElement,
+    description?: React.ReactElement;
     todo?: string[];
-}
+};
 
 export const components: (t: TFunction<string>) => Component[] = (t) => [
     {
@@ -35,8 +34,8 @@ export const components: (t: TFunction<string>) => Component[] = (t) => [
         todo: [
             t('Add a description to this component'),
             t('Add some interactive features so people don\'t have to wait'),
-            t('Add a "What\'s new" section.')
-        ]
+            t('Add a "What\'s new" section.'),
+        ],
     },
     {
         icon: GiMusicalNotes,
@@ -47,7 +46,7 @@ export const components: (t: TFunction<string>) => Component[] = (t) => [
         todo: [
             t('Add a description to this component'),
             t('Increase functionality to show individual artists/albums/genres'),
-        ]
+        ],
     },
     {
         icon: GiConwayLifeGlider,
@@ -59,7 +58,7 @@ export const components: (t: TFunction<string>) => Component[] = (t) => [
             t('Add a description to this component'),
             t('Add ability to specify starting configuration'),
             t('Add controls to start/stop and control speed'),
-        ]
+        ],
     },
     {
         icon: GiOrbital,
@@ -71,7 +70,7 @@ export const components: (t: TFunction<string>) => Component[] = (t) => [
             t('Add a description to this component'),
             t('Add zoom and pan ability'),
             t('Add ability to add a new body'),
-        ]
+        ],
     },
     {
         icon: GiThornyTentacle,
@@ -82,8 +81,8 @@ export const components: (t: TFunction<string>) => Component[] = (t) => [
         todo: [
             t('Add a description to this component'),
             t('Fix scaling so that image is not stretched'),
-            t('Add ability to zoom into a section')
-        ]
+            t('Add ability to zoom into a section'),
+        ],
     },
     {
         icon: GiChessKnight,
@@ -94,7 +93,7 @@ export const components: (t: TFunction<string>) => Component[] = (t) => [
         todo: [
             t('Add a description to this component'),
             t('Clean up the UI'),
-        ]
+        ],
     },
 ];
 

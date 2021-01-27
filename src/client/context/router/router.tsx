@@ -1,17 +1,17 @@
-import React                                        from 'react';
-// import useAuthentication                         from '#context/authentication';
-import { Location, History } from 'history';
+import React                                             from 'react';
 import { BrowserRouter, useHistory as routerUseHistory } from 'react-router-dom';
 
-type HistoryState = { referrer: Location<HistoryState> }
+import type { Location, History } from 'history';
 
-export const Router: React.FC = ({children}: {children?: React.ReactNode}) => {
+type HistoryState = { referrer: Location<HistoryState> };
+
+export const Router: React.FC = ({ children }: {children?: React.ReactNode}) => {
     return (
         <BrowserRouter>
             {children}
         </BrowserRouter>
     );
-}
+};
 
 // export const AuthenticatedRoute: React.FC<RouteProps> = (props: RouteProps) => {
 //     // const { account }   = useAuthentication();
@@ -19,7 +19,7 @@ export const Router: React.FC = ({children}: {children?: React.ReactNode}) => {
 
 //     return (
 //         // account
-//         // ?   <Route {...props} /> 
+//         // ?   <Route {...props} />
 //         /*:*/   <Route>
 //                 <Redirect to={{
 //                     pathname: "/login",
@@ -38,7 +38,7 @@ export const Router: React.FC = ({children}: {children?: React.ReactNode}) => {
 
 export const useHistory = () => {
     return routerUseHistory() as History<HistoryState>;
-}
+};
 
 export type { Location } from 'history';
 export { Route, Switch, Redirect, useLocation, useParams, useRouteMatch }     from 'react-router-dom';

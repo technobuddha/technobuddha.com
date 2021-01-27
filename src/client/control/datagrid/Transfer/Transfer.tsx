@@ -28,23 +28,23 @@ export type TransferProps<T = unknown> = {
     title?:         string;
     onTransfer?:    (left: T[], right: T[]) => void;
     children?:      never;
-}
+};
 
 type TransferClasses = TransferClassesBase & {
-    grid: DataGridClasses,
-    buttons: TransferButtonClasses,
-}
+    grid: DataGridClasses;
+    buttons: TransferButtonClasses;
+};
 
 type TransferStyles = TransferStylesBase & {
-    grid: DataGridStyles,
-    buttons: TransferButtonStyles,
-}
+    grid: DataGridStyles;
+    buttons: TransferButtonStyles;
+};
 
 type TransferClassesBase = {
     root: string;
     gridBox: string;
     buttonsBox: string;
-}
+};
 type TransferStylesBase = {[key in keyof TransferClassesBase]: React.CSSProperties};
 
 const useStyles = makeStyles({
@@ -56,26 +56,26 @@ const useStyles = makeStyles({
     },
     gridBox: {
         flexGrow: 1,
-    }
+    },
 });
 
 export function Transfer<T = unknown>(
-    {left: leftProp, right: rightProp, rowHeight, name, title, onTransfer, className, style, classes, styles}: TransferProps<T>) {
+    { left: leftProp, right: rightProp, rowHeight, name, title, onTransfer, className, style, classes, styles }: TransferProps<T>) {
     const css               = useStyles();
     const dispatch          = React.useRef<DispatchFunction>(null!);
     const [left, setLeft]   = useDerivedState(leftProp,                                                                     [leftProp]);
     const [right, setRight] = useDerivedState(rightProp,                                                                    [rightProp]);
-    const selected          = React.useMemo(() => ({left: [] as T[], right: [] as T[]}),                                    [leftProp, rightProp]);
-    const columns           = React.useMemo(() => [{name} as ColumnSpecification<T>],                                       [name]);
+    const selected          = React.useMemo(() => ({ left: [] as T[], right: [] as T[] }),                                    [leftProp, rightProp]);
+    const columns           = React.useMemo(() => [{ name } as ColumnSpecification<T>],                                       [name]);
     const clearR            = React.useRef<() => void>();
     const clearL            = React.useRef<() => void>();
-    const filtersR          = React.useMemo(() => [{type: 'search', name, title: title ?? name, clear: clearR} as FilterSpecification<T>], [name, title]);
-    const filtersL          = React.useMemo(() => [{type: 'search', name, title: title ?? name, clear: clearL} as FilterSpecification<T>], [name, title]);
+    const filtersR          = React.useMemo(() => [{ type: 'search', name, title: title ?? name, clear: clearR } as FilterSpecification<T>], [name, title]);
+    const filtersL          = React.useMemo(() => [{ type: 'search', name, title: title ?? name, clear: clearL } as FilterSpecification<T>], [name, title]);
     const isLeftSelected    = React.useCallback((datum: T) => selected.left.includes(datum),                                [selected]);
     const isRightSelected   = React.useCallback((datum: T) => selected.right.includes(datum),                               [selected]);
 
     const handleSelectionChangedLeft    = React.useCallback(
-        ({selectedRows, selectedCount, unselectedCount}: OnSelectionChangedParams<T>) => {
+        ({ selectedRows, selectedCount, unselectedCount }: OnSelectionChangedParams<T>) => {
             selected.left = selectedRows;
             dispatch.current?.({
                 rAll: (selectedCount + unselectedCount) === 0,
@@ -85,12 +85,12 @@ export function Transfer<T = unknown>(
         [selected]
     );
     const handleSelectionChangedRight   = React.useCallback(
-        ({selectedRows, selectedCount, unselectedCount}: OnSelectionChangedParams<T>) => {
+        ({ selectedRows, selectedCount, unselectedCount }: OnSelectionChangedParams<T>) => {
             selected.right = selectedRows;
             dispatch.current?.({
                 lSel: selectedCount === 0,
                 lAll: (selectedCount + unselectedCount) === 0,
-            })
+            });
         },
         [selected]
     );
@@ -162,7 +162,7 @@ export function Transfer<T = unknown>(
     return (
         <Box
             className={clsx(css.root, className, classes?.root)}
-            style={{...style, ...styles?.root}}
+            style={{ ...style, ...styles?.root }}
         >
             <Box
                 className={clsx(css.gridBox, classes?.gridBox)}
@@ -214,7 +214,7 @@ export function Transfer<T = unknown>(
                 />
             </Box>
         </Box>
-    )
+    );
 }
 
 export default Transfer;

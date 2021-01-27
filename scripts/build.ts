@@ -49,14 +49,14 @@ function report(error: Error, stats: webpack.Stats): void {
 out(`Compiling ${chalk.blue('server')}`);
 webpack(
     genServerWebpackConfig(false),
-    (error: Error, stats: webpack.Stats) => {
-        report(error, stats);
+    (errorServer: Error, statsServer: webpack.Stats) => {
+        report(errorServer, statsServer);
 
         out(`\nCompiling ${chalk.blue('client')}`);
         webpack(
             genClientWebpackConfig(false),
-            (error: Error, stats: webpack.Stats) => {
-                report(error, stats);
+            (errorClient: Error, statsClient: webpack.Stats) => {
+                report(errorClient, statsClient);
 
                 out(`\nBuilding ${chalk.blue('package.json')}`);
 
@@ -68,7 +68,7 @@ webpack(
                 delete pj.bugs;
                 delete pj.homepage;
 
-                pj.scripts = { start: "NODE_ENV=production nodemon --watch /etc/letsencrypt/live/technobuddha --watch bin --ext pem,js bin/server.js" };
+                pj.scripts = { start: 'NODE_ENV=production nodemon --watch /etc/letsencrypt/live/technobuddha --watch bin --ext pem,js bin/server.js' };
                 pj.dependencies = Object.fromEntries(
                     Object.entries(pj.dependencies!)
                     .map(([k, v]) => [k, v.startsWith('^') ? v.slice(1) : v])
@@ -82,6 +82,6 @@ webpack(
                 out(`\n--${chalk.blue('done')}\n`);
                 process.exit(0);
             }
-        )  
+        );
     }
 );

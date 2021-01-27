@@ -9,7 +9,7 @@ export const NewAlbums: React.FC = () => {
 
     React.useEffect(
         () => {
-           api.music.artists().then(tracks => setDataset(tracks.payload));
+            api.music.artists().then(tracks => setDataset(tracks.payload));
         },
         []
     );
@@ -20,11 +20,11 @@ export const NewAlbums: React.FC = () => {
                 data={dataset}
                 rowHeight={32}
                 columns={[
-                    {name: 'artist',        type: 'string', sortBy: ['artist', 'album']},
-                    {name: 'album',         type: 'string', sortBy: ['album']},
-                    {name: 'year',          type: 'number', sortBy: ['year'], width: 40},
-                    {name: 'genre',         type: 'array',  sortBy: ['genre', 'subgenre']},
-                    {name: 'subgenre',      type: 'array',  sortBy: ['subgenre']}
+                    { name: 'artist',        type: 'string', sortBy: ['artist', 'album'] },
+                    { name: 'album',         type: 'string', sortBy: ['album'] },
+                    { name: 'year',          type: 'number', sortBy: ['year'], width: 40 },
+                    { name: 'genre',         type: 'array',  sortBy: ['genre', 'subgenre'] },
+                    { name: 'subgenre',      type: 'array',  sortBy: ['subgenre'] },
                 ]}
                 filters={[
                     // {type: 'checkbox-list', name: 'genre',    Icon: MusicNote},
@@ -38,6 +38,6 @@ export const NewAlbums: React.FC = () => {
         return <DelayedLoading />;
     }
 
-}
+};
 
 export default NewAlbums;

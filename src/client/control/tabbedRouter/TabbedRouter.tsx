@@ -9,22 +9,22 @@ type TabPanelProps = {
     content: React.ComponentType;
     children?: never;
     [key: string]: unknown;
-}
+};
 
 const TabPanel: React.FC<TabPanelProps> = ({ content: Content, value, index, ...other }) => {
-  return (
-      <div
-          className={css.panel}
-          role="tabpanel"
-          hidden={value !== index}
-          id={`scrollable-tabpanel-${index}`}
-          aria-labelledby={`scrollable-tab-${index}`}
-          {...other}
-      >
-          <Content />
-      </div>
-  );
-}
+    return (
+        <div
+            className={css.panel}
+            role="tabpanel"
+            hidden={value !== index}
+            id={`scrollable-tabpanel-${index}`}
+            aria-labelledby={`scrollable-tab-${index}`}
+            {...other}
+        >
+            <Content />
+        </div>
+    );
+};
 
 type TabbedRouterProps = {
     tabs: {
@@ -33,15 +33,15 @@ type TabbedRouterProps = {
         icon: React.ReactElement;
         content: React.ComponentType;
     }[];
-}
+};
 
-export const TabbedRouter: React.FC<TabbedRouterProps> = ({tabs}) => {
+export const TabbedRouter: React.FC<TabbedRouterProps> = ({ tabs }) => {
     const match = useRouteMatch();
     const history = useHistory();
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     const handleChange = (_event: React.ChangeEvent<{}>, newValue: any) => {
-        history.push(newValue)
+        history.push(newValue);
     };
 
     return (
@@ -49,7 +49,7 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({tabs}) => {
             <Route exact path={match.path}>
                 <Redirect to={`${match.path}/${tabs[0].url}`} />
             </Route>
-            <Route path={tabs.map(({url}) => `${match.path}/${url}`)}>
+            <Route path={tabs.map(({ url }) => `${match.path}/${url}`)}>
                 <div className={css.root}>
                     <AppBar position="static" color="default">
                         <Tabs
@@ -60,12 +60,12 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({tabs}) => {
                             indicatorColor="primary"
                             textColor="primary"
                         >
-                            {tabs.map(({label, icon: Icon, url}, i) => <Tab key={i} value={`${match.path}/${url}`} label={label} icon={Icon}/>)}
+                            {tabs.map(({ label, icon: Icon, url }, i) => <Tab key={i} value={`${match.path}/${url}`} label={label} icon={Icon}/>)}
                         </Tabs>
                     </AppBar>
                     <div className={css.panel}>
                         <Switch>
-                            {tabs.map(({content, url}) => (
+                            {tabs.map(({ content, url }) => (
                                 <Route key={url} path={`${match.path}/${url}`}>
                                     <TabPanel content={content} />
                                 </Route>
@@ -79,6 +79,6 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({tabs}) => {
             </Route>
         </Switch>
     );
-}
+};
 
 export default TabbedRouter;

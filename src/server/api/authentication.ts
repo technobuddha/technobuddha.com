@@ -28,7 +28,7 @@ authentication.get(
         res.clearCookie('session');
         res.status(401).json('Not logged in.');
     }
-)
+);
 
 authentication.put(
     '/session',
@@ -47,11 +47,11 @@ authentication.put(
             if(sessionId) {
                 await db.deleteSession(sessionId);
             }
-            
+
             if(!settings.concurrentSessions && !account.admin) {
                 await db.deleteConcurrentSessions(account.id);
             }
-            
+
             const session = await db.createSession(account.id);
 
             res.cookie('session', session.id, { maxAge: settings.session.cookieAge });
@@ -61,7 +61,7 @@ authentication.put(
             res.status(401).json('Login incorrect');
         }
     }
-)
+);
 
 authentication.delete(
     '/session',
@@ -70,16 +70,16 @@ authentication.delete(
         if(sessionId) {
             await db.deleteSession(sessionId);
         }
-        
+
         res.clearCookie('session');
         res.status(200).json('OK');
     }
-)
+);
 
 authentication.post(
     '/check-password-strength',
     (req, res) => {
-        const {password, userInputs} = req.body;
+        const { password, userInputs } = req.body;
 
         if(isUndefined(password)) {
             res.status(400).json('Request must include field "password"');
@@ -87,14 +87,14 @@ authentication.post(
         }
 
         const zResult = zxcvbn(password, userInputs);
-        res.json({score: zResult.score, warning: zResult.feedback.warning, suggestions: zResult.feedback.suggestions});
+        res.json({ score: zResult.score, warning: zResult.feedback.warning, suggestions: zResult.feedback.suggestions });
     }
-)
+);
 
 authentication.put(
     '/account',
     async (req, res) => {
-        const {first, last, email, password} = req.body;
+        const { first, last, email, password } = req.body;
 
         if(!first || !last || !email || !password) {
             res.status(400).json('Request must include fields "first", "last", "email" and "password"');
@@ -105,9 +105,9 @@ authentication.put(
             res.status(409).json('Account already exists.');
         }
 
-        res.status(201).json(await db.createAccount({first, last, email, password}));
+        res.status(201).json(await db.createAccount({ first, last, email, password }));
     }
-)
+);
 
 authentication.use(
     (_req, res) => {

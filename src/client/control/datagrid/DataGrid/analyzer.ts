@@ -10,26 +10,26 @@ import type { Column, ColumnType, ColumnSpecifications } from './column';
 export type IdentifiedType = 'string' | 'number' | 'boolean' | 'symbol' | 'object' | 'function' | 'undefined' | 'iso-date' | 'null' | 'date' | 'array';
 export type Shape          = 'key-value' | 'array' | 'primitive' | 'polymorphic';
 
-const isoDate       = /^(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))$/
-const numberString  = /^((?:NaN|[+-]?(?:(?:\d+|\d*\.\d+)(?:[Ee][+-]?\d+)?|[+-]?Infinity)))$/
+const isoDate       = /^(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))$/u;
+const numberString  = /^((?:NaN|[+-]?(?:(?:\d+|\d*\.\d+)(?:[Ee][+-]?\d+)?|[+-]?Infinity)))$/u;
 
 export type AnalyzerResults<T = unknown> = {
     getColumnType: (key: string) => ColumnType;
     getShape: () => Shape;
     createDefaultColumn: (name: string) => Column<T>;
     getKeys: () => string[];
-}
+};
 
-export function analyzer<T = unknown>({data, columns}: {data: T[], columns?: ColumnSpecifications<T>}): AnalyzerResults<T> {
-    let information: {types: Record<string, ColumnType>, shape: Shape};
+export function analyzer<T = unknown>({ data, columns }: {data: T[]; columns?: ColumnSpecifications<T>}): AnalyzerResults<T> {
+    let information: {types: Record<string, ColumnType>; shape: Shape};
 
     function getShape(): Shape {
-        if(!information) information = analyze({data, columns});
+        if(!information) information = analyze({ data, columns });
         return information.shape;
     }
 
     function getColumnType(key: string): ColumnType {
-        if(!information) information = analyze({data, columns});
+        if(!information) information = analyze({ data, columns });
         return information.types[key] ?? 'unknown';
     }
 
@@ -40,27 +40,27 @@ export function analyzer<T = unknown>({data, columns}: {data: T[], columns?: Col
         return {
             name:       name.toString(),
             width:      '*',
-            header:     headerFactory({name}, type, shape),
-            render:     rendererFactory({name}, type, shape),
+            header:     headerFactory({ name }, type, shape),
+            render:     rendererFactory({ name }, type, shape),
             sortBy:     [name],
-            collate:    collatorFactory({name}, type, shape),
-        }
+            collate:    collatorFactory({ name }, type, shape),
+        };
     }
 
     function getKeys(): string[] {
-        if(!information) information = analyze({data, columns});
+        if(!information) information = analyze({ data, columns });
         return Object.keys(information.types);
     }
 
-    return {getColumnType, getShape, createDefaultColumn, getKeys};
+    return { getColumnType, getShape, createDefaultColumn, getKeys };
 }
 
-function analyze<T = unknown>({data, columns}: {data: T[], columns?: ColumnSpecifications<T>}): {types: Record<string, ColumnType>, shape: Shape} {
+function analyze<T = unknown>({ data, columns }: {data: T[]; columns?: ColumnSpecifications<T>}): {types: Record<string, ColumnType>; shape: Shape} {
     const types         = {} as Record<string, ColumnType> ;
     const used          = new Set<string>();
     const columnData    = {} as Record<string, Set<IdentifiedType>>;
-    const shapes        = new Set<Shape>(); 
-    
+    const shapes        = new Set<Shape>();
+
     if(columns) {
         columns.forEach(
             column => {
@@ -88,7 +88,7 @@ function analyze<T = unknown>({data, columns}: {data: T[], columns?: ColumnSpeci
             Object.keys(datum).forEach(key => {
                 if(!(key in columnData))
                     columnData[key] = new Set<IdentifiedType>();
-        
+
                 columnData[key]!.add(identify((datum as Record<string, unknown>)[key]));
             });
 
@@ -99,7 +99,7 @@ function analyze<T = unknown>({data, columns}: {data: T[], columns?: ColumnSpeci
 
                 if(!(key in columnData))
                     columnData[key] = new Set<IdentifiedType>();
-        
+
                 columnData[key]!.add(identify(datum[i]));
             }
 
@@ -124,7 +124,7 @@ function analyze<T = unknown>({data, columns}: {data: T[], columns?: ColumnSpeci
             shapes.add('primitive');
         }
     });
-                
+
     for(const [key, identified] of Object.entries(columnData)) {
         if(!(key in types)) {
             let nullable = false;
@@ -134,7 +134,7 @@ function analyze<T = unknown>({data, columns}: {data: T[], columns?: ColumnSpeci
                 identified.delete('undefined');
                 nullable = true;
             }
-        
+
             if(identified.has('string') && identified.has('iso-date')) {
                 identified.delete('iso-date');
             }
@@ -142,9 +142,9 @@ function analyze<T = unknown>({data, columns}: {data: T[], columns?: ColumnSpeci
             if(identified.has('string') && identified.has('number')) {
                 identified.delete('number');
             }
-            
+
             if(identified.size === 1 && identified.has('number')) {
-                types[key] = { dataType: 'number',  nullable }
+                types[key] = { dataType: 'number',  nullable };
             } else if(identified.size === 1 && (identified.has('date') || identified.has('iso-date'))) {
                 types[key] = { dataType: 'date',    nullable };
             } else if(identified.size === 1 && identified.has('string')) {
@@ -160,8 +160,8 @@ function analyze<T = unknown>({data, columns}: {data: T[], columns?: ColumnSpeci
 
     const shape = (shapes.size === 1) ? shapes.values().next().value : 'polymorphic';
 
-    console.log('analyser', {types, shape});
-    return {types, shape};
+    console.log('analyser', { types, shape });
+    return { types, shape };
 }
 
 function identify(value: unknown, identifyArrays = true): IdentifiedType {
@@ -196,9 +196,8 @@ function identify(value: unknown, identifyArrays = true): IdentifiedType {
                 )
                     return 'array';
 
-                return 'object';    
-            }
-            else
+                return 'object';
+            } else
                 return 'object';
 
         case 'boolean':

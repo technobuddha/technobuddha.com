@@ -1,11 +1,10 @@
 import React                    from 'react';
 import useTranslation           from '#context/i18n';
-import {email as emailRegExp}   from '@technobuddha/library/regexp';
+import { email as emailRegExp }   from '@technobuddha/library/regexp';
 import Typography               from '@material-ui/core/Typography';
 import Button                   from '@material-ui/core/Button';
 import TextField                from '~src/client/control/textField/TextField';
 import Email                    from '@material-ui/icons/Email';
-
 
 export type LoginMode  = 'login' | 'forgotPassword' | 'signUp';
 export type LoginState = { mode: LoginMode };
@@ -17,13 +16,12 @@ export const ForgotPassword: React.FC = () => {
     const handleEmailChange         = (text: string) => { setEmail(text); };
     const isDisabled                = () => !email;
 
-    const handleExecute             = async (e: React.FormEvent<HTMLButtonElement>) =>
-    {
+    const handleExecute             = async (e: React.FormEvent<HTMLButtonElement>) =>  {
         e.preventDefault();
 
         //if(!await authentication.login(username!, password!))
         //    setErrorMessage(`${t('Please enter a correct username and password')}.`)
-    }
+    };
 
     return (
         <>

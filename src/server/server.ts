@@ -48,14 +48,14 @@ import type { IncomingMessage } from 'http';
         }
 
         return `${colored}${space.repeat(7 - level.length)}`;
-    }
+    };
 
     const logger = winston.createLogger({
         level:          isDevelopment ? 'silly' : 'verbose',
         format:         winston.format.combine(
-                            winston.format.timestamp(),
-                            winston.format.printf(info => `${info.timestamp} ${logLevel(info.level)} ${info.message}`),
-                        ),
+            winston.format.timestamp(),
+            winston.format.printf(info => `${info.timestamp} ${logLevel(info.level)} ${info.message}`),
+        ),
         transports:     [
             new winston.transports.Console(),
             new winston.transports.File({ filename: '/var/log/technobuddha/server.log' }),
@@ -65,7 +65,7 @@ import type { IncomingMessage } from 'http';
     const exit = () => {
         pgp.end();
         process.exit(0);
-    }
+    };
     process.on('exit', exit);
 
     [ 'SIGINT', 'SIGTERM', 'SIGHUP', 'SIGQUIT', 'uncaughtException' ].forEach(
@@ -73,7 +73,7 @@ import type { IncomingMessage } from 'http';
             sig,
             () => {
                 logger.error(sig);
-                exit()
+                exit();
             }
         )
     );
@@ -86,14 +86,14 @@ import type { IncomingMessage } from 'http';
     function cacheControl(days = 0) {
         const seconds = days * 24 * 60 * 60;
 
-        if (seconds === 0 || isDevelopment)
+        if(seconds === 0 || isDevelopment)
             return 'public, no-cache, no-store, must-revalidate';
         else
             return `public, max-age=${seconds}`;
     }
 
     let preload: string;
-    if (process.env.USE_CDN === 'true') { 
+    if(process.env.USE_CDN === 'true') {
         const cdn = 'https://cdnjs.cloudflare.com/ajax/libs';
         preload = Object.entries(externalPackages)
         .map(([packageName, info]) => {
@@ -106,8 +106,8 @@ import type { IncomingMessage } from 'http';
         preload = Object.entries(externalPackages)
         .map(([packageName, info]) => {
             const url = info.localPath
-                    ?   path.join('/cdn', info.alias ?? packageName, info.localPath, isDevelopment ? info.development : info.production)
-                    :   path.join('/cdn', info.alias ?? packageName, isDevelopment ? info.development : info.production);
+                ?   path.join('/cdn', info.alias ?? packageName, info.localPath, isDevelopment ? info.development : info.production)
+                :   path.join('/cdn', info.alias ?? packageName, isDevelopment ? info.development : info.production);
             return `<script type="application/javascript" src="${url}"></script>`;
         })
         .join('\n        ');
@@ -128,15 +128,15 @@ import type { IncomingMessage } from 'http';
         res.statusMessage = 'NOT FOUND';
         res.status(404).render('error/404.hbs', { favicon });
     }
-    
+
     const app = express();
 
     if(!isDevelopment) {
         const logProxy = (req: Request, res: Response | IncomingMessage) => {
             const { statusCode, statusMessage } = res;
             const { protocol, method, url, ip } = req;
-            logger.http(`${protocol}:${method} ${statusCode} ${statusMessage} ${url} [${chalk.cyan(ip)}]`) 
-        }
+            logger.http(`${protocol}:${method} ${statusCode} ${statusMessage} ${url} [${chalk.cyan(ip)}]`);
+        };
 
         app.use(
             [
@@ -153,7 +153,7 @@ import type { IncomingMessage } from 'http';
                 '/Public',
                 '/PushNotifications',
                 '/Rpc',
-                '/RpcWithCert'
+                '/RpcWithCert',
             ],
             createProxyMiddleware({
                 target:         'http://mail.technobuddha.com',
@@ -165,7 +165,7 @@ import type { IncomingMessage } from 'http';
                 onError:        (err, req, res) => {
                     logProxy(req, res);
                     logger.error(err.message);
-                }
+                },
             })
         );
     }
@@ -174,8 +174,8 @@ import type { IncomingMessage } from 'http';
     .set('view engine', hbs)
     .set('views',       paths.views)
     .use(cookieParser())
-    .use(express.json({reviver}))
-    .use(express.urlencoded({extended: true}))
+    .use(express.json({ reviver }))
+    .use(express.urlencoded({ extended: true }))
     .set('json replacer', replacer)
     .use(
         (req, res, next) => {
@@ -186,11 +186,11 @@ import type { IncomingMessage } from 'http';
                 const { protocol, method, originalUrl, url, ip } = req;
                 const { statusCode, statusMessage } = res;
                 const duration = Date.now() - start;
-                logger.http(`${protocol}:${method} ${statusCode} ${statusMessage ? `${statusMessage} ` : ``}${chalk.green(`${duration}ms`)} ${originalUrl ?? url} [${chalk.cyan(ip)}]`);
+                logger.http(`${protocol}:${method} ${statusCode} ${statusMessage ? `${statusMessage} ` : ''}${chalk.green(`${duration}ms`)} ${originalUrl ?? url} [${chalk.cyan(ip)}]`);
 
                 res.end = end;
                 res.end(...args);
-            }
+            };
 
             next();
         }
@@ -208,7 +208,7 @@ import type { IncomingMessage } from 'http';
         status404
     );
 
-    if (isDevelopment) {
+    if(isDevelopment) {
         const clientWebpackConfig   = genClientWebpackConfig(isDevelopment, logger);
         const compiler              = webpack(clientWebpackConfig);
 
@@ -238,7 +238,7 @@ import type { IncomingMessage } from 'http';
             hotMiddleware(
                 compiler,
                 {
-                    log: (message: string) => logger.debug(`[${chalk.yellow('webpack-hot-middleware')}] ${message}`)
+                    log: (message: string) => logger.debug(`[${chalk.yellow('webpack-hot-middleware')}] ${message}`),
                 }
             )
         );
@@ -303,7 +303,7 @@ import type { IncomingMessage } from 'http';
             res.setHeader('Cache-Control',  cacheControl(1));
 
             const userAgent = req.headers['user-agent'];
-            if(userAgent && !matchesUA(userAgent, { browsers: packageJson.browserslist, allowHigherVersions: true})) {
+            if(userAgent && !matchesUA(userAgent, { browsers: packageJson.browserslist, allowHigherVersions: true })) {
                 // if(req.cookies['peril'] !== 'accepted') {
                 //     logger.warn(`user-agent not supported: "${userAgent}"`);
                 //     res.render('abandon-hope.hbs', { favicon, years: new Date().getFullYear() - 1314 });
@@ -333,7 +333,7 @@ import type { IncomingMessage } from 'http';
             (req, res) => {
                 const host = req.headers.host?.split(':')[0];
                 res.writeHead(301, { Location: `https://${host}${HTTPS_PORT === 443 ? '' : `:${HTTPS_PORT}`}${req.url}` });
-                res.end()
+                res.end();
             }
         )
         .listen(HTTP_PORT, () => logger.info(`HTTP Redirector listening on port ${HTTP_PORT}`));
@@ -345,11 +345,11 @@ import type { IncomingMessage } from 'http';
             (req, res) => {
                 const host = req.headers.host?.split(':')[0];
                 res.writeHead(301, { Location: `http://${host}${HTTP_PORT === 80 ? '' : `:${HTTP_PORT}`}${req.url}` });
-                res.end()
+                res.end();
             }
         )
         .listen(HTTPS_PORT, () => logger.info(`HTTPS Redirector listening on port ${HTTPS_PORT}`));
-        
+
         app.listen(
             HTTP_PORT,
             () => logger.info(`HTTP Server listening on port ${HTTP_PORT}`)

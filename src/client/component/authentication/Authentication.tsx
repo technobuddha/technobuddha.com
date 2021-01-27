@@ -4,7 +4,7 @@ import ForgotPassword    from './ForgotPassword';
 import SignUp            from './SignUp';
 import settings          from '#settings/authentication';
 import useTranslation    from '#context/i18n';
-import {makeStyles}      from '#context/mui';
+import { makeStyles }      from '#context/mui';
 import { Switch, Route } from '#context/router';
 import Link              from '#control/link';
 import Watermark         from '#control/watermark';
@@ -27,8 +27,8 @@ const useStyles = makeStyles(theme => ({
     },
     jump: {
         marginTop: theme.spacing(2),
-    }
-}))
+    },
+}));
 
 export const Authentication: React.FC = () => {
     const css   = useStyles();
@@ -40,14 +40,14 @@ export const Authentication: React.FC = () => {
                 <Paper>
                     <Box className={css.inner}>
                         <Switch>
-                            <Route path='/login'            component={Login} />
+                            <Route path="/login" component={Login} />
                             {
                                 settings.signUp &&
-                                <Route path='/sign-up' component={SignUp} />
+                                <Route path="/sign-up" component={SignUp} />
                             }
                             {
                                 settings.forgotPassword &&
-                                <Route path='/forgot-password' component={ForgotPassword} />
+                                <Route path="/forgot-password" component={ForgotPassword} />
                             }
                         </Switch>
                         <Box className={css.jump}>
@@ -65,9 +65,9 @@ export const Authentication: React.FC = () => {
                                 <Route path={['/sign-up', '/forgot-password']}>
                                     <Box>
                                         <Typography variant="caption">
-                                        {t("Already have an account?")} <Link to="/login" replace>{t('Log In')}</Link>
+                                            {t('Already have an account?')} <Link to="/login" replace>{t('Log In')}</Link>
                                         </Typography>
-                                    </Box>                            
+                                    </Box>
                                 </Route>
                             </Switch>
                         </Box>

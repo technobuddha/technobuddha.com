@@ -13,13 +13,13 @@ export const NewAlbums: React.FC = () => {
 
     React.useEffect(
         () => {
-           api.music.newAlbums().then(tracks => setDataset(tracks.payload));
+            api.music.newAlbums().then(tracks => setDataset(tracks.payload));
         },
         []
     );
 
     //todo translate
-    const rowRenderer: RowRenderer = ({datum}: {datum: any}) => (
+    const rowRenderer: RowRenderer = ({ datum }: {datum: any}) => (
         <div className={css.row}>
             <img className={css.img}alt="Album Artwork" src={`/art/${datum.collectionGroupId.toUpperCase()}`} ></img>
             <div className={css.artist}>{datum.artist.join('; ')}</div>
@@ -41,16 +41,16 @@ export const NewAlbums: React.FC = () => {
                 data={dataset}
                 rowHeight={136}
                 columns={[
-                    {name: 'artist',        type: 'array',  sortBy: ['artist', 'album']},
-                    {name: 'album',         type: 'string', sortBy: ['album']},
-                    {name: 'year',          type: 'number', sortBy: ['year']},//, width: 40},
-                    {name: 'genre',         type: 'array',  sortBy: ['genre', 'subgenre']},
-                    {name: 'subgenre',      type: 'array',  sortBy: ['subgenre']}
+                    { name: 'artist',        type: 'array',  sortBy: ['artist', 'album'] },
+                    { name: 'album',         type: 'string', sortBy: ['album'] },
+                    { name: 'year',          type: 'number', sortBy: ['year'] }, //, width: 40},
+                    { name: 'genre',         type: 'array',  sortBy: ['genre', 'subgenre'] },
+                    { name: 'subgenre',      type: 'array',  sortBy: ['subgenre'] },
                 ]}
                 rowRenderer={rowRenderer}
                 filters={[
-                    {type: 'checkbox-list', name: 'genre',    Icon: MusicNote},
-                    {type: 'checkbox-list', name: 'subgenre', Icon: MusicNote},
+                    { type: 'checkbox-list', name: 'genre',    Icon: MusicNote },
+                    { type: 'checkbox-list', name: 'subgenre', Icon: MusicNote },
                 ]}
                 defaultSort="artist"
                 useLocation={true}
@@ -60,6 +60,6 @@ export const NewAlbums: React.FC = () => {
         return <DelayedLoading />;
     }
 
-}
+};
 
 export default NewAlbums;

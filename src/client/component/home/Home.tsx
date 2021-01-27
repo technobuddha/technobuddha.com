@@ -7,7 +7,7 @@ import Spinner            from './Spinner';
 import css                from './Home.module.css';
 
 export type HomeProps = {
-    children?:  never,
+    children?:  never;
 };
 
 export const Home: React.FC<HomeProps> = () => {
@@ -15,30 +15,33 @@ export const Home: React.FC<HomeProps> = () => {
     const components = useComponents();
     const speed = 15;
 
-    const keyframes = React.useMemo(() => {
+    const keyframes = React.useMemo(
+        () => {
             const duration = speed * components.length;
             const oneSecond = 100.0 / duration;
 
             // TODO the name of the animation should be randomized
             return `
                 @keyframes fade {
-                0%                                       { opacity: 0; max-height: 0;    }
-                ${((duration - speed) + 0) * oneSecond}% { opacity: 0; max-height: 0;    }
-                ${((duration - speed) + 1) * oneSecond}% { opacity: 1; max-height: 100%; }
-                ${(duration - 1)           * oneSecond}% { opacity: 1; max-height: 100%; }
-                100%                                     { opacity: 0; max-height: 0;    }
+                    0%                                       { opacity: 0; max-height: 0;    }
+                    ${((duration - speed) + 0) * oneSecond}% { opacity: 0; max-height: 0;    }
+                    ${((duration - speed) + 1) * oneSecond}% { opacity: 1; max-height: 100%; }
+                    ${(duration - 1)           * oneSecond}% { opacity: 1; max-height: 100%; }
+                    100%                                     { opacity: 0; max-height: 0;    }
                 }
             `;
         },
         [speed, components]
-    )
+    );
 
-    const articleStyle = React.useMemo(() =>
-        memoize<(i: number) => React.CSSProperties>(i => ({
-            animationName: 'fade',
-            animationDuration: `${components.length * speed}s`,
-            animationDelay: `${-(components.length - i - 1) * speed}s`,
-        })),
+    const articleStyle = React.useMemo(
+        () => {
+            return memoize<(i: number) => React.CSSProperties>(i => ({
+                animationName: 'fade',
+                animationDuration: `${components.length * speed}s`,
+                animationDelay: `${-(components.length - i - 1) * speed}s`,
+            }));
+        },
         [speed]
     );
 
@@ -66,7 +69,7 @@ export const Home: React.FC<HomeProps> = () => {
                                 <div className={css.todo}>
                                     {t('To Do')}
                                     <ul>
-                                        {component.todo.map((td, i) => (<li key={i}>{td}</li>))}
+                                        {component.todo.map((td, j) => (<li key={j}>{td}</li>))}
                                     </ul>
                                 </div>
                             }
@@ -76,6 +79,6 @@ export const Home: React.FC<HomeProps> = () => {
             }
         </Box>
     );
-}
+};
 
 export default Home;

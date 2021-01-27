@@ -12,19 +12,19 @@ export type FrameProps<T = unknown> = Omit<SizeScrollbarProps, 'children'> & {
     controlWidth:   number;
     menu?:          boolean;
     children:       (props: FrameRenderProps) => React.ReactElement;
-}
+};
 
 export type FrameRenderProps = SizeScrollbarRenderProps & {
     columnWidths:   number[];
-}
+};
 
-export function Frame<T = unknown>({className, style, columns, controlWidth, menu, children}: FrameProps<T>) {
+export function Frame<T = unknown>({ className, style, columns, controlWidth, menu, children }: FrameProps<T>) {
     return (
         <SizeScrollbar
             className={className}
             style={style}
         >
-            {({width, height, scrollbarWidth, scrollbarHeight}: SizeScrollbarRenderProps) => {
+            {({ width, height, scrollbarWidth, scrollbarHeight }: SizeScrollbarRenderProps) => {
                 let rowWidth    = width - scrollbarWidth - 2;
                 let stars       = 0;
 
@@ -40,7 +40,7 @@ export function Frame<T = unknown>({className, style, columns, controlWidth, men
                 );
 
                 const columnWidths = columns.map(column => isNumber(column.width) ? column.width : (rowWidth * (parseInt(column.width, 10) || 1)) / stars);
-                return children({width, height, scrollbarWidth, scrollbarHeight, columnWidths});
+                return children({ width, height, scrollbarWidth, scrollbarHeight, columnWidths });
             }}
         </SizeScrollbar>
     );

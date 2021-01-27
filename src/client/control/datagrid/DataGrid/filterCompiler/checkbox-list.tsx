@@ -22,29 +22,29 @@ export type FilterFactoryCheckboxOptions<T = unknown> = {
     type:           'checkbox-list';
     name:           keyof T;
     title?:         string;
-    Icon?:          React.ComponentType<{className?: string; style?: React.CSSProperties;}>;
+    Icon?:          React.ComponentType<{className?: string; style?: React.CSSProperties}>;
 };
 
-export function filterCompilerCheckbox<T = unknown>({name, title, Icon}: FilterFactoryCheckboxOptions<T>, data: T[], { getShape }: AnalyzerResults<T>): Filter<T> {
+export function filterCompilerCheckbox<T = unknown>({ name, title, Icon }: FilterFactoryCheckboxOptions<T>, data: T[], { getShape }: AnalyzerResults<T>): Filter<T> {
     const search = getUniqueValues(data, name);
 
     return {
         name,
-        Actuator({classes, styles}: FilterActuatorProps) {
+        Actuator({ classes, styles }: FilterActuatorProps) {
             const { changeFilter, filterValues }    = useGrid<T>();
             const [ open,     setOpen ]             = React.useState<boolean>(false);
             const [ disabled, setDisabled ]         = React.useState<boolean>(true);
             const filterValue                       = React.useRef(normalizeFilterArray(filterValues[name]));
 
-            const handleActuatorClick       = () => { setOpen(true); }
-            const handleDialogClose         = () => { setOpen(false); }
+            const handleActuatorClick       = () => { setOpen(true); };
+            const handleDialogClose         = () => { setOpen(false); };
             const handleSelectionChanged    = (
-                {selectedRows, selectedCount, unselectedCount}: OnSelectionChangedParams<string>) => {
+                { selectedRows, selectedCount, unselectedCount }: OnSelectionChangedParams<string>) => {
                 filterValue.current = unselectedCount === 0 ? null : selectedRows;
                 setDisabled(selectedCount === 0);
-            }
-            const handleOKClick             = () => { setOpen(false); changeFilter(name, filterValue.current); }
-            const handleCancelClick         = () => { setOpen(false); }
+            };
+            const handleOKClick             = () => { setOpen(false); changeFilter(name, filterValue.current); };
+            const handleCancelClick         = () => { setOpen(false); };
 
             return (
                 <>
@@ -67,8 +67,8 @@ export function filterCompilerCheckbox<T = unknown>({name, title, Icon}: FilterF
                                     data={search}
                                     selection={true}
                                     selected={(datum: string) => filterValue.current === null || filterValue.current.includes(toString(datum))}
-                                    columns={[{name: name as string}]}
-                                    filters={[{type: 'search', name: 0, title: title ?? (name as string)}]}
+                                    columns={[{ name: name as string }]}
+                                    filters={[{ type: 'search', name: 0, title: title ?? (name as string) }]}
                                     defaultSort="*"
                                     onSelectionChanged={handleSelectionChanged}
                                 />
@@ -89,11 +89,11 @@ export function filterCompilerCheckbox<T = unknown>({name, title, Icon}: FilterF
                         </DialogActions>
                     </Dialog>
                 </>
-            )
+            );
         },
-        Indicator: arrayIndicator({name, title, Icon}),
+        Indicator: arrayIndicator({ name, title, Icon }),
         execute: equalityExecute(name, getShape()),
-    }
+    };
 }
 
 export default filterCompilerCheckbox;

@@ -17,13 +17,13 @@ export default {
     saveMissing:                isDevelopment,
     interpolation: {
         escapeValue:      false,
-        formatSeparator:  ','
+        formatSeparator:  ',',
     },
     react: {
-        wait:             true
+        wait:             true,
     },
     backend: {
         loadPath:     '/locales/{{lng}}/{{ns}}.json',
-        addPath:      '/locales/{{lng}}/{{ns}}.json'
-    }
+        addPath:      '/locales/{{lng}}/{{ns}}.json',
+    },
 } as InitOptions;

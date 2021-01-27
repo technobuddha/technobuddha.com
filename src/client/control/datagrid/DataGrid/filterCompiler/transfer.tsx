@@ -19,31 +19,31 @@ export type FilterFactoryTransferOptions<T = unknown> = {
     type:           'transfer';
     name:           keyof T;
     title?:         string;
-    Icon?:          React.ComponentType<{className?: string; style?: React.CSSProperties;}>;
+    Icon?:          React.ComponentType<{className?: string; style?: React.CSSProperties}>;
 };
 
 function not<T>(a: T[], b: T[]) {
     return a.filter(value => b.indexOf(value) === -1);
 }
 
-export function filterCompilerTransfer<T = unknown>({name, title, Icon}: FilterFactoryTransferOptions<T>, { getShape }: AnalyzerResults<T>): Filter<T> {
+export function filterCompilerTransfer<T = unknown>({ name, title, Icon }: FilterFactoryTransferOptions<T>, { getShape }: AnalyzerResults<T>): Filter<T> {
     return {
         name,
-        Actuator({classes, styles}: FilterActuatorProps) {
+        Actuator({ classes, styles }: FilterActuatorProps) {
             const { data, changeFilter, filterValues }  = useGrid<T>();
             const [ open, setOpen ]     = React.useState<boolean>(false);
             const filterValue           = React.useMemo(() => normalizeFilterArray(filterValues[name]) ?? [], [filterValues, name]);
             const search                = React.useMemo(() => getUniqueValues(data, name),                    [data, name]);
             const left                  = React.useMemo(() => not(search, filterValue),                       [search, filterValue]);
             const right                 = React.useMemo(() => filterValue,                                    [filterValue]);
-            const transfer              = React.useMemo(() => ({left, right}),                                [left, right])
-            const handleActuatorClick   = () => { setOpen(true); }
-            const handleDialogClose     = () => { setOpen(false); }
-            const handleOKClick         = () => { setOpen(false); changeFilter(name, transfer.right); }
-            const handleCancelClick     = () => { setOpen(false); }
-            const handleTransfer        = (left: string[], right: string[]) => {
-                transfer.left   = left;
-                transfer.right  = right;
+            const transfer              = React.useMemo(() => ({ left, right }),                                [left, right]);
+            const handleActuatorClick   = () => { setOpen(true); };
+            const handleDialogClose     = () => { setOpen(false); };
+            const handleOKClick         = () => { setOpen(false); changeFilter(name, transfer.right); };
+            const handleCancelClick     = () => { setOpen(false); };
+            const handleTransfer        = (leftItems: string[], rightItems: string[]) => {
+                transfer.left   = leftItems;
+                transfer.right  = rightItems;
             };
 
             return (
@@ -62,7 +62,7 @@ export function filterCompilerTransfer<T = unknown>({name, title, Icon}: FilterF
                     >
                         <DialogTitle>{title ?? name}</DialogTitle>
                         <DialogContent>
-                            <Transfer 
+                            <Transfer
                                 name={name as string}
                                 title={title}
                                 rowHeight={24}
@@ -85,11 +85,11 @@ export function filterCompilerTransfer<T = unknown>({name, title, Icon}: FilterF
                         </DialogActions>
                     </Dialog>
                 </>
-            )
+            );
         },
-        Indicator: arrayIndicator({name, title, Icon}),
+        Indicator: arrayIndicator({ name, title, Icon }),
         execute: equalityExecute(name, getShape()),
-    }
+    };
 }
 
 export default filterCompilerTransfer;

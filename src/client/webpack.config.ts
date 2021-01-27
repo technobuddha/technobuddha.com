@@ -37,15 +37,15 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
         module: {
             rules: [
                 {
-                    test:       /\.tsx?$/,
+                    test:       /\.tsx?$/u,
                     loader:     'ts-loader',
                     options:    {
-                        transpileOnly: true 
+                        transpileOnly: true,
                     },
-                    exclude:    /node-modules/,
+                    exclude:    /node-modules/u,
                 },
                 {
-                    test:       /\.p?css$/,
+                    test:       /\.p?css$/u,
                     use: [
                         'css-hot-loader',
                         MiniCssExtractPlugin.loader,
@@ -55,7 +55,7 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                                 modules: {
                                     compileType:                'module',
                                     mode:                       'local',
-                                    auto:                       /\.p?css$/,
+                                    auto:                       /\.p?css$/u,
                                     exportGlobals:              true,
                                     localIdentName:             isDevelopment ? '[local]-[path][name]' : '[hash:base64]',
                                     localIdentContext:          paths.client,
@@ -71,17 +71,17 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                             loader: 'postcss-loader',
                             options: {
                                 postcssOptions: postcss_config,
-                            }
+                            },
                         },
                     ],
                 },
                 {
-                    test:       /\.(ttf|eot|svg|png|jpg|gif|ico)$/,
-                    loader:     'file-loader'
+                    test:       /\.(ttf|eot|svg|png|jpg|gif|ico)$/u,
+                    loader:     'file-loader',
                 },
                 {
                     enforce:    'pre',
-                    test:       /\.js$/,
+                    test:       /\.js$/u,
                     loader:     'source-map-loader',
                 },
             ],
@@ -89,7 +89,7 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
         // https://webpack.js.org/configuration/resolve/
         resolve: {
             extensions,
-            plugins:        [ new TsConfigPathsPlugin({extensions}) ],
+            plugins:        [ new TsConfigPathsPlugin({ extensions }) ],
         },
         // https://webpack.js.org/configuration/optimization/
         optimization: {
@@ -99,7 +99,7 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                 automaticNameDelimiter: '-',
                 cacheGroups: {
                     packages: {
-                        test:           /[\\/]node_modules[\\/]/,
+                        test:           /[\\/]node_modules[\\/]/u,
                         priority:       1,
                     },
                 },
@@ -126,5 +126,5 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
             (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                                    : null),
             //(isDevelopment ? new BundleAnalyzerPlugin()                                                                                  : null),
         ]),
-    }
+    };
 }

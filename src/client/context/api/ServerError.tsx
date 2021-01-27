@@ -1,5 +1,5 @@
 import React                from 'react';
-import {useTranslation}     from '#context/i18n';
+import { useTranslation }     from '#context/i18n';
 import Box                  from '@material-ui/core/Box';
 import Typography           from '@material-ui/core/Typography';
 import IconButton           from '@material-ui/core/IconButton';
@@ -8,11 +8,11 @@ import ExpandLess           from '@material-ui/icons/ExpandLess';
 import Collapse             from '@material-ui/core/Collapse';
 
 type ServerErrorProps = {
-    err:    Error,
-}
+    err:    Error;
+};
 
-export const ServerError: React.FC<ServerErrorProps> = ({err}: ServerErrorProps) => {
-    const {t}                     = useTranslation();
+export const ServerError: React.FC<ServerErrorProps> = ({ err }: ServerErrorProps) => {
+    const { t }                     = useTranslation();
     const [expanded, setExpanded] = React.useState(false);
 
     const handleExpandClick = () => setExpanded(!expanded);
@@ -36,6 +36,6 @@ export const ServerError: React.FC<ServerErrorProps> = ({err}: ServerErrorProps)
             </Collapse>
         </Box>
     );
-}
+};
 
 export default ServerError;

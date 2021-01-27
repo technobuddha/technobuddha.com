@@ -36,14 +36,14 @@ const useHeaderStyles = makeStyles(theme => ({
         justifyContent: 'flex-end',
         alignItems: 'center',
         height: '100%',
-        width: '50%'
+        width: '50%',
     },
     login: {
 
     },
     authorization: {
         color: theme.palette.common.white,
-    }
+    },
 }));
 
 type HeaderProps = { children?: never };
@@ -65,24 +65,24 @@ export const Header: React.FC<HeaderProps> = () => {
                     </Typography>
                     <Typography variant="body2" className={css.version}>
                         {t('Version')} {packageJson.version}
-                    </Typography>                   
+                    </Typography>
                 </Box>
                 <Box className={css.controls}>
                     <Box className={css.login}>
-                    {
-                        account &&
-                        <Typography>
-                            {account.first} {account.last}
-                        </Typography>
-                    }
+                        {
+                            account &&
+                            <Typography>
+                                {account.first} {account.last}
+                            </Typography>
+                        }
                     </Box>
                     <IconButton onClick={handleUserClick}>
                         <AccountCircle className={css.authorization} />
-                    </IconButton> 
-                </Box>                
+                    </IconButton>
+                </Box>
             </Box>
         </AppBar>
     );
-}
+};
 
 export default Header;

@@ -1,5 +1,4 @@
-declare module 'cheferizeIt'
-{
+declare module 'cheferizeIt' {
     function cheferize(text: string): string;
 
     export = cheferize;

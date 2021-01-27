@@ -1,14 +1,14 @@
 import process                          from 'process';
 import { setTimeout, clearTimeout }     from 'timers';
-import keys                             from 'lodash/keys';
-import omit                             from 'lodash/omit';
-import { Logger }                       from 'winston';
-import i18next                          from '#settings/i18next';
-import {translate, readTranslations, writeTranslations, TranslateReturn } from '#util/translation';
-import { isNil } from 'lodash';
+import keys    from 'lodash/keys';
+import omit    from 'lodash/omit';
+import isNil   from 'lodash/isNil';
+import i18next from '#settings/i18next';
+import { translate, readTranslations, writeTranslations } from '#util/translation';
 
-export class TranslationWorker
-{
+import type { Logger }          from 'winston';
+import type { TranslateReturn } from '#util/translation';
+export class TranslationWorker {
     private static readonly interval                = 1000;
 
     private queue:  { [key: string]: string[] }     = {};
@@ -16,11 +16,10 @@ export class TranslationWorker
 
     private logger: Logger;
 
-    constructor(logger: Logger)
-    {
+    constructor(logger: Logger) {
         this.logger = logger;
 
-        logger.info(`Translation worker running.`);
+        logger.info('Translation worker running.');
 
         process
         .once('SIGINT',     () => { this.exit(); process.exit(1); })
@@ -36,7 +35,7 @@ export class TranslationWorker
     }
 
     private exit() {
-        if (this.timer)
+        if(this.timer)
             clearTimeout(this.timer);
         this.write();
     }
@@ -50,7 +49,7 @@ export class TranslationWorker
         this.queue          = {};
 
         for(const ns of Object.keys(myQueue)) {
-            for (const lng of i18next.supportedLngs || []) {
+            for(const lng of i18next.supportedLngs || []) {
                 const currentTranslations = readTranslations(lng, ns);
                 const archiveTranslations = readTranslations(lng, ns, 'archive');
                 const promises            = [] as Promise<TranslateReturn>[];
@@ -71,7 +70,7 @@ export class TranslationWorker
 
                 for(const tr of await Promise.all(promises)) {
                     if(tr.translation) {
-                        currentTranslations[tr.key] = tr.translation; 
+                        currentTranslations[tr.key] = tr.translation;
                         this.logger.info(`${tr.key} added to ${lng}/${ns}`);
                     }
                 }

@@ -26,30 +26,30 @@ export type RowHeaderProps<T = unknown> = {
 };
 
 export function RowHeader<T = unknown>(
-    {data, index, columns, columnWidths, scrollbarWidth, controlWidth, rowHeight, menu, className, style, classes, styles}: RowHeaderProps<T>
+    { data, index, columns, columnWidths, scrollbarWidth, controlWidth, rowHeight, menu, className, style, classes, styles }: RowHeaderProps<T>
 ) {
-    const css = useColumnStyles({scrollbarWidth, controlWidth});
+    const css = useColumnStyles({ scrollbarWidth, controlWidth });
 
     const handleMenuClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-        menu?.({event, data, index})
-    }
+        menu?.({ event, data, index });
+    };
 
     return (
-        <Box 
+        <Box
             className={clsx(css.root, className, classes?.root)}
-            style={{...styles?.root, ...style}}
+            style={{ ...styles?.root, ...style }}
         >
             {
                 (columns.map(
-                    (column, index) => (
-                        <Box 
+                    (column, i) => (
+                        <Box
                             key={column.name}
                             height={rowHeight}
-                            width={columnWidths[index]}
+                            width={columnWidths[i]}
                             className={clsx(css.cell, classes?.cell, css.cellHeader, classes?.cellHeader)}
-                            style={{...styles?.cell, ...styles?.cellHeader}}
+                            style={{ ...styles?.cell, ...styles?.cellHeader }}
                         >
-                            {column.header({data, classes: classes?.header, styles: styles?.header})}
+                            {column.header({ data, classes: classes?.header, styles: styles?.header })}
                         </Box>
                     )
                 ))
@@ -60,7 +60,7 @@ export function RowHeader<T = unknown>(
                     height={rowHeight}
                     width={`${controlWidth}px`}
                     className={clsx(css.cell, classes?.cell, css.cellHeader, classes?.cellHeader)}
-                    style={{...styles?.cell, ...styles?.cellHeader}}
+                    style={{ ...styles?.cell, ...styles?.cellHeader }}
                 >
                     <IconButton
                         className={clsx(css.menuButton, classes?.menuButton)}
@@ -70,7 +70,7 @@ export function RowHeader<T = unknown>(
                     >
                         <MenuIcon
                             className={clsx(css.menuIcon, classes?.menuIcon, css.menuIconHeader, classes?.menuIconHeader)}
-                            style={{...styles?.menuIcon, ...(styles?.menuIconHeader)}}
+                            style={{ ...styles?.menuIcon, ...(styles?.menuIconHeader) }}
                         />
                     </IconButton>
                 </Box>
@@ -79,12 +79,12 @@ export function RowHeader<T = unknown>(
                 key="[stub]"
                 width={`${scrollbarWidth}px`}
                 className={clsx(css.cell, css.stub, classes?.cell, css.cellHeader, classes?.cellHeader)}
-                style={{...styles?.cell, ...styles?.stub, ...styles?.cellHeader}}
+                style={{ ...styles?.cell, ...styles?.stub, ...styles?.cellHeader }}
             >
                 {'\u00A0'}
             </Box>
         </Box>
-    )
+    );
 }
 
 export default RowHeader;

@@ -1,4 +1,3 @@
-
 import { hot, setConfig }                   from 'react-hot-loader';
 import React, { PureComponent, Suspense }   from 'react';                             // Load React AFTER hot loader
 import { IconProvider }                     from '#context/icon';
@@ -14,7 +13,7 @@ import AppLoading                           from './AppLoading';
 
 setConfig({ showReactDomPatchNotification: false });
 
-export const App = hot(module) (
+export const App = hot(module)(
     class extends PureComponent {
         public render() {
             return (
@@ -28,7 +27,7 @@ export const App = hot(module) (
                                             <ComponentsProvider>
                                                 <Router>
                                                     <UserInterface />
-                                                </Router>                                                
+                                                </Router>
                                             </ComponentsProvider>
                                         </AuthenticationProvider>
                                     </APIProvider>

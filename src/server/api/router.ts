@@ -8,8 +8,7 @@ api.use('/authentication', authentication);
 api.use('/music', music);
 
 api.use(
-    (_req, res) =>
-    {
+    (_req, res) => {
         res.status(404).render('error/404.hbs');
     }
 );

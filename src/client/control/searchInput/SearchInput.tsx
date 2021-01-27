@@ -17,10 +17,10 @@ type SearchInputProps =
 
 export const SearchInput: React.FC<SearchInputProps> = (props: SearchInputProps) => {
     const [ search, setSearch ] = React.useState<string>('');
-    const [ id ]                = React.useState<string>(uuid.v4)
+    const [ id ]                = React.useState<string>(uuid.v4);
 
-    const handleChange = (text: string) => { setSearch(text); props.onChange?.(text); }
-    const handleCancel = () => { setSearch('') }
+    const handleChange = (text: string) => { setSearch(text); props.onChange?.(text); };
+    const handleCancel = () => { setSearch(''); };
 
     return (
         <TextField
@@ -38,6 +38,6 @@ export const SearchInput: React.FC<SearchInputProps> = (props: SearchInputProps)
             )}
         />
     );
-}
+};
 
 export default SearchInput;

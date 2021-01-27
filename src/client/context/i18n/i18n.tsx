@@ -13,15 +13,15 @@ i18n
 
 type I18nProviderProps = {
     children?: React.ReactNode;
-}
+};
 
-export const I18nProvider: React.FC = ({children}: I18nProviderProps) => {
+export const I18nProvider: React.FC = ({ children }: I18nProviderProps) => {
     return (
         <I18nextProvider i18n={i18n}>
             {children}
         </I18nextProvider>
-    )
-}
+    );
+};
 
 export { useTranslation } from 'react-i18next';
 export default useTranslation;

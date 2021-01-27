@@ -1,5 +1,4 @@
-declare module 'postcss-comment'
-{
+declare module 'postcss-comment' {
     export type PostCssCommentParser = () => any;
     export = () => any;
 }

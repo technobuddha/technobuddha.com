@@ -1,4 +1,4 @@
-import React       from 'react';
+import type React  from 'react';
 import compact     from 'lodash/compact';
 import isUndefined from 'lodash/isUndefined';
 import { useGrid } from './GridContext';
@@ -15,23 +15,23 @@ type SorterProps<T = unknown> = {
 
 export type SorterRenderProps<T = unknown> = {
     data:               T[];
-}
+};
 
-export function Sorter<T = unknown>({data, columns, children}: SorterProps<T>) {
+export function Sorter<T = unknown>({ data, columns, children }: SorterProps<T>) {
     const { sort } = useGrid<T>();
 
     if(!isUndefined(sort)) {
-        const column = columns.find(col => col.name === sort.sortBy)
+        const column = columns.find(col => col.name === sort.sortBy);
 
-        console.log('Sorter', sort.sortBy, sort.sortAscending)
+        console.log('Sorter', sort.sortBy, sort.sortAscending);
 
         if(column?.sortBy && column.sortBy.length) {
-            const collators = compact(column.sortBy.map(sort => columns.find(col => col.name === sort)?.collate)).map(collate => collate(sort.sortAscending));
+            const collators = compact(column.sortBy.map(s => columns.find(col => col.name === s)?.collate)).map(collate => collate(sort.sortAscending));
             if(collators.length) {
                 data.sort((x: T, y: T) => {
                     let result = 0;
-                    for(let i = 0; i < collators.length; ++i) {
-                        result = collators[i](x, y);
+                    for(const collator of collators) {
+                        result = collator(x, y);
                         if(result !== 0)
                             break;
                     }
@@ -39,9 +39,9 @@ export function Sorter<T = unknown>({data, columns, children}: SorterProps<T>) {
                 });
             }
         }
-    } else console.log('NO SORT COLUMN')
+    } else console.log('NO SORT COLUMN');
 
-    return children({data});
+    return children({ data });
 }
 
 export default Sorter;

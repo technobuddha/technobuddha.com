@@ -4,18 +4,19 @@ import Dialog                           from '@material-ui/core/Dialog';
 import DialogActions                    from '@material-ui/core/DialogActions';
 import DialogContent                    from '@material-ui/core/DialogContent';
 import DialogTitle                      from '@material-ui/core/DialogTitle';
-import Transfer                         from '../../Transfer';
-import { useGrid }                      from '../GridContext';
+import Transfer                         from '../../../Transfer';
+import { useGrid }                      from '../../GridContext';
 import { equalityExecute }              from './execution';
-import FilterActuator                   from './FilterActuator';
-import { arrayIndicator }               from './indicators';
+import FilterActuator                   from '../FilterActuator';
+import { arrayIndicator }               from '../indicators';
 import { normalizeFilterArray }         from './normalization';
-import { getUniqueValues }              from './util';
+import { getUniqueValues }              from '../util';
 
-import type { AnalyzerResults }             from '../analyzer';
-import type { Filter, FilterActuatorProps } from '../filter';
+import type { AnalyzerResults }             from '../../analyzer';
+import type { Filter, FilterActuatorProps } from '../../filter';
+import type { CompilerOptions } from './options';
 
-export type FilterFactoryTransferOptions<T = unknown> = {
+export type TransferCompilerOptions<T = unknown> = CompilerOptions & {
     type:           'transfer';
     name:           keyof T;
     title?:         string;
@@ -26,7 +27,8 @@ function not<T>(a: T[], b: T[]) {
     return a.filter(value => b.indexOf(value) === -1);
 }
 
-export function filterCompilerTransfer<T = unknown>({ name, title, Icon }: FilterFactoryTransferOptions<T>, { getShape }: AnalyzerResults<T>): Filter<T> {
+// TODO implement the clear functionality
+export function filterCompilerTransfer<T = unknown>({ name, title, Icon }: TransferCompilerOptions<T>, { getShape }: AnalyzerResults<T>): Filter<T> {
     return {
         name,
         Actuator({ classes, styles }: FilterActuatorProps) {

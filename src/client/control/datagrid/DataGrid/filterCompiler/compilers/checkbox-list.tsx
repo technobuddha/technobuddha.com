@@ -6,26 +6,28 @@ import DialogActions            from '@material-ui/core/DialogActions';
 import DialogContent            from '@material-ui/core/DialogContent';
 import DialogTitle              from '@material-ui/core/DialogTitle';
 import toString                 from 'lodash/toString';
-import DataGrid                 from '../DataGrid';
-import useGrid                  from '../GridContext';
-import FilterActuator           from './FilterActuator';
+import DataGrid                 from '../../DataGrid';
+import useGrid                  from '../../GridContext';
+import FilterActuator           from '../FilterActuator';
 import { normalizeFilterArray } from './normalization';
 import { equalityExecute }      from './execution';
-import { arrayIndicator }       from './indicators';
-import { getUniqueValues }      from './util';
+import { arrayIndicator }       from '../indicators';
+import { getUniqueValues }      from '../util';
 
-import type { AnalyzerResults }             from '../analyzer';
-import type { OnSelectionChangedParams }    from '../DataGrid';
-import type { Filter, FilterActuatorProps } from '../filter';
+import type { AnalyzerResults }             from '../../analyzer';
+import type { OnSelectionChangedParams }    from '../../DataGrid';
+import type { Filter, FilterActuatorProps } from '../../filter';
+import type { CompilerOptions }             from './options';
 
-export type FilterFactoryCheckboxOptions<T = unknown> = {
+// TODO implement clear functionality
+export type CheckboxCompilerOptions<T = unknown> = CompilerOptions & {
     type:           'checkbox-list';
     name:           keyof T;
     title?:         string;
     Icon?:          React.ComponentType<{className?: string; style?: React.CSSProperties}>;
 };
 
-export function filterCompilerCheckbox<T = unknown>({ name, title, Icon }: FilterFactoryCheckboxOptions<T>, data: T[], { getShape }: AnalyzerResults<T>): Filter<T> {
+export function filterCompilerCheckbox<T = unknown>({ name, title, Icon }: CheckboxCompilerOptions<T>, data: T[], { getShape }: AnalyzerResults<T>): Filter<T> {
     const search = getUniqueValues(data, name);
 
     return {

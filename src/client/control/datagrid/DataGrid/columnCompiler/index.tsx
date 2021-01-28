@@ -1,6 +1,6 @@
-import React                    from 'react';
-import { makeStyles }           from '@material-ui/core/styles';
-import isString                 from 'lodash/isString';
+import React                                               from 'react';
+import { makeStyles }                                      from '@material-ui/core/styles';
+import isString                                            from 'lodash/isString';
 import { RowSelectionIndicator, MasterSelectionIndicator } from '../selectionIndictors';
 import { collatorFactory, nullCollator }                   from './collatorFactory';
 import { headerFactory }                                   from './headerFactory';

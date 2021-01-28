@@ -4,18 +4,18 @@ import TextField                from '@material-ui/core/TextField';
 import { makeStyles }           from '@material-ui/core/styles';
 import Search                   from '@material-ui/icons/Search';
 import Clear                    from '@material-ui/icons/Clear';
-import { useGrid }              from '../GridContext';
+import { useGrid }              from '../../GridContext';
 import { searchExecute }        from './execution';
 import { normalizeFilterValue } from './normalization';
 
-import type { AnalyzerResults } from '../analyzer';
-import type { Filter }          from '../filter';
+import type { AnalyzerResults } from '../../analyzer';
+import type { Filter }          from '../../filter';
+import type { CompilerOptions } from './options';
 
-export type FilterFactorySearchOptions<T = unknown> = {
+export type SearchCompilerOptions<T = unknown> = CompilerOptions & {
     type:       'search';
     name:       keyof T;
     title:      string;
-    clear?:     React.MutableRefObject<() => void>;     // TODO implement clear for other types...  maybe make it a base type member
 };
 
 const useSearchStyles = makeStyles(theme => ({
@@ -43,7 +43,7 @@ const useSearchStyles = makeStyles(theme => ({
     },
 }));
 
-export function filterCompilerSearch<T = unknown>({ name, title, clear }: FilterFactorySearchOptions<T>, { getShape }: AnalyzerResults<T>): Filter<T> {
+export function filterCompilerSearch<T = unknown>({ name, title, clear }: SearchCompilerOptions<T>, { getShape }: AnalyzerResults<T>): Filter<T> {
     return {
         name,
         Actuator:  () => {

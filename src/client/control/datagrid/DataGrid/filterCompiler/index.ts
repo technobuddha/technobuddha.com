@@ -1,20 +1,14 @@
-import { filterCompilerCheckbox } from './checkbox-list';
-import { filterCompilerCustom }   from './custom';
-import { filterCompilerSearch }   from './search';
-import { filterCompilerTransfer } from './transfer';
+import { filterCompilerCheckbox, filterCompilerCustom, filterCompilerSearch, filterCompilerTransfer } from './compilers';
 
-import type { Filter }                       from '../filter';
-import type { AnalyzerResults }              from '../analyzer';
-import type { FilterFactoryCustomOptions }   from './custom';
-import type { FilterFactoryCheckboxOptions } from './checkbox-list';
-import type { FilterFactoryTransferOptions } from './transfer';
-import type { FilterFactorySearchOptions }   from './search';
+import type { Filter }           from '../filter';
+import type { AnalyzerResults }  from '../analyzer';
+import type { CustomCompilerOptions, CheckboxCompilerOptions, TransferCompilerOptions, SearchCompilerOptions } from './compilers';
 
 export type FilterSpecification<T = unknown> =
-    FilterFactoryCustomOptions<T>   |
-    FilterFactoryCheckboxOptions<T> |
-    FilterFactoryTransferOptions<T> |
-    FilterFactorySearchOptions<T>;
+    CustomCompilerOptions<T>   |
+    CheckboxCompilerOptions<T> |
+    TransferCompilerOptions<T> |
+    SearchCompilerOptions<T>;
 
 export function filterCompiler<T = unknown>(options: FilterSpecification<T>, data: T[], analysis: AnalyzerResults<T>): Filter<T> {
     switch(options.type) {

@@ -1,6 +1,7 @@
-import type React from 'react';
-import isArray    from 'lodash/isArray';
-import mapValues  from 'lodash/mapValues';
+import React       from 'react';
+import isArray     from 'lodash/isArray';
+import mapValues   from 'lodash/mapValues';
+import { useGrid } from '../GridContext';
 
 export type Filter<T = unknown> = {
     name:       keyof T;
@@ -35,7 +36,7 @@ export type FilterIndicatorClasses = {
 };
 export type FilterIndicatorStyles = {[key in keyof FilterIndicatorClasses]: React.CSSProperties};
 
-export function serializeFilterValue<T = unknown>(filterValues: FilterValues<T>) {
+function queryStringizeFilterValue<T = unknown>(filterValues: FilterValues<T>) {
     return JSON.stringify(mapValues(filterValues, filterValue => {
         if(filterValue === null)
             return null;
@@ -45,3 +46,30 @@ export function serializeFilterValue<T = unknown>(filterValues: FilterValues<T>)
             return filterValue;
     }));
 }
+
+type FiltererProps<T = unknown> = {
+    filters:    Filter<T>[];
+    children:   (renderProps: FiltererRenderProps<T>) => React.ReactElement;
+};
+
+export type FiltererRenderProps<T = unknown> = {
+    data:       T[];
+};
+
+export function Filterer<T = unknown>({ filters, children }: FiltererProps<T>) {
+    const { data, filterValues } = useGrid<T>();
+    const filteredData           = React.useMemo(
+        () => {
+            console.log('Filtering...');
+
+            let fData = [...data];
+            filters.forEach(filter => { fData = filter.execute(fData, filterValues[filter.name]); });
+            return fData;
+        },
+        [data, filters, queryStringizeFilterValue(filterValues)]
+    );
+
+    return children({ data: filteredData });
+}
+
+export default Filterer;

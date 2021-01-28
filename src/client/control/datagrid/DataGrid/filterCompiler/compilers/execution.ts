@@ -3,8 +3,8 @@ import some                                           from 'lodash/some';
 import toString                                       from 'lodash/toString';
 import { normalizeFilterValue, normalizeFilterArray } from './normalization';
 
-import type { FilterValue } from '../filter';
-import type { Shape }       from '../analyzer';
+import type { FilterValue } from '../../filter';
+import type { Shape }       from '../../analyzer';
 
 export function searchExecute<T = unknown>(name: keyof T, shape: Shape) {
     switch(shape) {

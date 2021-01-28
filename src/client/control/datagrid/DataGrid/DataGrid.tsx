@@ -4,7 +4,7 @@ import clsx             from 'clsx';
 import analyzer         from './analyzer';
 import columnCompiler   from './columnCompiler';
 import filterCompiler   from './filterCompiler';
-import Filterer         from './Filterer';
+import { Filterer }     from './filter';
 import Frame            from './Frame';
 import Grid             from './Grid';
 import { GridProvider } from './GridContext';
@@ -13,7 +13,7 @@ import Sorter           from './Sorter';
 
 import type { ColumnSpecifications }        from './column';
 import type { FilterSpecification }         from './filterCompiler';
-import type { FiltererRenderProps }         from './Filterer';
+import type { FiltererRenderProps }         from './filter/Filterer';
 import type { FrameRenderProps }            from './Frame';
 import type { GridClasses, GridStyles }     from './Grid';
 import type { MenuFactory }                 from './menu';

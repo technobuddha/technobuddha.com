@@ -1,5 +1,5 @@
-import React                                      from 'react';
-import Box                                        from '@material-ui/core/Box';
+import React             from 'react';
+import Box               from '@material-ui/core/Box';
 import { makeStyles }    from '@material-ui/core/styles';
 import clsx              from 'clsx';
 import { Size }          from 'mui-size';

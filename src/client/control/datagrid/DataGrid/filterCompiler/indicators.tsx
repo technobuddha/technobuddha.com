@@ -1,7 +1,7 @@
 import React                    from 'react';
 import Chip                     from '@material-ui/core/Chip';
 import useGrid                  from '../GridContext';
-import { normalizeFilterArray } from './normalization';
+import { normalizeFilterArray } from './compilers/normalization';
 
 import type { FilterIndicatorProps } from '../filter';
 

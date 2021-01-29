@@ -23,6 +23,8 @@ export function Sorter<T = unknown>({ data, columns, children }: SorterProps<T>)
     if(!isUndefined(sort)) {
         const column = columns.find(col => col.name === sort.sortBy);
 
+        // TODO remove debugging
+        // eslint-disable-next-line no-console
         console.log('Sorter', sort.sortBy, sort.sortAscending);
 
         if(column?.sortBy && column.sortBy.length) {
@@ -39,7 +41,11 @@ export function Sorter<T = unknown>({ data, columns, children }: SorterProps<T>)
                 });
             }
         }
-    } else console.log('NO SORT COLUMN');
+    } else {
+        //TODO Better error recovery
+        // eslint-disable-next-line no-console
+        console.log('NO SORT COLUMN');
+    }
 
     return children({ data });
 }

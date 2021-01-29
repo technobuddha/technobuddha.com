@@ -11,10 +11,10 @@ import type { TranslateReturn } from '#util/translation';
 export class TranslationWorker {
     private static readonly interval                = 1000;
 
-    private queue:  { [key: string]: string[] }     = {};
+    private queue:  {[key: string]: string[] }     = {};
     private timer:  NodeJS.Timer | null             = null;
 
-    private logger: Logger;
+    private readonly logger: Logger;
 
     constructor(logger: Logger) {
         this.logger = logger;
@@ -28,7 +28,7 @@ export class TranslationWorker {
         this.run();
     }
 
-    public enqueue(url: string, body: { [key: string]: string }): void {
+    public enqueue(url: string, body: {[key: string]: string }): void {
         const phrases   = keys(omit(body, '_t'));
 
         this.queue[url] = (url in this.queue) ? this.queue[url].concat(phrases) : phrases;
@@ -37,11 +37,11 @@ export class TranslationWorker {
     private exit() {
         if(this.timer)
             clearTimeout(this.timer);
-        this.write();
+        void this.write();
     }
 
     private run() {
-        this.timer = setTimeout(() => { this.write().then(() => this.run()); }, TranslationWorker.interval);
+        this.timer = setTimeout(() => { void this.write().then(() => { this.run(); }); }, TranslationWorker.interval);
     }
 
     private async write() {
@@ -49,6 +49,7 @@ export class TranslationWorker {
         this.queue          = {};
 
         for(const ns of Object.keys(myQueue)) {
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             for(const lng of i18next.supportedLngs || []) {
                 const currentTranslations = readTranslations(lng, ns);
                 const archiveTranslations = readTranslations(lng, ns, 'archive');

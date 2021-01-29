@@ -4,14 +4,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import css              from './DelayedLoading.module.css';
 
 export const DelayedLoading: React.FC = () => {
-
     return (
         <div className={css.delayedLoading}>
             <div className={css.placeholder}>
                 <Fade
                     in={true}
                     style={{ transitionDelay: '800ms' }}
-                    unmountOnExit
+                    unmountOnExit={true}
                 >
                     <CircularProgress />
                 </Fade>

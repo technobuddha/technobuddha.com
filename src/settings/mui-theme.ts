@@ -1,7 +1,16 @@
-const { createMuiTheme }    = require('@material-ui/core/styles');
+import { createMuiTheme } from '@material-ui/core/styles';
 
-module.exports = createMuiTheme(
-    {
+import type { Theme as MuiTheme } from '@material-ui/core/styles';
+
+export type Theme = MuiTheme & {
+    iconSize:               number;
+    userInterface: {
+        headerHeight:       string;
+    };
+};
+
+export const theme: Theme = {
+    ...createMuiTheme({
         palette: {
             type:       'light',
             primary: {
@@ -33,11 +42,11 @@ module.exports = createMuiTheme(
                 },
             },
         },
+    }),
+    iconSize: 24,
+    userInterface: {
+        headerHeight: '40px',
     },
-    {
-        iconSize: 24,
-        userInterface: {
-            headerHeight: '40px',
-        },
-    },
-);
+};
+
+export default theme;

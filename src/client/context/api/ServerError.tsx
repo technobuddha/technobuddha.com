@@ -13,9 +13,9 @@ type ServerErrorProps = {
 
 export const ServerError: React.FC<ServerErrorProps> = ({ err }: ServerErrorProps) => {
     const { t }                     = useTranslation();
-    const [expanded, setExpanded] = React.useState(false);
+    const [ expanded, setExpanded ] = React.useState(false);
 
-    const handleExpandClick = () => setExpanded(!expanded);
+    const handleExpandClick = () => { setExpanded(!expanded); };
 
     return (
         <Box width="25vw">
@@ -29,8 +29,8 @@ export const ServerError: React.FC<ServerErrorProps> = ({ err }: ServerErrorProp
                     </IconButton>
                 </Box>
             </Box>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <Typography gutterBottom>
+            <Collapse in={expanded} timeout="auto" unmountOnExit={true}>
+                <Typography gutterBottom={true}>
                     {err.message}
                 </Typography>
             </Collapse>

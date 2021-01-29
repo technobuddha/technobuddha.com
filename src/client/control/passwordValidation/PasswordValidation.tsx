@@ -20,7 +20,7 @@ type PasswordValidationProps =
 export const PasswordValidation: React.FC<PasswordValidationProps> = (props: PasswordValidationProps) => {
     const { t }                   = useTranslation();
     const { authentication }      = useAPI();
-    const [state, setState]     = React.useState<{score: number; warning: string}>({ score: 0, warning: '' });
+    const [ state, setState ]     = React.useState<{ score: number; warning: string }>({ score: 0, warning: '' });
 
     React.useEffect(
         () => {
@@ -47,14 +47,14 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = (props: Pas
             } else {
                 authentication.checkPasswordStrength(props.password, props.userInputs)
                 .then(value => {
-                    const score = value.payload.score;
+                    const { score } = value.payload;
 
                     setState({ score, warning: t(value.payload.warning) });
                     props.onChange?.(isNil(props.strength) || score >= props.strength);
                 });
             }
         },
-        [props.password]
+        [ props.password ]
     );
 
     return (
@@ -80,9 +80,9 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = (props: Pas
             <Box height={20}>
                 {
                     state.warning &&
-                    <Typography color="error" variant="caption" component="div">
-                        {state.warning}
-                    </Typography>
+                        <Typography color="error" variant="caption" component="div">
+                            {state.warning}
+                        </Typography>
                 }
             </Box>
         </Box>
@@ -90,8 +90,8 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = (props: Pas
 };
 
 PasswordValidation.defaultProps = {
-    barColors:      ['#dddddd', '#ef4836', '#f6b44d', '#2b90ef', '#25c281'],
-    scoreWords:     ['very weak', 'weak', 'average', 'strong', 'very strong'],
+    barColors:      [ '#dddddd', '#ef4836', '#f6b44d', '#2b90ef', '#25c281' ],
+    scoreWords:     [ 'very weak', 'weak', 'average', 'strong', 'very strong' ],
 };
 
 export default PasswordValidation;

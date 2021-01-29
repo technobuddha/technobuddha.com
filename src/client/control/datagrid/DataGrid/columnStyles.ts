@@ -11,8 +11,8 @@ type RowClassnames = {
     menuIconHeader?:        string;
     stub?:                  string;
 };
-export type RowClasses = RowClassnames & {header: HeaderClasses; column?: Record<string, string>};
-export type RowStyles  = {[key in keyof RowClassnames]: React.CSSProperties} & {header: HeaderStyles; column?: Record<string, React.CSSProperties>};
+export type RowClasses = RowClassnames & { header: HeaderClasses; column?: Record<string, string> };
+export type RowStyles  = {[key in keyof RowClassnames]: React.CSSProperties} & { header: HeaderStyles; column?: Record<string, React.CSSProperties> };
 
 export type HeaderClasses = {
     button:                 string;
@@ -77,6 +77,6 @@ const ucs = makeStyles(theme => ({
     },
 }));
 
-export const useColumnStyles: ((args: {scrollbarWidth: number; controlWidth: number}) => ReturnType<typeof ucs>) = ucs;
+export const useColumnStyles: ((args: { scrollbarWidth: number; controlWidth: number }) => ReturnType<typeof ucs>) = ucs;
 
 export default useColumnStyles;

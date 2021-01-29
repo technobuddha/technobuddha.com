@@ -122,7 +122,15 @@ export function genClientWebpackConfig(isDevelopment = true, logger?: Logger): w
                 filename:           '[name].css',
                 chunkFilename:      '[id].css',
             }),
-            (isDevelopment ? new CMTDWebpackPlugin({ inputDirectoryName: paths.src, globPattern: '**/*.css', camelCase: true, logger, config: postcss_config }) : null),
+            (isDevelopment
+                ? new CMTDWebpackPlugin({
+                        inputDirectoryName: paths.src,
+                        globPattern: '**/*.css',
+                        camelCase: true,
+                        logger,
+                        config: postcss_config,
+                    })
+                : null),
             (isDevelopment ? new webpack.HotModuleReplacementPlugin()                                                                    : null),
             //(isDevelopment ? new BundleAnalyzerPlugin()                                                                                  : null),
         ]),

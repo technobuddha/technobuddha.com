@@ -20,11 +20,11 @@ export type TransferCompilerOptions<T = unknown> = CompilerOptions & {
     type:           'transfer';
     name:           keyof T;
     title?:         string;
-    Icon?:          React.ComponentType<{className?: string; style?: React.CSSProperties}>;
+    Icon?:          React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
 };
 
 function not<T>(a: T[], b: T[]) {
-    return a.filter(value => b.indexOf(value) === -1);
+    return a.filter(value => !b.includes(value));
 }
 
 // TODO implement the clear functionality
@@ -34,11 +34,11 @@ export function filterCompilerTransfer<T = unknown>({ name, title, Icon }: Trans
         Actuator({ classes, styles }: FilterActuatorProps) {
             const { data, changeFilter, filterValues }  = useGrid<T>();
             const [ open, setOpen ]     = React.useState<boolean>(false);
-            const filterValue           = React.useMemo(() => normalizeFilterArray(filterValues[name]) ?? [], [filterValues, name]);
-            const search                = React.useMemo(() => getUniqueValues(data, name),                    [data, name]);
-            const left                  = React.useMemo(() => not(search, filterValue),                       [search, filterValue]);
-            const right                 = React.useMemo(() => filterValue,                                    [filterValue]);
-            const transfer              = React.useMemo(() => ({ left, right }),                                [left, right]);
+            const filterValue           = React.useMemo(() => normalizeFilterArray(filterValues[name]) ?? [], [ filterValues, name ]);
+            const search                = React.useMemo(() => getUniqueValues(data, name),                    [ data, name ]);
+            const left                  = React.useMemo(() => not(search, filterValue),                       [ search, filterValue ]);
+            const right                 = React.useMemo(() => filterValue,                                    [ filterValue ]);
+            const transfer              = React.useMemo(() => ({ left, right }),                                [ left, right ]);
             const handleActuatorClick   = () => { setOpen(true); };
             const handleDialogClose     = () => { setOpen(false); };
             const handleOKClick         = () => { setOpen(false); changeFilter(name, transfer.right); };

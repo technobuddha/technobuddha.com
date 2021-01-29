@@ -54,7 +54,8 @@ export function RowHeader<T = unknown>(
                     )
                 ))
             }
-            {menu &&
+            {
+                menu &&
                 <Box
                     key="[menu]"
                     height={rowHeight}

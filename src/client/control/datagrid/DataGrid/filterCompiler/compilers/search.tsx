@@ -78,20 +78,20 @@ export function filterCompilerSearch<T = unknown>({ name, title, clear }: Search
             return (
                 <Grid
                     className={css.root}
-                    container
+                    container={true}
                     alignItems="flex-end"
                 >
                     <Grid
                         className={css.gridIcon}
-                        item
+                        item={true}
                     >
                         <Search />
                     </Grid>
-                    <Grid item className={css.gridText}>
+                    <Grid item={true} className={css.gridText}>
                         <TextField
                             className={css.textfield}
                             size="small"
-                            placeholder={title ?? name}
+                            placeholder={title}
                             variant="outlined"
                             onChange={handleChange}
                             value={search}
@@ -99,9 +99,10 @@ export function filterCompilerSearch<T = unknown>({ name, title, clear }: Search
                     </Grid>
                     <Grid
                         className={css.gridIcon}
-                        item
+                        item={true}
                     >
-                        {search !== '' &&
+                        {
+                            search !== '' &&
                             <Clear
                                 className={css.clear}
                                 onClick={handleClearClick}

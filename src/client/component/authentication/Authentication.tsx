@@ -54,18 +54,18 @@ export const Authentication: React.FC = () => {
                             <Switch>
                                 {
                                     settings.signUp &&
-                                    <Route path={['/login', '/forgot-password']} >
+                                    <Route path={[ '/login', '/forgot-password' ]}>
                                         <Box>
                                             <Typography variant="caption">
-                                                {t("Don't have an account?")} <Link to="/sign-up" replace>{t('Sign Up')}</Link>
+                                                {t("Don't have an account?")} <Link to="/sign-up" replace={true}>{t('Sign Up')}</Link>
                                             </Typography>
                                         </Box>
                                     </Route>
                                 }
-                                <Route path={['/sign-up', '/forgot-password']}>
+                                <Route path={[ '/sign-up', '/forgot-password' ]}>
                                     <Box>
                                         <Typography variant="caption">
-                                            {t('Already have an account?')} <Link to="/login" replace>{t('Log In')}</Link>
+                                            {t('Already have an account?')} <Link to="/login" replace={true}>{t('Log In')}</Link>
                                         </Typography>
                                     </Box>
                                 </Route>

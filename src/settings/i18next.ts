@@ -7,7 +7,7 @@ export default {
     fallbackLng:                false,
     supportedLngs:              [ 'en', 'chef' ],
     nonExplicitSupportedLngs:   false,
-    ns:                         ['translation'],
+    ns:                         [ 'translation' ],
     defaultNS:                  'translation',
     debug:                      false,
     keySeparator:               false,

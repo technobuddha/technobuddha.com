@@ -39,7 +39,7 @@ export function Frame<T = unknown>({ className, style, columns, controlWidth, me
                     }
                 );
 
-                const columnWidths = columns.map(column => isNumber(column.width) ? column.width : (rowWidth * (parseInt(column.width, 10) || 1)) / stars);
+                const columnWidths = columns.map(column => (isNumber(column.width) ? column.width : (rowWidth * (parseInt(column.width, 10) || 1)) / stars));
                 return children({ width, height, scrollbarWidth, scrollbarHeight, columnWidths });
             }}
         </SizeScrollbar>

@@ -42,8 +42,8 @@ function queryStringizeFilterValue<T = unknown>(filterValues: FilterValues<T>) {
             return null;
         else if(isArray(filterValue))
             return filterValue.join('&');
-        else
-            return filterValue;
+
+        return filterValue;
     }));
 }
 
@@ -60,13 +60,15 @@ export function Filterer<T = unknown>({ filters, children }: FiltererProps<T>) {
     const { data, filterValues } = useGrid<T>();
     const filteredData           = React.useMemo(
         () => {
+            // TODO Remove debugging
+            // eslint-disable-next-line no-console
             console.log('Filtering...');
 
-            let fData = [...data];
+            let fData = [ ...data ];
             filters.forEach(filter => { fData = filter.execute(fData, filterValues[filter.name]); });
             return fData;
         },
-        [data, filters, queryStringizeFilterValue(filterValues)]
+        [ data, filters, queryStringizeFilterValue(filterValues) ]
     );
 
     return children({ data: filteredData });

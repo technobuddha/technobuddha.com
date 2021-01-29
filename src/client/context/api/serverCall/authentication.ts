@@ -2,18 +2,18 @@ import fetchAPI from '../fetchAPI';
 
 import type { Account } from '#schema/account';
 
-type CPS = {score: number; warning: string; suggestions: string[]};
+type CPS = { score: number; warning: string; suggestions: string[] };
 export const authentication = {
     async readSession() {
-        return fetchAPI<Account>('/api/authentication/session', { method: 'GET', validStatuses: [200, 401] });
+        return fetchAPI<Account>('/api/authentication/session', { method: 'GET', validStatuses: [ 200, 401 ]});
     },
 
     async createSession(username: string, password: string) {
-        return fetchAPI<Account>('/api/authentication/session', { method: 'PUT', validStatuses: [201, 401] }, { username, password });
+        return fetchAPI<Account>('/api/authentication/session', { method: 'PUT', validStatuses: [ 201, 401 ]}, { username, password });
     },
 
     async deleteSession() {
-        return fetchAPI<void>('/api/authentication/session', { method: 'DELETE', validStatuses: [200] });
+        return fetchAPI<void>('/api/authentication/session', { method: 'DELETE', validStatuses: [ 200 ]});
     },
 
     async checkPasswordStrength(password: string, userInputs: string[] = []) {

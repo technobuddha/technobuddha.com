@@ -88,9 +88,8 @@ const useStyles = makeStyles(theme => ({
 export function Anything({ children, type, className, top = true }: AnythingParams) {
     const css = useStyles();
 
-    if(isNil(children) || (isObject(children) && isEmpty(children))) {
+    if(isNil(children) || (isObject(children) && isEmpty(children)))
         return <div className={clsx(className, css.null, className)}>&nbsp;</div>;
-    }
 
     if(isArray(children)) {
         return (
@@ -101,7 +100,7 @@ export function Anything({ children, type, className, top = true }: AnythingPara
     } else if(isObject(children)) {
         return (
             <div className={clsx(css.object, className, top && css.top)}>
-                {Object.entries(children).map(([key, value]) => (
+                {Object.entries(children).map(([ key, value ]) => (
                     <div key={key} className={css.keyValue}>
                         <div className={css.key}>{key}</div>
                         <Anything className={css.value} top={false}>{value}</Anything>

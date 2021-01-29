@@ -7,16 +7,15 @@ import type { SortKey }     from './Sorter';
 
 const KEY_SORT = 'sort';
 
-export function getSortFromQueryString<T = unknown>() {
-    let { [KEY_SORT]: sort } = queryString.parse(location.search);
+export function getSortFromQueryString<T = unknown>(): SortKey<T> | undefined {
+    const { [KEY_SORT]: sort } = queryString.parse(location.search);
 
-    if(sort === null || sort == undefined)
+    if(sort === null) {
         return undefined;
-    else if(isArray(sort)) {
+    } else if(isArray(sort)) {
         if(sort.length === 0)
             return undefined;
-        else
-            sort = sort[0];
+        return sort[0] as SortKey<T>;
     }
 
     return sort as SortKey<T>;
@@ -38,8 +37,8 @@ export function getFiltersFromQueryString() {
     return filterValues;
 }
 
-export function setFiltersInQueryString(filterValues: ParsedQuery) {
-    const sort      = getSortFromQueryString();
+export function setFiltersInQueryString<T = unknown>(filterValues: ParsedQuery) {
+    const sort      = getSortFromQueryString<T>();
     const search    = { ...filterValues, [KEY_SORT]: sort };
 
     history.pushState(null, '', `${location.pathname}?${queryString.stringify(search)}${location.hash}`);

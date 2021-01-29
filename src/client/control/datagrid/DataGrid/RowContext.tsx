@@ -9,7 +9,7 @@ type RowState<T = unknown> = {
     unselectedCount:    number;
     setSelected:        (datum: T, selected: boolean) => void;
     getSelected:        (datum: T) => boolean;
-    countSelected:      (data: T[]) => {selected: number; unselected: number};
+    countSelected:      (data: T[]) => { selected: number; unselected: number };
 };
 
 type RowProperties = {
@@ -33,7 +33,7 @@ function defaultRowProperties(selected = false) {
 
 export function RowProvider<T = unknown>({ selected, onSelectionChanged, children }: RowProviderProps<T>) {
     const { data }          = useGrid<T>();
-    const [, forceUpdate]   = React.useReducer(x => x + 1, 0);
+    const [ , forceUpdate ]   = React.useReducer<(x: number) => number>(x => x + 1, 0);
 
     const state = React.useMemo(
         () => {
@@ -42,17 +42,19 @@ export function RowProvider<T = unknown>({ selected, onSelectionChanged, childre
 
             data.forEach(
                 datum => {
-                    const datumSelected = !!selected?.(datum);
+                    const datumSelected = Boolean(selected?.(datum));
                     if(datumSelected) ++selectedCount;
                     map.set(datum, defaultRowProperties(datumSelected));
                 }
             );
 
+            // TODO remove debugging
+            // eslint-disable-next-line no-console
             console.log('Row Provider initialized with ', selectedCount, data.length);
 
             return { map, selectedCount, unselectedCount: data.length - selectedCount, now: Date.now() };
         },
-        [data, selected]
+        [ data, selected ]
     );
 
     const getSelected = React.useCallback(
@@ -60,10 +62,12 @@ export function RowProvider<T = unknown>({ selected, onSelectionChanged, childre
             const current = state.map.get(datum);
             if(current)
                 return current.selected;
+            // TODO remove debugging
+            // eslint-disable-next-line no-console
             console.error('Attempt to get selected state for row not in dataset', datum);
             return false;
         },
-        [state]
+        [ state ]
     );
 
     const setDatumSelected = React.useCallback(
@@ -83,20 +87,22 @@ export function RowProvider<T = unknown>({ selected, onSelectionChanged, childre
                     }
                 }
             } else {
+                // TODO better error recovery
+                // eslint-disable-next-line no-console
                 console.error('Attempt to set selected state for row not in dataset', datum);
             }
         },
-        [state]
+        [ state ]
     );
 
     const setSelected = React.useCallback(
         (row: T | T[], isSelected: boolean) => {
             if(isArray(row))
-                row.forEach(datum => setDatumSelected(datum, isSelected));
+                row.forEach(datum => { setDatumSelected(datum, isSelected); });
             else
                 setDatumSelected(row, isSelected);
         },
-        [setDatumSelected]
+        [ setDatumSelected ]
     );
 
     const countSelected = React.useCallback(
@@ -108,13 +114,15 @@ export function RowProvider<T = unknown>({ selected, onSelectionChanged, childre
                 if(datumState) {
                     if(datumState.selected) cntSelected++; else cntUnselected++;
                 } else {
+                    // TODO remove debugging
+                    // eslint-disable-next-line no-console
                     console.error('Row is not in the WeakMap');
                 }
             });
 
             return { selected: cntSelected, unselected: cntUnselected };
         },
-        [state]
+        [ state ]
     );
 
     React.useEffect(
@@ -125,11 +133,19 @@ export function RowProvider<T = unknown>({ selected, onSelectionChanged, childre
                 unselectedCount: state.unselectedCount,
             });
         },
-        [state, state.selectedCount, state.unselectedCount]
+        [ state, state.selectedCount, state.unselectedCount ]
     );
 
     return (
-        <RowContext.Provider value={{ selectedCount: state.selectedCount, unselectedCount: state.unselectedCount, getSelected, setSelected, countSelected } as RowState<T>}>
+        <RowContext.Provider
+            value={{
+                selectedCount: state.selectedCount,
+                unselectedCount: state.unselectedCount,
+                getSelected,
+                setSelected,
+                countSelected,
+            }}
+        >
             {children}
         </RowContext.Provider>
     );

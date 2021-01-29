@@ -4,7 +4,9 @@ import paths                       from '#config/paths';
 import { TranslationServiceClient }  from '@google-cloud/translate';
 import plural                      from '@technobuddha/library/plural';
 import compareStrings              from '@technobuddha/library/compareStrings';
-const { cheferize } = require('cheferizeIt');
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { cheferize } = require('cheferizeIt'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 const tsc = new TranslationServiceClient();
 
@@ -14,7 +16,7 @@ export type TranslateReturn = {
     translation: string | null | undefined;
 };
 
-export function translate(key: string, language: string): Promise<TranslateReturn> {
+export async function translate(key: string, language: string): Promise<TranslateReturn> {
     const phrase = key.endsWith('_plural') ? plural(key.slice(0, key.length - 7)) : key;
 
     if(language === 'en')
@@ -25,13 +27,13 @@ export function translate(key: string, language: string): Promise<TranslateRetur
 
     const request = {
         parent: `projects/${process.env.GCLOUD_PROJECT}/locations/global`,
-        contents: [phrase],
+        contents: [ phrase ],
         mimeType: 'text/plain',
         sourceLanguageCode: 'en',
         targetLanguageCode: language,
     };
 
-    return tsc.translateText(request).then(result => ({ key, language, translation: result[0]?.translations?.[0].translatedText ?? null }));
+    return tsc.translateText(request).then(result => ({ key, language, translation: result[0].translations?.[0].translatedText ?? null }));
 }
 
 export function readTranslations(lng: string, ns: string, group?: string): Record<string, string> {

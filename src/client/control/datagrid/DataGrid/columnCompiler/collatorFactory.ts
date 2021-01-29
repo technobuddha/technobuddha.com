@@ -22,7 +22,6 @@ export function collatorFactory<T = unknown>(column: ColumnSpecification<T>, typ
                 case 'array':
                 case 'string': {
                     return (ascending: boolean) => {
-
                         return ascending
                             ?   (x: T, y: T) => {
                                     const xx = (x as Record<string, unknown>)[key];
@@ -75,7 +74,7 @@ export function collatorFactory<T = unknown>(column: ColumnSpecification<T>, typ
         }
 
         case 'array': {
-            const key = isNumber(column.name) ? column.name : parseInt(column.name);
+            const key = isNumber(column.name) ? column.name : parseInt(column.name, 10);
 
             switch(type.dataType) {
                 case 'string':
@@ -134,22 +133,26 @@ export function collatorFactory<T = unknown>(column: ColumnSpecification<T>, typ
         case 'polymorphic': {
             switch(type.dataType) {
                 case 'string': {
-                    return (ascending: boolean) => ascending
-                        ?   (x: T, y: T) => isNil(x) ? (isNil(y) ? 0 : +1) : (isNil(y) ? -1 : intlCollator.compare(toString(x), toString(y)))
-                        :   (x: T, y: T) => isNil(y) ? (isNil(x) ? 0 : -1) : (isNil(x) ? +1 : intlCollator.compare(toString(y), toString(x)));
+                    return (ascending: boolean) => (
+                        ascending
+                            ?   (x: T, y: T) => (isNil(x) ? (isNil(y) ? 0 : +1) : (isNil(y) ? -1 : intlCollator.compare(toString(x), toString(y))))
+                            :   (x: T, y: T) => (isNil(y) ? (isNil(x) ? 0 : -1) : (isNil(x) ? +1 : intlCollator.compare(toString(y), toString(x))))
+                    );
                 }
 
                 case 'number': {
-                    return (ascending: boolean) => ascending
-                        ?   (x: T, y: T) => isNil(x) ? (isNil(y) ? 0 : +1) : (isNil(y) ? -1 : toNumber(x) - toNumber(y))
-                        :   (x: T, y: T) => isNil(y) ? (isNil(x) ? 0 : -1) : (isNil(x) ? +1 : toNumber(y) - toNumber(x));
+                    return (ascending: boolean) => (
+                        ascending
+                            ?   (x: T, y: T) => (isNil(x) ? (isNil(y) ? 0 : +1) : (isNil(y) ? -1 : toNumber(x) - toNumber(y)))
+                            :   (x: T, y: T) => (isNil(y) ? (isNil(x) ? 0 : -1) : (isNil(x) ? +1 : toNumber(y) - toNumber(x)))
+                    );
                 }
 
                 case 'date': {
                     return (ascending: boolean) => {
                         return ascending
-                            ?   (x: T, y: T) => isNil(x) ? (isNil(y) ? 0 : +1) : (isNil(y) ? -1 : toTimestamp(x) - toTimestamp(y))
-                            :   (x: T, y: T) => isNil(y) ? (isNil(x) ? 0 : -1) : (isNil(x) ? +1 : toTimestamp(y) - toTimestamp(x));
+                            ?   (x: T, y: T) => (isNil(x) ? (isNil(y) ? 0 : +1) : (isNil(y) ? -1 : toTimestamp(x) - toTimestamp(y)))
+                            :   (x: T, y: T) => (isNil(y) ? (isNil(x) ? 0 : -1) : (isNil(x) ? +1 : toTimestamp(y) - toTimestamp(x)));
                     };
                 }
 
@@ -157,6 +160,9 @@ export function collatorFactory<T = unknown>(column: ColumnSpecification<T>, typ
                     return nullCollator;
             }
         }
+
+        default:
+            return nullCollator;
     }
 }
 

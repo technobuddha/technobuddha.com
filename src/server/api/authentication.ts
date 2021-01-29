@@ -8,71 +8,72 @@ export const authentication = express.Router();
 
 authentication.get(
     '/session',
-    async (req, res) => {
-        const sessionId = req.cookies.session;
+    (req, res) => {
+        void (async () => {
+            const sessionId = req.cookies.session;
 
-        if(sessionId) {
-            const session = await db.getSession(sessionId);
-            if(session) {
-                if(session.expires >= new Date()) {
-                    const account = await db.getAccountById(session.account_id);
+            if(sessionId) {
+                const session = await db.getSession(sessionId);
+                if(session) {
+                    if(session.expires >= new Date()) {
+                        const account = await db.getAccountById(session.account_id);
 
-                    if(account) {
-                        res.status(200).json(account);
-                        return;
+                        if(account) {
+                            res.status(200).json(account);
+                            return;
+                        }
                     }
                 }
             }
-        }
 
-        res.clearCookie('session');
-        res.status(401).json('Not logged in.');
+            res.clearCookie('session');
+            res.status(401).json('Not logged in.');
+        })();
     }
 );
 
 authentication.put(
     '/session',
-    async (req, res) => {
-        const username: string    = req.body.username;
-        const password: string    = req.body.password;
+    (req, res) => {
+        void (async () => {
+            const { username, password }  = req.body as { username: string; password: string };
 
-        if(!username || !password) {
-            res.status(400).json('Request must include fields "username" and "password"');
-        }
+            if(!username || !password)
+                res.status(400).json('Request must include fields "username" and "password"');
 
-        const account   = await db.verifyPassword(username, password);
-        if(account) {
-            const sessionId = req.cookies.session;
+            const account   = await db.verifyPassword(username, password);
+            if(account) {
+                const sessionId = req.cookies.session;
 
-            if(sessionId) {
-                await db.deleteSession(sessionId);
+                if(sessionId)
+                    await db.deleteSession(sessionId);
+
+                if(!settings.concurrentSessions && !account.admin)
+                    await db.deleteConcurrentSessions(account.id);
+
+                const session = await db.createSession(account.id);
+
+                res.cookie('session', session.id, { maxAge: settings.session.cookieAge });
+                res.status(201).json(account);
+            } else {
+                res.clearCookie('session');
+                res.status(401).json('Login incorrect');
             }
-
-            if(!settings.concurrentSessions && !account.admin) {
-                await db.deleteConcurrentSessions(account.id);
-            }
-
-            const session = await db.createSession(account.id);
-
-            res.cookie('session', session.id, { maxAge: settings.session.cookieAge });
-            res.status(201).json(account);
-        } else {
-            res.clearCookie('session');
-            res.status(401).json('Login incorrect');
-        }
+        })();
     }
 );
 
 authentication.delete(
     '/session',
-    async (req, res) => {
-        const sessionId = req.cookies.session;
-        if(sessionId) {
-            await db.deleteSession(sessionId);
-        }
+    (req, res) => {
+        void (async () => {
+            const sessionId = req.cookies.session;
+            if(sessionId)
+                await db.deleteSession(sessionId);
 
-        res.clearCookie('session');
-        res.status(200).json('OK');
+            res.clearCookie('session');
+            res.status(200).json('OK');
+        })();
     }
 );
 
@@ -93,19 +94,20 @@ authentication.post(
 
 authentication.put(
     '/account',
-    async (req, res) => {
-        const { first, last, email, password } = req.body;
+    (req, res) => {
+        void (async () => {
+            const { first, last, email, password } = req.body;
 
-        if(!first || !last || !email || !password) {
-            res.status(400).json('Request must include fields "first", "last", "email" and "password"');
-            return;
-        }
+            if(!first || !last || !email || !password) {
+                res.status(400).json('Request must include fields "first", "last", "email" and "password"');
+                return;
+            }
 
-        if(await db.getAccountByEmail(email)) {
-            res.status(409).json('Account already exists.');
-        }
+            if(await db.getAccountByEmail(email))
+                res.status(409).json('Account already exists.');
 
-        res.status(201).json(await db.createAccount({ first, last, email, password }));
+            res.status(201).json(await db.createAccount({ first, last, email, password }));
+        })();
     }
 );
 

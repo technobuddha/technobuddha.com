@@ -21,10 +21,14 @@ export function useAuthentication() {
 
 const KEY       = 'authenticationProvider';
 
-export const AuthenticationProvider: React.FC = ({ children }: {children?: React.ReactNode}) => {
-    const [error,   setError]       = React.useState<boolean>(false);
-    const [account, setAccount]     = React.useState<Account | null>(null);
-    const [loading, setLoading]     = React.useState<boolean>(true);
+type AuthenticationProviderProps = {
+    children?: React.ReactNode;
+};
+
+export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ children }) => {
+    const [ error,   setError ]       = React.useState<boolean>(false);
+    const [ account, setAccount ]     = React.useState<Account | null>(null);
+    const [ loading, setLoading ]     = React.useState<boolean>(true);
     const { authentication }        = useAPI();
 
     const checkLogin = async () => {
@@ -52,17 +56,17 @@ export const AuthenticationProvider: React.FC = ({ children }: {children?: React
     const killTimeout = () => {
         const handle = sessionStorage.getItem(KEY);
         if(handle) {
-            clearTimeout(Number.parseInt(handle));
+            clearTimeout(Number.parseInt(handle, 10));
             sessionStorage.removeItem(KEY);
         }
     };
 
     const periodicCheck = async () => {
-        const checker = async () => {
+        const checker = () => {
             killTimeout();
 
-            await checkLogin();
-            sessionStorage.setItem(KEY, setTimeout(checker, settings.session.keepAlive).toString());
+            void checkLogin()
+            .then(() => sessionStorage.setItem(KEY, setTimeout(checker, settings.session.keepAlive).toString()));
         };
 
         killTimeout();
@@ -105,19 +109,20 @@ export const AuthenticationProvider: React.FC = ({ children }: {children?: React
     React.useEffect(
         () => {
             if(loading)
-                initialCheck();
+                void initialCheck();
             if(account)
-                periodicCheck();
+                void periodicCheck();
         },
         []
     );
 
+    if(loading)
+        return null;
+
     return (
-        loading
-            ?   null
-            :   <AuthenticationContext.Provider value={{ error, account, login, logout, createAccount }}>
-                    {children}
-                </AuthenticationContext.Provider>
+        <AuthenticationContext.Provider value={{ error, account, login, logout, createAccount }}>
+            {children}
+        </AuthenticationContext.Provider>
     );
 };
 

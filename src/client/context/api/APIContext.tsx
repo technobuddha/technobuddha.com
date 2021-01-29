@@ -14,7 +14,7 @@ export function useAPI() {
     return React.useContext(APIContext);
 }
 
-export const APIProvider: React.FC = (props: {children?: React.ReactNode}) => {
+export const APIProvider: React.FC = (props: { children?: React.ReactNode }) => {
     return (
         <APIContext.Provider value={{ fetchAPI, authentication, music }}>
             {props.children}

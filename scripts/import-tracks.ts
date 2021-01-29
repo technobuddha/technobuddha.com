@@ -13,15 +13,15 @@ function parsePartOfSet(text: string | null | undefined) {
     let title: string | null = null;
 
     if(text) {
-        const m = text.match(partOfSet);
+        const m = partOfSet.exec(text);
         if(m) {
-            disc = Number.parseInt(m[1]);
+            disc = Number.parseInt(m[1], 10);
             if(m[2])
-                set = Number.parseInt(m[2].slice(1));
+                set = Number.parseInt(m[2].slice(1), 10);
             if(m[3])
                 title = m[3].trim();
         } else {
-            disc = Number.parseInt(text);
+            disc = Number.parseInt(text, 10);
             if(Number.isNaN(disc)) disc = 1;
         }
     }
@@ -31,8 +31,12 @@ function parsePartOfSet(text: string | null | undefined) {
     return { disc, set, title };
 }
 
-(async function main() {
+function err(text: string | undefined) {
+    if(text)
+        process.stderr.write(text);
+}
 
+(async function main() {
     const b1 = new cliProgress.SingleBar({
         format: `Tracks |${chalk.cyan('{bar}')}| {percentage}% || {value}/{total}`,
         barCompleteChar: '\u2588',
@@ -43,7 +47,8 @@ function parsePartOfSet(text: string | null | undefined) {
     await db.task(async t => {
         await t.none('TRUNCATE track_new;');
 
-        for(const file of ['tracks0.mldata', 'tracks1.mldata']) {
+        for(const file of [ 'tracks0.mldata', 'tracks1.mldata' ]) {
+            // eslint-disable-next-line new-cap
             const lineReader = new nReadLines(path.join(paths.data, file));
 
             let line: Buffer | false;
@@ -51,7 +56,7 @@ function parsePartOfSet(text: string | null | undefined) {
             // eslint-disable-next-line no-cond-assign
             while(line = lineReader.next()) {
                 if(index++ === 0) {
-                    b1.start(Number.parseInt(line.toString()), 0, { speed: 'N/A'  });
+                    b1.start(Number.parseInt(line.toString(), 10), 0, { speed: 'N/A'  });
                 } else {
                     const json = JSON.parse(line.toString());
                     const {
@@ -181,8 +186,11 @@ function parsePartOfSet(text: string | null | undefined) {
                                 Duration,
                             }
                         );
-                    } catch(err) {
-                        console.log(`\n\n${json.Path}\n${err.message}`);
+                    } catch(error: unknown) {
+                        if(error instanceof Error)
+                            err(`${json.Path}\n${error.message}\n`);
+                        else
+                            err(`${json.Path}\n${(error as any).toString()}\n`);
                     }
 
                     b1.increment();
@@ -199,4 +207,4 @@ function parsePartOfSet(text: string | null | undefined) {
 
     // stop the bar
     b1.stop();
-})();
+}());

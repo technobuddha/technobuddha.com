@@ -16,8 +16,8 @@ export function RowSelectionIndicator<T = unknown>({ datum, className, style }: 
     const { setSelected, getSelected } = useRow();
 
     const handleCheckboxChange = React.useCallback(
-        (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => setSelected(datum!, checked),
-        [datum, setSelected]
+        (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => setSelected(datum, checked),
+        [ datum, setSelected ]
     );
 
     return (
@@ -41,8 +41,8 @@ export function MasterSelectionIndicator<T = unknown>({ data, className, style }
     const { selected, unselected }            = countSelected(data);
 
     const handleMasterChange = React.useCallback(
-        (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => setSelected(data!, checked),
-        [data]
+        (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => setSelected(data, checked),
+        [ data ]
     );
 
     return (

@@ -19,16 +19,16 @@ export const Chaos: React.FC = () => {
     );
 };
 
-type ChaosBoardProps = {boxWidth: number; boxHeight: number};
+type ChaosBoardProps = { boxWidth: number; boxHeight: number };
 type Mode = 'compute' | 'display';
 
 const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoardProps) => {
     const { t }                         = useTranslation();
     const canvas                        = React.useRef<HTMLCanvasElement>(null);
     const overlay                       = React.useRef<HTMLCanvasElement>(null);
-    const width                         = React.useMemo(() => Math.floor(boxWidth / SIZE),  [boxWidth]);
-    const height                        = React.useMemo(() => Math.floor(boxHeight / SIZE), [boxHeight]);
-    const [ mode, setMode ]             = useDerivedState<Mode>('compute', [width, height]);
+    const width                         = React.useMemo(() => Math.floor(boxWidth / SIZE),  [ boxWidth ]);
+    const height                        = React.useMemo(() => Math.floor(boxHeight / SIZE), [ boxHeight ]);
+    const [ mode, setMode ]             = useDerivedState<Mode>('compute', [ width, height ]);
     const [ showLegend, setShowLegend ] = React.useState(true);
     const grid                          = React.useRef<RGBV[][]>([]);
 
@@ -47,7 +47,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
         return { x, y };
     };
 
-    const scaledCoordinates = ({ x: clientX, y: clientY }: {x: number; y: number}) => {
+    const scaledCoordinates = ({ x: clientX, y: clientY }: { x: number; y: number }) => {
         const x = x_min.current + (clientX / width)  * (x_max.current - x_min.current);
         const y = y_min.current + (clientY / height) * (y_max.current - y_min.current);
         return { x, y };
@@ -70,12 +70,10 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
                 const x_mid = (x_min.current + x_max.current) / 2;
                 const y_mid = (y_min.current + y_max.current) / 2;
 
-                console.log(x_min.current, x_max.current, y_min.current, y_max.current);
                 x_min.current = x_mid - (x_mid - x_min.current) * Math.sqrt(10);
                 x_max.current = x_mid + (x_max.current - x_mid) * Math.sqrt(10);
                 y_min.current = y_mid - (y_mid - y_min.current) * Math.sqrt(10);
                 y_max.current = y_mid + (y_max.current - y_mid) * Math.sqrt(10);
-                console.log(x_min.current, x_max.current, y_min.current, y_max.current);
                 setMode('compute');
             } else {
                 mouseIsDown.current = true;
@@ -121,9 +119,8 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
     };
 
     const handleKeyUp           = (event: React.KeyboardEvent<HTMLCanvasElement>) => {
-        if(event.key === 'Escape') {
+        if(event.key === 'Escape')
             setShowLegend(show => !show);
-        }
     };
 
     React.useEffect(
@@ -140,8 +137,9 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
                     y_max.current = result.y_max;
                     setMode('display');
                 })
-                .catch(err => console.error(err));
-            } else if(mode === 'display') {
+                // eslint-disable-next-line no-console
+                .catch(err => { console.error(err); });  // TODO use snackbar to show error
+            } else {
                 setTimeout(
                     () => {
                         const context   = canvas.current!.getContext('2d')!;
@@ -170,7 +168,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
                 );
             }
         },
-        [mode]
+        [ mode ]
     );
 
     return (

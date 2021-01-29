@@ -3,9 +3,8 @@ import paths        from './paths';
 import { config }   from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 
-if(!process.env.NODE_ENV) {
+if(!process.env.NODE_ENV)
     process.env.NODE_ENV = 'development';
-}
 
 [
     `${paths.env}.${process.env.NODE_ENV}.local`,

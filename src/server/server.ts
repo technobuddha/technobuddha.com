@@ -30,7 +30,7 @@ import packageJson                  from '~package.json';
 import type { Response, Request, NextFunction } from 'express';
 import type { IncomingMessage } from 'http';
 
-(async function main(){
+(async function main() {
     const isDevelopment = process.env.NODE_ENV !== 'production';
 
     const logLevel = (level: string) => {
@@ -80,31 +80,31 @@ import type { IncomingMessage } from 'http';
 
     const HTTP_PORT             = isDevelopment ? 8080 : 80;
     const HTTPS_PORT            = isDevelopment ? 8443 : 443;
-    const title                 = (settings?.title)      ?? 'Untitled';
-    const favicon               = (settings?.favicon)    ?? '/assets/favicon.ico';
+    const title                 = settings.title   ?? 'Untitled';
+    const favicon               = settings.favicon ?? '/assets/favicon.ico';
 
     function cacheControl(days = 0) {
         const seconds = days * 24 * 60 * 60;
 
         if(seconds === 0 || isDevelopment)
             return 'public, no-cache, no-store, must-revalidate';
-        else
-            return `public, max-age=${seconds}`;
+
+        return `public, max-age=${seconds}`;
     }
 
     let preload: string;
     if(process.env.USE_CDN === 'true') {
         const cdn = 'https://cdnjs.cloudflare.com/ajax/libs';
         preload = Object.entries(externalPackages)
-        .map(([packageName, info]) => {
-            const version   = fs.readJsonSync(path.join(paths.node_modules, packageName, 'package.json')).version;
-            const url       = `${cdn}/${info.alias ?? packageName}/${version}/${isDevelopment ? info.development : info.production}`;
+        .map(([ packageName, info ]) => {
+            const { version } = fs.readJsonSync(path.join(paths.node_modules, packageName, 'package.json'));
+            const url         = `${cdn}/${info.alias ?? packageName}/${version}/${isDevelopment ? info.development : info.production}`;
             return `<script type="application/javascript" src="${url}"></script>`;
         })
         .join('\n        ');
     } else {
         preload = Object.entries(externalPackages)
-        .map(([packageName, info]) => {
+        .map(([ packageName, info ]) => {
             const url = info.localPath
                 ?   path.join('/cdn', info.alias ?? packageName, info.localPath, isDevelopment ? info.development : info.production)
                 :   path.join('/cdn', info.alias ?? packageName, isDevelopment ? info.development : info.production);
@@ -161,7 +161,7 @@ import type { IncomingMessage } from 'http';
                 autoRewrite:    true,
                 logLevel:       'debug',
                 logProvider:    () => logger,
-                onProxyRes:     (proxyRes, req, _res) => logProxy(req, proxyRes),
+                onProxyRes:     (proxyRes, req, _res) => { logProxy(req, proxyRes); },
                 onError:        (err, req, res) => {
                     logProxy(req, res);
                     logger.error(err.message);
@@ -181,14 +181,17 @@ import type { IncomingMessage } from 'http';
         (req, res, next) => {
             const start = Date.now();
 
-            const end   = res.end;
-            res.end = function(...args: any[]) {
-                const { protocol, method, originalUrl, url, ip } = req;
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            const saveEnd = res.end;
+            res.end = function end(...args: any[]) {
+                const { protocol, method, originalUrl, ip } = req;
                 const { statusCode, statusMessage } = res;
                 const duration = Date.now() - start;
-                logger.http(`${protocol}:${method} ${statusCode} ${statusMessage ? `${statusMessage} ` : ''}${chalk.green(`${duration}ms`)} ${originalUrl ?? url} [${chalk.cyan(ip)}]`);
+                const message = statusMessage ? `${statusMessage} ` : '';
 
-                res.end = end;
+                logger.http(`${protocol}:${method} ${statusCode} ${message}${chalk.green(`${duration}ms`)} ${originalUrl} [${chalk.cyan(ip)}]`);
+
+                res.end = saveEnd;
                 res.end(...args);
             };
 
@@ -197,9 +200,10 @@ import type { IncomingMessage } from 'http';
     )
     .get(
         '/oeoaa',
-        (_req, res) => {
+        (_req, _res) => {
+            // TODO Remove Debugging
             throw new Error('Ting Tang Walla Walla Bing Bang');
-            res.send('Ting Tang Walla Walla Bing Bang\n');
+            //res.send('Ting Tang Walla Walla Bing Bang\n');
         }
     )
     .use(
@@ -217,9 +221,8 @@ import type { IncomingMessage } from 'http';
             'server',
             (name: string, type: string, args: string[]) => {
                 if(type === 'error' || type === 'warn' || type === 'info' || type === 'debug') {
-                    for(const arg of args) {
+                    for(const arg of args)
                         logger[type](`[${chalk.yellow(name)}] ${arg}`);
-                    }
                     return false;
                 }
                 return true;
@@ -249,8 +252,8 @@ import type { IncomingMessage } from 'http';
             app.post(
                 '/locales/*',
                 (req, res) => {
-                    const [,,, nsfile] = req.url.split('/');
-                    const [ns]         = nsfile.split('.');
+                    const [ ,,, nsfile ] = req.url.split('/');
+                    const [ ns ]         = nsfile.split('.');
                     translationWorker.enqueue(ns, req.body);
                     res.end();
                 }
@@ -319,9 +322,8 @@ import type { IncomingMessage } from 'http';
         (err: Error, _req: Request, res: Response, _next: NextFunction) => {
             logger.error(`Error: ${err.message}`);
             if(err.stack) {
-                for(const stack of splitLines(err.stack).slice(1)) {
+                for(const stack of splitLines(err.stack).slice(1))
                     logger.debug(stack);
-                }
             }
 
             res.status(500).render('error/500.hbs', { favicon });
@@ -355,4 +357,4 @@ import type { IncomingMessage } from 'http';
             () => logger.info(`HTTP Server listening on port ${HTTP_PORT}`)
         );
     }
-})();
+}());

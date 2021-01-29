@@ -14,10 +14,15 @@ import { translate, readTranslations, writeTranslations } from '#util/translatio
 import type { I18NextScannerConfig } from 'i18next-scanner';
 import type { TranslateReturn }      from '#util/translation';
 
-(async function() {
-    const foreign = i18next.supportedLngs ? i18next.supportedLngs.filter(lng => lng != 'en') : [];
+function out(text: string | undefined) {
+    if(text)
+        process.stdout.write(text);
+}
 
-    for(const ns of isString(i18next.ns) ? [i18next.ns] : i18next.ns ?? ['translation']) {
+(async function main() {
+    const foreign = i18next.supportedLngs ? i18next.supportedLngs.filter(lng => lng !== 'en') : [];
+
+    for(const ns of isString(i18next.ns) ? [ i18next.ns ] : i18next.ns ?? [ 'translation' ]) {
         const en = readTranslations('en', ns, 'external');
 
         for(const lng of foreign) {
@@ -26,14 +31,14 @@ import type { TranslateReturn }      from '#util/translation';
             await Promise.all(
                 Object.keys(en)
                 .filter(key => isNil(t[key]))
-                .map(key => translate(key, lng))
+                .map(async key => translate(key, lng))
             )
             .then(
                 results => {
                     results.forEach(
                         result => {
                             if(!isNil(result.translation)) {
-                                console.log(`${chalk.green('translated')} ${chalk.grey(`${ns} ${lng}`)} ${result.key}`);
+                                out(`${chalk.green('translated')} ${chalk.grey(`${ns} ${lng}`)} ${result.key}\n`);
                                 t[result.key] = result.translation;
                             }
                         }
@@ -56,20 +61,21 @@ import type { TranslateReturn }      from '#util/translation';
             removeUnusedKeys: false,
             sort: false,
             attr: {
-                list: ['data-i18n'],
-                extensions: ['.html', '.htm'],
+                list: [ 'data-i18n' ],
+                extensions: [ '.html', '.htm' ],
             },
             func: {
-                list: ['i18next.t', 'i18n.t', 't'],
-                extensions: ['.js', '.jsx'],
+                list: [ 'i18next.t', 'i18n.t', 't' ],
+                extensions: [ '.js', '.jsx' ],
             },
             trans: {
                 component: 'Trans',
                 i18nKey: 'i18nKey',
                 defaultsKey: 'defaults',
-                extensions: ['.js', '.jsx'],
+                extensions: [ '.js', '.jsx' ],
                 fallbackKey: (_ns, text) => text,
             },
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             lngs: i18next.supportedLngs || undefined,
             ns: i18next.ns,
             defaultLng: 'en',
@@ -91,7 +97,7 @@ import type { TranslateReturn }      from '#util/translation';
                 suffix: '}}',
             },
         },
-        transform: typescriptTransform({ extensions: ['.ts', '.tsx'] }),
+        transform: typescriptTransform({ extensions: [ '.ts', '.tsx' ]}),
     };
 
     vfs.src(config.input, { buffer: false })
@@ -99,13 +105,13 @@ import type { TranslateReturn }      from '#util/translation';
     .pipe(new stream.Transform({
         objectMode: true,
         transform(file, _enc, callback) {
-            const [lng, ns]             = file.path.split('/');
+            const [ lng, ns ]             = file.path.split('/');
             const newTranslations       = JSON.parse(file.contents.toString()) as Record<string, string>;
             const oldTranslations       = readTranslations(lng, ns);
             const archiveTranslations   = readTranslations(lng, ns, 'archive');
             const promises              = [] as Promise<TranslateReturn>[];
 
-            for(const [key, translation] of Object.entries(newTranslations)) {
+            for(const [ key, translation ] of Object.entries(newTranslations)) {
                 if(isNil(translation)) {
                     if(key in oldTranslations) {
                         newTranslations[key] = oldTranslations[key];
@@ -113,7 +119,7 @@ import type { TranslateReturn }      from '#util/translation';
                     } else if(key in archiveTranslations) {
                         newTranslations[key] = archiveTranslations[key];
                         delete archiveTranslations[key];
-                        console.log(`${chalk.cyanBright('reinstated')} ${chalk.grey(`${ns} ${lng}`)} ${key}`);
+                        out(`${chalk.cyanBright('reinstated')} ${chalk.grey(`${ns} ${lng}`)} ${key}\n`);
                     } else {
                         promises.push(translate(key, lng));
                     }
@@ -123,9 +129,9 @@ import type { TranslateReturn }      from '#util/translation';
                 }
             }
 
-            for(const [key, translation] of Object.entries(oldTranslations)) {
+            for(const [ key, translation ] of Object.entries(oldTranslations)) {
                 archiveTranslations[key] = translation;
-                console.log(`${chalk.cyan('archived')} ${chalk.grey(`${ns} ${lng}`)} ${key}`);
+                out(`${chalk.cyan('archived')} ${chalk.grey(`${ns} ${lng}`)} ${key}\n`);
             }
 
             Promise.all(promises)
@@ -134,7 +140,7 @@ import type { TranslateReturn }      from '#util/translation';
                     for(const result of results) {
                         if(result.translation) {
                             newTranslations[result.key] = result.translation;
-                            console.log(`${chalk.green('translated+')} ${chalk.grey(`${ns} ${lng}`)} ${result.key}`);
+                            out(`${chalk.green('translated+')} ${chalk.grey(`${ns} ${lng}`)} ${result.key}\n`);
                         }
                     }
 
@@ -143,7 +149,12 @@ import type { TranslateReturn }      from '#util/translation';
 
                     callback();
                 }
+            )
+            .catch(
+                error => {
+                    out(chalk.red(error));
+                }
             );
         },
     }));
-})();
+}());

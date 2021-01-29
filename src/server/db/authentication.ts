@@ -120,4 +120,14 @@ export async function deleteConcurrentSessions(account_id: number) {
     );
 }
 
-export default { getAccountById, getAccountByEmail, createAccount, verifyPassword, getSession, createSession, renewSession, deleteSession, deleteConcurrentSessions };
+export default {
+    getAccountById,
+    getAccountByEmail,
+    createAccount,
+    verifyPassword,
+    getSession,
+    createSession,
+    renewSession,
+    deleteSession,
+    deleteConcurrentSessions,
+};

@@ -18,7 +18,7 @@ function out(text: string | undefined) {
         process.stdout.write(text);
 }
 
-function report(error: Error, stats: webpack.Stats): void {
+function report(error: Error | null, stats: webpack.Stats): void {
     if(error) {
         out(`\n${chalk.red(error)}\n`);
         process.exit(1);
@@ -27,24 +27,23 @@ function report(error: Error, stats: webpack.Stats): void {
     // out(` ${(stats.endTime ?? 0) - (stats.startTime ?? 0)}ms\n`);
     if(stats.compilation.errors.length) {
         out(`${chalk.red('Errors:')}\n`);
-        for(const e of stats.compilation.errors) {
+        for(const e of stats.compilation.errors)
             out(`${e.message}\n`);
-        }
     }
 
     if(stats.compilation.warnings.length) {
         out(`${chalk.yellow('Warnings:')}\n`);
-        for(const w of stats.compilation.warnings) {
+        for(const w of stats.compilation.warnings)
             out(`${w.message}\n`);
-        }
     }
 
     if(stats.compilation.errors.length) process.exit(1);
 
-    for(const [filename, asset] of Object.entries(stats.compilation.assets)) {
+    for(const [ filename, asset ] of Object.entries(stats.compilation.assets)) {
         const a: any = asset;
+        const size = binaryUnits(fs.statSync(a.existsAt).size, { format: '###.00', pad: 6 });
 
-        out(`${' '.repeat(50)}${filename.padEnd(40)} ${(a.isOverSizeLimit ? chalk.red : chalk.green)(binaryUnits(fs.statSync(a.existsAt).size, { format: '###.00', pad: 6 })).padStart(20)}\n`);
+        out(`${' '.repeat(50)}${filename.padEnd(40)} ${(a.isOverSizeLimit ? chalk.red : chalk.green)(size).padStart(20)}\n`);
     }
 }
 
@@ -63,8 +62,9 @@ function start(task: string, text?: string) {
     if(text) {
         out(chalk.blue(text));
         out(' '.repeat(20 - text.length));
-    } else
+    } else {
         out(' '.repeat(20));
+    }
     timer = Date.now();
 }
 
@@ -109,11 +109,11 @@ webpack(
                 pj.scripts = { start: 'NODE_ENV=production nodemon --watch /etc/letsencrypt/live/technobuddha --watch bin --ext pem,js bin/server.js' };
                 pj.dependencies = Object.fromEntries(
                     Object.entries(pj.dependencies!)
-                    .map(([k, v]) => [k, v.startsWith('^') ? v.slice(1) : v])
+                    .map(([ k, v ]) => [ k, v.startsWith('^') ? v.slice(1) : v ])
                 );
                 pj.devDependencies = Object.fromEntries(
                     Object.entries(pj.devDependencies!)
-                    .map(([k, v]) => [k, v.startsWith('^') ? v.slice(1) : v])
+                    .map(([ k, v ]) => [ k, v.startsWith('^') ? v.slice(1) : v ])
                 );
 
                 fs.writeFileSync('deploy/package.json', JSON.stringify(pj, undefined, 2), 'utf8');

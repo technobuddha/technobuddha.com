@@ -20,9 +20,9 @@ export default {
     forgotPassword:   false,
     signUp:           true,
     session: {
-        duration:     1   * ticksPerWeek,
-        cookieAge:    1   * ticksPerWeek,
-        keepAlive:    0.5 * ticksPerHour,
+        duration:     ticksPerWeek,
+        cookieAge:    ticksPerWeek,
+        keepAlive:    ticksPerHour * 0.5,
     },
     password: {
         minLength: null,

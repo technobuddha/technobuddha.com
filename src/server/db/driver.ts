@@ -9,7 +9,7 @@ export const db = pgp({
     user:       process.env.DB_USER,
     host:       process.env.DB_HOST,
     database:   process.env.DB_DATABASE,
-    port:       parseInt(process.env.DB_PORT ?? '5432'),
+    port:       parseInt(process.env.DB_PORT ?? '5432', 10),
 });
 
 export default db;

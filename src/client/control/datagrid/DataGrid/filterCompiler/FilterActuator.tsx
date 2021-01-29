@@ -10,7 +10,7 @@ export type FilterActuatorProps = {
     classes?:           FilterActuatorClasses;
     styles?:            FilterActuatorStyles;
     onButtonClick?:     () => void;
-    Icon?:              React.ComponentType<{className?: string; style?: React.CSSProperties}>;
+    Icon?:              React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
     title:              string;
 };
 
@@ -51,7 +51,8 @@ export const FilterActuator = ({ classes, styles, Icon, onButtonClick, title }: 
                 style={styles?.button}
                 onClick={handleButtonClick}
             >
-                {Icon &&
+                {
+                    Icon &&
                     <Icon
                         className={clsx(css.icon, classes?.icon)}
                         style={styles?.icon}

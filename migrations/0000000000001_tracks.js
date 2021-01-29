@@ -1,6 +1,6 @@
 exports.shorthands = undefined;
 
-const names = ['track', 'track_old', 'track_new'];
+const names = [ 'track', 'track_old', 'track_new' ];
 
 exports.up = pgm => {
     for(const name of names) {
@@ -63,7 +63,6 @@ exports.up = pgm => {
 };
 
 exports.down = pgm => {
-    for(const name of names) {
+    for(const name of names)
         pgm.dropTable(name);
-    }
 };

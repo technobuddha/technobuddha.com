@@ -7,4 +7,4 @@ export const normalizeFilterValue   = (filterValue: FilterValue) =>
     (isArray(filterValue) ? (filterValue.length > 0 ? filterValue[0] : null) : filterValue);
 
 export const normalizeFilterArray   = (filterValue: FilterValue) =>
-    (isArray(filterValue) ? (filterValue.length > 0 ? filterValue : null) : (isString(filterValue) ? [filterValue] : null));
+    (isArray(filterValue) ? (filterValue.length > 0 ? filterValue : null) : (isString(filterValue) ? [ filterValue ] : null));

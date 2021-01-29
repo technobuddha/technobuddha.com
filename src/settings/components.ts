@@ -25,7 +25,7 @@ export type Component = {
     todo?: string[];
 };
 
-export const components: (t: TFunction) => Component[] = (t) => [
+export const components: (t: TFunction) => Component[] = t => [
     {
         icon: GiHouse,
         primary: t('Home'),

@@ -20,7 +20,7 @@ export const ComponentsProvider: React.FC = ({ children }: ComponentsProviderPro
     const { t, i18n } = useTranslation();
     const control     = React.useMemo<Component[]>(
         () => components(t),
-        [i18n.language]
+        [ i18n.language ]
     );
 
     return (

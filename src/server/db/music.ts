@@ -28,8 +28,8 @@ export async function getTracks(): Promise<GetTracks[]> {
 }
 
 type GetNewAlbumsPick = 'artist' | 'album' | 'collectionGroupId' | 'year' | 'genre' | 'subgenre';
-type GetNewAlbumsInput = Pick<DBTrack, SnakeCase<GetNewAlbumsPick>> & {title: string[]};
-export type GetNewAlbums = Pick<Track,   GetNewAlbumsPick> & {title: string[]};
+type GetNewAlbumsInput = Pick<DBTrack, SnakeCase<GetNewAlbumsPick>> & { title: string[] };
+export type GetNewAlbums = Pick<Track,   GetNewAlbumsPick> & { title: string[] };
 export async function getNewAlbums(): Promise<GetNewAlbums[]> {
     return db.manyOrNone<GetNewAlbumsInput>(
         `
@@ -52,8 +52,8 @@ export async function getNewAlbums(): Promise<GetNewAlbums[]> {
 }
 
 type GetArtistsPick = 'album' | 'year' | 'genre' | 'subgenre';
-type GetArtistsInput = Pick<DBTrack, SnakeCase<GetArtistsPick>> & {artist: Scalar<DBTrack['artist']>};
-export type GetArtists = Pick<Track,   GetArtistsPick> & {artist: Scalar<Track['artist']>};
+type GetArtistsInput = Pick<DBTrack, SnakeCase<GetArtistsPick>> & { artist: Scalar<DBTrack['artist']> };
+export type GetArtists = Pick<Track,   GetArtistsPick> & { artist: Scalar<Track['artist']> };
 export async function getArtists(): Promise<GetArtists[]> {
     return db.manyOrNone<GetArtistsInput>(
         `
@@ -64,8 +64,8 @@ export async function getArtists(): Promise<GetArtists[]> {
 }
 
 type GetGenresPick = 'artist' | 'album' | 'year' | 'subgenre';
-type GetGenresInput = Pick<DBTrack, SnakeCase<GetGenresPick>> & {artist: Scalar<DBTrack['genre']>};
-export type GetGenres = Pick<Track,   GetGenresPick> & {artist: Scalar<Track['genre']>};
+type GetGenresInput = Pick<DBTrack, SnakeCase<GetGenresPick>> & { genre: Scalar<DBTrack['genre']> };
+export type GetGenres = Pick<Track,   GetGenresPick> & { genre: Scalar<Track['genre']> };
 export async function getGenres(): Promise<GetGenres[]> {
     return db.manyOrNone<GetGenresInput>(
         `

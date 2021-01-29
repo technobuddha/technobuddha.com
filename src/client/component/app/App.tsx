@@ -14,6 +14,7 @@ import AppLoading                           from './AppLoading';
 setConfig({ showReactDomPatchNotification: false });
 
 export const App = hot(module)(
+    // eslint-disable-next-line react/prefer-stateless-function
     class extends PureComponent {
         public render() {
             return (

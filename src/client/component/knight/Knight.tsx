@@ -15,18 +15,18 @@ import { makeStyles }       from '@material-ui/core/styles';
 
 const blackKnight        = '♞';
 
-const MOVES = [[1, 2], [2, 1], [-1, 2], [-2, 1], [1, -2], [2, -1], [-1, -2], [-2, -1]];
+const MOVES = [[ 1, 2 ], [ 2, 1 ], [ -1, 2 ], [ -2, 1 ], [ 1, -2 ], [ 2, -1 ], [ -1, -2 ], [ -2, -1 ]];
 
 class Square {
     constructor(public x: number, public y: number) {
     }
 
     public moves(board: (number | null)[][], move: number): Square[] {
-        return Array.from((function*(x: number, y: number) {
+        return Array.from((function *makeBoard(x: number, y: number) {
             const width     = board.length;
             const height    = board.length > 0 ? board[0].length : 0;
 
-            for(const [deltaX, deltaY] of MOVES) {
+            for(const [ deltaX, deltaY ] of MOVES) {
                 const newX = x + deltaX;
                 const newY = y + deltaY;
                 if(newX >= 0 && newX < width && newY >= 0 && newY < height && board[newX][newY] === null) {
@@ -55,18 +55,18 @@ const useKnightStyles = makeStyles({
 
 export const Knight: React.FC = () => {
     const css                        = useKnightStyles();
-    const [width,    setWidth]       = React.useState(8);
-    const [height,   setHeight]      = React.useState(8);
-    const [startX,   setStartX]      = React.useState(0);
-    const [startY,   setStartY]      = React.useState(0);
-    const [finishX,  setFinishX]     = React.useState(1);
-    const [finishY,  setFinishY]     = React.useState(1);
-    const [solution, setSolution]    = React.useState<null | number>(null);
+    const [ width,    setWidth ]       = React.useState(8);
+    const [ height,   setHeight ]      = React.useState(8);
+    const [ startX,   setStartX ]      = React.useState(0);
+    const [ startY,   setStartY ]      = React.useState(0);
+    const [ finishX,  setFinishX ]     = React.useState(1);
+    const [ finishY,  setFinishY ]     = React.useState(1);
+    const [ solution, setSolution ]    = React.useState<null | number>(null);
 
-    type OnChangeEvent = React.ChangeEvent<{name?: string; value: unknown}>;
+    type OnChangeEvent = React.ChangeEvent<{ name?: string; value: unknown }>;
 
     const handleWidthChange = (event: OnChangeEvent) => {
-        const newValue = Number.parseInt(event.target.value as string);
+        const newValue = Number.parseInt(event.target.value as string, 10);
         setWidth(newValue);
         if(startX  >= newValue) setStartX(newValue - 1);
         if(finishX >= newValue) setFinishX(newValue - 1);
@@ -74,7 +74,7 @@ export const Knight: React.FC = () => {
     };
 
     const handleHeightChange = (event: OnChangeEvent) => {
-        const newValue = Number.parseInt(event.target.value as string);
+        const newValue = Number.parseInt(event.target.value as string, 10);
         setHeight(newValue);
         if(startY  >= newValue) setStartY(newValue - 1);
         if(finishY >= newValue) setFinishY(newValue - 1);
@@ -82,25 +82,25 @@ export const Knight: React.FC = () => {
     };
 
     const handleStartXChange = (event: OnChangeEvent) => {
-        const newValue = Number.parseInt(event.target.value as string);
+        const newValue = Number.parseInt(event.target.value as string, 10);
         setStartX(newValue);
         setSolution(null);
     };
 
     const handleFinishXChange = (event: OnChangeEvent) => {
-        const newValue = Number.parseInt(event.target.value as string);
+        const newValue = Number.parseInt(event.target.value as string, 10);
         setFinishX(newValue);
         setSolution(null);
     };
 
     const handleStartYChange = (event: OnChangeEvent) => {
-        const newValue = Number.parseInt(event.target.value as string);
+        const newValue = Number.parseInt(event.target.value as string, 10);
         setStartY(newValue);
         setSolution(null);
     };
 
     const handleFinishYChange = (event: OnChangeEvent) => {
-        const newValue = Number.parseInt(event.target.value as string);
+        const newValue = Number.parseInt(event.target.value as string, 10);
         setFinishY(newValue);
         setSolution(null);
     };
@@ -223,7 +223,7 @@ const useKnightSolverStyles = makeStyles(theme => ({
     },
     column: {
         display: 'flex',
-        flexDirection:'column',
+        flexDirection: 'column',
     },
     square: {
         width: theme.spacing(4),
@@ -251,16 +251,16 @@ const useKnightSolverStyles = makeStyles(theme => ({
 
 export const KnightSolver: React.FC<KnightSolverProps> = ({ height, width, startX, startY, finishX, finishY, onSolved }) => {
     const css                       = useKnightSolverStyles();
-    const [move, setMove]           = useDerivedState(() => 0,                             [height, width, startX, startY]);
-    const [positions, setPositions] = useDerivedState(() => [new Square(startX, startY)],  [height, width, startX, startY]);
-    const target                    = React.useMemo(() => new Square(finishX, finishY),    [finishX, finishY]);
+    const [ move, setMove ]           = useDerivedState(() => 0,                             [ height, width, startX, startY ]);
+    const [ positions, setPositions ] = useDerivedState(() => [ new Square(startX, startY) ],  [ height, width, startX, startY ]);
+    const target                    = React.useMemo(() => new Square(finishX, finishY),    [ finishX, finishY ]);
     const board                     = React.useMemo(
         () => {
             const b = create2DArray<number | null>(width, height, null);
             b[startX][startY] = 0;
             return b;
         },
-        [height, width, startX, startY]
+        [ height, width, startX, startY ]
     );
 
     React.useEffect(
@@ -275,29 +275,28 @@ export const KnightSolver: React.FC<KnightSolverProps> = ({ height, width, start
                     250
                 );
 
-                return () => clearTimeout(timer);
+                return () => { clearTimeout(timer); };
             }
 
             onSolved?.(board[target.x][target.y]);
 
             return () => undefined;
         },
-        [move, board, finishX, finishY, onSolved, positions, target.x, target.y]
+        [ move, board, finishX, finishY, onSolved, positions, target.x, target.y ]
     );
 
     return (
         <Box className={css.board}>
             <Box key="X" className={css.column}>
-                <Typography className={clsx(css.square, css.legend)}></Typography >
                 {
-                    range(0, height).map(i => <Typography key={i} className={clsx(css.square, css.legend)}>{i + 1}</Typography >)
+                    range(0, height).map(i => <Typography key={i} className={clsx(css.square, css.legend)}>{i + 1}</Typography>)
                 }
             </Box>
             {
                 board.map(
                     (row, i) => (
                         <Box key={i} className={css.column}>
-                            <Typography className={clsx(css.square, css.legend)}>{numberToLetter(i + 1)}</Typography >
+                            <Typography className={clsx(css.square, css.legend)}>{numberToLetter(i + 1)}</Typography>
                             {
 
                                 row.map(

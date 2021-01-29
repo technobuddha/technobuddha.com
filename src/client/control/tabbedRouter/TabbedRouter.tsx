@@ -46,7 +46,7 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({ tabs }) => {
 
     return (
         <Switch>
-            <Route exact path={match.path}>
+            <Route exact={true} path={match.path}>
                 <Redirect to={`${match.path}/${tabs[0].url}`} />
             </Route>
             <Route path={tabs.map(({ url }) => `${match.path}/${url}`)}>
@@ -60,7 +60,7 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({ tabs }) => {
                             indicatorColor="primary"
                             textColor="primary"
                         >
-                            {tabs.map(({ label, icon: Icon, url }, i) => <Tab key={i} value={`${match.path}/${url}`} label={label} icon={Icon}/>)}
+                            {tabs.map(({ label, icon: Icon, url }, i) => <Tab key={i} value={`${match.path}/${url}`} label={label} icon={Icon} />)}
                         </Tabs>
                     </AppBar>
                     <div className={css.panel}>

@@ -23,9 +23,9 @@ export const Music: React.FC = () => {
     return (
         <TabbedRouter
             tabs={[
-                { url: 'new_albums',  label: t('New Albums'), content: NewAlbums,  icon: <GiMusicSpell/> },
-                { url: 'artists',     label: t('Artists'),    content: Artists,    icon: <GiMeepleGroup/> },
-                { url: 'genres ',     label: t('Genres'),     content: Genres,     icon: <GiMusicalKeyboard/> },
+                { url: 'new_albums',  label: t('New Albums'), content: NewAlbums,  icon: <GiMusicSpell /> },
+                { url: 'artists',     label: t('Artists'),    content: Artists,    icon: <GiMeepleGroup /> },
+                { url: 'genres ',     label: t('Genres'),     content: Genres,     icon: <GiMusicalKeyboard /> },
                 { url: 'all_tracks',  label: t('All Tracks'), content: Tracks,     icon: <GiMusicalScore /> },
             ]}
         />

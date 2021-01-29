@@ -3,13 +3,16 @@ import DelayedLoading from '#control/delayedLoading';
 import DataGrid       from '#control/datagrid';
 import useApi         from '#context/api';
 
+import type { APIValue }     from '#context/api';
+import type { PromiseValue } from 'type-fest';
+
 export const NewAlbums: React.FC = () => {
     const api   = useApi();
-    const [ dataset, setDataset ]   = React.useState<any[]>(null!);
+    const [ dataset, setDataset ]   = React.useState<APIValue<PromiseValue<ReturnType<typeof api.music.genres>>> | null>(null);
 
     React.useEffect(
         () => {
-            api.music.artists().then(tracks => setDataset(tracks.payload));
+            api.music.genres().then(tracks => { setDataset(tracks.payload); });
         },
         []
     );
@@ -20,11 +23,11 @@ export const NewAlbums: React.FC = () => {
                 data={dataset}
                 rowHeight={32}
                 columns={[
-                    { name: 'genre',         type: 'array',  sortBy: ['genre', 'subgenre'] },
-                    { name: 'subgenre',      type: 'array',  sortBy: ['subgenre'] },
-                    { name: 'artist',        type: 'string', sortBy: ['artist', 'album'] },
-                    { name: 'album',         type: 'string', sortBy: ['album'] },
-                    { name: 'year',          type: 'number', sortBy: ['year'], width: 40 },
+                    { name: 'genre',         type: 'array',  sortBy: [ 'genre', 'subgenre' ]},
+                    { name: 'subgenre',      type: 'array',  sortBy: [ 'subgenre' ]},
+                    { name: 'artist',        type: 'string', sortBy: [ 'artist', 'album' ]},
+                    { name: 'album',         type: 'string', sortBy: [ 'album' ]},
+                    { name: 'year',          type: 'number', sortBy: [ 'year' ], width: 40 },
 
                 ]}
                 filters={[
@@ -35,10 +38,9 @@ export const NewAlbums: React.FC = () => {
                 useLocation={true}
             />
         );
-    } else {
-        return <DelayedLoading />;
     }
 
+    return <DelayedLoading />;
 };
 
 export default NewAlbums;

@@ -5,30 +5,38 @@ export const music = express.Router();
 
 music.get(
     '/tracks',
-    async (_req, res) => {
-        const tracks = await db.getTracks();
-        res.status(200).json(tracks);
+    (_req, res) => {
+        void (async () => {
+            const tracks = await db.getTracks();
+            res.status(200).json(tracks);
+        })();
     }
 )
 .get(
     '/newAlbums',
-    async (_req, res) => {
-        const albums = await db.getNewAlbums();
-        res.status(200).json(albums);
+    (_req, res) => {
+        void (async () => {
+            const albums = await db.getNewAlbums();
+            res.status(200).json(albums);
+        })();
     }
 )
 .get(
     '/artists',
-    async (_req, res) => {
-        const artists = await db.getArtists();
-        res.status(200).json(artists);
+    (_req, res) => {
+        void (async () => {
+            const artists = await db.getArtists();
+            res.status(200).json(artists);
+        })();
     }
 )
 .get(
     '/genres',
-    async (_req, res) => {
-        const artists = await db.getGenres();
-        res.status(200).json(artists);
+    (_req, res) => {
+        void (async () => {
+            const artists = await db.getGenres();
+            res.status(200).json(artists);
+        })();
     }
 );
 

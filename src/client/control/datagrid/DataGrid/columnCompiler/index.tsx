@@ -52,20 +52,22 @@ export function columnCompiler<T = unknown>(
                     width:   column.width ?? '*',
                     header:  headerFactory(column, type, shape),
                     render:  rendererFactory(column, type, shape),
-                    sortBy:  column.sortBy === null ? null : (column.sortBy ?? [column.name]),
+                    sortBy:  column.sortBy === null ? null : (column.sortBy ?? [ column.name ]),
                     collate: collatorFactory(column, type, shape),
                 } as Column<T>;
             })
         :   getKeys().map(key => createDefaultColumn(key));
 
-    if(selection) cols.unshift({
-        name: '[selection]',
-        width: controlWidth,
-        header: Header,
-        render: Render,
-        sortBy: null,
-        collate: nullCollator,
-    });
+    if(selection) {
+        cols.unshift({
+            name: '[selection]',
+            width: controlWidth,
+            header: Header,
+            render: Render,
+            sortBy: null,
+            collate: nullCollator,
+        });
+    }
 
     return cols;
 }

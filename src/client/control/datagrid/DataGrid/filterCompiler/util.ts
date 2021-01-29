@@ -8,11 +8,10 @@ export function getUniqueValues<T = unknown>(data: T[], name: keyof T) {
             const v = datum[name];
 
             if(!isNil(v)) {
-                if(isArray(v)) {
+                if(isArray(v))
                     v.forEach(vv => { if(!isNil(vv)) set.add(vv.toString()); });
-                } else {
-                    if(!isNil(v)) set.add((v as any)?.toString?.());
-                }
+                else if(!isNil(v))
+                    set.add((v as any)?.toString?.());
             }
         }
     );

@@ -10,11 +10,13 @@ import type { Options as FetcherOptions }    from '@technobuddha/library/fetcher
 const CONTENT_TYPE = 'Content-type';
 const CONTENT_JSON = 'application/json;charset=utf-8';
 
-export type API<T>          = {status: number; statusText: string; payload: T};
-export type FetchAPIOptions = Omit<FetcherOptions, 'body'> & {validStatuses?: number[]};
+export type API<T>                     = { status: number; statusText: string; payload: T };
+export type APIValue<T extends API<unknown>> = T['payload'];
+
+export type FetchAPIOptions = Omit<FetcherOptions, 'body'> & { validStatuses?: number[] };
 export async function fetchAPI<T>(url: string, options: FetchAPIOptions, json?: Record<string, unknown>): Promise<API<T>> {
     const validStatuses   = options.validStatuses ?? range(200, 300);
-    let headers         = options.headers;
+    let { headers }       = options;
 
     if(json) {
         if(isNil(headers)) {
@@ -27,13 +29,10 @@ export async function fetchAPI<T>(url: string, options: FetchAPIOptions, json?: 
                 } catch{}
             }
         } else if(isArray(headers)) {
-            if(every(headers, header => header[0].toLowerCase() !== CONTENT_TYPE.toLowerCase())) {
-                headers.push([CONTENT_TYPE, CONTENT_JSON]);
-            }
-        } else {
-            if(every(Object.keys(headers), header => header.toLowerCase() !== CONTENT_TYPE.toLowerCase())) {
-                headers[CONTENT_TYPE] = CONTENT_JSON;
-            }
+            if(every(headers, header => header[0].toLowerCase() !== CONTENT_TYPE.toLowerCase()))
+                headers.push([ CONTENT_TYPE, CONTENT_JSON ]);
+        } else if(every(Object.keys(headers), header => header.toLowerCase() !== CONTENT_TYPE.toLowerCase())) {
+            headers[CONTENT_TYPE] = CONTENT_JSON;
         }
     }
 
@@ -53,12 +52,13 @@ export async function fetchAPI<T>(url: string, options: FetchAPIOptions, json?: 
                         };
                     })
                 );
-            } else {
-                throw Error(`${response.status} ${response.statusText}`);
             }
+
+            throw Error(`${response.status} ${response.statusText}`);
         }
     ).catch(err => {
-        console.error(err);
+        // eslint-disable-next-line no-console
+        console.error(err); // TODO use the snackbar
         //enqueueSnackbar((<ServerError err={err}/>), {persist: true, variant: 'error'})
         throw err;
     });

@@ -20,7 +20,6 @@ type CheckboxProps = {
 };
 
 export const Checkbox: React.FC<CheckboxProps> = (props: CheckboxProps) => {
-
     const handleChange = (_event: React.ChangeEvent<Record<string, unknown>>, checked: boolean) => props.onChange?.(checked);
 
     return (
@@ -35,6 +34,7 @@ export const Checkbox: React.FC<CheckboxProps> = (props: CheckboxProps) => {
                     icon={props.icon?.unchecked}
                     checkedIcon={props.icon?.checked}
                     color={props.color}
+                    size={props.size}
                 />
             }
         />

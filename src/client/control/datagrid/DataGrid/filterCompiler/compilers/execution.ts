@@ -8,7 +8,7 @@ import type { Shape }       from '../../analyzer';
 
 export function searchExecute<T = unknown>(name: keyof T, shape: Shape) {
     switch(shape) {
-        case 'key-value':{
+        case 'key-value': {
             return (data: T[], value: FilterValue) => {
                 const filterValue = normalizeFilterValue(value);
 
@@ -26,13 +26,14 @@ export function searchExecute<T = unknown>(name: keyof T, shape: Shape) {
                             );
                         }
                     );
-                } else
-                    return data;
+                }
+
+                return data;
             };
         }
 
         case 'array': {
-            const key = parseInt(name as string);
+            const key = parseInt(name as string, 10);
 
             return (data: T[], value: FilterValue) => {
                 const filterValue = normalizeFilterValue(value);
@@ -51,21 +52,24 @@ export function searchExecute<T = unknown>(name: keyof T, shape: Shape) {
                             );
                         }
                     );
-                } else
-                    return data;
+                }
+
+                return data;
             };
         }
 
         case 'primitive':
-        case 'polymorphic': {
+        case 'polymorphic':
+        default: {
             return (data: T[], value: FilterValue) => {
                 const filterValue = normalizeFilterValue(value);
 
                 if(filterValue) {
                     const search = filterValue.toLocaleLowerCase();
                     return data.filter(datum => toString(datum).toLocaleLowerCase().includes(search));
-                } else
-                    return data;
+                }
+
+                return data;
             };
         }
     }
@@ -73,11 +77,11 @@ export function searchExecute<T = unknown>(name: keyof T, shape: Shape) {
 
 export function equalityExecute<T = unknown>(name: keyof T, shape: Shape) {
     switch(shape) {
-        case 'key-value':{
+        case 'key-value': {
             return (data: T[], value: FilterValue) => {
                 const filterValue   = normalizeFilterArray(value);
 
-                if(filterValue)
+                if(filterValue) {
                     return data.filter(
                         datum => {
                             const field = datum[name];
@@ -89,18 +93,19 @@ export function equalityExecute<T = unknown>(name: keyof T, shape: Shape) {
                             );
                         }
                     );
-                else
-                    return data;
+                }
+
+                return data;
             };
         }
 
         case 'array': {
-            const key = parseInt(name as string);
+            const key = parseInt(name as string, 10);
 
             return (data: T[], value: FilterValue) => {
                 const filterValue   = normalizeFilterArray(value);
 
-                if(filterValue)
+                if(filterValue) {
                     return data.filter(
                         datum => {
                             const field = (datum as unknown as unknown[])[key];
@@ -112,20 +117,22 @@ export function equalityExecute<T = unknown>(name: keyof T, shape: Shape) {
                             );
                         }
                     );
-                else
-                    return data;
+                }
+
+                return data;
             };
         }
 
         case 'primitive':
-        case 'polymorphic': {
+        case 'polymorphic':
+        default: {
             return (data: T[], value: FilterValue) => {
                 const filterValue   = normalizeFilterArray(value);
 
                 if(filterValue)
                     return data.filter(datum => filterValue.includes(toString(datum)));
-                else
-                    return data;
+
+                return data;
             };
         }
     }

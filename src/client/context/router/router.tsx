@@ -1,11 +1,11 @@
 import React                                             from 'react';
 import { BrowserRouter, useHistory as routerUseHistory } from 'react-router-dom';
 
-import type { Location, History } from 'history';
+import type { Location } from 'history';
 
 type HistoryState = { referrer: Location<HistoryState> };
 
-export const Router: React.FC = ({ children }: {children?: React.ReactNode}) => {
+export const Router: React.FC = ({ children }: { children?: React.ReactNode }) => {
     return (
         <BrowserRouter>
             {children}
@@ -37,7 +37,7 @@ export const Router: React.FC = ({ children }: {children?: React.ReactNode}) => 
 // }
 
 export const useHistory = () => {
-    return routerUseHistory() as History<HistoryState>;
+    return routerUseHistory<HistoryState>();
 };
 
 export type { Location } from 'history';

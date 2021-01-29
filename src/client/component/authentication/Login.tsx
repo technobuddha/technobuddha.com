@@ -29,28 +29,27 @@ export const Login: React.FC = () => {
     const { t }                                   = useTranslation();
     const authentication                        = useAuthentication();
     const history                               = useHistory();
-    const [username, setUsername]               = React.useState<string>('');
-    const [password, setPassword]               = React.useState<string>('');
-    const [errorMessage, setErrorMessage]       = React.useState<string | null>(null);
+    const [ username, setUsername ]               = React.useState<string>('');
+    const [ password, setPassword ]               = React.useState<string>('');
+    const [ errorMessage, setErrorMessage ]       = React.useState<string | null>(null);
 
     const handleUsernameChange      = (text: string) => { setUsername(text); setErrorMessage(null); };
     const handlePasswordChange      = (text: string) => { setPassword(text); setErrorMessage(null); };
     const isEnabled                 = () => Boolean(username && password);
     const handleExecute             = (event: React.MouseEvent<HTMLButtonElement>) => { event.preventDefault(); handleLogin(); };
     const handleKeyPress            = (event: React.KeyboardEvent<HTMLElement>)    => {
-        if(isEnabled() && event.key == 'Enter') {
+        if(isEnabled() && event.key === 'Enter') {
             event.preventDefault();
             handleLogin();
         }
     };
     const handleLogin               = () => {
-        authentication.login(username!, password!).then(response => {
+        authentication.login(username, password).then(response => {
             if(response) {
-                if(history.location.state?.referrer) {
+                if(history.location.state?.referrer)
                     history.push(history.location.state.referrer);
-                } else {
+                else
                     history.push('/');
-                }
             } else {
                 setErrorMessage(`${t('Please enter a correct username and password')}.`);
             }
@@ -65,11 +64,11 @@ export const Login: React.FC = () => {
             <Box className={css.input}>
                 <TextField
                     onChange={handleUsernameChange}
-                    autoFocus
+                    autoFocus={true}
                     label={t('Email address')}
                     value={username}
                     name="username"
-                    startAdornment={<Email/>}
+                    startAdornment={<Email />}
                 />
             </Box>
             <Box className={css.input}>

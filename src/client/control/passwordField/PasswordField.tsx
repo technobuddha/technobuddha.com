@@ -26,7 +26,7 @@ export const PasswordField: React.FC<PasswordFieldProps> = (props: PasswordField
         props.onChange?.(text);
     };
 
-    const handleVisibility        = () => setShowPassword(!showPassword);
+    const handleVisibility        = () => { setShowPassword(!showPassword); };
 
     return (
         <TextField
@@ -38,7 +38,7 @@ export const PasswordField: React.FC<PasswordFieldProps> = (props: PasswordField
             value={password}
             helperText={props.helperText}
             error={props.error}
-            startAdornment={<Lock/>}
+            startAdornment={<Lock />}
             required={props.required}
             validation={props.validation}
             endAdornment={

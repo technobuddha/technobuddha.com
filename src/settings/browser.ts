@@ -1,6 +1,6 @@
 type Settings = {
-    title: string;
-    favicon: string;
+    title?: string;
+    favicon?: string;
 };
 
 export default {

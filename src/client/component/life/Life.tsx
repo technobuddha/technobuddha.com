@@ -6,7 +6,7 @@ import clean                from '@technobuddha/library/clean';
 import { space }            from '@technobuddha/library/constants';
 import { Size }             from 'mui-size';
 
-const MOVES = [[1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1], [0, 1]];
+const MOVES = [[ 1, 1 ], [ 1, 0 ], [ 1, -1 ], [ 0, -1 ], [ -1, -1 ], [ -1, 0 ], [ -1, 1 ], [ 0, 1 ]];
 const SIZE  = 4;
 const START =
 //  **
@@ -39,11 +39,11 @@ type LifeBoardProps = {
 
 const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: LifeBoardProps) => {
     const canvas                = React.useRef<HTMLCanvasElement>(null);
-    const width                 = React.useMemo(() => Math.floor(boxWidth / SIZE),  [boxWidth]);
-    const height                = React.useMemo(() => Math.floor(boxHeight / SIZE), [boxHeight]);
-    const [move,  setMove]      = React.useState(0);
-    const history               = React.useMemo(() => [] as boolean[][][], [width, height, start]);
-    const [board, setBoard]     = useDerivedState(
+    const width                 = React.useMemo(() => Math.floor(boxWidth / SIZE),  [ boxWidth ]);
+    const height                = React.useMemo(() => Math.floor(boxHeight / SIZE), [ boxHeight ]);
+    const [ move,  setMove ]      = React.useState(0);
+    const history               = React.useMemo(() => [] as boolean[][][], [ width, height, start ]);
+    const [ board, setBoard ]     = useDerivedState(
         () => {
             const b = create2DArray(width, height, false);
 
@@ -53,14 +53,16 @@ const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: Lif
             const x     = Math.floor((width - w)  / 2);
             const y     = Math.floor((height - h) / 2);
 
-            for(let i = 0; i < w; ++i)
-                for(let j = 0; j < h; ++j)
-                    if(((lines[j]?.[i]) ?? space) !== space) {
+            for(let i = 0; i < w; ++i) {
+                for(let j = 0; j < h; ++j) {
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    if(((lines[j][i]) ?? space) !== space)
                         b[i + x][j + y] = true;
-                    }
+                }
+            }
             return b;
         },
-        [width, height, start]
+        [ width, height, start ]
     );
 
     const detectGlider = React.useMemo(
@@ -83,27 +85,47 @@ const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: Lif
                 };
 
                 for(let x = 1; x < w; ++x) {
-                    if(activeBoard[x][0] && activeBoard[x][1] && (activeBoard[x - 1][1] !== activeBoard[x + 1][1]) && activeBoard[x - 1][2] && activeBoard[x + 1][2]) {
+                    if(
+                        activeBoard[x][0] &&
+                        activeBoard[x][1] &&
+                        (activeBoard[x - 1][1] !== activeBoard[x + 1][1]) &&
+                        activeBoard[x - 1][2] &&
+                        activeBoard[x + 1][2]
+                    )
                         kill(x - 1, 0);
-                    }
 
-                    if(activeBoard[x][h] && activeBoard[x][h - 1] && (activeBoard[x - 1][h - 1] !== activeBoard[x + 1][h - 1]) && activeBoard[x - 1][h - 2] && activeBoard[x + 1][h - 2]) {
+                    if(
+                        activeBoard[x][h] &&
+                        activeBoard[x][h - 1] &&
+                        (activeBoard[x - 1][h - 1] !== activeBoard[x + 1][h - 1]) &&
+                        activeBoard[x - 1][h - 2] &&
+                        activeBoard[x + 1][h - 2]
+                    )
                         kill(x - 1, h - 2);
-                    }
                 }
 
                 for(let y = 1; y < h; ++y) {
-                    if(activeBoard[0][y] && activeBoard[1][y] && (activeBoard[1][y - 1] !== activeBoard[1][y + 1]) && activeBoard[2][y - 1] && activeBoard[2][y + 1]) {
+                    if(
+                        activeBoard[0][y] &&
+                        activeBoard[1][y] &&
+                        (activeBoard[1][y - 1] !== activeBoard[1][y + 1]) &&
+                        activeBoard[2][y - 1] &&
+                        activeBoard[2][y + 1]
+                    )
                         kill(0, y - 1);
-                    }
 
-                    if(activeBoard[w][y] && activeBoard[w - 1][y] && (activeBoard[w - 1][y - 1] !== activeBoard[w - 1][y + 1]) && activeBoard[w - 2][y - 1] && activeBoard[w - 2][y + 1]) {
+                    if(
+                        activeBoard[w][y] &&
+                        activeBoard[w - 1][y] &&
+                        (activeBoard[w - 1][y - 1] !== activeBoard[w - 1][y + 1]) &&
+                        activeBoard[w - 2][y - 1] &&
+                        activeBoard[w - 2][y + 1]
+                    )
                         kill(w - 2, y - 1);
-                    }
                 }
             };
         },
-        [width, height]
+        [ width, height ]
     );
 
     React.useEffect(
@@ -112,7 +134,7 @@ const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: Lif
                 () => {
                     const context   = canvas.current!.getContext('2d')!;
 
-                    if(move == 0) {
+                    if(move === 0) {
                         context.fillStyle = 'powderblue';
                         context.fillRect(0, 0, width * SIZE, height * SIZE);
 
@@ -136,7 +158,7 @@ const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: Lif
                                 row.forEach(
                                     (cell, j) => {
                                         const neighbors = MOVES.reduce(
-                                            (acc, [deltaX, deltaY]) => {
+                                            (acc, [ deltaX, deltaY ]) => {
                                                 const newX = i + deltaX;
                                                 const newY = j + deltaY;
 
@@ -164,6 +186,9 @@ const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: Lif
                                                     context.fillRect(i * SIZE, j * SIZE, SIZE, SIZE);
                                                 }
                                                 nextBoard[i][j] = true;
+                                                break;
+
+                                            default:
                                                 break;
                                         }
                                     }
@@ -196,14 +221,13 @@ const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: Lif
                 0
             );
 
-            return () => clearTimeout(timer);
+            return () => { clearTimeout(timer); };
         },
-        [board, move]
+        [ board, move ]
     );
 
     return (
-        <canvas ref={canvas} width={boxWidth} height={boxHeight}>
-        </canvas>
+        <canvas ref={canvas} width={boxWidth} height={boxHeight} />
     );
 };
 

@@ -24,7 +24,7 @@ export type TransferButtonClasses = {
 };
 export type TransferButtonStyles = {[key in keyof TransferButtonClasses]: React.CSSProperties};
 
-export type DispatchFunction = (args: {rAll?: boolean; rSel?: boolean; lAll?: boolean; lSel?: boolean}) => void;
+export type DispatchFunction = (args: { rAll?: boolean; rSel?: boolean; lAll?: boolean; lSel?: boolean }) => void;
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -46,14 +46,14 @@ const useStyles = makeStyles(theme => ({
 
 const TransferButtons = ({ classes, styles, dispatch, onRAllClick, onRSelClick, onLSelClick, onLAllClick }: TransferButtonsProps) => {
     const css                               = useStyles();
-    const [rAllDisabled, setRAllDisabled]   = React.useState(true);
-    const [rSelDisabled, setRSelDisabled]   = React.useState(true);
-    const [lAllDisabled, setLAllDisabled]   = React.useState(true);
-    const [lSelDisabled, setLSelDisabled]   = React.useState(true);
-    const handleRAllClick                   = React.useCallback(() => onRAllClick?.(), [onRAllClick]);
-    const handleRSelClick                   = React.useCallback(() => onRSelClick?.(), [onRSelClick]);
-    const handleLSelClick                   = React.useCallback(() => onLSelClick?.(), [onLSelClick]);
-    const handleLAllClick                   = React.useCallback(() => onLAllClick?.(), [onLAllClick]);
+    const [ rAllDisabled, setRAllDisabled ]   = React.useState(true);
+    const [ rSelDisabled, setRSelDisabled ]   = React.useState(true);
+    const [ lAllDisabled, setLAllDisabled ]   = React.useState(true);
+    const [ lSelDisabled, setLSelDisabled ]   = React.useState(true);
+    const handleRAllClick                   = React.useCallback(() => onRAllClick?.(), [ onRAllClick ]);
+    const handleRSelClick                   = React.useCallback(() => onRSelClick?.(), [ onRSelClick ]);
+    const handleLSelClick                   = React.useCallback(() => onLSelClick?.(), [ onLSelClick ]);
+    const handleLAllClick                   = React.useCallback(() => onLAllClick?.(), [ onLAllClick ]);
 
     dispatch.current = ({ rAll, rSel, lAll, lSel }: Parameters<DispatchFunction>[0]) => {
         if(!isUndefined(rAll)) setRAllDisabled(rAll);

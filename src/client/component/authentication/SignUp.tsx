@@ -3,13 +3,13 @@ import { useTranslation }             from '#context/i18n';
 import escapeRegExp                 from 'lodash/escapeRegExp';
 import settings                     from '#settings/authentication';
 import useHistory                   from '#context/router';
-import { useAuthentication }          from '#context/authentication';
-import { email as emailRegExp }       from '@technobuddha/library/regexp';
-import { nbsp }                       from '@technobuddha/library/constants';
+import { useAuthentication }        from '#context/authentication';
+import { email as emailRegExp }     from '@technobuddha/library/regexp';
+import { nbsp, empty }              from '@technobuddha/library/constants';
 import Button                       from '@material-ui/core/Button';
 import Box                          from '@material-ui/core/Box';
 import Alert                        from '@material-ui/lab/Alert';
-import TextField                    from '~src/client/control/textField/TextField';
+import TextField                    from '#control/textField';
 import PasswordField                from '#control/passwordField';
 import PasswordValidation           from '#control/passwordValidation';
 import Checkbox                     from '#control/checkbox';
@@ -22,32 +22,41 @@ export const SignUp: React.FC = () => {
     const { t }                                                           = useTranslation();
     const authentication                                                = useAuthentication();
     const history                                                       = useHistory();
-    const [first,                       setFirst]                       = React.useState<string>('');
-    const [last,                        setLast]                        = React.useState<string>('');
-    const [email,                       setEmail]                       = React.useState<string>('');
-    const [password,                    setPassword]                    = React.useState<string>('');
-    const [passwordConfirmation,        setPasswordConfirmation]        = React.useState<string>('');
-    const [validFirst,                  setValidFirst]                  = React.useState<boolean>(false);
-    const [validLast,                   setValidLast]                   = React.useState<boolean>(false);
-    const [validEmail,                  setValidEmail]                  = React.useState<boolean>(false);
-    const [validPassword,               setValidPassword]               = React.useState<boolean>(false);
-    const [validPasswordConfirmation,   setValidPasswordConfirmation]   = React.useState<boolean>(false);
-    const [passwordValidation,          setPasswordValidation]          = React.useState<boolean>(false);
-    const [tosAccepted,                 setTosAccepted]                 = React.useState<boolean>(false);
-    const [errorMessage,                setErrorMessage]                = React.useState<string>('');
+    const [ first,                       setFirst ]                       = React.useState<string>(empty);
+    const [ last,                        setLast ]                        = React.useState<string>(empty);
+    const [ email,                       setEmail ]                       = React.useState<string>(empty);
+    const [ password,                    setPassword ]                    = React.useState<string>(empty);
+    const [ passwordConfirmation,        setPasswordConfirmation ]        = React.useState<string>(empty);
+    const [ validFirst,                  setValidFirst ]                  = React.useState<boolean>(false);
+    const [ validLast,                   setValidLast ]                   = React.useState<boolean>(false);
+    const [ validEmail,                  setValidEmail ]                  = React.useState<boolean>(false);
+    const [ validPassword,               setValidPassword ]               = React.useState<boolean>(false);
+    const [ validPasswordConfirmation,   setValidPasswordConfirmation ]   = React.useState<boolean>(false);
+    const [ passwordValidation,          setPasswordValidation ]          = React.useState<boolean>(false);
+    const [ tosAccepted,                 setTosAccepted ]                 = React.useState<boolean>(false);
+    const [ errorMessage,                setErrorMessage ]                = React.useState<string>(empty);
 
-    const handleFirstChange                 = (text: string)        => { setFirst(text);                  setErrorMessage(''); };
-    const handleLastChange                  = (text: string)        => { setLast(text);                   setErrorMessage(''); };
-    const handleEmailChange                 = (text: string)        => { setEmail(text);                  setErrorMessage(''); };
-    const handlePasswordChange              = (text: string)        => { setPassword(text);               setErrorMessage(''); };
-    const handlePasswordConfirmationChange  = (text: string)        => { setPasswordConfirmation(text);   setErrorMessage(''); };
+    const handleFirstChange                 = (text: string)        => { setFirst(text);                  setErrorMessage(empty); };
+    const handleLastChange                  = (text: string)        => { setLast(text);                   setErrorMessage(empty); };
+    const handleEmailChange                 = (text: string)        => { setEmail(text);                  setErrorMessage(empty); };
+    const handlePasswordChange              = (text: string)        => { setPassword(text);               setErrorMessage(empty); };
+    const handlePasswordConfirmationChange  = (text: string)        => { setPasswordConfirmation(text);   setErrorMessage(empty); };
     const handlePasswordValidationChange    = (valid: boolean)      => { setPasswordValidation(valid); };
-    const handleTosAcceptedChange           = (checked: boolean)    => { setTosAccepted(checked);         setErrorMessage(''); };
+    const handleTosAcceptedChange           = (checked: boolean)    => { setTosAccepted(checked);         setErrorMessage(empty); };
 
-    const isEnabled                         = () => validFirst && validLast && validEmail && validPassword && validPasswordConfirmation && passwordValidation && tosAccepted;
+    const isEnabled = () => (
+        validFirst &&
+        validLast &&
+        validEmail &&
+        validPassword &&
+        validPasswordConfirmation &&
+        passwordValidation &&
+        tosAccepted
+    );
+
     const handleExecute                     = (event: React.MouseEvent<HTMLButtonElement>) => { event.preventDefault(); handleSignup(); };
     const handleKeyPress                    = (event: React.KeyboardEvent<HTMLElement>)    => {
-        if(isEnabled() && event.key == 'Enter') {
+        if(isEnabled() && event.key === 'Enter') {
             event.preventDefault();
             handleSignup();
         }
@@ -58,9 +67,7 @@ export const SignUp: React.FC = () => {
             await authentication.login(email, password);
             history.push('/');
         })
-        .catch(() =>
-            setErrorMessage(`${t('Email address already in use')}.`)
-        );
+        .catch(() => { setErrorMessage(`${t('Email address already in use')}.`); });
     };
 
     return (
@@ -72,12 +79,12 @@ export const SignUp: React.FC = () => {
             <TextField
                 onChange={handleFirstChange}
                 onValidation={setValidFirst}
-                autoFocus
+                autoFocus={true}
                 label={t('First Name')}
                 value={first}
-                startAdornment={<Person/>}
+                startAdornment={<Person />}
                 name="first"
-                required
+                required={true}
             />
 
             <TextField
@@ -85,9 +92,9 @@ export const SignUp: React.FC = () => {
                 onValidation={setValidLast}
                 label={t('Last Name')}
                 value={last}
-                startAdornment={<Person/>}
+                startAdornment={<Person />}
                 name="last"
-                required
+                required={true}
             />
 
             <TextField
@@ -95,10 +102,10 @@ export const SignUp: React.FC = () => {
                 onValidation={setValidEmail}
                 label={t('Email address')}
                 value={email}
-                startAdornment={<Email/>}
+                startAdornment={<Email />}
                 name="username"
                 validation={emailRegExp}
-                required
+                required={true}
             />
 
             <PasswordField
@@ -107,7 +114,7 @@ export const SignUp: React.FC = () => {
                 label={t('Password')}
                 helperText={`${t('Password is case-sensitive')}.`}
                 value={password}
-                required
+                required={true}
             />
 
             <PasswordField
@@ -116,13 +123,13 @@ export const SignUp: React.FC = () => {
                 onValidation={setValidPasswordConfirmation}
                 value={passwordConfirmation}
                 helperText={validPasswordConfirmation ? nbsp : t('Passwords must match')}
-                required
+                required={true}
                 validation={new RegExp(`^${escapeRegExp(password)}$`, 'u')}
             />
 
             <PasswordValidation
                 password={password}
-                userInputs={[first, last, email]}
+                userInputs={[ first, last, email ]}
                 onChange={handlePasswordValidationChange}
                 minLength={settings.password.minLength}
                 maxLength={settings.password.maxLength}
@@ -146,7 +153,7 @@ export const SignUp: React.FC = () => {
                     type="submit"
                     color="primary"
                     disabled={!isEnabled()}
-                    fullWidth
+                    fullWidth={true}
                 >
                     {t('Create Account')}
                 </Button>

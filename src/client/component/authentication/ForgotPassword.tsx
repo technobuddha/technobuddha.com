@@ -1,22 +1,26 @@
 import React                    from 'react';
-import useTranslation           from '#context/i18n';
-import { email as emailRegExp }   from '@technobuddha/library/regexp';
+import { email as emailRegExp } from '@technobuddha/library/regexp';
+import { empty }                from '@technobuddha/library/constants';
 import Typography               from '@material-ui/core/Typography';
 import Button                   from '@material-ui/core/Button';
-import TextField                from '~src/client/control/textField/TextField';
+import TextField                from '#control/textField';
 import Email                    from '@material-ui/icons/Email';
+//import useAuthentication        from '#context/authentication';
+import useTranslation           from '#context/i18n';
 
 export type LoginMode  = 'login' | 'forgotPassword' | 'signUp';
 export type LoginState = { mode: LoginMode };
 
 export const ForgotPassword: React.FC = () => {
-    const { t }                                 = useTranslation();
-    const [ email, setEmail ]                   = React.useState<string>('');
+    const { t }                         = useTranslation();
+    //const authentication                = useAuthentication();
+    const [ email, setEmail ]           = React.useState(empty);
+    const [ validEmail, setValidEmail ] = React.useState(false);
 
     const handleEmailChange         = (text: string) => { setEmail(text); };
-    const isDisabled                = () => !email;
+    const isEnabled                 = () => validEmail;
 
-    const handleExecute             = async (e: React.FormEvent<HTMLButtonElement>) =>  {
+    const handleExecute             = /*async*/ (e: React.FormEvent<HTMLButtonElement>) =>  {
         e.preventDefault();
 
         //if(!await authentication.login(username!, password!))
@@ -31,13 +35,13 @@ export const ForgotPassword: React.FC = () => {
 
             <TextField
                 onChange={handleEmailChange}
-                // onValidation={setValidEmail}
+                onValidation={setValidEmail}
                 label={t('Email address')}
                 value={email}
-                startAdornment={<Email/>}
+                startAdornment={<Email />}
                 name="username"
                 validation={emailRegExp}
-                required
+                required={true}
             />
 
             <Button
@@ -45,7 +49,7 @@ export const ForgotPassword: React.FC = () => {
                 variant="contained"
                 type="submit"
                 color="primary"
-                disabled={isDisabled()}
+                disabled={!isEnabled()}
                 fullWidth={true}
             >
                 {t('Reset Password')}

@@ -23,11 +23,10 @@ export const Link: React.FC<LinkProps> = (props: LinkProps) => {
     const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         event.preventDefault();
 
-        if(replace) {
+        if(replace)
             history.replace(props.to);
-        } else {
+        else
             history.push(props.to);
-        }
     };
 
     return (

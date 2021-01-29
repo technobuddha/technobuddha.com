@@ -26,95 +26,100 @@ const useCellStyles = makeStyles(_theme => ({
 export function rendererFactory<T = unknown>(column: ColumnSpecification<T>, type: ColumnType, shape: Shape) {
     if(column.render)
         return column.render;
-    else {
-        switch(shape) {
-            case 'key-value': {
-                const key = column.name.toString();
 
-                return ({ datum }: ColumnRenderProps<T>) => {
-                    const css = useCellStyles();
-                    const field = (datum as Record<string, unknown>)[key];
-                    return <Anything className={css.cell} type={type.dataType}>{field}</Anything>;
-                };
-                break;
-            }
+    switch(shape) {
+        case 'key-value': {
+            const key = column.name.toString();
 
-            case 'array': {
-                const key = isNumber(column.name) ? column.name : parseFloat(column.name);
+            return ({ datum }: ColumnRenderProps<T>) => {
+                const css = useCellStyles();
+                const field = (datum as Record<string, unknown>)[key];
+                return <Anything className={css.cell} type={type.dataType}>{field}</Anything>;
+            };
+        }
 
-                switch(type.dataType) {
-                    case 'number':
-                        return ({ datum }: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            const field = (datum as unknown as unknown[])[key];
-                            return <Box className={clsx(css.cell, css.right)}>{toString(field)}</Box>;
-                        };
+        case 'array': {
+            const key = isNumber(column.name) ? column.name : parseFloat(column.name);
 
-                    case 'date':
-                        return ({ datum }: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            const field = (datum as unknown as unknown[])[key];
-                            return <Box className={clsx(css.cell, css.left)}>{toDateUTCString(field)}</Box>;
-                        };
+            switch(type.dataType) {
+                case 'number':
+                    return ({ datum }: ColumnRenderProps<T>) => {
+                        const css = useCellStyles();
+                        const field = (datum as unknown as unknown[])[key];
+                        return <Box className={clsx(css.cell, css.right)}>{toString(field)}</Box>;
+                    };
 
-                    case 'unknown':
-                    case 'string':
-                        return ({ datum }: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            const field = (datum as unknown as unknown[])[key];
-                            return <Box className={clsx(css.cell, css.left)}>{toString(field)}</Box>;
-                        };
+                case 'date':
+                    return ({ datum }: ColumnRenderProps<T>) => {
+                        const css = useCellStyles();
+                        const field = (datum as unknown as unknown[])[key];
+                        return <Box className={clsx(css.cell, css.left)}>{toDateUTCString(field)}</Box>;
+                    };
 
-                    case 'object':
-                        return ({ datum }: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            const field = (datum as unknown as unknown[])[key];
-                            return <Box className={clsx(css.cell, css.left)}><Anything>{field}</Anything></Box>;
-                        };
+                case 'object':
+                    return ({ datum }: ColumnRenderProps<T>) => {
+                        const css = useCellStyles();
+                        const field = (datum as unknown as unknown[])[key];
+                        return <Box className={clsx(css.cell, css.left)}><Anything>{field}</Anything></Box>;
+                    };
 
-                    case 'array':
-                        return ({ datum }: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            const field = (datum as unknown as unknown[])[key] as unknown[];
-                            return <Box className={clsx(css.cell, css.left)}><Anything>{field}</Anything></Box>;
-                        };
-                }
-                break;
-            }
+                case 'array':
+                    return ({ datum }: ColumnRenderProps<T>) => {
+                        const css = useCellStyles();
+                        const field = (datum as unknown as unknown[])[key] as unknown[];
+                        return <Box className={clsx(css.cell, css.left)}><Anything>{field}</Anything></Box>;
+                    };
 
-            case 'primitive':
-            case 'polymorphic': {
-                switch(type.dataType) {
-                    case 'number':
-                        return ({ datum }: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            return <Box className={clsx(css.cell, css.right)}>{toString(datum)}</Box>;
-                        };
-
-                    case 'date':
-                        return ({ datum }: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            return <Box className={clsx(css.cell, css.left)}>{toDateUTCString(datum)}</Box>;
-                        };
-
-                    case 'unknown':
-                    case 'string':
-                        return ({ datum }: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            return <Box className={clsx(css.cell, css.left)}>{toString(datum)}</Box>;
-                        };
-
-                    case 'object':
-                        return ({ datum }: ColumnRenderProps<T>) => {
-                            const css = useCellStyles();
-                            return <Box className={clsx(css.cell, css.left)}><Anything>{datum}</Anything></Box>;
-                        };
-
-                    case 'array':
-                        return () => <></>;
-                }
+                case 'unknown':
+                case 'string':
+                default:
+                    return ({ datum }: ColumnRenderProps<T>) => {
+                        const css = useCellStyles();
+                        const field = (datum as unknown as unknown[])[key];
+                        return <Box className={clsx(css.cell, css.left)}>{toString(field)}</Box>;
+                    };
             }
         }
+
+        case 'primitive':
+        case 'polymorphic': {
+            switch(type.dataType) {
+                case 'number':
+                    return ({ datum }: ColumnRenderProps<T>) => {
+                        const css = useCellStyles();
+                        return <Box className={clsx(css.cell, css.right)}>{toString(datum)}</Box>;
+                    };
+
+                case 'date':
+                    return ({ datum }: ColumnRenderProps<T>) => {
+                        const css = useCellStyles();
+                        return <Box className={clsx(css.cell, css.left)}>{toDateUTCString(datum)}</Box>;
+                    };
+
+                case 'object':
+                    return ({ datum }: ColumnRenderProps<T>) => {
+                        const css = useCellStyles();
+                        return <Box className={clsx(css.cell, css.left)}><Anything>{datum}</Anything></Box>;
+                    };
+
+                case 'array':
+                    return () => false;
+
+                case 'unknown':
+                case 'string':
+                default:
+                    return ({ datum }: ColumnRenderProps<T>) => {
+                        const css = useCellStyles();
+                        return <Box className={clsx(css.cell, css.left)}>{toString(datum)}</Box>;
+                    };
+            }
+        }
+
+        default:
+            return ({ datum }: ColumnRenderProps<T>) => {
+                const css = useCellStyles();
+                return <Box className={clsx(css.cell, css.left)}>{toString(datum)}</Box>;
+            };
     }
 }
 

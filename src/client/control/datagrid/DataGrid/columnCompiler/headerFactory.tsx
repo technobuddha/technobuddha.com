@@ -49,8 +49,8 @@ export function headerFactory<T = unknown>(column: ColumnSpecification<T>, _type
                 <Button
                     className={clsx(css.button, classes?.button)}
                     style={styles?.button}
-                    fullWidth
-                    disableElevation
+                    fullWidth={true}
+                    disableElevation={true}
                     size="small"
                     variant="contained"
                     color="primary"
@@ -86,8 +86,9 @@ export function headerFactory<T = unknown>(column: ColumnSpecification<T>, _type
                 </Button>
             );
         };
-    } else
-        return column.header;
+    }
+
+    return column.header;
 }
 
 export default headerFactory;

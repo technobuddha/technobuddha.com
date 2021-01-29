@@ -6,13 +6,16 @@ import MusicNote      from '@material-ui/icons/MusicNote';
 import Group          from '@material-ui/icons/Group';
 import DelayedLoading from '#control/delayedLoading';
 
+import type { APIValue }     from '#context/api';
+import type { PromiseValue } from 'type-fest';
+
 export const Tracks: React.FC = () => {
     const api   = useApi();
-    const [ dataset, setDataset ]   = React.useState<any[]>(null!);
+    const [ dataset, setDataset ]   = React.useState<APIValue<PromiseValue<ReturnType<typeof api.music.tracks>>> | null>(null);
 
     React.useEffect(
         () => {
-            api.music.tracks().then(tracks => setDataset(tracks.payload));
+            api.music.tracks().then(tracks => { setDataset(tracks.payload); });
         },
         []
     );
@@ -23,8 +26,8 @@ export const Tracks: React.FC = () => {
                 data={dataset}
                 rowHeight={32}
                 columns={[
-                    { name: 'artist',        type: 'array',  sortBy: ['artist', 'album', 'discNumber', 'trackNumber'] },
-                    { name: 'album',         type: 'string', sortBy: ['album', 'discNumber', 'trackNumber'] },
+                    { name: 'artist',        type: 'array',  sortBy: [ 'artist', 'album', 'discNumber', 'trackNumber' ]},
+                    { name: 'album',         type: 'string', sortBy: [ 'album', 'discNumber', 'trackNumber' ]},
                     { name: 'discNumber',    type: 'number', width: 32, header: '#' },
                     { name: 'trackNumber',   type: 'number', width: 32, header: '#' },
                     { name: 'title',         type: 'string' },
@@ -39,10 +42,9 @@ export const Tracks: React.FC = () => {
                 useLocation={true}
             />
         );
-    } else {
-        return <DelayedLoading />;
     }
 
+    return <DelayedLoading />;
 };
 
 export default Tracks;

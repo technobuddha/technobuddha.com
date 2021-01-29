@@ -47,34 +47,46 @@ export type GridProps<T = unknown> = {
 };
 
 export type GridClasses = {
-    filter: {
-        actuator:   FilterActuatorClasses;
-        indicator:  FilterIndicatorClasses;
+    filter?: {
+        actuator?:  FilterActuatorClasses;
+        indicator?: FilterIndicatorClasses;
     };
-    area:   GridAreaClasses;
-    row:    RowClasses;
-    column: RowClasses['column'];
+    area?:   GridAreaClasses;
+    row?:    RowClasses;
+    column?: RowClasses['column'];
 };
 
 export type GridStyles = {
-    filter: {
-        actuator:   FilterActuatorStyles;
-        indicator:  FilterIndicatorStyles;
+    filter?: {
+        actuator?:   FilterActuatorStyles;
+        indicator?:  FilterIndicatorStyles;
     };
-    area:   GridAreaStyles;
-    row:    RowStyles;
-    column: RowStyles['column'];
+    area?:   GridAreaStyles;
+    row?:    RowStyles;
+    column?: RowStyles['column'];
 };
 
 type GridAreaClasses = {
-    actuators:      string;
-    indicators:     string;
-    header:         string;
-    detail:         string;
+    actuators?:      string;
+    indicators?:     string;
+    header?:         string;
+    detail?:         string;
 };
 type GridAreaStyles = {[key in keyof GridAreaClasses]: React.CSSProperties};
 
-function Grid<T = unknown>({ classes, styles, rowHeight, scrollbarWidth, controlWidth, data, columns, rowRenderer, columnWidths, filters, menu }: GridProps<T>) {
+function Grid<T = unknown>({
+    classes,
+    styles,
+    rowHeight,
+    scrollbarWidth,
+    controlWidth,
+    data,
+    columns,
+    rowRenderer,
+    columnWidths,
+    filters,
+    menu,
+}: GridProps<T>) {
     const css = useGridStyles();
 
     const GridRow = (rowProps: ListChildComponentProps) => {
@@ -98,11 +110,13 @@ function Grid<T = unknown>({ classes, styles, rowHeight, scrollbarWidth, control
         );
     };
 
-    console.log('Grid rendering...');
+    // eslint-disable-next-line no-console
+    console.log('Grid rendering...');   // TODO Remove debug
 
     return (
         <>
-            {filters &&
+            {
+                filters &&
                 <>
                     <Box
                         className={clsx(css.actuators, classes?.area?.actuators)}
@@ -144,9 +158,10 @@ function Grid<T = unknown>({ classes, styles, rowHeight, scrollbarWidth, control
                 menu={menu}
             />
             <Size flexGrow={1}>
-                {({ width, height }) => (
-                    rowHeight
-                        ?   <FixedSizeList
+                {({ width, height }) => {
+                    if(rowHeight) {
+                        return (
+                            <FixedSizeList
                                 height={height}
                                 width={width}
                                 itemCount={data.length}
@@ -155,28 +170,32 @@ function Grid<T = unknown>({ classes, styles, rowHeight, scrollbarWidth, control
                             >
                                 {GridRow}
                             </FixedSizeList>
-                        :   <Box width={width} height={height} style={{ overflowX: 'auto' }}>
-                                {data.map((datum, index) => (
-                                    <Row
-                                        key={index}
-                                        classes={classes?.row}
-                                        styles={styles?.row}
-                                        datum={datum}
-                                        columns={columns}
-                                        rowRenderer={rowRenderer}
-                                        columnWidths={columnWidths}
-                                        controlWidth={controlWidth}
-                                        scrollbarWidth={scrollbarWidth}
-                                        menu={menu}
-                                    />
-                                ))}
-                            </Box>
-                )}
+                        );
+                    }
+
+                    return (
+                        <Box width={width} height={height} style={{ overflowX: 'auto' }}>
+                            {data.map((datum, index) => (
+                                <Row
+                                    key={index}
+                                    classes={classes?.row}
+                                    styles={styles?.row}
+                                    datum={datum}
+                                    columns={columns}
+                                    rowRenderer={rowRenderer}
+                                    columnWidths={columnWidths}
+                                    controlWidth={controlWidth}
+                                    scrollbarWidth={scrollbarWidth}
+                                    menu={menu}
+                                />
+                            ))}
+                        </Box>
+                    );
+                }}
             </Size>
 
         </>
     );
-
 }
 
 export default Grid;

@@ -12,7 +12,7 @@ export default {
             features: {
                 'custom-properties': {
                     preserve:   true,
-                    importFrom:[{
+                    importFrom: [{
                         customProperties:   mapKeys(variables, (_, key) => `--${kebabCase(key)}`),
                     }],
                 },

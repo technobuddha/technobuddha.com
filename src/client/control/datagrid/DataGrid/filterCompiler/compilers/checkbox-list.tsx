@@ -24,7 +24,7 @@ export type CheckboxCompilerOptions<T = unknown> = CompilerOptions & {
     type:           'checkbox-list';
     name:           keyof T;
     title?:         string;
-    Icon?:          React.ComponentType<{className?: string; style?: React.CSSProperties}>;
+    Icon?:          React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
 };
 
 export function filterCompilerCheckbox<T = unknown>({ name, title, Icon }: CheckboxCompilerOptions<T>, data: T[], { getShape }: AnalyzerResults<T>): Filter<T> {
@@ -40,8 +40,7 @@ export function filterCompilerCheckbox<T = unknown>({ name, title, Icon }: Check
 
             const handleActuatorClick       = () => { setOpen(true); };
             const handleDialogClose         = () => { setOpen(false); };
-            const handleSelectionChanged    = (
-                { selectedRows, selectedCount, unselectedCount }: OnSelectionChangedParams<string>) => {
+            const handleSelectionChanged    = ({ selectedRows, selectedCount, unselectedCount }: OnSelectionChangedParams<string>) => {
                 filterValue.current = unselectedCount === 0 ? null : selectedRows;
                 setDisabled(selectedCount === 0);
             };
@@ -62,7 +61,7 @@ export function filterCompilerCheckbox<T = unknown>({ name, title, Icon }: Check
                         onClose={handleDialogClose}
                         maxWidth={false}
                     >
-                        <DialogTitle>{title || name}</DialogTitle>
+                        <DialogTitle>{title ?? name}</DialogTitle>
                         <DialogContent>
                             <Box width={640} height={480}>
                                 <DataGrid

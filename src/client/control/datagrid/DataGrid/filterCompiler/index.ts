@@ -19,6 +19,7 @@ export function filterCompiler<T = unknown>(options: FilterSpecification<T>, dat
         case 'search':
             return filterCompilerSearch(options, analysis);
         case 'custom':
+        default:
             return filterCompilerCustom(options, data);
     }
 }

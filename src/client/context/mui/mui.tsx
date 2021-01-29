@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-
 import React                                                    from 'react';
 import theme                                                    from '#settings/mui-theme';
 import { create }                                               from 'jss';
@@ -25,10 +23,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }: ThemeP
     );
 };
 
-export function useTheme() {
-    return muiUseTheme<Theme>();
+export function useTheme(): Theme {
+    return muiUseTheme();
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function makeStyles<Props extends object = {}, ClassKey extends string = string>(
     style: Styles<Theme, Props, ClassKey>,
     options?: WithStylesOptions<Theme>

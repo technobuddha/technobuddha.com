@@ -15,6 +15,6 @@ export type Account = {
     policy_accepted:    Date        | null;
 };
 
-export type AccountCreate = SetRequired<Partial<Omit<Account, 'id'>>, 'email' | 'first' | 'last'> & {password: string};
+export type AccountCreate = SetRequired<Partial<Omit<Account, 'id'>>, 'email' | 'first' | 'last'> & { password: string };
 
 export default Account;

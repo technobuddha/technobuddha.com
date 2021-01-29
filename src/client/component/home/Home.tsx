@@ -32,7 +32,7 @@ export const Home: React.FC<HomeProps> = () => {
                 }
             `;
         },
-        [speed, components]
+        [ speed, components ]
     );
 
     const articleStyle = React.useMemo(
@@ -43,7 +43,7 @@ export const Home: React.FC<HomeProps> = () => {
                 animationDelay: `${-(components.length - i - 1) * speed}s`,
             }));
         },
-        [speed]
+        [ speed ]
     );
 
     return (

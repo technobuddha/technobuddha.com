@@ -24,18 +24,17 @@ type TextFieldProps =
     };
 
 export const TextField: React.FC<TextFieldProps> = (props: TextFieldProps) => {
-    const [text,  setText]  = React.useState<string>(props.value ?? '');
-    const [valid, setValid] = React.useState<boolean>(true);
+    const [ text,  setText ]  = React.useState<string>(props.value ?? '');
+    const [ valid, setValid ] = React.useState<boolean>(true);
 
     const handleChange            = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newText           = event.target.value;
         let   isValid           = true;
 
-        if(props.required && newText.trim().length === 0) {
+        if(props.required && newText.trim().length === 0)
             isValid = false;
-        } else if(props.validation) {
+        else if(props.validation)
             isValid = props.validation.test(newText);
-        }
 
         setValid(isValid);
         props.onValidation?.(isValid);
@@ -57,7 +56,7 @@ export const TextField: React.FC<TextFieldProps> = (props: TextFieldProps) => {
             name={props.name}
             disabled={props.disabled}
             error={props.error || !valid || (props.required && text.trim() === '')}
-            fullWidth
+            fullWidth={true}
             helperText={props.helperText}
             required={props.required}
             margin="dense"

@@ -49,7 +49,7 @@ export type DataGridStyles = {
     grid?:      GridStyles;
 };
 
-export type OnSelectionChangedParams<T = unknown> = {selectedRows: T[]; selectedCount: number; unselectedCount: number};
+export type OnSelectionChangedParams<T = unknown> = { selectedRows: T[]; selectedCount: number; unselectedCount: number };
 
 const useDataGridStyles = makeStyles(theme => ({
     root: {
@@ -68,14 +68,14 @@ export function DataGrid<T = unknown>(
         onSelectionChanged }: DataGridProps<T>
 ) {
     const css               = useDataGridStyles();
-    const analysis          = React.useMemo(() => analyzer({ data, columns }), [data, columns]);
+    const analysis          = React.useMemo(() => analyzer({ data, columns }), [ data, columns ]);
     const compiledColumns   = React.useMemo(
         () => columnCompiler<T>(analysis, selection ?? false, controlWidth ?? 40, columns),
-        [analysis, selection, controlWidth, columns]
+        [ analysis, selection, controlWidth, columns ]
     );
     const compiledFilters   = React.useMemo(
         () => (filters ?? []).map(f => filterCompiler(f, data, analysis)),
-        [data, analysis, filters]
+        [ data, analysis, filters ]
     );
 
     return (
@@ -102,7 +102,7 @@ export function DataGrid<T = unknown>(
                                     style={{ ...style, ...styles?.root }}
                                     columns={compiledColumns}
                                     controlWidth={controlWidth ?? 40}
-                                    menu={!!menu}
+                                    menu={Boolean(menu)}
                                 >
                                     {(frame: FrameRenderProps) => {
                                         return (

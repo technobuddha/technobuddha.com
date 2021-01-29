@@ -18,7 +18,7 @@ const startServer   = () => {
         stopServer();
     }
 
-    serverProcess = spawn('node', [path.join(paths.bin, 'server.js')], { stdio: 'inherit' });
+    serverProcess = spawn('node', [ path.join(paths.bin, 'server.js') ], { stdio: 'inherit' });
 };
 
 const stopServer    = () => {
@@ -33,20 +33,20 @@ const exit = () => {
     process.exit(0);
 };
 
-['SIGINT', 'SIGTERM', 'SIGHUP', 'SIGQUIT', 'exit', 'uncaughtexception'].forEach(
+[ 'SIGINT', 'SIGTERM', 'SIGHUP', 'SIGQUIT', 'exit', 'uncaughtexception' ].forEach(
     sig => process.on(sig, exit)
 );
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err: Error) => {
     throw err;
 });
 
 webpack(genServerWebpackConfig(true)).watch(
     {},
-    (error: Error, stats: webpack.Stats) => {
+    (error: Error | null, stats: webpack.Stats) => {
         if(error ?? stats.hasErrors())
             process.stdout.write(`${stats.toString('errors-only')}\n`);
         else
@@ -105,13 +105,13 @@ function header() {
 
     let output = '';
     for(let i = 0; i < logo.length; ++i) {
-        for(let j = 8; j > i; --j) {
+        for(let j = 8; j > i; --j)
             output += '  ';
-        }
+
         output += logo[i];
-        for(let j = 8; j > i; --j) {
+        for(let j = 8; j > i; --j)
             output += '  ';
-        }
+
         output += `   ${name[i]}\n`;
     }
     return output;

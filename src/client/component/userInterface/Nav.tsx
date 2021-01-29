@@ -97,7 +97,7 @@ export const Nav: React.FC = () => {
     const handleMouseOver = () => {
         cancelTimer();
         if(!clicked)
-            timer.current = window.setTimeout(() => setMenuOpen(true), expansionTimeout);
+            timer.current = window.setTimeout(() => { setMenuOpen(true); }, expansionTimeout);
     };
 
     const handleMouseLeave = () => {
@@ -106,11 +106,11 @@ export const Nav: React.FC = () => {
         cancelTimer();
     };
 
-    const handleMenuClick = () => setMenuOpen(m => !m);
+    const handleMenuClick = () => { setMenuOpen(m => !m); };
 
     return (
         <Box className={css.root}>
-            <Box className={css.buttonBox} >
+            <Box className={css.buttonBox}>
                 <IconButton onClick={handleMenuClick}>
                     {menuOpen ? <MenuOpen className={css.buttonIcon} /> : <Menu className={css.buttonIcon} />}
                 </IconButton>
@@ -128,7 +128,7 @@ export const Nav: React.FC = () => {
                             const current   = history.location.pathname.startsWith(component.location);
 
                             return (
-                                <ListItem button onClick={handleListClick(component.location)} key={i}>
+                                <ListItem button={true} onClick={handleListClick(component.location)} key={i}>
                                     <ListItemIcon>
                                         <Icon className={clsx(css.icon, { [css.current]: current, [css.available]: !current })} />
                                     </ListItemIcon>

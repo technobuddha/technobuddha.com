@@ -26,8 +26,8 @@ function mandelbrot(width: number, height: number, x_min: number, x_max: number,
         counts[i] = [];
 
         for(let j = 0; j < height; ++j) {
-            const x0        = i * 1 * ((x_max - x_min) / width)  + x_min;
-            const y0        = j * 1 * ((y_max - y_min) / height) + y_min;
+            const x0        = i * ((x_max - x_min) / width)  + x_min;
+            const y0        = j * ((y_max - y_min) / height) + y_min;
             let x           = 0.0;
             let y           = 0.0;
             let iteration   = 0;
@@ -47,8 +47,9 @@ function mandelbrot(width: number, height: number, x_min: number, x_max: number,
                 counts[i][j] = count;
                 if(count < iterations - 1)
                     histo[Math.floor(count)]++;
-            } else
+            } else {
                 counts[i][j] = iterations;
+            }
         }
     }
 

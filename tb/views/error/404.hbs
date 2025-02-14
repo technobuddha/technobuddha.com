@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="{{favicon}}" rel="icon" type="image/x-icon" />
+        <title>Page not found (404)</title>
+        <style type="text/css">
+            body, html {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                border: none;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 42px;
+                font-weight: bold;
+            }
+
+            div.main {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                padding: 12px;
+            }
+
+            div.main:after {
+                content: '404';
+                color: white;
+                position: absolute;
+                top: 180px;
+                left: 190px;
+            }
+
+            img {
+                float: left;
+                position: relative;
+            }
+
+            div.title {
+                font-size: 150%;
+                padding-top: 72px;
+            }
+
+            div.message {
+                font-size: 125%;
+                margin-bottom: 18px;
+                clear: left;
+                max-width: 1024px;
+                text-align: center;
+            }
+
+            div.nav {
+                font-size: 75%;
+                margin-bottom: 18px;
+                max-width: 1024px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main">
+            <img src="/assets/logo.png" />
+            <div class="title">Page Not Found</div>
+            <div class="message">You will have to seek for what you desire elsewhere, for it does not exist here.</div>
+            <div class="nav">You can always try the <a href="{{homePage}}"">Home Page</a>.</div>
+        </div>
+    </body>
+</html>

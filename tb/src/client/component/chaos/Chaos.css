@@ -1,0 +1,79 @@
+.chaos {
+    position: relative;
+    background-color: mui-theme(palette-primary-light);
+
+    .compute {
+        position: absolute;
+        z-index: 12;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px;
+        height: 300px;
+        background-color: mui-theme(palette-primary-light);
+        border: mui-spacing(5) solid mui-theme(palette-primary-main);
+        border-radius: 50%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .op {
+            color: mui-theme(palette-primary-contrastText);
+            font-size: 1.00rem;
+            margin: 0 0 mui-spacing(1) 0;
+        }
+    
+        .text {
+            color: mui-theme(palette-primary-contrastText);
+            font-size: 1.25rem;
+            margin: 0 0 mui-spacing(2) 0;
+        }
+    }
+
+    .legend {
+        position: absolute;
+        top: mui-spacing(2);
+        left: mui-spacing(2);
+        z-index: 12;
+        width: 24rem;
+        height: 8rem;
+        background-color: mui-theme(palette-primary-main);
+        border: mui-spacing(0.75) solid mui-theme(palette-primary-light);
+        color: mui-theme(palette-primary-contrastText);
+        display: grid;
+        padding: mui-spacing(1);
+        grid-template-columns: 40% 60%;
+        grid-template-areas:
+            "title title"
+            "left  right";
+
+       .title {
+           grid-area: title;
+           font-size: 1.1em;
+           font-weight: bold;
+           text-align: center;
+           background-color: mui-theme(palette-primary-dark);
+           padding-top: mui-spacing(0.5);
+           margin-bottom: mui-spacing(0.5);
+       }
+    }
+
+    .canvas {
+        position: absolute;
+        border: none;
+        padding: 0;
+        margin: 0;
+        z-index: 10;
+    }
+
+    .overlay {
+        position: absolute;
+        border: none;
+        padding: 0;
+        margin: 0;
+        z-index: 11;
+        background-color: transparent;
+    }
+}

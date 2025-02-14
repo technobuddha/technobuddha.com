@@ -1,0 +1,21 @@
+{
+  "editor.rulers": [
+    100
+  ],
+  "search.exclude": {
+    "dist/**/*": true,
+    "node_modules/**/*": true
+  },
+  "todo-tree.filtering.excludeGlobs": [
+    "node_modules/**/*",
+    "dist/**/*"
+  ],
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "files.encoding": "utf8"
+}

@@ -1,6 +1,5 @@
 import React from 'react';
-import { type RowRenderer } from '@technobuddha/datagrid';
-import DataGrid from '@technobuddha/datagrid';
+import { DataGrid, type RowRenderer } from '@technobuddha/datagrid';
 import { MdMusicNote } from 'react-icons/md';
 
 import { type APIValue } from '#context/api';

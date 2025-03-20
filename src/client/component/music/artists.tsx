@@ -1,5 +1,5 @@
 import React from 'react';
-import DataGrid from '@technobuddha/datagrid';
+import { DataGrid } from '@technobuddha/datagrid';
 
 import { type APIValue } from '#context/api';
 import { useAPI } from '#context/api';

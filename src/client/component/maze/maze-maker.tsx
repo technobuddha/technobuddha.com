@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { randomPick, toCapitalWordCase, toHumanCase } from '@technobuddha/library';
-import { Size } from '@technobuddha/mui-size';
+import { Size } from '@technobuddha/size';
 
 import { CanvasDrawing } from './drawing/canvas-drawing.ts';
 import { Blob } from './generator/blob.ts';

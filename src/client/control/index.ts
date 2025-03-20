@@ -1,3 +1,4 @@
+export { Alert, type AlertProps } from './alert/index.ts';
 export { Checkbox, type CheckboxProps } from './checkbox/index.ts';
 export { CircularProgress } from './circular-progress/index.ts';
 export { DelayedLoading } from './delayed-loading/index.ts';

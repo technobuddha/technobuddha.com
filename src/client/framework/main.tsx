@@ -20,9 +20,9 @@ export const Main: React.FC<MainProps> = ({ className }) => {
   return (
     <Box className={clsx(className, css.main)}>
       <Routes>
-        {translatedComponents?.map(({ component, location, name }) => {
+        {translatedComponents?.map(({ component, location, route, name }) => {
           const Component = component;
-          return <Route key={name} path={location} Component={Component} />;
+          return <Route key={name} path={route ?? location} Component={Component} />;
         })}
         <Route path="*" element={<div>Catch-all route</div>} />
       </Routes>

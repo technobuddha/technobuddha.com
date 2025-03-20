@@ -27,7 +27,7 @@ type Settings = {
 export const authenticationSettings: Settings = {
   login: true,
   forgotPassword: false,
-  signUp: false,
+  signUp: true,
   session: {
     duration: ticksPerWeek,
     cookieAge: ticksPerWeek,

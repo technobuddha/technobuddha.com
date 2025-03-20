@@ -1,6 +1,7 @@
 .theme {
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 
   .colors {
     display: grid;

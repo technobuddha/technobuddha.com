@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { randomPick, toCapitalWordCase, toHumanCase } from '@technobuddha/library';
-import { Size } from '@technobuddha/mui-size';
+import { Size } from '@technobuddha/size';
 
 import { useUserInterface } from '#context/user-interface';
 

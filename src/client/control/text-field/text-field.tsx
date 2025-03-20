@@ -66,25 +66,27 @@ export const TextField: React.FC<TextFieldProps> = ({
     [onChange, onValidation, required, validation],
   );
 
-  const slotProps: MuiTextFieldProps['slotProps'] = {
-    input: {
-      startAdornment: (
-        <InputAdornment position="start">
-          {startAdornment ?? <Box width={52} height={52} />}
-        </InputAdornment>
-      ),
-      endAdornment: (
-        <InputAdornment position="end">
-          {endAdornment ?? <Box width={52} height={52} />}
-        </InputAdornment>
-      ),
-    },
-  };
+  const slotProps = React.useMemo(
+    () => ({
+      input: {
+        startAdornment: (
+          <InputAdornment position="start">
+            {startAdornment ?? <Box width={52} height={52} />}
+          </InputAdornment>
+        ),
+        endAdornment: (
+          <InputAdornment position="end">
+            {endAdornment ?? <Box width={52} height={52} />}
+          </InputAdornment>
+        ),
+      },
+    }),
+    [endAdornment, startAdornment],
+  );
 
   return (
-    //TODO
     <MuiTextField
-      // className={className}
+      classes={{ root: className }}
       id={id}
       onChange={handleChange}
       variant="outlined"
@@ -98,14 +100,8 @@ export const TextField: React.FC<TextFieldProps> = ({
       fullWidth
       helperText={helperText}
       required={required}
-      // margin="dense"
       color="primary"
-      slotProps={{
-        input: {
-          startAdornment: <InputAdornment position="start">kg</InputAdornment>,
-        },
-      }}
-      // slotProps={slotProps}
+      slotProps={slotProps as MuiTextFieldProps['slotProps']}
     />
   );
 };

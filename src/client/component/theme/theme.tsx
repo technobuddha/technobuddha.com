@@ -69,5 +69,19 @@ export const Theme: React.FC<ThemeProps> = () => (
       <Typography variant="caption">caption</Typography>
       <Typography variant="overline">overline</Typography>
     </div>
+    <div className={css.typography}>
+      <div style={{ fontSize: '10pt' }}>10pt</div>
+      <div style={{ fontSize: '12pt' }}>12pt</div>
+      <div style={{ fontSize: '14pt' }}>14pt</div>
+      <div style={{ fontSize: '16pt' }}>16pt</div>
+      <div style={{ fontSize: '10px' }}>10px</div>
+      <div style={{ fontSize: '12px' }}>12px</div>
+      <div style={{ fontSize: '14px' }}>14px</div>
+      <div style={{ fontSize: '16px' }}>16px</div>
+      <div style={{ fontSize: '0.750rem' }}>0.750rem</div>
+      <div style={{ fontSize: '0.875rem' }}>0.875rem</div>
+      <div style={{ fontSize: '1.000rem' }}>1.000rem</div>
+      <div style={{ fontSize: '1.125rem' }}>1.125rem</div>
+    </div>
   </div>
 );

@@ -9,6 +9,6 @@ export type WatermarkProps = {
 export const Watermark: React.FC<WatermarkProps> = ({ children }) => (
   <main className={css.watermark}>
     <div className={css.logo} />
-    {children}
+    <div className={css.contents}>{children}</div>
   </main>
 );

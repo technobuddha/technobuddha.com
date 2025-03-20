@@ -21,11 +21,22 @@ export const Music: React.FC = () => {
 
   return (
     <TabbedRouter
+      path="/music"
       tabs={[
-        { url: 'new_albums', label: t('New Albums'), content: NewAlbums, icon: <GiMusicSpell /> },
-        { url: 'artists', label: t('Artists'), content: Artists, icon: <GiMeepleGroup /> },
-        { url: 'genres ', label: t('Genres'), content: Genres, icon: <GiMusicalKeyboard /> },
-        { url: 'all_tracks', label: t('All Tracks'), content: Tracks, icon: <GiMusicalScore /> },
+        {
+          route: '/new-albums',
+          label: t('New Albums'),
+          content: NewAlbums,
+          icon: <GiMusicSpell />,
+        },
+        { route: '/artists', label: t('Artists'), content: Artists, icon: <GiMeepleGroup /> },
+        { route: '/genres', label: t('Genres'), content: Genres, icon: <GiMusicalKeyboard /> },
+        {
+          route: '/all-tracks',
+          label: t('All Tracks'),
+          content: Tracks,
+          icon: <GiMusicalScore />,
+        },
       ]}
     />
   );

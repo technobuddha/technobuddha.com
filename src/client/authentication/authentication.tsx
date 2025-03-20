@@ -48,6 +48,17 @@ export const Authentication: React.FC = () => {
                   </Typography>
                 </Box>
               )}
+              {(pathname === '/login' || pathname === '/sign-up') &&
+                authenticationSettings.forgotPassword === true && (
+                  <Box>
+                    <Typography variant="caption">
+                      {t('Forgot your password?')}{' '}
+                      <Link to="/forgot-password" replace>
+                        {t('Reset your password')}
+                      </Link>
+                    </Typography>
+                  </Box>
+                )}
             </Box>
           </Box>
         </Paper>

@@ -1,6 +1,6 @@
 {
   "name": "technobuddha.com",
-  "version": "9.1.0",
+  "version": "9.1.1",
   "description": "Technobuddha application",
   "author": {
     "name": "Phil Hill",
@@ -76,10 +76,10 @@
     "@react-router/node": "7.3.0",
     "@react-router/serve": "7.3.0",
     "@technobuddha/color": "0.3.1",
-    "@technobuddha/datagrid": "1.2.0",
+    "@technobuddha/datagrid": "1.2.9",
     "@technobuddha/library": "1.9.3",
-    "@technobuddha/mui-size": "1.2.0",
     "@technobuddha/react-hooks": "1.6.1",
+    "@technobuddha/size": "link:../size",
     "@types/browserslist-useragent": "3.0.7",
     "browserslist": "4.24.4",
     "browserslist-useragent": "4.0.0",

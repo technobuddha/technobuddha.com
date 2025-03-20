@@ -1,8 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import LinearProgress from '@mui/material/LinearProgress';
-import { Size } from '@technobuddha/mui-size';
 import { useDerivedState } from '@technobuddha/react-hooks';
+import { Size } from '@technobuddha/size';
 
 import { useTranslation } from '#context/i18n';
 

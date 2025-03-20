@@ -6,14 +6,15 @@ import {
   GiConwayLifeGlider,
   GiHouse,
   GiMaze,
-  // GiMusicalNotes,
+  GiMusicalNotes,
   GiOilySpiral,
   GiOrbital,
   GiPalette,
 } from 'react-icons/gi';
 import { HiColorSwatch } from 'react-icons/hi';
 
-// import { Music } from '#component/music';
+import { Music } from '#component/music';
+
 import { Chaos } from '../client/component/chaos/index.ts';
 import { Color } from '../client/component/color/index.ts';
 import { Home } from '../client/component/home/index.ts';
@@ -31,6 +32,7 @@ export type Component = {
   primary: string;
   secondary?: string;
   location: string;
+  route?: string;
   component: React.ComponentType;
   description?: React.ReactElement;
   todo?: string[];
@@ -69,19 +71,20 @@ export const components: (t: TFunction) => Component[] = (t) => [
       t('Add a "What\'s new" section.'),
     ],
   },
-  // {
-  //   active: true,
-  //   name: 'music',
-  //   icon: GiMusicalNotes,
-  //   primary: t('Music'),
-  //   secondary: t('Music Collection'),
-  //   location: '/music',
-  //   component: Music,
-  //   xxxtodo: [
-  //     t('Add a description to this component'),
-  //     t('Increase functionality to show individual artists/albums/genres'),
-  //   ],
-  // },
+  {
+    active: true,
+    name: 'music',
+    icon: GiMusicalNotes,
+    primary: t('Music'),
+    secondary: t('Music Collection'),
+    location: '/music',
+    route: '/music/*',
+    component: Music,
+    xxxtodo: [
+      t('Add a description to this component'),
+      t('Increase functionality to show individual artists/albums/genres'),
+    ],
+  },
   {
     active: true,
     name: 'maze',

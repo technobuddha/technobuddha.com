@@ -1,6 +1,5 @@
 import React from 'react';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { Button, Typography } from '@mui/material';
 import { email as emailRegExp, empty } from '@technobuddha/library';
 import { MdEmail } from 'react-icons/md';
 

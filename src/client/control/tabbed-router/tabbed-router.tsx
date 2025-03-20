@@ -1,10 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
+import { AppBar, Tab, Tabs } from '@mui/material';
 
-import { Navigate, Route, Routes, useNavigate, useResolvedPath } from '#context/router';
+import { Navigate, useLocation, useNavigate } from '#context/router';
 
 import css from './tabbed-router.module.css';
 
@@ -29,57 +27,54 @@ const TabPanel: React.FC<TabPanelProps> = ({ content: Content, value, index, ...
 );
 
 export type TabbedRouterProps = {
+  readonly path: string;
   readonly tabs: {
-    url: string;
+    route: string;
     label: string;
     icon: React.ReactElement;
     content: React.ComponentType;
   }[];
 };
 
-export const TabbedRouter: React.FC<TabbedRouterProps> = ({ tabs }) => {
-  const match = useResolvedPath('');
+export const TabbedRouter: React.FC<TabbedRouterProps> = ({ path, tabs }) => {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
+  const subpath = pathname.startsWith(path) ? pathname.slice(path.length) : pathname;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-object-type
-  const handleChange = (_event: React.ChangeEvent<{}>, newValue: any): void => {
-    void navigate(newValue);
-  };
-
-  return (
-    <Routes>
-      <Route path={match.pathname}>
-        <Navigate to={`${match.pathname}/${tabs[0].url}`} />
-      </Route>
-      <Route path={tabs.map(({ url }) => `${match.pathname}/${url}`)}>
-        <div className={css.root}>
-          <AppBar position="static" color="default">
-            <Tabs
-              value={history.location.pathname}
-              onChange={handleChange}
-              variant="scrollable"
-              scrollButtons="on"
-              indicatorColor="primary"
-              textColor="primary"
-            >
-              {/* eslint-disable-next-line @typescript-eslint/naming-convention */}
-              {tabs.map(({ label, icon: Icon, url }, i) => (
-                <Tab key={i} value={`${match.pathname}/${url}`} label={label} icon={Icon} />
-              ))}
-            </Tabs>
-          </AppBar>
-          <div className={css.panel}>
-            <Routes>
-              {tabs.map(({ content, url }) => (
-                <Route key={url} path={`${match.pathname}/${url}`}>
-                  <TabPanel content={content} />
-                </Route>
-              ))}
-            </Routes>
-          </div>
-        </div>
-      </Route>
-      <Route>catch-all route</Route>
-    </Routes>
+  const handleChange = React.useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-object-type
+    (_event: React.ChangeEvent<{}>, newValue: any): void => {
+      void navigate(`${path}${newValue}`);
+    },
+    [navigate, path],
   );
+
+  const tab = tabs.find((t) => t.route === subpath);
+
+  if (tab) {
+    return (
+      <div className={css.root}>
+        <AppBar position="static" color="default">
+          <Tabs
+            value={subpath}
+            onChange={handleChange}
+            variant="scrollable"
+            scrollButtons="on"
+            indicatorColor="primary"
+            textColor="primary"
+          >
+            {/* eslint-disable-next-line @typescript-eslint/naming-convention */}
+            {tabs.map(({ label, icon: Icon, route }) => (
+              <Tab key={route} value={route} label={label} icon={Icon} />
+            ))}
+          </Tabs>
+        </AppBar>
+        <div className={css.panel}>
+          <TabPanel content={tab.content} />
+        </div>
+      </div>
+    );
+  }
+
+  return <Navigate to={`${path}${tabs[0].route}`} />;
 };

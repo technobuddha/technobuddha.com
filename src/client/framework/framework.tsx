@@ -17,9 +17,9 @@ export const Framework: React.FC = () => (
     <CssBaseLine />
     <div className={css.userInterface}>
       <Routes>
-        <Route path="/login/*" element={<Authentication />} />
-        <Route path="/sign-up/*" element={<Authentication />} />
-        <Route path="/forgot-password/*" element={<Authentication />} />
+        <Route path="/forgot-password" element={<Authentication />} />
+        <Route path="/login" element={<Authentication />} />
+        <Route path="/sign-up" element={<Authentication />} />
         <Route path="/" element={<Navigate to={userInterfaceSettings.homePage} />} />
         <Route
           path="*"

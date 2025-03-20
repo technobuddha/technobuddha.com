@@ -60,12 +60,4 @@ export const theme: Theme = {
   userInterface: {
     headerHeight: '40px',
   },
-  // TODO [2025-03-01]: Add overrides
-  // overrides: {
-  //   MuiLink: {
-  //     root: {
-  //       fontWeight: 'bold',
-  //     },
-  //   },
-  // },
 };

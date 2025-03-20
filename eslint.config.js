@@ -9,8 +9,18 @@ import { app } from '@technobuddha/project';
  * @type {Linter.Config[]}
  */
 const config = [
+  // src/tsconfig.json
+  app.lint({
+    files: ['src/*.tsx'],
+    ignores: [],
+    environment: 'browser',
+    tsConfig: 'src/tsconfig.json',
+    react: true,
+  }),
   // tsconfig.json
   app.lint({ files: ['*.config.js'], ignores: [], environment: 'node' }),
+  // tsconfig.json
+  app.lint({ files: ['*.config.ts'], ignores: [], environment: 'node' }),
 ];
 
 export default config;

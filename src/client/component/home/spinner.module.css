@@ -1,0 +1,86 @@
+.root {
+  height: 288px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .spinner {
+    width: 288px;
+    height: 288px;
+    position: relative;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .iconContainer {
+      animation-name: rotate;
+      animation-direction: normal;
+      animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+      animation-play-state: run;
+      animation-timing-function: linear;
+      transform-origin: center;
+      width: 288px;
+      height: 288px;
+      border-radius: 50%;
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      .iconBox {
+        width: 144px;
+        height: 30px;
+        transform-origin: center right;
+        position: absolute;
+        top: 129px;
+
+        .iconInner {
+          width: 30px;
+          height: 30px;
+          margin-left: 8px;
+
+          .icon {
+            animation-name: rotate;
+            animation-direction: reverse;
+            animation-fill-mode: forwards;
+            animation-iteration-count: infinite;
+            animation-play-state: run;
+            animation-timing-function: linear;
+            background-size: cover;
+            font-size: 20px;
+            width: 30px;
+            height: 30px;
+            color: mui-theme(palette-common-white);
+          }
+        }
+      }
+    }
+
+    .pie {
+      height: 288px;
+      width: 288px;
+      position: relative;
+      border-radius: 50%;
+      overflow: hidden;
+      background: mui-theme(palette-secondary-main);
+
+      .segment {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        transform-origin: 50% 100%;
+        background: mui-theme(palette-secondary-dark);
+      }
+    }
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotateZ(0);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}

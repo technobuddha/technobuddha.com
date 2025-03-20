@@ -1,3 +1,4 @@
-export { default, useAPI, APIProvider }  from './APIContext';
+export { useAPI, APIProvider } from './api-context.jsx';
+export { FetchStatusError } from './fetch-status-error';
 
-export type { API, APIValue } from './fetchAPI';
+export type { API, APIValue } from './api-context';

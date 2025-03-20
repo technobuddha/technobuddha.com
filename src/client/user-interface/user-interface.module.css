@@ -1,0 +1,26 @@
+.user-interface {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  .frame {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    .nav {
+      flex-basis: 1rem;
+    }
+
+    .main {
+      flex-grow: 1;
+    }
+  }
+}

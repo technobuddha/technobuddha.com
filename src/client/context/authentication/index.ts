@@ -1,1 +1,1 @@
-export { default, useAuthentication, AuthenticationProvider } from './authentication';
+export { useAuthentication, AuthenticationProvider } from './authentication.jsx';

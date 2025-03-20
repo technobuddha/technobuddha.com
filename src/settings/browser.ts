@@ -1,9 +1,9 @@
 type Settings = {
-    title?: string;
-    favicon?: string;
+  title?: string;
+  favicon?: string;
 };
 
-export default {
-    title:      'Technobuddha',
-    favicon:    '/assets/favicon.png',
-} as Settings;
+export const browserSettings: Settings = {
+  title: 'Technobuddha',
+  favicon: '/assets/favicon.png',
+};

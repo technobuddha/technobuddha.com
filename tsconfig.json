@@ -10,6 +10,7 @@
     "types": ["node"],
     "lib": ["esnext"]
   },
-  "include": ["*.config.js"],
-  "exclude": []
+  "include": ["*.config.js", "*.config.ts"],
+  "exclude": [],
+  "references": [{ "path": "./src" }]
 }

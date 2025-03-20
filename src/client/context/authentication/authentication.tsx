@@ -1,129 +1,159 @@
-import React         from 'react';
-import useAPI        from '#context/api';
+import React from 'react';
+import { useAPI } from '#context/api';
 import shallowEquals from '@technobuddha/library/shallowEquals';
-import settings      from '#settings/authentication';
+import { authenticationSettings } from '#settings/authentication';
 
 import type { Account } from '#schema/account';
 
 type AuthenticationState = {
-    error:          boolean;
-    account:        Account | null;
-    login:          (username: string, password: string) => Promise<boolean>;
-    logout:         () => Promise<void>;
-    createAccount:  (first: string, last: string, email: string, password: string) => Promise<Account | null>;
+  error: boolean;
+  account: Account | null;
+  login: (username: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+  createAccount: (
+    first: string,
+    last: string,
+    email: string,
+    password: string,
+  ) => Promise<Account | null>;
 };
 
 const AuthenticationContext = React.createContext<AuthenticationState>(null!);
 
-export function useAuthentication() {
-    return React.useContext(AuthenticationContext);
+export function useAuthentication(): AuthenticationState {
+  return React.useContext(AuthenticationContext);
 }
 
-const KEY       = 'authenticationProvider';
+const KEY = 'authenticationProvider';
+
+const GENERIC_USER: Account = {
+  id: -1,
+  email: 'generic@example.com',
+  first: 'Generic',
+  last: 'User',
+  admin: false,
+  disabled: false,
+  confirmed: null,
+  failed_logins: 0,
+  locked: null,
+  created: new Date(),
+  updated: null,
+  policy_accepted: null,
+};
 
 type AuthenticationProviderProps = {
-    children?: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ children }) => {
-    const [ error,   setError ]       = React.useState<boolean>(false);
-    const [ account, setAccount ]     = React.useState<Account | null>(null);
-    const [ loading, setLoading ]     = React.useState<boolean>(true);
-    const { authentication }        = useAPI();
+  const [error, setError] = React.useState<boolean>(false);
+  const [account, setAccount] = React.useState<Account | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const { authentication } = useAPI();
 
-    const checkLogin = async () => {
-        return authentication.readSession().then(
-            api => {
-                if(api.status === 200) {
-                    if(!shallowEquals(api.payload, account))
-                        setAccount(api.payload);
-                } else if(api.status === 401) {
-                    setAccount(null);
-                }
-                //setError(false);
-            }
-        ).catch(() => {
+  const checkLogin = async () => {
+    if (authenticationSettings.login) {
+      return authentication
+        .readSession()
+        .then((api) => {
+          if (api.status === 200) {
+            if (!shallowEquals(api.payload, account)) setAccount(api.payload);
+          } else if (api.status === 401) {
             setAccount(null);
-            setError(true);
+          }
+        })
+        .catch(() => {
+          setAccount(null);
+          setError(true);
         });
-    };
+    }
 
-    const initialCheck = async () => {
-        await checkLogin();
-        setLoading(false);
-    };
+    setAccount(GENERIC_USER);
+    return Promise.resolve(GENERIC_USER);
+  };
 
-    const killTimeout = () => {
-        const handle = sessionStorage.getItem(KEY);
-        if(handle) {
-            clearTimeout(Number.parseInt(handle, 10));
-            sessionStorage.removeItem(KEY);
-        }
-    };
+  const initialCheck = async () => {
+    await checkLogin();
+    setLoading(false);
+  };
 
-    const periodicCheck = async () => {
-        const checker = () => {
-            killTimeout();
+  const killTimeout = () => {
+    const handle = sessionStorage.getItem(KEY);
+    if (handle) {
+      clearTimeout(Number.parseInt(handle, 10));
+      sessionStorage.removeItem(KEY);
+    }
+  };
 
-            void checkLogin()
-            .then(() => sessionStorage.setItem(KEY, setTimeout(checker, settings.session.keepAlive).toString()));
-        };
-
+  const periodicCheck = async () => {
+    if (authenticationSettings.login) {
+      const checker = () => {
         killTimeout();
-        sessionStorage.setItem(KEY, setTimeout(checker, settings.session.keepAlive).toString());
 
-        return () => {
-            killTimeout();
-        };
-    };
+        void checkLogin().then(() =>
+          sessionStorage.setItem(
+            KEY,
+            setTimeout(checker, authenticationSettings.session.keepAlive).toString(),
+          ),
+        );
+      };
 
-    const login = async (username: string, password: string): Promise<boolean> => {
-        return authentication.createSession(username, password)
-        .then(result => {
-            if(result.status === 201) {
-                setAccount(result.payload);
-                return true;
-            }
-            return false;
-        });
-    };
+      killTimeout();
+      sessionStorage.setItem(
+        KEY,
+        setTimeout(checker, authenticationSettings.session.keepAlive).toString(),
+      );
 
-    const logout = async (): Promise<void> => {
-        await authentication.deleteSession();
-        setAccount(null);
-    };
+      return () => {
+        killTimeout();
+      };
+    }
 
-    const createAccount = async (first: string, last: string, email: string, password: string): Promise<Account | null> => {
-        return authentication.createAccount(first, last, email, password)
-        .then(result => {
-            if(result.status === 201) {
-                setAccount(result.payload);
-                return result.payload;
-            }
-            return null;
-        });
-    };
+    return Promise.resolve();
+  };
 
-    killTimeout();
+  const login = async (username: string, password: string): Promise<boolean> => {
+    return authentication.createSession(username, password).then((result) => {
+      if (result.status === 201) {
+        setAccount(result.payload);
+        return true;
+      }
+      return false;
+    });
+  };
 
-    React.useEffect(
-        () => {
-            if(loading)
-                void initialCheck();
-            if(account)
-                void periodicCheck();
-        },
-        []
-    );
+  const logout = async (): Promise<void> => {
+    await authentication.deleteSession();
+    setAccount(null);
+  };
 
-    if(loading)
-        return null;
+  const createAccount = async (
+    first: string,
+    last: string,
+    email: string,
+    password: string,
+  ): Promise<Account | null> => {
+    return authentication.createAccount(first, last, email, password).then((result) => {
+      if (result.status === 201) {
+        setAccount(result.payload);
+        return result.payload;
+      }
+      return null;
+    });
+  };
 
-    return (
-        <AuthenticationContext.Provider value={{ error, account, login, logout, createAccount }}>
-            {children}
-        </AuthenticationContext.Provider>
-    );
+  killTimeout();
+
+  React.useEffect(() => {
+    if (loading) void initialCheck();
+    if (account) void periodicCheck();
+  }, []);
+
+  if (loading) return null;
+
+  return (
+    <AuthenticationContext.Provider value={{ error, account, login, logout, createAccount }}>
+      {children}
+    </AuthenticationContext.Provider>
+  );
 };
-
-export default useAuthentication;

@@ -1,0 +1,44 @@
+.header {
+  display: flex;
+  flex-direction: row !important;
+  height: mui-spacing(5);
+
+  .display {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 50%;
+
+    .site {
+      position: relative;
+    }
+
+    .divider {
+      margin: 0 mui-spacing(1) 0 mui-spacing(1.5);
+      width: 1px;
+      height: calc(100% - mui-spacing(1));
+      background-color: mui-theme(palette-common-white);
+    }
+
+    .title {
+      margin-bottom: mui-spacing(0.25);
+    }
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    width: 50%;
+
+    .login {
+      position: relative;
+    }
+
+    .authorization {
+      color: mui-theme(palette-common-white);
+    }
+  }
+}

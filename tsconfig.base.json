@@ -22,11 +22,11 @@
     // "emitDecoratorMetadata": true,                    /* Emit design-type metadata for decorated declarations in source files. */
     // "jsxFactory": "",                                 /* Specify the JSX factory function used when targeting React JSX emit, e.g. 'React.createElement' or 'h'. */
     // "jsxFragmentFactory": "",                         /* Specify the JSX Fragment reference used for fragments when targeting React JSX emit e.g. 'React.Fragment' or 'Fragment'. */
-    // "jsxImportSource": "",                            /* Specify module specifier used to import the JSX factory functions when using 'jsx: react-jsx*'. */
+    "jsxImportSource": "react",                          /* Specify module specifier used to import the JSX factory functions when using 'jsx: react-jsx*'. */
     // "reactNamespace": "",                             /* Specify the object invoked for 'createElement'. This only applies when targeting 'react' JSX emit. */
     // "noLib": true,                                    /* Disable including any library files, including the default lib.d.ts. */
-    // "useDefineForClassFields": true,                  /* Emit ECMAScript-standard-compliant class fields. */
-    // "moduleDetection": "auto",                        /* Control what method is used to detect module-format JS files. */
+    "useDefineForClassFields": true,                     /* Emit ECMAScript-standard-compliant class fields. */
+    "moduleDetection": "force",                          /* Control what method is used to detect module-format JS files. */
 
     /* Modules */
     "module": "preserve"                                 /* Specify what module code is generated. */,
@@ -110,6 +110,24 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true                                /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
+
+    "paths": {                                          /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+      "~*":           [ "./*"                     ],
+      "#config*":     [ "./*"                      ],
+      "#context*":    [ "./src/client/context*"   ],
+      "#control*":    [ "./src/client/control*"   ],
+      "#component*":  [ "./src/client/component*" ],
+      "#client*":     [ "./src/client*"           ],
+      "#server*":     [ "./src/server*"           ],
+      "#worker*":     [ "./src/worker*"           ],
+      "#util*":       [ "./src/util*"             ],
+      "#schema":      [ "./src/schema"            ],
+      "#schema*":     [ "./src/schema*"           ],
+      "#settings*":   [ "./src/settings*"         ],
+      "$*":           [ "./src/*"                 ],
+      // "%icons":       [ "../node_modules/@react-icons/all-files" ],
+      // "%icons/*":     [ "../node_modules/@react-icons/all-files/*"]
+    }
   }
 }

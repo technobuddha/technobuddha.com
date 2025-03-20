@@ -1,1 +1,2 @@
-export { default, SnackbarProvider } from './snackbar';
+export { SnackbarProvider } from './snackbar';
+export { useSnackbar, type SnackbarKey } from 'notistack';

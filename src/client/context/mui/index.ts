@@ -1,2 +1,2 @@
-export { default, makeStyles, useTheme, ThemeProvider } from './mui';
-export type { Theme } from './mui';
+export { makeStyles, useTheme, ThemeProvider, theme } from './mui.jsx';
+export { type Theme } from './mui.jsx';

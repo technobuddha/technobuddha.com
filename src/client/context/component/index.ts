@@ -1,1 +1,1 @@
-export { default, useComponents, ComponentsProvider } from './component';
+export { useComponents, ComponentsProvider } from './component';

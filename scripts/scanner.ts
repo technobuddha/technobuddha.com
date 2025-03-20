@@ -19,7 +19,7 @@ function out(text: string | undefined) {
         process.stdout.write(text);
 }
 
-(async function main() {
+void (async function main() {
     const foreign = i18next.supportedLngs ? i18next.supportedLngs.filter(lng => lng !== 'en') : [];
 
     for(const ns of isString(i18next.ns) ? [ i18next.ns ] : i18next.ns ?? [ 'translation' ]) {
@@ -35,14 +35,12 @@ function out(text: string | undefined) {
             )
             .then(
                 results => {
-                    results.forEach(
-                        result => {
-                            if(!isNil(result.translation)) {
-                                out(`${chalk.green('translated')} ${chalk.grey(`${ns} ${lng}`)} ${result.key}\n`);
-                                t[result.key] = result.translation;
-                            }
+                    for(const result of results) {
+                        if(!isNil(result.translation)) {
+                            out(`${chalk.green('translated')} ${chalk.grey(`${ns} ${lng}`)} ${result.key}\n`);
+                            t[result.key] = result.translation;
                         }
-                    );
+                    }
 
                     writeTranslations(t, lng, ns, 'external');
                 }

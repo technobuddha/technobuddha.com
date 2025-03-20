@@ -6,10 +6,16 @@
   "compilerOptions": {
     "composite": true,
     "rootDir": ".",
-    "outDir": "../dist",
     "types": ["vite/client"],
     "lib": ["esnext", "dom"]
   },
-  "include": ["**/*.tsx", "**/*.ts"],
-  "exclude": []
+  "include": [],
+  "exclude": [],
+  "references": [
+    { "path": "./client" },
+    { "path": "./schema" },
+    { "path": "./server" },
+    { "path": "./settings" },
+    { "path": "./util" }
+  ]
 }

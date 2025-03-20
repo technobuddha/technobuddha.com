@@ -1,14 +1,14 @@
 #!/bin/env -S ts-node -r ./config/env.ts -r tsconfig-paths/register
 import path                       from 'path';
 import webpack                    from 'webpack';
-import chalk                      from 'chalk'; chalk.level = 3;    // Tell chalk that we support full RGB colors
+import chalk                      from 'chalk';
 import { spawn }                  from 'child_process';
 import repeat                     from 'lodash/repeat';
 import { genServerWebpackConfig } from '#server/webpack.config';
 import paths                      from '#config/paths';
-
 import type { ChildProcess } from 'child_process';
 
+chalk.level = 3;    // Tell chalk that we support full RGB colors
 const esc = '\u001b';
 let serverProcess: ChildProcess | null = null;
 
@@ -33,9 +33,8 @@ const exit = () => {
     process.exit(0);
 };
 
-[ 'SIGINT', 'SIGTERM', 'SIGHUP', 'SIGQUIT', 'exit', 'uncaughtexception' ].forEach(
-    sig => process.on(sig, exit)
-);
+for(const sig of [ 'SIGINT', 'SIGTERM', 'SIGHUP', 'SIGQUIT', 'exit', 'uncaughtexception' ])
+    process.on(sig, exit);
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -82,7 +81,7 @@ function header() {
     const logo = [
         chalk.hex('#d0f2fa')('▄██▄'),
         chalk.hex('#a3e1f6')('▄██████▄'),
-        chalk.hex('#70c0e4')('▄████☯ ████▄'),
+        chalk.hex('#70c0e4')('▄██████████▄'),
         chalk.hex('#4b98ca')('▄██████████████▄'),
         chalk.hex('#1b5ca8')('▄██████████████████▄'),
         chalk.hex('#135490')('▄██████████████████████▄'),
@@ -104,11 +103,11 @@ function header() {
     ];
 
     let output = '';
-    for(let i = 0; i < logo.length; ++i) {
+    for(const [ i, element ] of logo.entries()) {
         for(let j = 8; j > i; --j)
             output += '  ';
 
-        output += logo[i];
+        output += element;
         for(let j = 8; j > i; --j)
             output += '  ';
 

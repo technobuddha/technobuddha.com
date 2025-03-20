@@ -118,13 +118,10 @@
       "#component*":  [ "./src/client/component*" ],
       "#client*":     [ "./src/client*"           ],
       "#server*":     [ "./src/server*"           ],
-      "#worker*":     [ "./src/worker*"           ],
       "#util*":       [ "./src/util*"             ],
-      "#schema":      [ "./src/schema"            ],
       "#schema*":     [ "./src/schema*"           ],
       "#settings*":   [ "./src/settings*"         ],
-      // "%icons":       [ "../node_modules/@react-icons/all-files" ],
-      // "%icons/*":     [ "../node_modules/@react-icons/all-files/*"]
+      "#config*":     [ "./src/config*"           ],
     }
   }
 }

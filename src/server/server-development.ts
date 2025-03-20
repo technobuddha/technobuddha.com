@@ -1,25 +1,28 @@
 import '#config/env';
-import chalk                        from 'chalk';
-import express                      from 'express';
-import createLogger                 from './create-logger';
-import setup                        from './setup';
-import staticContent                from './static-content';
-import api                          from './api';
-import development                  from './development';
-import translation                  from './translation';
-import listener                     from './listener';
-import invulnerability from './invulnerability';
 
-const logger = createLogger(true);
+import chalk from 'chalk';
+import express, { type Express } from 'express';
 
-invulnerability(logger);
-logger.verbose(`Server booting... ${chalk.green('DEVELOPMENT')}`);
+// import { api } from './api/index.js';
+import { createLogger } from './create-logger.js';
+import { invulnerability } from './invulnerability.js';
+// import { listener } from './listener.js';
+import { setup } from './setup.js';
+import { staticContent } from './static-content.js';
+import { translation } from './translation.js';
 
-const app = express();
-setup(app, logger);
-development(app, logger);
-translation(app, logger);
-app.use('/api', api(logger));
-staticContent(app, logger);
+export function server(): Express {
+  const logger = createLogger(true);
 
-listener(app, logger);
+  invulnerability(logger);
+  logger.verbose(`Server booting... ${chalk.green('DEVELOPMENT')}`);
+
+  const app = express();
+  setup(app, logger);
+  translation(app, logger);
+  // app.use('/api', api(logger));
+  staticContent(app, logger);
+
+  // void listener(app, logger);
+  return app;
+}

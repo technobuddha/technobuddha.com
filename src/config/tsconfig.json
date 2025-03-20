@@ -6,10 +6,9 @@
   "compilerOptions": {
     "composite": true,
     "rootDir": ".",
-    "types": [],
+    "types": ["node"],
     "lib": ["esnext"]
   },
   "include": ["**/*.ts"],
-  "exclude": [],
-  "references": [{ "path": "../settings" }, { "path": "../config" }]
+  "exclude": []
 }

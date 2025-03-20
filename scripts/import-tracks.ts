@@ -1,10 +1,10 @@
 #!/bin/env -S ts-node --prefer-ts-exts  -r ./config/env.ts -r tsconfig-paths/register
-import path        from 'path';
-import paths       from '#config/paths';
 import { db }      from '#server/db/driver';
 import nReadLines  from 'n-readlines';
 import cliProgress from 'cli-progress';
 import chalk       from 'chalk';
+
+import type { Buffer }  from 'buffer';
 
 const partOfSet = /^([0-9]+)(\/[0-9]+)?(\s*.*)$/u;
 function parsePartOfSet(text: string | null | undefined) {
@@ -36,7 +36,7 @@ function err(text: string | undefined) {
         process.stderr.write(text);
 }
 
-(async function main() {
+void (async function main() {
     const b1 = new cliProgress.SingleBar({
         format: `Tracks |${chalk.cyan('{bar}')}| {percentage}% || {value}/{total}`,
         barCompleteChar: '\u2588',
@@ -47,9 +47,9 @@ function err(text: string | undefined) {
     await db.task(async t => {
         await t.none('TRUNCATE track_new;');
 
-        for(const file of [ 'tracks0.mldata', 'tracks1.mldata' ]) {
+        for(const file of [ '/mnt/music/tracks.mldata' ]) {
             // eslint-disable-next-line new-cap
-            const lineReader = new nReadLines(path.join(paths.data, file));
+            const lineReader = new nReadLines(file);
 
             let line: Buffer | false;
             let index = 0;
@@ -112,7 +112,7 @@ function err(text: string | undefined) {
                     try {
                         await t.none(
                             `
-                            INSERT INTO track_new 
+                            INSERT INTO track_new
                             (
                                 content_id, path, modified, artist, album, performer, composer, conductor,
                                 writer, genre, subgenre, title, subtitle, track_number, is_compilation, lyrics,
@@ -188,9 +188,9 @@ function err(text: string | undefined) {
                         );
                     } catch(error: unknown) {
                         if(error instanceof Error)
-                            err(`${json.Path}\n${error.message}\n`);
+                            err(`${Path}\n${error.message}\n`);
                         else
-                            err(`${json.Path}\n${(error as any).toString()}\n`);
+                            err(`${Path}\n${(error as any).toString()}\n`);
                     }
 
                     b1.increment();

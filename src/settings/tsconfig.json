@@ -1,3 +1,15 @@
+// 🚨
+// 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
+// 🚨
 {
-    "extends": "../../config/tsconfig.browser.json"
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+    "types": [],
+    "lib": ["esnext"]
+  },
+  "include": ["**/*.ts"],
+  "exclude": [],
+  "references": [{ "path": "../client" }]
 }

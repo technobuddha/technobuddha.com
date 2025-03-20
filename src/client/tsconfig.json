@@ -1,3 +1,14 @@
+// 🚨
+// 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
+// 🚨
 {
-    "extends": "../../config/tsconfig.browser.json"
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+    "types": ["vite/client"],
+    "lib": ["esnext", "dom"]
+  },
+  "include": ["**/*.tsx", "**/*.ts"],
+  "exclude": []
 }

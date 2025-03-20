@@ -164,8 +164,6 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         }
       }
 
-      //
-
       void factory.create(selectedMaze, selectedAlgorithm, mask, selectedSolver).then(() => {
         setTimeout(() => {
           setRedraw((x) => x + 1);

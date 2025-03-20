@@ -1,3 +1,4 @@
+/* eslint-disable tsdoc/syntax */
 // @ts-check
 // 🚨
 // 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
@@ -11,7 +12,7 @@ import { app } from '@technobuddha/project';
 const config = [
   // src/tsconfig.json
   app.lint({
-    files: ['src/**/*.tsx'],
+    files: ['src/client/**/*.tsx'],
     ignores: [],
     environment: 'browser',
     tsConfig: 'src/tsconfig.json',
@@ -19,10 +20,41 @@ const config = [
   }),
   // src/tsconfig.json
   app.lint({
-    files: ['src/**/*.ts'],
+    files: ['src/client/**/*.ts'],
     ignores: [],
     environment: 'browser',
-    tsConfig: 'src/tsconfig.json',
+    tsConfig: 'src/client/tsconfig.json',
+  }),
+  // ?
+  app.lint({
+    files: ['src/schema/**/*.ts'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: 'src/schema/tsconfig.json',
+  }),
+  app.lint({
+    files: ['src/settings/**/*.ts'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: 'src/settings/tsconfig.json',
+  }),
+  app.lint({
+    files: ['src/server/**/*.ts'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: 'src/server/tsconfig.json',
+  }),
+  app.lint({
+    files: ['src/config/**/*.ts'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: 'src/config/tsconfig.json',
+  }),
+  app.lint({
+    files: ['src/util/**/*.ts'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: 'src/util/tsconfig.json',
   }),
   // tsconfig.json
   app.lint({ files: ['*.config.js'], ignores: [], environment: 'node' }),

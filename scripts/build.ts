@@ -9,8 +9,8 @@ import binaryUnits                  from '@technobuddha/library/binaryUnits';
 import { genServerWebpackConfig }   from '#server/webpack.config';
 import { genClientWebpackConfig }   from '#client/webpack.config';
 import type { PackageJson }         from 'type-fest';
-chalk.level = 3;
 
+chalk.level = 3;
 process.env.NODE_ENV = 'production';
 
 function out(text: string | undefined) {
@@ -24,20 +24,19 @@ function report(error: Error | null, stats: webpack.Stats): void {
         process.exit(1);
     }
 
-    // out(` ${(stats.endTime ?? 0) - (stats.startTime ?? 0)}ms\n`);
-    if(stats.compilation.errors.length) {
+    if(stats.compilation.errors.length > 0) {
         out(`${chalk.red('Errors:')}\n`);
         for(const e of stats.compilation.errors)
             out(`${e.message}\n`);
     }
 
-    if(stats.compilation.warnings.length) {
+    if(stats.compilation.warnings.length > 0) {
         out(`${chalk.yellow('Warnings:')}\n`);
         for(const w of stats.compilation.warnings)
             out(`${w.message}\n`);
     }
 
-    if(stats.compilation.errors.length) process.exit(1);
+    if(stats.compilation.errors.length > 0) process.exit(1);
 
     for(const [ filename, asset ] of Object.entries(stats.compilation.assets)) {
         const a: any = asset;
@@ -55,6 +54,11 @@ function run(res: shell.ShellString) {
     }
 }
 
+function nano() {
+    const t = process.hrtime();
+    return t[0] + t[1] / 1000000000;
+}
+
 let timer: number;
 function start(task: string, text?: string) {
     out(chalk.whiteBright(task));
@@ -65,11 +69,13 @@ function start(task: string, text?: string) {
     } else {
         out(' '.repeat(20));
     }
-    timer = Date.now();
+    timer = nano();
 }
 
 function finish() {
-    out(chalk.cyanBright(`${metricUnits((Date.now() - timer) / 1000, { format: '##0.00', pad: 6 })}s\n`));
+    const clock = nano() - timer;
+
+    out(chalk.cyanBright(`${metricUnits(clock, { format: '##0.00', pad: 6 })}s\n`));
 }
 
 start('Cleaning');
@@ -111,16 +117,17 @@ webpack(
                     Object.entries(pj.dependencies!)
                     .map(([ k, v ]) => [ k, v.startsWith('^') ? v.slice(1) : v ])
                 );
-                pj.devDependencies = Object.fromEntries(
-                    Object.entries(pj.devDependencies!)
-                    .map(([ k, v ]) => [ k, v.startsWith('^') ? v.slice(1) : v ])
-                );
+                delete pj.devDependencies;
+                //pj.devDependencies = Object.fromEntries(
+                //     Object.entries(pj.devDependencies!)
+                //     .map(([ k, v ]) => [ k, v.startsWith('^') ? v.slice(1) : v ])
+                // );
 
                 fs.writeFileSync('deploy/package.json', JSON.stringify(pj, undefined, 2), 'utf8');
                 finish();
 
                 start('npm', 'install');
-                shell.exec('npm install --prefix ./deploy', { silent: true });
+                run(shell.exec('npm install --prefix ./deploy', { silent: true }));
                 finish();
 
                 out(`\n--${chalk.green('done')}\n`);

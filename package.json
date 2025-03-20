@@ -116,5 +116,8 @@
     "vite-express": "0.20.0",
     "winston": "3.17.0",
     "zxcvbn": "4.4.2"
+  },
+  "resolutions": {
+    "merge": "^2.1.1"
   }
 }

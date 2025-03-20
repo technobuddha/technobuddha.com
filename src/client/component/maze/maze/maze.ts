@@ -361,8 +361,12 @@ export abstract class Maze {
   //#endregion
   //#region Maze Drawing
   public prepareDrawing(drawing?: Drawing): void {
+    const replaced = this.drawing !== drawing;
+
     this.drawing = drawing;
-    // this.clear();
+    if (replaced) {
+      this.clear();
+    }
   }
 
   private computeSize({ width, height }: { drawing?: Drawing; width?: number; height?: number }): {

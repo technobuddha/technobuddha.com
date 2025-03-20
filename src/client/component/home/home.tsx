@@ -1,9 +1,11 @@
 import React from 'react';
+import { Typography } from '@mui/material';
 
 import { MazeBackground } from '#component/maze/maze-background.jsx';
 import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
-import { components } from '#settings/components.tsx';
+import { useNavigate } from '#context/router';
+import { type Component, components } from '#settings/components.tsx';
 
 import Logo from './logo.svg?react';
 import { Spinner } from './spinner.tsx';
@@ -17,8 +19,15 @@ export type HomeProps = {
 export const Home: React.FC<HomeProps> = () => {
   const theme = useTheme();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const translatedComponents = React.useMemo(() => components(t).filter((c) => c.active), [t]);
-  const speed = 15;
+
+  const handleClick = React.useCallback(
+    (component: Component) => {
+      void navigate(component.location);
+    },
+    [navigate],
+  );
 
   return (
     <MazeBackground maskColor={theme.palette.primary.dark}>
@@ -39,7 +48,15 @@ export const Home: React.FC<HomeProps> = () => {
           </div>
         </div>
         <div className={css.wheelOfComponents}>
-          <Spinner speed={speed} components={translatedComponents} />
+          <Spinner components={translatedComponents} onClick={handleClick}>
+            {({ primary, secondary, description }) => (
+              <div className={css.component}>
+                <Typography variant="h4">{primary}</Typography>
+                {Boolean(secondary) && <Typography variant="h5">{secondary}</Typography>}
+                {Boolean(description) && <div className={css.description}>{description}</div>}
+              </div>
+            )}
+          </Spinner>
         </div>
       </div>
     </MazeBackground>

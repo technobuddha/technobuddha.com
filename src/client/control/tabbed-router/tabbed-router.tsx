@@ -53,8 +53,8 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({ path, tabs }) => {
 
   if (tab) {
     return (
-      <div className={css.root}>
-        <AppBar position="static" color="default">
+      <div className={css.tabbedRouter}>
+        {/* <AppBar position="static" color="default">
           <Tabs
             value={subpath}
             onChange={handleChange}
@@ -63,12 +63,12 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({ path, tabs }) => {
             indicatorColor="primary"
             textColor="primary"
           >
-            {/* eslint-disable-next-line @typescript-eslint/naming-convention */}
+            {/* eslint-disable-next-line @typescript-eslint/naming-convention * /}
             {tabs.map(({ label, icon: Icon, route }) => (
               <Tab key={route} value={route} label={label} icon={Icon} />
             ))}
           </Tabs>
-        </AppBar>
+        </AppBar> */}
         <div className={css.panel}>
           <TabPanel content={tab.content} />
         </div>

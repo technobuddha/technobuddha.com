@@ -1,7 +1,6 @@
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { randomPick, toCapitalWordCase, toHumanCase } from '@technobuddha/library';
-import { Size } from '@technobuddha/size';
+import { useMeasure } from 'react-use';
 
 import { CanvasDrawing } from './drawing/canvas-drawing.ts';
 import { Blob } from './generator/blob.ts';
@@ -32,16 +31,6 @@ import { Filler } from './solver/filler.ts';
 import { type MazeSolver, type MazeSolverProperties } from './solver/maze-solver.ts';
 import { Search } from './solver/search.ts';
 import { WallWalking } from './solver/wall-walking.ts';
-
-type MazeMakerProps = {
-  children?: never;
-};
-
-export const MazeMaker: React.FC<MazeMakerProps> = () => (
-  <Size width="100%" height="100%">
-    {({ width, height }) => <MazeBoard boxWidth={width} boxHeight={height} />}
-  </Size>
-);
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   // cubic: (props) => new CubicMaze(props),
@@ -125,13 +114,13 @@ const masks: Record<string, (maze: Maze) => void> = {
   triangle: triangleMask,
 };
 
-type MazeBoardProps = {
-  readonly boxWidth: number;
-  readonly boxHeight: number;
-  readonly children?: never;
+type MazeMakerProps = {
+  children?: never;
 };
 
-export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => {
+export const MazeMaker: React.FC<MazeMakerProps> = () => {
+  const [div, { width, height }] = useMeasure<HTMLDivElement>();
+
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
   const canvasSolve = React.useRef<HTMLCanvasElement | null>(null);
   const [redraw, setRedraw] = React.useState(0);
@@ -189,44 +178,49 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => 
         }, 0);
       });
     }
-  }, [redraw, boxHeight, boxWidth]);
+  }, [redraw, height, width]);
 
   return (
     <div
+      ref={div}
       style={{
         position: 'relative',
         backgroundColor: 'black',
         color: 'white',
         fontWeight: 'bold',
-        width: boxWidth,
-        height: boxHeight,
+        width: '100%',
+        height: '100%',
       }}
     >
-      <div style={{ position: 'absolute', zIndex: 4, top: 0, left: 0 }}>
-        Maze Shape:&nbsp;
-        {toCapitalWordCase(toHumanCase(mazeName))}
-        &nbsp;|&nbsp;Generator:&nbsp;
-        {toCapitalWordCase(toHumanCase(algorithmName))}
-        &nbsp;|&nbsp; Solver:&nbsp;
-        {toCapitalWordCase(toHumanCase(solverName))}
-        {maskName !== '' && (
-          <span>&nbsp;|&nbsp; Mask:&nbsp;{toCapitalWordCase(toHumanCase(maskName))}</span>
-        )}
-      </div>
-      {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-      <canvas
-        ref={canvasMaze}
-        width={boxWidth - 12}
-        height={boxHeight - 20}
-        style={{ position: 'absolute', top: 20, left: 6, zIndex: 1 }}
-      />
-      {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-      <canvas
-        ref={canvasSolve}
-        width={boxWidth - 12}
-        height={boxHeight - 20}
-        style={{ position: 'absolute', top: 20, left: 6, zIndex: 2 }}
-      />
+      {width > 0 && height > 0 && (
+        <>
+          <div style={{ position: 'absolute', zIndex: 4, top: 0, left: 0 }}>
+            Maze Shape:&nbsp;
+            {toCapitalWordCase(toHumanCase(mazeName))}
+            &nbsp;|&nbsp;Generator:&nbsp;
+            {toCapitalWordCase(toHumanCase(algorithmName))}
+            &nbsp;|&nbsp; Solver:&nbsp;
+            {toCapitalWordCase(toHumanCase(solverName))}
+            {maskName !== '' && (
+              <span>&nbsp;|&nbsp; Mask:&nbsp;{toCapitalWordCase(toHumanCase(maskName))}</span>
+            )}
+          </div>
+          {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+          <canvas
+            ref={canvasMaze}
+            width={width - 12}
+            height={height - 20}
+            style={{ position: 'absolute', top: 20, left: 6, zIndex: 1 }}
+          />
+          {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+          <canvas
+            ref={canvasSolve}
+            width={width - 12}
+            height={height - 20}
+            style={{ position: 'absolute', top: 20, left: 6, zIndex: 2 }}
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 // import Color                from '#component/color';
 import React from 'react';
+import { Link, Typography } from '@mui/material';
 import { type IconType } from 'react-icons';
 import {
   GiChessKnight,
@@ -13,17 +14,16 @@ import {
 } from 'react-icons/gi';
 import { HiColorSwatch } from 'react-icons/hi';
 
+import { Chaos } from '#component/chaos';
+import { Color } from '#component/color';
+import { Home } from '#component/home';
+import { Knight } from '#component/knight';
+import { Life } from '#component/life';
+import { MazeDebugger, MazeMaker } from '#component/maze';
 import { Music } from '#component/music';
-
-import { Chaos } from '../client/component/chaos/index.ts';
-import { Color } from '../client/component/color/index.ts';
-import { Home } from '../client/component/home/index.ts';
-import { Knight } from '../client/component/knight/index.ts';
-import { Life } from '../client/component/life/index.ts';
-import { MazeDebugger, MazeMaker } from '../client/component/maze/index.ts';
-import { NBody } from '../client/component/n-body/index.ts';
-import { Theme } from '../client/component/theme/index.ts';
-import { type TFunction } from '../client/context/i18n/index.ts';
+import { NBody } from '#component/n-body';
+import { Theme } from '#component/theme';
+import { type TFunction } from '#context/i18n';
 
 export type Component = {
   active: boolean;
@@ -47,21 +47,21 @@ export const components: (t: TFunction) => Component[] = (t) => [
     location: '/home',
     description: (
       <div>
-        <div>
+        <Typography>
           {t(
             'Learn some things about the Technobuddha, and delve into his various projects designed  soley for his amusement (though you might be amused also).',
           )}
-        </div>
-        <div>
+        </Typography>
+        <Typography>
           {t(
             'The maze generator and solver can be seen in the background, you can get more interesting mazes on the',
           )}{' '}
-          <a href="/maze">{t('Mazes Page')}</a>
-        </div>
-        <div>
+          <Link href="/maze">{t('Mazes Page')}</Link>
+        </Typography>
+        <Typography>
           {t('The source code for this website can be found on')}{' '}
-          <a href="https://github.com/technobuddha/technobuddha.com">GitHub</a>
-        </div>
+          <Link href="https://github.com/technobuddha/technobuddha.com">GitHub</Link>
+        </Typography>
       </div>
     ),
     component: Home,
@@ -93,21 +93,17 @@ export const components: (t: TFunction) => Component[] = (t) => [
     secondary: t('Maze generator & solver'),
     description: (
       <div>
-        <div>
+        <Typography>
           {t(
             'Mazes and computers go hand-in-hand because a maze mimics the common computer science problem of graph traversal.',
           )}
-        </div>
-        <div>
           {t(
             "Thousands of types of Mazes can be made by combining maze topologies (like: square, triangle, hexagon, octogon and pentagon) with maze generation algorithms (like: Prim's, Hunt and Kill, and Recursive Backtracker) and maze solving algorithms (like: Dijkstra's, wall-walking and filler.",
           )}
-        </div>
-        <div>
           {t(
             'You can watch as mazes are generated and solved, animating each algorithm to show how it works.',
           )}
-        </div>
+        </Typography>
       </div>
     ),
     location: '/maze',
@@ -122,20 +118,21 @@ export const components: (t: TFunction) => Component[] = (t) => [
     secondary: t('The Mandelbrot Set'),
     description: (
       <div>
-        <div>
-          {t('The')} <a href="https://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot set</a>{' '}
-          {t('is a')} <a href="https://en.wikipedia.org/wiki/Fractal_curve">{t('fractal curve')}</a>{' '}
+        <Typography>
+          {t('The')} <Link href="https://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot set</Link>{' '}
+          {t('is a')}{' '}
+          <Link href="https://en.wikipedia.org/wiki/Fractal_curve">{t('fractal curve')}</Link>{' '}
           {t('created by a simple mathamatical equation. It demonstrates')}{' '}
-          <a href="https://en.wikipedia.org/wiki/Chaos_theory">{t('Chaos theory')}</a>{' '}
+          <Link href="https://en.wikipedia.org/wiki/Chaos_theory">{t('Chaos theory')}</Link>{' '}
           {t('by showing how small changes in a non-linear system can lead to large differences.')}
-        </div>
-        <div>
+        </Typography>
+        <Typography>
           {t('This implementation uses a')}{' '}
-          <a href="https://en.wikipedia.org/wiki/Web_worker">{t('web worker')}</a>{' '}
+          <Link href="https://en.wikipedia.org/wiki/Web_worker">{t('web worker')}</Link>{' '}
           {t(
             'to offload the huge amount of calculations needed to render the set to another thread. Otherwise the entire user interface would lock up while the set is being computed.',
           )}
-        </div>
+        </Typography>
       </div>
     ),
     location: '/chaos',
@@ -149,15 +146,18 @@ export const components: (t: TFunction) => Component[] = (t) => [
     primary: t('Life'),
     secondary: t("John Conway's Game of Life"),
     description: (
-      <div>
-        <div>
+      <>
+        <Typography>
           {t('A')}{' '}
-          <a href="https://en.wikipedia.org/wiki/Cellular_automaton">{t('cellular automaton')}</a>{' '}
+          <Link href="https://en.wikipedia.org/wiki/Cellular_automaton">
+            {t('cellular automaton')}
+          </Link>{' '}
           {t('devised by the British mathematician')}{' '}
-          <a href="https://en.wikipedia.org/wiki/John_Horton_Conway">John Horton Conway</a>{' '}
+          <Link href="https://en.wikipedia.org/wiki/John_Horton_Conway">John Horton Conway</Link>{' '}
           {t('in 1970.')}
           {t('It is a')}{' '}
-          <a href="https://en.wikipedia.org/wiki/Zero-player_game">{t('zero-player game')}</a>,
+          <Link href="https://en.wikipedia.org/wiki/Zero-player_game">{t('zero-player game')}</Link>
+          ,
           {t(
             'meaning that its evolution is determined by its initial state, requiring no further input.',
           )}
@@ -165,20 +165,20 @@ export const components: (t: TFunction) => Component[] = (t) => [
             'One interacts with the Game of Life by creating an initial configuration and observing how it evolves.',
           )}
           {t('It is')}{' '}
-          <a href="https://en.wikipedia.org/wiki/Turing_complete">{t('Turing complete')}</a>{' '}
+          <Link href="https://en.wikipedia.org/wiki/Turing_complete">{t('Turing complete')}</Link>{' '}
           {t('and can simulate an')}{' '}
-          <a href="https://en.wikipedia.org/wiki/Von_Neumann_universal_constructor">
+          <Link href="https://en.wikipedia.org/wiki/Von_Neumann_universal_constructor">
             {t('universal constructor')}
-          </a>{' '}
+          </Link>{' '}
           {t('or any other')}{' '}
-          <a href="https://en.wikipedia.org/wiki/Turing_machine">{t('Turing machine')}</a>.
-        </div>
-        <div>
+          <Link href="https://en.wikipedia.org/wiki/Turing_machine">{t('Turing machine')}</Link>.
+        </Typography>
+        <Typography>
           {t(
             'This implementation is designed to run as fast as possible without using any graphic accelaration, or multi-threading.',
           )}
-        </div>
-      </div>
+        </Typography>
+      </>
     ),
     location: '/life',
     component: Life,
@@ -194,12 +194,14 @@ export const components: (t: TFunction) => Component[] = (t) => [
     primary: t('Space'),
     secondary: t('N-body Gravitational Simulation'),
     description: (
-      <div>
+      <Typography>
         {t('Take a lot of data from')}{' '}
-        <a href="https://ssd.jpl.nasa.gov/horizons/app.html#/">{t("JPL's Horizons System")}</a>{' '}
+        <Link href="https://ssd.jpl.nasa.gov/horizons/app.html#/">
+          {t("JPL's Horizons System")}
+        </Link>{' '}
         {t('and plug that into the basic mathamatical equations for gravity, and you get a')}{' '}
-        <a href="https://en.wikipedia.org/wiki/N-body_simulation">{t('N-body similation')}</a>
-      </div>
+        <Link href="https://en.wikipedia.org/wiki/N-body_simulation">{t('N-body similation')}</Link>
+      </Typography>
     ),
     location: '/nbody',
     component: NBody,

@@ -42,7 +42,12 @@
     padding: mui-spacing(2);
     background-color: mui-theme(palette-common-black);
 
-    .spinner {
+    .component {
+      .description {
+        p {
+          padding-top: 0.5rem;
+        }
+      }
     }
   }
 }

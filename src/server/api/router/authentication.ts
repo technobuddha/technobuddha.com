@@ -1,6 +1,6 @@
 import { type Router } from 'express';
 import express from 'express';
-import isUndefined from 'lodash/isUndefined';
+import { isUndefined } from 'lodash-es';
 import { type Logger } from 'winston';
 import zxcvbn from 'zxcvbn';
 

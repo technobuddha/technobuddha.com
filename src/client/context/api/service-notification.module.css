@@ -1,0 +1,7 @@
+.server-error {
+  width: 25vw;
+
+  .message {
+    margin-top: mui-spacing(0.25);
+  }
+}

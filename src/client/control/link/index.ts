@@ -1,2 +1,1 @@
-export { default, Link } from './Link';
-export type { LinkProps } from './Link';
+export { Link, type LinkProps } from './link.tsx';

@@ -1,1 +1,2 @@
-export { default, useAuthentication, AuthenticationProvider } from './authentication';
+export { AuthenticationProvider } from './authentication.tsx';
+export { useAuthentication } from './context.ts';

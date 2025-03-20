@@ -1,0 +1,294 @@
+.theme {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  .colors {
+    display: grid;
+    grid-template-columns: repeat(30, mui-spacing(6));
+    grid-template-rows: repeat(10, mui-spacing(6));
+    grid-template-areas:
+      'cb cb cb cb cb cb cb cb cb cb cb cb cb cb cb cw cw cw cw cw cw cw cw cw cw cw cw cw cw cw'
+      'pl pl pl pl pl pl pl pl pl pl pm pm pm pm pm pm pm pm pm pm pd pd pd pd pd pd pd pd pd pd'
+      'sl sl sl sl sl sl sl sl sl sl sm sm sm sm sm sm sm sm sm sm sd sd sd sd sd sd sd sd sd sd'
+      'el el el el el el el el el el em em em em em em em em em em ed ed ed ed ed ed ed ed ed ed'
+      'wl wl wl wl wl wl wl wl wl wl wm wm wm wm wm wm wm wm wm wm wd wd wd wd wd wd wd wd wd wd'
+      'il il il il il il il il il il im im im im im im im im im im id id id id id id id id id id'
+      'ul ul ul ul ul ul ul ul ul ul um um um um um um um um um um ud ud ud ud ud ud ud ud ud ud'
+      'g0 g0 g0 g1 g1 g1 g2 g2 g2 g3 g3 g3 g4 g4 g4 g5 g5 g5 g6 g6 g6 g7 g7 g7 g8 g8 g8 g9 g9 g9'
+      'a1 a1 a1 a1 a1 a1 a1 a2 a2 a2 a2 a2 a2 a2 a2 a4 a4 a4 a4 a4 a4 a4 a7 a7 a7 a7 a7 a7 a7 a7'
+      'bp bp bp bp bp bp bp bp bp bp bp bp bp bp bp bd bd bd bd bd bd bd bd bd bd bd bd bd bd bd'
+      'dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv dv'
+      'aa aa aa aa aa ah ah ah ah ah as as as as as ad ad ad ad ad ab ab ab ab ab af af af af af';
+    margin: mui-spacing(5);
+
+    * {
+      text-align: center;
+      padding: mui-spacing(1);
+    }
+
+    .common-black {
+      grid-area: cb;
+      background: mui-theme(palette-common-black);
+      color: contrastText(mui-theme(palette-common-black));
+    }
+
+    .common-white {
+      grid-area: cw;
+      background: mui-theme(palette-common-white);
+      color: contrastText(mui-theme(palette-common-white));
+    }
+
+    .primary-light {
+      grid-area: pl;
+      background: mui-theme(palette-primary-light);
+      color: mui-theme(palette-primary-contrastText);
+    }
+
+    .primary-main {
+      grid-area: pm;
+      background: mui-theme(palette-primary-main);
+      color: mui-theme(palette-primary-contrastText);
+    }
+
+    .primary-dark {
+      grid-area: pd;
+      background: mui-theme(palette-primary-dark);
+      color: mui-theme(palette-primary-contrastText);
+    }
+
+    .secondary-light {
+      grid-area: sl;
+      background: mui-theme(palette-secondary-light);
+      color: mui-theme(palette-secondary-contrastText);
+    }
+
+    .secondary-main {
+      grid-area: sm;
+      background: mui-theme(palette-secondary-main);
+      color: mui-theme(palette-secondary-contrastText);
+    }
+
+    .secondary-dark {
+      grid-area: sd;
+      background: mui-theme(palette-secondary-dark);
+      color: mui-theme(palette-secondary-contrastText);
+    }
+
+    .error-light {
+      grid-area: el;
+      background: mui-theme(palette-error-light);
+      color: mui-theme(palette-error-contrastText);
+    }
+
+    .error-main {
+      grid-area: em;
+      background: mui-theme(palette-error-main);
+      color: mui-theme(palette-error-contrastText);
+    }
+
+    .error-dark {
+      grid-area: ed;
+      background: mui-theme(palette-error-dark);
+      color: mui-theme(palette-error-contrastText);
+    }
+
+    .warning-light {
+      grid-area: wl;
+      background: mui-theme(palette-warning-light);
+      color: mui-theme(palette-warning-contrastText);
+    }
+
+    .warning-main {
+      grid-area: wm;
+      background: mui-theme(palette-warning-main);
+      color: mui-theme(palette-warning-contrastText);
+    }
+
+    .warning-dark {
+      grid-area: wd;
+      background: mui-theme(palette-warning-dark);
+      color: mui-theme(palette-warning-contrastText);
+    }
+
+    .info-light {
+      grid-area: il;
+      background: mui-theme(palette-info-light);
+      color: mui-theme(palette-info-contrastText);
+    }
+
+    .info-main {
+      grid-area: im;
+      background: mui-theme(palette-info-main);
+      color: mui-theme(palette-info-contrastText);
+    }
+
+    .info-dark {
+      grid-area: id;
+      background: mui-theme(palette-info-dark);
+      color: mui-theme(palette-info-contrastText);
+    }
+
+    .success-light {
+      grid-area: ul;
+      background: mui-theme(palette-success-light);
+      color: mui-theme(palette-success-contrastText);
+    }
+
+    .success-main {
+      grid-area: um;
+      background: mui-theme(palette-success-main);
+      color: mui-theme(palette-success-contrastText);
+    }
+
+    .success-dark {
+      grid-area: ud;
+      background: mui-theme(palette-success-dark);
+      color: mui-theme(palette-success-contrastText);
+    }
+
+    .grey50 {
+      grid-area: g0;
+      background: mui-theme(palette-grey-50);
+      color: contrastText(mui-theme(palette-grey-50));
+    }
+
+    .grey100 {
+      grid-area: g1;
+      background: mui-theme(palette-grey-100);
+      color: contrastText(mui-theme(palette-grey-100));
+    }
+
+    .grey200 {
+      grid-area: g2;
+      background: mui-theme(palette-grey-200);
+      color: contrastText(mui-theme(palette-grey-200));
+    }
+
+    .grey300 {
+      grid-area: g3;
+      background: mui-theme(palette-grey-300);
+      color: contrastText(mui-theme(palette-grey-300));
+    }
+
+    .grey400 {
+      grid-area: g4;
+      background: mui-theme(palette-grey-400);
+      color: contrastText(mui-theme(palette-grey-400));
+    }
+
+    .grey500 {
+      grid-area: g5;
+      background: mui-theme(palette-grey-500);
+      color: contrastText(mui-theme(palette-grey-500));
+    }
+
+    .grey600 {
+      grid-area: g6;
+      background: mui-theme(palette-grey-600);
+      color: contrastText(mui-theme(palette-grey-600));
+    }
+
+    .grey700 {
+      grid-area: g7;
+      background: mui-theme(palette-grey-700);
+      color: contrastText(mui-theme(palette-grey-700));
+    }
+
+    .grey800 {
+      grid-area: g8;
+      background: mui-theme(palette-grey-800);
+      color: contrastText(mui-theme(palette-grey-800));
+    }
+
+    .grey900 {
+      grid-area: g9;
+      background: mui-theme(palette-grey-900);
+      color: contrastText(mui-theme(palette-grey-900));
+    }
+
+    .greyA100 {
+      grid-area: a1;
+      background: mui-theme(palette-grey-A100);
+      color: contrastText(mui-theme(palette-grey-A100));
+    }
+
+    .greyA200 {
+      grid-area: a2;
+      background: mui-theme(palette-grey-A200);
+      color: contrastText(mui-theme(palette-grey-A200));
+    }
+
+    .greyA400 {
+      grid-area: a4;
+      background: mui-theme(palette-grey-A400);
+      color: contrastText(mui-theme(palette-grey-A400));
+    }
+
+    .greyA700 {
+      grid-area: a7;
+      background: mui-theme(palette-grey-A700);
+      color: contrastText(mui-theme(palette-grey-A700));
+    }
+
+    .background-paper {
+      grid-area: bp;
+      background: mui-theme(palette-background-paper);
+      color: contrastText(mui-theme(palette-background-paper));
+    }
+
+    .background-default {
+      grid-area: bd;
+      background: mui-theme(palette-background-default);
+      color: contrastText(mui-theme(palette-background-default));
+    }
+
+    .divider {
+      grid-area: dv;
+      background: mui-theme(palette-divider);
+      color: contrastText(mui-theme(palette-divider));
+    }
+
+    .action-active {
+      grid-area: aa;
+      background: mui-theme(palette-action-active);
+      color: contrastText(mui-theme(palette-action-active));
+    }
+
+    .action-hover {
+      grid-area: ah;
+      background: mui-theme(palette-action-hover);
+      color: contrastText(mui-theme(palette-action-hover));
+    }
+
+    .action-selected {
+      grid-area: as;
+      background: mui-theme(palette-action-selected);
+      color: contrastText(mui-theme(palette-action-selected));
+    }
+
+    .action-disabled {
+      grid-area: ad;
+      background: mui-theme(palette-action-disabled);
+      color: contrastText(mui-theme(palette-action-disabled));
+    }
+
+    .action-disabled-background {
+      grid-area: ab;
+      background: mui-theme(palette-action-disabledBackground);
+      color: contrastText(mui-theme(palette-action-disabledBackground));
+    }
+
+    .action-focus {
+      grid-area: af;
+      background: mui-theme(palette-action-focus);
+      color: contrastText(mui-theme(palette-action-focus));
+    }
+  }
+
+  .typography {
+    margin: mui-spacing(5);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}

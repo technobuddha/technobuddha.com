@@ -1,0 +1,233 @@
+openapi: 3.0.2
+info:
+  title: Technobuddha API
+  version: 0.1.0
+  description: >-
+    Access the technobuddha music collection
+paths:
+  /api/music/tracks:
+    description: Collection of of all music tracks
+    parameters:
+      - $ref: '#/components/parameters/accept'
+      - $ref: '#/components/parameters/accept-encoding'
+    get:
+      description: Get all music tracks
+      summary: Get all music tracks
+      deprecated: false
+      operationId: getTracks
+      responses:
+        '200':
+          $ref: '#/components/responses/Tracks'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+servers: [{ 'url': 'http://localhost' }]
+components:
+  schemas:
+    Track:
+      type: object
+      properties:
+        content_id:
+          type: string
+          format: uuid
+        artist:
+          type: array
+          items:
+            type: string
+        album:
+          type: string
+        disc_number:
+          type: string
+        track_number:
+          type: string
+        title:
+          type: string
+        genre:
+          type: array
+          items: string
+        required:
+          - artist
+          - album
+          - disc_number
+          - track_number
+          - title
+          - genre
+        additionalProperties: false
+    Exception400:
+      type: object
+      properties:
+        exception:
+          type: string
+          example: BadRequestException
+        message:
+          type: array
+          items:
+            type: string
+            example: 'Error message'
+        statusCode:
+          type: number
+          example: 400
+        timestamp:
+          type: string
+          format: date-time
+          example: '2024-09-16T15:51:29.832Z'
+        method:
+          type: string
+          example: 'POST'
+        path:
+          type: string
+          example: '/households/1234567890'
+    Exception500:
+      type: object
+      properties:
+        exception:
+          type: string
+          example: InternalServerError
+        message:
+          type: array
+          items:
+            type: string
+            example: 'Error message'
+        statusCode:
+          type: number
+          example: 500
+        timestamp:
+          type: string
+          format: date-time
+          example: '2024-09-16T15:51:29.832Z'
+        method:
+          type: string
+          example: 'POST'
+        path:
+          type: string
+          example: '/households/1234567890'
+  requestBodies:
+    HouseholdRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HouseholdRequest'
+      required: true
+    HouseholdNameRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HouseholdNameRequest'
+      required: true
+    UserRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserRequest'
+      required: true
+    MobileDeviceRequest:
+      description: Create a new mobile device for user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MobileDeviceRequest'
+      required: true
+    PushNotificationMobileDeviceRequest:
+      description: Create or replace push notification info
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PushNotificationMobileDeviceRequest'
+      required: true
+    VoiceAssistantRequest:
+      description: Create a new voice assistant for a user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VoiceAssistantRequest'
+      required: true
+  parameters:
+    accept:
+      name: accept
+      in: header
+      required: true
+      description: 'Acceptable content-types'
+      example: application/json
+      schema:
+        type: string
+    'accept-encoding':
+      name: accept-encoding
+      in: header
+      required: false
+      description: 'Acceptable content encodings'
+      example: gzip, deflate
+      schema:
+        type: string
+    PageSize:
+      name: pageSize
+      in: query
+      required: false
+      description: 'The number of items in a page for pagination operations.'
+      example: 100
+      schema:
+        type: integer
+    MaxItems:
+      name: maxItems
+      in: query
+      required: false
+      description: 'The maximum number of items to query for.'
+      example: 1000
+      schema:
+        type: integer
+    StartingToken:
+      name: startingToken
+      in: query
+      required: false
+      description: 'The starting token or marker to use for the request.'
+      example: ABC123DEF
+      schema:
+        type: string
+    RequestSignature:
+      name: x-iotn-request-signature
+      in: header
+      required: true
+      description: 'The request signature'
+      example: FADBE2D888...
+      schema:
+        type: string
+  headers:
+    ContentType:
+      description: The MIME type of the body of the response.
+      style: simple
+      explode: false
+      schema:
+        type: string
+    CacheControl:
+      description: Header used to direct caching done by browsers. Must be set to 'no-store'
+      example: no-store
+      style: simple
+      explode: false
+      schema:
+        type: string
+  responses:
+    Tracks:
+      description: A list of htracks
+      headers:
+        content-type:
+          $ref: '#/components/headers/ContentType'
+        cache-control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Track'
+    BadRequest:
+      description: BAD REQUEST
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Exception400'
+    NoContent:
+      description: NO CONTENT
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Exception500'

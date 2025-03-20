@@ -1,0 +1,42 @@
+.board {
+  border: 1px solid mui-theme(palette-primary-main);
+  display: inline-flex;
+  flex-direction: row;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.square {
+  width: mui-spacing(4);
+  height: mui-spacing(4);
+  border: 1px solid mui-theme(palette-primary-light);
+  text-align: center;
+  vertical-align: middle;
+  font-size: mui-spacing(2.25);
+}
+
+.legend {
+  background: mui-theme(palette-grey-300);
+}
+
+.target {
+  border-width: 2;
+  border-color: mui-theme(palette-secondary-dark);
+}
+
+.moves {
+  font-weight: bold;
+  color: mui-theme(palette-primary-main);
+
+  &.target {
+    color: mui-theme(palette-secondary-main);
+  }
+}
+
+.solution {
+  font-size: x-large;
+  text-align: center;
+}

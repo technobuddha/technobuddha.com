@@ -1,3 +1,1 @@
-export { Tracks } from './Tracks';
-export { NewAlbums } from './NewAlbums';
-export { default, Music } from './Music';
+export { Music } from './music.js';

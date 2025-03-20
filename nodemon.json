@@ -1,0 +1,6 @@
+{
+  "exec": "tsx src/server/server.ts",
+  "watch": ["./src/server", "/etc/letsencrypt/live/technobuddha"],
+  "ext": "ts,tsx,pem",
+  "quiet": true
+}

@@ -1,0 +1,109 @@
+.spinner {
+  --main: calc(var(--size) + var(--border) * 2);
+
+  height: var(--main);
+  display: flex;
+  background: mui-theme(palette-common-black);
+
+  .wheel {
+    width: var(--main);
+    height: var(--main);
+    position: relative;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: magenta;
+    padding: 0;
+    margin: 0;
+    border: none;
+
+    .iconContainer {
+      animation-name: rotate;
+      animation-direction: normal;
+      animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+      animation-play-state: running;
+      animation-timing-function: linear;
+      transform-origin: center;
+      width: var(--main);
+      height: var(--main);
+      border-radius: 50%;
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      .iconBox {
+        width: calc(var(--main) / 2);
+        height: var(--icon);
+        transform-origin: center right;
+        position: absolute;
+        top: calc(var(--main) / 2 - var(--icon) / 2);
+
+        .iconInner {
+          width: var(--icon);
+          height: var(--icon);
+          margin-left: calc(var(--border) * 2);
+
+          .icon {
+            animation-name: rotate;
+            animation-direction: reverse;
+            animation-fill-mode: forwards;
+            animation-iteration-count: infinite;
+            animation-play-state: running;
+            animation-timing-function: linear;
+            background-size: cover;
+            width: var(--icon);
+            height: var(--icon);
+            color: mui-theme(palette-common-white);
+          }
+        }
+      }
+    }
+
+    .pie {
+      height: var(--main);
+      width: var(--main);
+      position: relative;
+      border-radius: 50%;
+      overflow: hidden;
+      background: mui-theme(palette-secondary-main);
+
+      .segment {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        transform-origin: 50% 100%;
+        background: mui-theme(palette-secondary-dark);
+      }
+    }
+  }
+
+  .descriptions {
+    flex: 1;
+    position: relative;
+
+    .box {
+      position: absolute;
+      left: 2rem;
+      max-height: 0;
+      height: 100%;
+      text-align: justify;
+      animation-direction: normal;
+      animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+      animation-play-state: runing;
+      animation-timing-function: linear;
+      color: white;
+    }
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotateZ(0);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}

@@ -25,7 +25,7 @@ export class Sidewinder extends MazeGenerator {
     }
 
     if (dirs.length > 0) {
-      const carveDirection = this.selectNeighbor(
+      const carveDirection = this.randomPick(
         this.maze.neighbors(this.currentCell, { directions: dirs }),
       )!.direction;
 

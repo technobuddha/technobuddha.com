@@ -70,7 +70,7 @@ export class GrowingTree extends MazeGenerator {
         .neighbors(this.currentCell)
         .filter((cell) => !this.visited[cell.x][cell.y]);
       if (unvisitedNeighbors.length > 0) {
-        const cell = this.selectNeighbor(unvisitedNeighbors);
+        const cell = this.randomPick(unvisitedNeighbors)!;
         this.maze.removeWall(this.currentCell, cell.direction);
         this.visited[cell.x][cell.y] = true;
 

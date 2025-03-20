@@ -29,9 +29,14 @@ export class OctogonMaze extends Maze {
     return [this.cellSize, this.cellSize / 2];
   }
 
+  // eslint--next-line @typescript-eslint/class-methods-use-this
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  protected initialWalls(x: number, _y: number): Wall {
-    return x % 2 === 0 ?
+  protected cellKind(cell: Cell): number {
+    return cell.x % 2;
+  }
+
+  protected initialWalls(x: number, y: number): Wall {
+    return this.cellKind({ x, y }) === 0 ?
         { a: true, b: true, c: true, d: true, e: true, f: true, g: true, h: true }
       : { i: true, j: true, k: true, l: true };
   }
@@ -171,9 +176,8 @@ export class OctogonMaze extends Maze {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public move(cell: Cell, direction: Direction): CellDirection | null {
-    if (cell.x % 2 === 0) {
+    if (this.cellKind(cell) === 0) {
       switch (direction) {
         case 'a': {
           return { x: cell.x, y: cell.y - 1, direction };
@@ -226,7 +230,7 @@ export class OctogonMaze extends Maze {
 
   public isDeadEnd(cell: Cell): boolean {
     return (
-      this.sides(cell) === (cell.x % 2 === 0 ? 7 : 3) &&
+      this.sides(cell) === (this.cellKind(cell) === 0 ? 7 : 3) &&
       (cell.x !== this.entrance.x || cell.y !== this.entrance.y) &&
       (cell.x !== this.exit.x || cell.y !== this.exit.y)
     );
@@ -234,7 +238,7 @@ export class OctogonMaze extends Maze {
 
   public edges(cell: Cell, { walls = this.walls }: Overrides = {}): string[] {
     return this.neighbors(cell, {
-      directions: cell.x % 2 === 0 ? ['c', 'd', 'e'] : ['j'],
+      directions: this.cellKind(cell) === 0 ? ['c', 'd', 'e'] : ['j'],
       walls,
     }).map((cd) => cd.direction);
   }
@@ -248,7 +252,7 @@ export class OctogonMaze extends Maze {
     const ao = this.cellSize / Math.sqrt(4 + SQ2 * 2);
     const ai = (this.cellSize - this.wallSize * 2) / Math.sqrt(4 + SQ2 * 2);
 
-    if (x % 2 === 0) {
+    if (this.cellKind({ x, y }) === 0) {
       const x0 = (x * this.cellSize) / 2;
       const x1 = x0 + (SQ2 * this.wallSize) / 2;
       const x2 = x0 + this.wallSize;
@@ -346,7 +350,7 @@ export class OctogonMaze extends Maze {
 
   public drawFloor(cell: Cell, color = this.cellColor): void {
     if (this.drawing) {
-      if (cell.x % 2 === 0) {
+      if (this.cellKind(cell) === 0) {
         const { x0, x5, x6, xa, xf, y0, y5, ya, yf } = this.offsets(cell);
 
         this.drawing.polygon(
@@ -380,7 +384,7 @@ export class OctogonMaze extends Maze {
 
   public drawWall(cd: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
-      if (cd.x % 2 === 0) {
+      if (this.cellKind(cd) === 0) {
         switch (cd.direction) {
           case 'a': {
             const { x5, x9, xa, y0, y2 } = this.offsets(cd);
@@ -562,7 +566,7 @@ export class OctogonMaze extends Maze {
 
   public drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
     if (this.drawing) {
-      if (x % 2 === 0) {
+      if (this.cellKind({ x, y }) === 0) {
         switch (corner) {
           case 'ab': {
             const { x8, x9, xa, xb, y0, y1, y2, y3 } = this.offsets({ x, y });
@@ -662,13 +666,14 @@ export class OctogonMaze extends Maze {
           }
 
           case 'gh': {
-            const { x0, x1, x2, x3, y4, y5, y6, y7 } = this.offsets({ x, y });
+            const { x0, x1, x2, y4, y5, y6, y7 } = this.offsets({ x, y });
             this.drawing.polygon(
               [
                 { x: x0, y: y5 },
-                { x: x2, y: y7 },
-                { x: x3, y: y6 },
                 { x: x1, y: y4 },
+                { x: x2, y: y6 },
+                { x: x2, y: y7 },
+                { x: x0, y: y7 },
               ],
               color,
             );
@@ -761,7 +766,7 @@ export class OctogonMaze extends Maze {
     if (this.drawing) {
       this.drawCell(cell);
 
-      if (cell.x % 2 === 0) {
+      if (this.cellKind(cell) === 0) {
         switch (cell.direction) {
           case 'a': {
             const { x6, x9, y2, yd } = this.offsets(cell);
@@ -936,26 +941,21 @@ export class OctogonMaze extends Maze {
   }
 
   public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
-    const padding = 1;
     if (this.drawing) {
-      if (cell.x % 2 === 0) {
+      if (this.cellKind(cell) === 0) {
         this.drawCell(cell, cellColor);
-        const { x0, x8, xf, y0, y8, yf } = this.offsets(cell);
+        const { x2, x6, x9, xd, y2, y6, y9, yd } = this.offsets(cell);
 
-        const left = x0 + padding;
-        const top = y0 + padding;
-        const w = (cell.x % 2 === 0 ? xf : x8) - left - padding;
-        const h = (cell.x % 2 === 0 ? yf : y8) - top - padding;
-
-        this.drawing.line({ x: left, y: top }, { x: left + w, y: top + h }, color);
-        this.drawing.line({ x: left, y: top + h }, { x: left + w, y: top }, color);
+        this.drawing.line({ x: x2, y: y9 }, { x: xd, y: y6 }, color);
+        this.drawing.line({ x: x2, y: y6 }, { x: xd, y: y9 }, color);
+        this.drawing.line({ x: x6, y: y2 }, { x: x9, y: yd }, color);
+        this.drawing.line({ x: x6, y: yd }, { x: x9, y: y2 }, color);
       } else {
         this.drawCell(cell, cellColor);
+        const { x2, x4, x6, y2, y4, y6 } = this.offsets(cell);
 
-        const { x0, x4, x8, y0, y4, y8 } = this.offsets(cell);
-
-        this.drawing.line({ x: x4, y: y0 + padding }, { x: x4, y: y8 - padding }, color);
-        this.drawing.line({ x: x0 + padding, y: y4 }, { x: x8 - padding, y: y4 }, color);
+        this.drawing.line({ x: x2, y: y4 }, { x: x6, y: y4 }, color);
+        this.drawing.line({ x: x4, y: y2 }, { x: x4, y: y6 }, color);
       }
     }
   }

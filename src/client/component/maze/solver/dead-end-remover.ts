@@ -1,5 +1,3 @@
-import { randomShuffle } from '@technobuddha/library';
-
 import { animate } from '../util/animate.js';
 
 import { MazeSolver } from './maze-solver.js';
@@ -10,7 +8,7 @@ export class DeadEndRemover extends MazeSolver {
 
     this.maze.prepareContext(this.context);
     for (;;) {
-      const deadEnds = randomShuffle(this.maze.deadEnds({ walls }));
+      const deadEnds = this.randomShuffle(this.maze.deadEnds({ walls }));
       if (deadEnds.length === 0) {
         return;
       }

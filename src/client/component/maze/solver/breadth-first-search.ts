@@ -1,4 +1,4 @@
-import { create2DArray, randomShuffle } from '@technobuddha/library';
+import { create2DArray } from '@technobuddha/library';
 
 import { type Cell, type Direction } from '../maze/maze.js';
 import { animate } from '../util/animate.js';
@@ -40,7 +40,7 @@ export class BreadthFirstSearch extends MazeSolver {
             queue.length = 0;
           } else {
             const distance = distances[cell.x][cell.y].dist + 1;
-            const neighbors = randomShuffle(
+            const neighbors = this.randomShuffle(
               this.maze.validMoves(cell).filter((n) => distances[n.x][n.y].dist > distance),
             );
 
@@ -62,12 +62,19 @@ export class BreadthFirstSearch extends MazeSolver {
     this.maze.draw();
 
     let cell = { ...exit, direction: this.maze.opposite(exit.direction) };
-    for (;;) {
-      this.maze.drawPath({ ...cell, direction: this.maze.opposite(cell.direction) }, color);
-      if (cell.x === entrance.x && cell.y === entrance.y) {
-        break;
+
+    const dist = distances[cell.x]?.[cell.y];
+    if (!dist || dist.dist === Infinity) {
+      // eslint-disable-next-line no-console
+      console.log('no solution found', dist);
+    } else {
+      for (;;) {
+        this.maze.drawPath({ ...cell, direction: this.maze.opposite(cell.direction) }, color);
+        if (cell.x === entrance.x && cell.y === entrance.y) {
+          break;
+        }
+        cell = this.maze.move(cell, this.maze.opposite(distances[cell.x][cell.y].dir!))!;
       }
-      cell = this.maze.move(cell, this.maze.opposite(distances[cell.x][cell.y].dir!))!;
     }
   }
 }

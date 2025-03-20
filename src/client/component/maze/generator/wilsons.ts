@@ -36,7 +36,7 @@ export class Wilsons extends MazeGenerator {
       let path: (Cell | CellDirection)[] = [this.currentCell];
 
       while (!this.visited[this.currentCell.x][this.currentCell.y]) {
-        const cell = this.selectNeighbor(this.maze.neighbors(this.currentCell));
+        const cell = this.randomPick(this.maze.neighbors(this.currentCell))!;
 
         let cellVisited = false;
         let cellPreviousIndex = -1;

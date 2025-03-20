@@ -26,7 +26,7 @@ export class Prims extends MazeGenerator {
         .neighbors(this.currentCell)
         .filter((cell) => !this.visited[cell.x][cell.y]);
       if (unvisitedNeighbors.length > 0) {
-        const newCell = this.selectNeighbor(unvisitedNeighbors);
+        const newCell = this.randomPick(unvisitedNeighbors)!;
         this.maze.removeWall(this.currentCell, newCell.direction);
         this.visited[newCell.x][newCell.y] = true;
 

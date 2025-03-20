@@ -31,8 +31,14 @@ export class TriangleMaze extends Maze {
   }
 
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  protected cellKind(cell: Cell): number {
+    return (cell.x + cell.y) % 2;
+  }
+
   protected initialWalls(x: number, y: number): Wall {
-    return (x + y) % 2 === 0 ? { b: true, d: true, f: true } : { a: true, c: true, e: true };
+    return this.cellKind({ x, y }) === 0 ?
+        { b: true, d: true, f: true }
+      : { a: true, c: true, e: true };
   }
 
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
@@ -116,9 +122,8 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public move(cell: Cell, direction: Direction): CellDirection | null {
-    if ((cell.x + cell.y) % 2 === 1) {
+    if (this.cellKind(cell) === 1) {
       switch (direction) {
         case 'a': {
           return { x: cell.x, y: cell.y - 1, direction };
@@ -160,7 +165,7 @@ export class TriangleMaze extends Maze {
 
   public edges(cell: Cell, { walls = this.walls }: Overrides = {}): string[] {
     return this.neighbors(cell, {
-      directions: (cell.x + cell.y) % 2 === 1 ? ['c'] : ['b', 'd'],
+      directions: this.cellKind(cell) === 1 ? ['c'] : ['b', 'd'],
       walls,
     }).map((cd) => cd.direction);
   }
@@ -225,7 +230,7 @@ export class TriangleMaze extends Maze {
     const sx0 = x0 + this.cellSize * 0.375;
     const sx1 = sx0 + this.cellSize / 4;
 
-    if ((x + y) % 2 === 1) {
+    if (this.cellKind({ x, y }) === 1) {
       const sy1 = y5 + (this.cellSize * SIN60) / 2;
       const sy0 = sy1 - (this.cellSize * SIN60) / 4;
       return { x0, x1, x2, x3, x4, x5, x6, x7, x8, y0, y1, y2, y3, y4, y5, sx0, sx1, sy0, sy1 };

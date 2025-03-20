@@ -19,13 +19,17 @@ export class CanvasDrawing extends Drawing {
     }
   }
 
-  public clear(color?: string): void {
-    if (color) {
+  public clear(color = 'transparent', originX = 0, originY = 0): void {
+    this.canvas.setTransform(1, 0, 0, 1, 0, 0);
+
+    if (color === 'transparent') {
+      this.canvas.clearRect(0, 0, this.canvas.canvas.width, this.canvas.canvas.height);
+    } else {
       this.canvas.fillStyle = color;
       this.canvas.fillRect(0, 0, this.canvas.canvas.width, this.canvas.canvas.height);
-    } else {
-      this.canvas.clearRect(0, 0, this.canvas.canvas.width, this.canvas.canvas.height);
     }
+
+    this.canvas.translate(originX, originY);
   }
 
   public line(start: XY, finish: XY, color: string): void {
@@ -51,5 +55,10 @@ export class CanvasDrawing extends Drawing {
       this.canvas.lineTo(point.x, point.y);
     }
     this.canvas.fill();
+  }
+
+  public override text(xy: XY, text: string, color: string): void {
+    this.canvas.fillStyle = color;
+    this.canvas.fillText(text, xy.x, xy.y);
   }
 }

@@ -1,5 +1,3 @@
-import { randomShuffle } from '@technobuddha/library';
-
 import { type Cell, type CellDirection } from '../maze/maze.js';
 
 import { type MazeGeneratorProperties } from './maze-generator.js';
@@ -71,7 +69,7 @@ export class Kruskals extends MazeGenerator {
         }
       }
     }
-    this.edges = randomShuffle(this.edges);
+    this.edges = this.randomShuffle(this.edges);
 
     this.currentCell = { x: 0, y: 0 };
   }

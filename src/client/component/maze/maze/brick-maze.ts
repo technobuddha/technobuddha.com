@@ -29,6 +29,11 @@ export class BrickMaze extends Maze {
   }
 
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  protected cellKind(cell: Cell): number {
+    return cell.y % 2;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   protected initialWalls(): Wall {
     return { a: true, b: true, c: true, d: true, e: true, f: true };
   }
@@ -114,10 +119,8 @@ export class BrickMaze extends Maze {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public move(cell: Cell, direction: Direction): CellDirection {
-    const even = cell.y % 2 === 0;
-    if (even) {
+    if (this.cellKind(cell) === 0) {
       switch (direction) {
         case 'a': {
           return { x: cell.x - 1, y: cell.y - 1, direction };
@@ -186,7 +189,7 @@ export class BrickMaze extends Maze {
   public divider(cell1: Cell, cell2: Cell): CellDirection[] {
     if (cell1.x === cell2.x) {
       const dividers = range(cell1.y, cell2.y).flatMap((y) =>
-        y % 2 === 0 ?
+        this.cellKind({ x: cell1.x, y }) === 0 ?
           [{ x: cell1.x, y, direction: 'c' }]
         : [
             { x: cell1.x, y, direction: 'b' },
@@ -195,10 +198,7 @@ export class BrickMaze extends Maze {
           ],
       );
 
-      // if (cell1.y === 0) {
-      // dividers.uns/hift();
-      //  }
-      if (cell2.y >= this.height - 1 && cell2.y % 2 === 0) {
+      if (cell2.y >= this.height - 1 && this.cellKind(cell2) === 0) {
         dividers.pop();
       }
 
@@ -209,7 +209,7 @@ export class BrickMaze extends Maze {
         { x, y: cell1.y, direction: 'd' },
       ]);
 
-      if (cell1.y % 2 === 0) {
+      if (this.cellKind(cell1) === 0) {
         dividers.shift();
       } else {
         dividers.pop();
@@ -222,10 +222,9 @@ export class BrickMaze extends Maze {
   }
 
   private offsets({ x, y }: Cell): Record<string, number> {
-    const even = y % 2 === 0;
     const margin = Math.floor(this.cellSize / 8);
 
-    const x0 = x * this.cellSize * 2 + (even ? 0 : this.cellSize);
+    const x0 = x * this.cellSize * 2 + (this.cellKind({ x, y }) === 0 ? 0 : this.cellSize);
     const x1 = x0 + this.wallSize;
     const x2 = x1 + margin;
 

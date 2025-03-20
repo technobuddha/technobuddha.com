@@ -1,4 +1,4 @@
-import { create2DArray, randomShuffle } from '@technobuddha/library';
+import { create2DArray } from '@technobuddha/library';
 
 import { type Cell, type CellDirection } from '../maze/maze.js';
 
@@ -89,14 +89,14 @@ export class Blob extends MazeGenerator {
     while (stack.length > 0) {
       const region = stack.pop()!;
 
-      const [seedA, seedB] = randomShuffle(region.cells());
+      const [seedA, seedB] = this.randomShuffle(region.cells());
       region.subregions[seedA.x][seedA.y] = 'a';
       region.subregions[seedB.x][seedB.y] = 'b';
 
       const frontier = [seedA, seedB];
 
       while (frontier.length > 0) {
-        const index = Math.floor(Math.random() * frontier.length);
+        const index = Math.floor(this.random() * frontier.length);
         const cell = frontier[index];
 
         const neighbors = this.maze
@@ -104,7 +104,7 @@ export class Blob extends MazeGenerator {
           .filter((n) => region.subregions[n.x][n.y] === 'm');
 
         if (neighbors.length > 0) {
-          const neighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+          const neighbor = neighbors[Math.floor(this.random() * neighbors.length)];
           region.subregions[neighbor.x][neighbor.y] = region.subregions[cell.x][cell.y];
           frontier.push(neighbor);
         } else {
@@ -118,7 +118,7 @@ export class Blob extends MazeGenerator {
           this.maze.neighbors(cell).filter((n) => region.subregions[n.x][n.y] === 'b'),
         );
 
-      boundary.splice(Math.floor(Math.random() * boundary.length), 1);
+      boundary.splice(Math.floor(this.random() * boundary.length), 1);
 
       for (const cd of boundary) {
         this.walls.push({ ...cd, direction: this.maze.opposite(cd.direction) });

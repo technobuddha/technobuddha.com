@@ -17,12 +17,10 @@ export class MazeFactory {
   public exit: MazeSettings['exit'];
   public start: MazeSettings['start'];
   public random: MazeSettings['random'];
-  public selectNeighbor: MazeSettings['selectNeighbor'];
 
   public constructor({
     drawing: context,
     random = Math.random,
-    selectNeighbor,
     width,
     height,
     cellSize,
@@ -35,7 +33,6 @@ export class MazeFactory {
   }: MazeSettings = {}) {
     this.context = context;
     this.random = random;
-    this.selectNeighbor = selectNeighbor;
     this.width = width;
     this.height = height;
     this.cellSize = cellSize;
@@ -67,7 +64,6 @@ export class MazeFactory {
       const mg = generator({
         maze,
         start: this.start,
-        selectNeighbor: this.selectNeighbor,
         random: this.random,
       });
       return mg.generate();

@@ -9,11 +9,13 @@ export abstract class Drawing {
     this.height = height;
   }
 
-  public abstract clear(color?: string): void;
+  public abstract clear(color?: string, originX?: number, originY?: number): void;
 
   public abstract line(start: XY, finish: XY, color: string): void;
 
   public abstract rect(start: XY, finish: XY, color: string): void;
 
   public abstract polygon(points: XY[], color: string): void;
+
+  public abstract text(xy: XY, text: string, color: string): void;
 }

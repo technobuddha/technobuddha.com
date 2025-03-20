@@ -11,7 +11,7 @@ export class BinaryTree extends MazeGenerator {
     // TODO
     const neighbors = this.maze.neighbors(this.currentCell, { directions: ['S', 'E'] });
     if (neighbors.length > 0) {
-      this.maze.removeWall(this.currentCell, this.selectNeighbor(neighbors)!.direction);
+      this.maze.removeWall(this.currentCell, this.randomPick(neighbors)!.direction);
     }
 
     this.currentCell.x++;

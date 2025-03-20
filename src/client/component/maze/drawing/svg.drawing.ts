@@ -54,4 +54,9 @@ export class SVGDrawing extends Drawing {
     const pointsString = points.map((point) => `${point.x},${point.y}`).join(' ');
     this.svg.append(create('polygon', { points: pointsString, fill: color }));
   }
+
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  public text(_xy: XY, _text: string, _color: string): void {
+    throw new Error('Method not implemented.');
+  }
 }

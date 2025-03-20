@@ -17,6 +17,7 @@ import { HexagonMaze } from './maze/hexagon-maze.js';
 import { type Maze, type MazeProperties } from './maze/maze.js';
 import { MazeFactory } from './maze/maze-factory.js';
 import { OctogonMaze } from './maze/octogon-maze.js';
+import { PentagonMaze } from './maze/pentagon-maze.js';
 import { SquareMaze } from './maze/square-maze.js';
 import { TriangleMaze } from './maze/triangle-maze.js';
 import { ZetaMaze } from './maze/zeta-maze.js';
@@ -38,12 +39,13 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => (
 );
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
-  brick: (props) => new BrickMaze(props),
-  square: (props) => new SquareMaze(props),
-  triangle: (props) => new TriangleMaze(props),
-  hexagon: (props) => new HexagonMaze(props),
-  octogon: (props) => new OctogonMaze(props),
-  zeta: (props) => new ZetaMaze(props),
+  pentagon: (props) => new PentagonMaze(props),
+  // brick: (props) => new BrickMaze(props),
+  // square: (props) => new SquareMaze(props),
+  // triangle: (props) => new TriangleMaze(props),
+  // hexagon: (props) => new HexagonMaze(props),
+  // octogon: (props) => new OctogonMaze(props),
+  // zeta: (props) => new ZetaMaze(props),
 };
 
 const algorithms: Record<
@@ -81,11 +83,11 @@ const algorithms: Record<
 };
 
 const solvers: Record<string, (props: MazeSolverProperties) => MazeSolver> = {
-  depthFirstSearch: (props) => new DepthFirstSearch(props),
+  // depthFirstSearch: (props) => new DepthFirstSearch(props),
   deadEndFiller: (props) => new DeadEndFiller(props),
   deadEndRemover: (props) => new DeadEndRemover(props),
-  followTheRightWall: (props) => new WallWalking({ ...props, turn: 'right' }),
-  followTheLeftWall: (props) => new WallWalking({ ...props, turn: 'left' }),
+  // followTheRightWall: (props) => new WallWalking({ ...props, turn: 'right' }),
+  // followTheLeftWall: (props) => new WallWalking({ ...props, turn: 'left' }),
   breadthFirstSearch: (props) => new BreadthFirstSearch(props),
 };
 
@@ -132,9 +134,10 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => 
             .then(() => {
               setTimeout(() => {
                 setRedraw((x) => x + 1);
-              }, 10000);
+              }, 5000);
             });
         }, 0);
+        // setTimeout(() => setRedraw((x) => x + 1), 300000);
       });
     }
   }, [redraw, boxHeight, boxWidth]);

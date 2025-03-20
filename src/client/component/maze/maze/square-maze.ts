@@ -25,6 +25,11 @@ export class SquareMaze extends Maze {
   }
 
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  protected cellKind(cell: Cell): number {
+    return 0;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   protected initialWalls(): Wall {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     return { N: true, E: true, W: true, S: true };

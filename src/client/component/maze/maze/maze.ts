@@ -47,15 +47,19 @@ export type MazeProperties = {
   wallColor?: string;
   entrance?: CDSpecification;
   exit?: CDSpecification;
+  random?(this: void): number;
 };
 
 export type Wall = Record<Direction, boolean | undefined>;
 export abstract class Maze {
   public drawing: MazeProperties['drawing'];
 
+  protected readonly random: MazeProperties['random'];
+
   public readonly directions: Direction[] = [];
   public readonly corners: Corner[] = [];
   public readonly walls: Wall[][];
+
   public readonly width: Exclude<MazeProperties['width'], undefined>;
   public readonly height: Exclude<MazeProperties['height'], undefined>;
   public readonly cellSize: Exclude<MazeProperties['cellSize'], undefined>;
@@ -76,6 +80,7 @@ export abstract class Maze {
       wallColor = 'white',
       entrance = 'top left',
       exit = 'bottom right',
+      random = Math.random,
     }: MazeProperties,
     directions: Direction[],
     corners: Corner[],
@@ -91,10 +96,15 @@ export abstract class Maze {
     this.height = height ?? this.computeHeight(drawing?.height) ?? 25;
     this.entrance = this.resolveDirection(entrance);
     this.exit = this.resolveDirection(exit);
+    this.random = random;
 
     this.walls = create2DArray(this.width, this.height, (x, y) => this.initialWalls(x, y));
     this.walls[this.entrance.x][this.entrance.y][this.entrance.direction] = false;
     this.walls[this.exit.x][this.exit.y][this.exit.direction] = false;
+  }
+
+  protected randomPick<T>(array: T[]): T | undefined {
+    return randomPick(array, this.random);
   }
 
   public resolveDirection(spec: CDSpecification): CellDirection {
@@ -107,10 +117,10 @@ export abstract class Maze {
     const adjacent = this.adjacent(cell);
     const outside = adjacent.filter((c) => !this.inMaze(c));
     if (outside.length > 0) {
-      return { ...cell, direction: randomPick(outside)!.direction };
+      return { ...cell, direction: this.randomPick(outside)!.direction };
     }
 
-    return { ...cell, direction: randomPick(adjacent)!.direction };
+    return { ...cell, direction: this.randomPick(adjacent)!.direction };
   }
 
   protected computeWidth(width?: number): number | undefined {
@@ -131,7 +141,7 @@ export abstract class Maze {
 
   public draw(): void {
     if (this.drawing) {
-      this.drawing.clear();
+      this.clear();
 
       for (let x = 0; x < this.width; ++x) {
         for (let y = 0; y < this.height; ++y) {
@@ -145,7 +155,7 @@ export abstract class Maze {
           }
 
           for (const corner of this.corners) {
-            if (corner[0] in wall && corner[1] in wall) {
+            if (wall[corner[0]] && wall[corner[1]]) {
               this.drawPillar({ x, y, corner });
             }
           }
@@ -198,7 +208,7 @@ export abstract class Maze {
     }
 
     for (const corner of this.corners) {
-      if (corner[0] in wall && corner[1] in wall) {
+      if (wall[corner[0]] && wall[corner[1]]) {
         this.drawPillar({ ...cell, corner }, this.wallColor);
       }
     }
@@ -209,7 +219,7 @@ export abstract class Maze {
   }
 
   public adjacent(cell: Cell, { directions = this.directions }: Overrides = {}): CellDirection[] {
-    return directions.map((direction) => this.move(cell, direction)).filter((c) => c !== null);
+    return directions.map((direction) => this.move(cell, direction)).filter((c) => c != null);
   }
 
   public neighbors(
@@ -228,17 +238,8 @@ export abstract class Maze {
     );
   }
 
-  public sides(
-    cell: Cell,
-    { directions = this.directions, walls = this.walls }: Overrides = {},
-  ): number {
-    let s = 0;
-    for (const direction of directions) {
-      if (walls[cell.x][cell.y][direction]) {
-        s++;
-      }
-    }
-    return s;
+  public sides(cell: Cell, { walls = this.walls }: Overrides = {}): number {
+    return Object.values(walls[cell.x][cell.y]).reduce((p, v) => p + (v ? 1 : 0), 0);
   }
 
   public deadEnds({ directions = this.directions, walls = this.walls }: Overrides = {}): Cell[] {
@@ -273,11 +274,14 @@ export abstract class Maze {
 
   public prepareContext(context?: Drawing): void {
     this.drawing = context;
-    context?.clear();
+    this.clear();
   }
 
   public clear(color?: string): void {
-    this.drawing?.clear(color);
+    const [, wMargin] = this.drawingWidth();
+    const [, hMargin] = this.drawingHeight();
+
+    this.drawing?.clear(color, wMargin / 2, hMargin / 2);
   }
 
   public removeWall(
@@ -411,9 +415,9 @@ export abstract class Maze {
 
   public async braid(): Promise<void> {
     for (;;) {
-      const cell = randomPick(this.deadEnds());
+      const cell = this.randomPick(this.deadEnds());
       if (cell) {
-        const neighbor = randomPick(
+        const neighbor = this.randomPick(
           this.neighbors(cell).filter((c) => this.walls[cell.x][cell.y][c.direction]),
         );
         if (neighbor) {
@@ -427,6 +431,7 @@ export abstract class Maze {
 
   protected abstract drawingWidth(): [cell: number, padding: number];
   protected abstract drawingHeight(): [cell: number, padding: number];
+  protected abstract cellKind(cell: Cell): number;
   protected abstract initialWalls(x: number, y: number): Wall;
 
   public abstract opposite(direction: Direction): Direction;
@@ -440,6 +445,10 @@ export abstract class Maze {
   public abstract drawPillar(cell: CellCorner, color?: string): void;
   public abstract drawPath(cell: CellDirection, color?: string): void;
   public abstract drawX(cell: Cell, color?: string, cellColor?: string): void;
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  public drawText(_cell: Cell, _text: string, _color?: string): void {
+    //
+  }
 
   public abstract rightTurn(direction: Direction): Direction[];
   public abstract leftTurn(direction: Direction): Direction[];

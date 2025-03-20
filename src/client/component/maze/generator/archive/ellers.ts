@@ -1,4 +1,4 @@
-import { create2DArray, randomPick, randomShuffle } from '@technobuddha/library';
+import { create2DArray } from '@technobuddha/library';
 import { range, uniqBy } from 'lodash-es';
 
 import { type Cell, type CellDirection } from '../../maze/maze.js';
@@ -51,14 +51,13 @@ export class Ellers extends MazeGenerator {
     const currentSet = this.set[this.currentCell.x][this.currentCell.y];
 
     if (this.random() < 0.5 || this.currentCell.y === this.maze.height - 1) {
-      const next = randomPick(
+      const next = this.randomPick(
         this.maze
           .neighbors(this.currentCell)
           .filter(
             ({ x, y }) =>
               x >= this.currentCell.x && y === this.currentCell.y && currentSet !== this.set[x][y],
           ),
-        this.random,
       );
       if (next) {
         this.maze.removeWall(this.currentCell, next.direction);
@@ -88,7 +87,7 @@ export class Ellers extends MazeGenerator {
 
         if (downs.length > 1) {
           const numberOfDowns = Math.floor(this.random() * (downs.length - 1) + 1);
-          downs = randomShuffle(downs, this.random).slice(0, numberOfDowns);
+          downs = this.randomShuffle(downs).slice(0, numberOfDowns);
         }
 
         return { set, downs };

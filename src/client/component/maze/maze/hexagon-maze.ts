@@ -33,6 +33,11 @@ export class HexagonMaze extends Maze {
   }
 
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  protected cellKind(_cell: Cell): number {
+    return 0;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   protected initialWalls(): Wall {
     return { a: true, b: true, c: true, d: true, e: true, f: true };
   }
@@ -468,15 +473,13 @@ export class HexagonMaze extends Maze {
 
   public drawPath(cd: CellDirection, color = 'red'): void {
     if (this.drawing) {
-      const ctx = this.drawing;
-
       const { x2, x5, x6, x9, y2, y4, y5, y6 } = this.offsets(cd);
 
       this.drawCell(cd);
 
       switch (cd.direction) {
         case 'a': {
-          ctx.polygon(
+          this.drawing.polygon(
             [
               { x: x5, y: y6 },
               { x: x6, y: y6 },
@@ -487,7 +490,7 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'b': {
-          ctx.polygon(
+          this.drawing.polygon(
             [
               { x: x2, y: y4 },
               { x: x5, y: y6 },
@@ -498,7 +501,7 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'c': {
-          ctx.polygon(
+          this.drawing.polygon(
             [
               { x: x2, y: y4 },
               { x: x5, y: y2 },
@@ -509,7 +512,7 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'd': {
-          ctx.polygon(
+          this.drawing.polygon(
             [
               { x: x5, y: y2 },
               { x: x6, y: y2 },
@@ -520,7 +523,7 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'e': {
-          ctx.polygon(
+          this.drawing.polygon(
             [
               { x: x6, y: y2 },
               { x: x9, y: y5 },
@@ -531,7 +534,7 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'f': {
-          ctx.polygon(
+          this.drawing.polygon(
             [
               { x: x9, y: y4 },
               { x: x6, y: y6 },
@@ -553,7 +556,7 @@ export class HexagonMaze extends Maze {
 
       this.drawCell(cell, cellColor);
 
-      this.drawing.line({ x: x2, y: y4 }, { x: x9, y: y6 }, color);
+      this.drawing.line({ x: x2, y: y4 }, { x: x9, y: y4 }, color);
       this.drawing.line({ x: x5, y: y2 }, { x: x6, y: y6 }, color);
       this.drawing.line({ x: x6, y: y2 }, { x: x5, y: y6 }, color);
     }

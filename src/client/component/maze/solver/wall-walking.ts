@@ -21,7 +21,7 @@ export class WallWalking extends MazeSolver {
       this.turn = this.maze.leftTurn.bind(this);
     } else {
       this.turn =
-        Math.random() < 0.0 ? this.maze.rightTurn.bind(this) : this.maze.leftTurn.bind(this);
+        this.random() < 0.0 ? this.maze.rightTurn.bind(this) : this.maze.leftTurn.bind(this);
     }
   }
 

@@ -1,5 +1,3 @@
-import { randomShuffle } from '@technobuddha/library';
-
 import { animate } from '../util/animate.js';
 
 import { MazeSolver } from './maze-solver.js';
@@ -10,11 +8,7 @@ export class DeadEndFiller extends MazeSolver {
 
     this.maze.prepareContext(this.context);
 
-    const deadEnds = randomShuffle(this.maze.deadEnds());
-    // for (const end of deadEnds) {
-    //   this.maze.drawX(end, 'red');
-    // }
-
+    const deadEnds = this.randomShuffle(this.maze.deadEnds());
     for (const deadEnd of deadEnds) {
       for (let cell = deadEnd; this.maze.isDeadEnd(cell, { walls }); ) {
         const [move] = this.maze.validMoves(cell, { walls });

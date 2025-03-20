@@ -11,7 +11,7 @@ export class ZetaMaze extends OctogonMaze {
   protected override offsets({ x, y }: Cell): Record<string, number> {
     const ao = this.cellSize / Math.sqrt(4 + SQ2 * 2);
 
-    if (x % 2 === 0) {
+    if (this.cellKind({ x, y }) === 0) {
       const x0 = (x * this.cellSize) / 2;
       const x1 = x0 + (SQ2 * this.wallSize) / 2;
       const x3 = x0 + this.cellSize / 4;
@@ -93,7 +93,7 @@ export class ZetaMaze extends OctogonMaze {
 
   public override drawFloor(cell: Cell, color = this.cellColor): void {
     if (this.drawing) {
-      if (cell.x % 2 === 0) {
+      if (this.cellKind(cell) === 0) {
         const { x0, x4, x7, xb, y0, y4, y7, yb } = this.offsets(cell);
 
         this.drawing.polygon(
@@ -127,7 +127,7 @@ export class ZetaMaze extends OctogonMaze {
 
   public override drawWall(cd: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
-      if (cd.x % 2 === 0) {
+      if (this.cellKind(cd) === 0) {
         const { x0, x1, x2, x3, x5, x6, x8, x9, xa, xb, y0, y1, y2, y3, y5, y6, y8, y9, ya, yb } =
           this.offsets(cd);
         switch (cd.direction) {
@@ -245,7 +245,7 @@ export class ZetaMaze extends OctogonMaze {
 
   public override drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
     if (this.drawing) {
-      if (x % 2 === 0) {
+      if (this.cellKind({ x, y }) === 0) {
         switch (corner) {
           case 'ab': {
             const { x6, x7, x9, y0, y1, y3 } = this.offsets({ x, y });
@@ -364,7 +364,7 @@ export class ZetaMaze extends OctogonMaze {
     if (this.drawing) {
       this.drawCell(cell);
 
-      if (cell.x % 2 === 0) {
+      if (this.cellKind(cell) === 0) {
         switch (cell.direction) {
           case 'a': {
             const { x5, x6, y2, y8 } = this.offsets(cell);
@@ -487,7 +487,7 @@ export class ZetaMaze extends OctogonMaze {
 
   public override drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
     if (this.drawing) {
-      if (cell.x % 2 === 0) {
+      if (this.cellKind(cell) === 0) {
         this.drawCell(cell, cellColor);
 
         const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.offsets(cell);

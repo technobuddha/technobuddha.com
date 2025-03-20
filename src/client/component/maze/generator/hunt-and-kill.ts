@@ -1,4 +1,4 @@
-import { create2DArray, randomPick, randomShuffle } from '@technobuddha/library';
+import { create2DArray } from '@technobuddha/library';
 
 import { type Cell } from '../maze/maze.js';
 
@@ -41,7 +41,7 @@ export class HuntAndKill extends MazeGenerator {
         return cells.sort((a, b) => b.x - a.x || a.y - b.y);
       }
       case 'random': {
-        return randomShuffle(cells, this.random);
+        return this.randomShuffle(cells);
       }
       // no default
     }
@@ -51,9 +51,8 @@ export class HuntAndKill extends MazeGenerator {
     // kill
     this.visited[this.currentCell.x][this.currentCell.y] = true;
 
-    const next = randomPick(
+    const next = this.randomPick(
       this.maze.neighbors(this.currentCell).filter((m) => !this.visited[m.x][m.y]),
-      this.random,
     );
     if (next) {
       this.maze.removeWall(this.currentCell, next.direction);
@@ -65,9 +64,8 @@ export class HuntAndKill extends MazeGenerator {
     for (const target of this.selectHunted(
       this.maze.all().filter((c) => !this.visited[c.x][c.y]),
     )) {
-      const hunted = randomPick(
+      const hunted = this.randomPick(
         this.maze.neighbors(target).filter((n) => this.visited[n.x][n.y]),
-        this.random,
       );
       if (hunted) {
         this.maze.removeWall(target, hunted.direction);

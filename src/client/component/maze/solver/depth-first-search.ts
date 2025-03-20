@@ -1,4 +1,4 @@
-import { create2DArray, randomPick, randomShuffle } from '@technobuddha/library';
+import { create2DArray, randomShuffle } from '@technobuddha/library';
 
 import { type Cell, type Direction } from '../maze/maze.js';
 import { animate } from '../util/animate.js';

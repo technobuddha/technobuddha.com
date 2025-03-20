@@ -17,15 +17,26 @@
   "homepage": "https://github.com/technobuddha/technobuddha.com#readme",
   "packageManager": "yarn@4.6.0",
   "devDependencies": {
-    "@technobuddha/project": "0.0.152"
+    "@technobuddha/project": "0.0.155",
+    "@types/react": "19.0.8",
+    "@types/react-dom": "19.0.3"
   },
   "technobuddhaProject": {
-    "version": "0.0.152",
+    "version": "0.0.155",
     "created": "2020-04-01T04:20:42.690Z",
-    "updated": "2025-02-14T12:47:17.129Z"
+    "updated": "2025-02-14T19:52:54.790Z"
   },
   "type": "module",
   "engines": {
     "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "i18next": "24.2.2",
+    "i18next-browser-languagedetector": "8.0.3",
+    "i18next-http-backend": "3.0.2",
+    "notistack": "3.0.2",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-i18next": "15.4.0"
   }
 }

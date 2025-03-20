@@ -6,5 +6,6 @@ export {
   Routes,
   useLocation,
   useNavigate,
-  useParams /*useRouteMatch*/,
+  useParams,
+  useResolvedPath,
 } from 'react-router';

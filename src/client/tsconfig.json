@@ -11,5 +11,5 @@
   },
   "include": ["**/*.tsx", "**/*.ts"],
   "exclude": [],
-  "references": [{ "path": "../settings/tsconfig.json" }]
+  "references": [{ "path": "../schema" }, { "path": "../settings" }, { "path": "../server" }]
 }

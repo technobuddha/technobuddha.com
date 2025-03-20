@@ -75,6 +75,7 @@
     "@react-router/node": "7.3.0",
     "@react-router/serve": "7.3.0",
     "@technobuddha/color": "0.3.1",
+    "@technobuddha/datagrid": "1.2.0",
     "@technobuddha/library": "1.9.2",
     "@technobuddha/mui-size": "1.2.0",
     "@technobuddha/react-hooks": "1.6.1",

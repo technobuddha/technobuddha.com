@@ -6,16 +6,14 @@ import {
   GiConwayLifeGlider,
   GiHouse,
   GiMaze,
-  GiMusicalNotes,
+  // GiMusicalNotes,
   GiOilySpiral,
   GiOrbital,
   GiPalette,
 } from 'react-icons/gi';
-// import { GiMusicalNotes } from 'react-icons/gi';
 import { HiColorSwatch } from 'react-icons/hi';
 
-// import Music                from '#component/music';
-// TODO these should be #component...
+// import { Music } from '#component/music';
 import { Chaos } from '../client/component/chaos/index.js';
 import { Color } from '../client/component/color';
 import { Home } from '../client/component/home';
@@ -71,19 +69,19 @@ export const components: (t: TFunction) => Component[] = (t) => [
       t('Add a "What\'s new" section.'),
     ],
   },
-  {
-    active: false,
-    name: 'music',
-    icon: GiMusicalNotes,
-    primary: t('Music'),
-    secondary: t('Music Collection'),
-    location: '/music',
-    component: () => <div />, //Music,
-    todo: [
-      t('Add a description to this component'),
-      t('Increase functionality to show individual artists/albums/genres'),
-    ],
-  },
+  // {
+  //   active: true,
+  //   name: 'music',
+  //   icon: GiMusicalNotes,
+  //   primary: t('Music'),
+  //   secondary: t('Music Collection'),
+  //   location: '/music',
+  //   component: Music,
+  //   xxxtodo: [
+  //     t('Add a description to this component'),
+  //     t('Increase functionality to show individual artists/albums/genres'),
+  //   ],
+  // },
   {
     active: true,
     name: 'maze',
@@ -150,20 +148,32 @@ export const components: (t: TFunction) => Component[] = (t) => [
     description: (
       <div>
         <div>
-          {t('A')} <a href="https://en.wikipedia.org/wiki/Cellular_automaton">{t('cellular automaton')}</a>{' '}
+          {t('A')}{' '}
+          <a href="https://en.wikipedia.org/wiki/Cellular_automaton">{t('cellular automaton')}</a>{' '}
           {t('devised by the British mathematician')}{' '}
-          <a href="https://en.wikipedia.org/wiki/John_Horton_Conway">John Horton Conway</a> {t('in 1970.')}
-          {t('It is a')} <a href="https://en.wikipedia.org/wiki/Zero-player_game">{t('zero-player game')}</a>,
-          {t('meaning that its evolution is determined by its initial state, requiring no further input.')}
-          {t('One interacts with the Game of Life by creating an initial configuration and observing how it evolves.')}
-          {t('It is')} <a href="https://en.wikipedia.org/wiki/Turing_complete">{t('Turing complete')}</a> {t('and can simulate an')}{' '}
+          <a href="https://en.wikipedia.org/wiki/John_Horton_Conway">John Horton Conway</a>{' '}
+          {t('in 1970.')}
+          {t('It is a')}{' '}
+          <a href="https://en.wikipedia.org/wiki/Zero-player_game">{t('zero-player game')}</a>,
+          {t(
+            'meaning that its evolution is determined by its initial state, requiring no further input.',
+          )}
+          {t(
+            'One interacts with the Game of Life by creating an initial configuration and observing how it evolves.',
+          )}
+          {t('It is')}{' '}
+          <a href="https://en.wikipedia.org/wiki/Turing_complete">{t('Turing complete')}</a>{' '}
+          {t('and can simulate an')}{' '}
           <a href="https://en.wikipedia.org/wiki/Von_Neumann_universal_constructor">
             {t('universal constructor')}
           </a>{' '}
-          {t('or any other')} <a href="https://en.wikipedia.org/wiki/Turing_machine">{t('Turing machine')}</a>.
+          {t('or any other')}{' '}
+          <a href="https://en.wikipedia.org/wiki/Turing_machine">{t('Turing machine')}</a>.
         </div>
         <div>
-          {t('This implementation is designed to run as fast as possible without using any graphic accelaration, or multi-threading.')}
+          {t(
+            'This implementation is designed to run as fast as possible without using any graphic accelaration, or multi-threading.',
+          )}
         </div>
       </div>
     ),
@@ -183,7 +193,8 @@ export const components: (t: TFunction) => Component[] = (t) => [
     description: (
       <div>
         {t('Take a lot of data from')}{' '}
-        <a href="https://ssd.jpl.nasa.gov/horizons/app.html#/">{t("JPL's Horizons System")}</a> {t('and plug that into the basic mathamatical equations for gravity, and you get a')}{' '}
+        <a href="https://ssd.jpl.nasa.gov/horizons/app.html#/">{t("JPL's Horizons System")}</a>{' '}
+        {t('and plug that into the basic mathamatical equations for gravity, and you get a')}{' '}
         <a href="https://en.wikipedia.org/wiki/N-body_simulation">{t('N-body similation')}</a>
       </div>
     ),

@@ -253,10 +253,10 @@ export class BrickMaze extends Maze {
   }
 
   public drawFloor(cell: Cell, color = this.cellColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x0, x9, y0, y5 } = this.offsets(cell);
 
-      this.context.polygon(
+      this.drawing.polygon(
         [
           { x: x0, y: y0 },
           { x: x9, y: y0 },
@@ -269,32 +269,32 @@ export class BrickMaze extends Maze {
   }
 
   public drawWall(cd: CellDirection, color = this.wallColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x0, x1, x4, x5, x8, x9, y0, y1, y4, y5 } = this.offsets(cd);
 
       switch (cd.direction) {
         case 'a': {
-          this.context.rect({ x: x1, y: y0 }, { x: x4, y: y1 }, color);
+          this.drawing.rect({ x: x1, y: y0 }, { x: x4, y: y1 }, color);
           break;
         }
         case 'b': {
-          this.context.rect({ x: x5, y: y0 }, { x: x8, y: y1 }, color);
+          this.drawing.rect({ x: x5, y: y0 }, { x: x8, y: y1 }, color);
           break;
         }
         case 'c': {
-          this.context.rect({ x: x8, y: y1 }, { x: x9, y: y4 }, color);
+          this.drawing.rect({ x: x8, y: y1 }, { x: x9, y: y4 }, color);
           break;
         }
         case 'd': {
-          this.context.rect({ x: x5, y: y4 }, { x: x8, y: y5 }, color);
+          this.drawing.rect({ x: x5, y: y4 }, { x: x8, y: y5 }, color);
           break;
         }
         case 'e': {
-          this.context.rect({ x: x1, y: y4 }, { x: x4, y: y5 }, color);
+          this.drawing.rect({ x: x1, y: y4 }, { x: x4, y: y5 }, color);
           break;
         }
         case 'f': {
-          this.context.rect({ x: x0, y: y1 }, { x: x1, y: y4 }, color);
+          this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y4 }, color);
           break;
         }
 
@@ -304,37 +304,37 @@ export class BrickMaze extends Maze {
   }
 
   public drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x0, x1, x4, x5, x8, x9, y0, y1, y4, y5 } = this.offsets({ x, y });
 
       switch (corner) {
         case 'fa': {
-          this.context.rect({ x: x0, y: y0 }, { x: x1, y: y1 }, color);
+          this.drawing.rect({ x: x0, y: y0 }, { x: x1, y: y1 }, color);
           break;
         }
 
         case 'ab': {
-          this.context.rect({ x: x4, y: y0 }, { x: x5, y: y1 }, color);
+          this.drawing.rect({ x: x4, y: y0 }, { x: x5, y: y1 }, color);
           break;
         }
 
         case 'bc': {
-          this.context.rect({ x: x8, y: y0 }, { x: x9, y: y1 }, color);
+          this.drawing.rect({ x: x8, y: y0 }, { x: x9, y: y1 }, color);
           break;
         }
 
         case 'cd': {
-          this.context.rect({ x: x8, y: y4 }, { x: x9, y: y5 }, color);
+          this.drawing.rect({ x: x8, y: y4 }, { x: x9, y: y5 }, color);
           break;
         }
 
         case 'de': {
-          this.context.rect({ x: x4, y: y4 }, { x: x5, y: y5 }, color);
+          this.drawing.rect({ x: x4, y: y4 }, { x: x5, y: y5 }, color);
           break;
         }
 
         case 'ef': {
-          this.context.rect({ x: x0, y: y4 }, { x: x1, y: y5 }, color);
+          this.drawing.rect({ x: x0, y: y4 }, { x: x1, y: y5 }, color);
           break;
         }
 
@@ -344,14 +344,14 @@ export class BrickMaze extends Maze {
   }
 
   public drawPath(cell: CellDirection, color = 'red'): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x2, x3, x6, xc1, xc2, x7, y2, yc, y3 } = this.offsets(cell);
 
       this.drawCell(cell);
 
       switch (cell.direction) {
         case 'a': {
-          this.context.polygon(
+          this.drawing.polygon(
             [
               { x: x2, y: y3 },
               { x: xc1, y: y2 },
@@ -362,7 +362,7 @@ export class BrickMaze extends Maze {
           break;
         }
         case 'b': {
-          this.context.polygon(
+          this.drawing.polygon(
             [
               { x: x6, y: y3 },
               { x: xc2, y: y2 },
@@ -373,7 +373,7 @@ export class BrickMaze extends Maze {
           break;
         }
         case 'c': {
-          this.context.polygon(
+          this.drawing.polygon(
             [
               { x: x6, y: y2 },
               { x: x7, y: yc },
@@ -384,7 +384,7 @@ export class BrickMaze extends Maze {
           break;
         }
         case 'd': {
-          this.context.polygon(
+          this.drawing.polygon(
             [
               { x: x6, y: y2 },
               { x: xc2, y: y3 },
@@ -395,7 +395,7 @@ export class BrickMaze extends Maze {
           break;
         }
         case 'e': {
-          this.context.polygon(
+          this.drawing.polygon(
             [
               { x: x2, y: y2 },
               { x: xc1, y: y3 },
@@ -406,7 +406,7 @@ export class BrickMaze extends Maze {
           break;
         }
         case 'f': {
-          this.context.polygon(
+          this.drawing.polygon(
             [
               { x: x3, y: y2 },
               { x: x2, y: yc },
@@ -423,13 +423,13 @@ export class BrickMaze extends Maze {
   }
 
   public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x1, x8, y1, y4 } = this.offsets(cell);
 
       this.drawCell(cell, cellColor);
 
-      this.context.line({ x: x1, y: y1 }, { x: x8, y: y4 }, color);
-      this.context.line({ x: x1, y: y4 }, { x: x8, y: y1 }, color);
+      this.drawing.line({ x: x1, y: y1 }, { x: x8, y: y4 }, color);
+      this.drawing.line({ x: x1, y: y4 }, { x: x8, y: y1 }, color);
     }
   }
 

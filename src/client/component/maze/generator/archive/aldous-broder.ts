@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.js';
+import { MazeGenerator, type MazeGeneratorProperties } from '../maze-generator.js';
 
 export class AldousBroder extends MazeGenerator {
   private readonly visited: boolean[][] = [];
@@ -17,7 +17,7 @@ export class AldousBroder extends MazeGenerator {
 
   public override step(): boolean {
     for (;;) {
-      const cell = this.selectNeighbor(this.maze.neighbors(this.currentCell));
+      const cell = this.selectNeighbor(this.maze.neighbors(this.currentCell))!;
 
       if (!this.visited[cell.x][cell.y]) {
         this.maze.removeWall(this.currentCell, cell.direction);

@@ -20,7 +20,7 @@ export class MazeFactory {
   public selectNeighbor: MazeSettings['selectNeighbor'];
 
   public constructor({
-    context,
+    drawing: context,
     random = Math.random,
     selectNeighbor,
     width,
@@ -52,7 +52,7 @@ export class MazeFactory {
     generator?: (props: MazeGeneratorProperties) => MazeGenerator,
   ): Promise<Maze> {
     const maze = mazeMaker({
-      context: this.context,
+      drawing: this.context,
       width: this.width,
       height: this.height,
       cellSize: this.cellSize,

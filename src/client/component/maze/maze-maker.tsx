@@ -3,9 +3,10 @@ import React from 'react';
 import { randomPick, toCapitalWordCase, toHumanCase } from '@technobuddha/library';
 import { Size } from '@technobuddha/mui-size';
 
-import { Drawing } from './drawing/drawing.js';
+import { CanvasDrawing } from './drawing/canvas-drawing.js';
 import { Blob } from './generator/blob.js';
 import { GrowingTree } from './generator/growing-tree.js';
+import { HuntAndKill } from './generator/hunt-and-kill.js';
 import { Kruskals } from './generator/kruskals.js';
 import { type MazeGenerator, type MazeGeneratorProperties } from './generator/maze-generator.js';
 import { Prims } from './generator/prims.js';
@@ -45,13 +46,38 @@ const mazes: Record<string, (props: MazeProperties) => Maze> = {
   zeta: (props) => new ZetaMaze(props),
 };
 
-const algorithms: Record<string, (props: MazeGeneratorProperties) => MazeGenerator> = {
-  blob: (props) => new Blob(props),
-  growingTree: (props) => new GrowingTree(props),
-  kruskals: (props) => new Kruskals(props),
-  prims: (props) => new Prims(props),
-  recursizeBacktracker: (props) => new RecursiveBacktracker(props),
-  wilsons: (props) => new Wilsons(props),
+const algorithms: Record<
+  string,
+  Record<string, (props: MazeGeneratorProperties) => MazeGenerator>
+> = {
+  blob: {
+    normal: (props) => new Blob(props),
+  },
+  huntAndKill: {
+    random: (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
+    rows: (props) => new HuntAndKill({ huntMethod: 'rows', ...props }),
+    columns: (props) => new HuntAndKill({ huntMethod: 'columns', ...props }),
+    reverseRows: (props) => new HuntAndKill({ huntMethod: 'reverse-rows', ...props }),
+    reverseColumns: (props) => new HuntAndKill({ huntMethod: 'reverse-columns', ...props }),
+  },
+  growingTree: {
+    random: (props) => new GrowingTree({ method: 'random', ...props }),
+    oldest: (props) => new GrowingTree({ method: 'oldest', ...props }),
+    newest: (props) => new GrowingTree({ method: 'newest', ...props }),
+    middle: (props) => new GrowingTree({ method: 'middle', ...props }),
+  },
+  kruskals: {
+    normal: (props) => new Kruskals(props),
+  },
+  prims: {
+    normal: (props) => new Prims(props),
+  },
+  recursizeBacktracker: {
+    normal: (props) => new RecursiveBacktracker(props),
+  },
+  wilsons: {
+    normal: (props) => new Wilsons(props),
+  },
 };
 
 const solvers: Record<string, (props: MazeSolverProperties) => MazeSolver> = {
@@ -79,19 +105,20 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => 
 
   React.useEffect(() => {
     if (canvasMaze.current && canvasSolve.current) {
-      const contextMaze = new Drawing(canvasMaze.current.getContext('2d')!);
-      const contextSolve = new Drawing(canvasSolve.current.getContext('2d')!);
+      const contextMaze = new CanvasDrawing(canvasMaze.current);
+      const contextSolve = new CanvasDrawing(canvasSolve.current);
 
-      const factory = new MazeFactory({ context: contextMaze });
+      const factory = new MazeFactory({ drawing: contextMaze });
 
       const name = randomPick(Object.keys(mazes))!;
       const selectedMaze = mazes[name];
 
-      const algorithm = randomPick(Object.keys(algorithms))!;
-      const selectedAlgorithm = algorithms[algorithm];
+      const algorithm1 = randomPick(Object.keys(algorithms))!;
+      const algorithm2 = randomPick(Object.keys(algorithms[algorithm1]))!;
+      const selectedAlgorithm = algorithms[algorithm1][algorithm2];
 
       setMazeName(name);
-      setAlgorithmName(algorithm);
+      setAlgorithmName(`${algorithm1} ${algorithm2}`);
 
       const solver = randomPick(Object.keys(solvers))!;
       const selectedSolver = solvers[solver];
@@ -113,35 +140,37 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => 
   }, [redraw, boxHeight, boxWidth]);
 
   return (
-    <div style={{ position: 'relative' }}>
-      <div style={{ position: 'absolute', zIndex: 4, top: 0, left: boxWidth - 100 }}>
-        Maze Shape:
-        <br />
+    <div
+      style={{
+        position: 'relative',
+        backgroundColor: 'black',
+        color: 'white',
+        fontWeight: 'bold',
+        width: boxWidth,
+        height: boxHeight,
+      }}
+    >
+      <div style={{ position: 'absolute', zIndex: 4, top: 0, left: 0 }}>
+        Maze Shape:&nbsp;
         {toCapitalWordCase(toHumanCase(mazeName))}
-        <br />
-        <br />
-        Generator:
-        <br />
+        Generator:&nbsp;
         {toCapitalWordCase(toHumanCase(algorithmName))}
-        <br />
-        <br />
-        Solver:
-        <br />
+        &nbsp;|&nbsp; Solver:&nbsp;
         {toCapitalWordCase(toHumanCase(solverName))}
       </div>
       {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
       <canvas
         ref={canvasMaze}
-        width={boxWidth - 100}
-        height={boxHeight}
-        style={{ position: 'absolute', zIndex: 1 }}
+        width={boxWidth - 12}
+        height={boxHeight - 20}
+        style={{ position: 'absolute', top: 20, left: 6, zIndex: 1 }}
       />
       {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
       <canvas
         ref={canvasSolve}
-        width={boxWidth - 100}
-        height={boxHeight}
-        style={{ position: 'absolute', zIndex: 2 }}
+        width={boxWidth - 12}
+        height={boxHeight - 20}
+        style={{ position: 'absolute', top: 20, left: 6, zIndex: 2 }}
       />
     </div>
   );

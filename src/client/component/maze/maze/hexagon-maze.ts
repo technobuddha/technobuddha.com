@@ -279,10 +279,10 @@ export class HexagonMaze extends Maze {
   }
 
   public drawFloor(cell: Cell, color = this.cellColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x0, x3, x8, xB, y0, y4, y8 } = this.offsets(cell);
 
-      this.context.polygon(
+      this.drawing.polygon(
         [
           { x: x0, y: y4 },
           { x: x3, y: y0 },
@@ -297,8 +297,8 @@ export class HexagonMaze extends Maze {
   }
 
   public drawWall(cd: CellDirection, color = this.wallColor): void {
-    if (this.context) {
-      const ctx = this.context;
+    if (this.drawing) {
+      const ctx = this.drawing;
 
       const { x1, x2, x3, x5, x6, x8, x9, xA, y0, y1, y2, y3, y4, y5, y6, y7, y8 } =
         this.offsets(cd);
@@ -383,8 +383,8 @@ export class HexagonMaze extends Maze {
   }
 
   public drawPillar(cell: CellCorner, color = this.wallColor): void {
-    if (this.context) {
-      const ctx = this.context;
+    if (this.drawing) {
+      const ctx = this.drawing;
       const { x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xA, xB, y0, y1, y2, y3, y4, y5, y6, y7, y8 } =
         this.offsets(cell);
 
@@ -467,8 +467,8 @@ export class HexagonMaze extends Maze {
   }
 
   public drawPath(cd: CellDirection, color = 'red'): void {
-    if (this.context) {
-      const ctx = this.context;
+    if (this.drawing) {
+      const ctx = this.drawing;
 
       const { x2, x5, x6, x9, y2, y4, y5, y6 } = this.offsets(cd);
 
@@ -548,14 +548,14 @@ export class HexagonMaze extends Maze {
   }
 
   public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x2, x5, x6, x9, y2, y4, y6 } = this.offsets(cell);
 
       this.drawCell(cell, cellColor);
 
-      this.context.line({ x: x2, y: y4 }, { x: x9, y: y6 }, color);
-      this.context.line({ x: x5, y: y2 }, { x: x6, y: y6 }, color);
-      this.context.line({ x: x6, y: y2 }, { x: x5, y: y6 }, color);
+      this.drawing.line({ x: x2, y: y4 }, { x: x9, y: y6 }, color);
+      this.drawing.line({ x: x5, y: y2 }, { x: x6, y: y6 }, color);
+      this.drawing.line({ x: x6, y: y2 }, { x: x5, y: y6 }, color);
     }
   }
 }

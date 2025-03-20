@@ -5,48 +5,44 @@ import { type Cell } from '../maze/maze.js';
 import { type MazeGeneratorProperties } from './maze-generator.js';
 import { MazeGenerator } from './maze-generator.js';
 
-type SelectionMethod = 'newest' | 'oldest' | 'middle' | 'random';
+export type Method = 'newest' | 'oldest' | 'middle' | 'random';
+
+type GrowingTreeProperties = MazeGeneratorProperties & {
+  method?: Method | Record<Method, number>;
+};
 
 export class GrowingTree extends MazeGenerator {
   private readonly visited: boolean[][];
   private readonly list: Cell[];
+  private readonly method: Method | Record<Method, number>;
 
-  public constructor(props: MazeGeneratorProperties) {
+  public constructor({ method = 'random', ...props }: GrowingTreeProperties) {
     super(props);
 
+    this.method = method;
     this.visited = create2DArray(this.maze.width, this.maze.height, false);
     this.list = [this.start];
     this.visited[this.start.x][this.start.y] = true;
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  private selectMethod(cellSelectionMethod: SelectionMethod = 'random'): SelectionMethod {
-    //if(typeof cellSelectionMethod === 'string')
-    return cellSelectionMethod;
+  private selectMethod(): Method {
+    if (typeof this.method === 'string') {
+      return this.method;
+    }
 
-    // const selectionMethods = ['newest', 'oldest', 'middle', 'random'];
-    // const selectedMethods  = Object.entries(cellSelectionMethods)
-    // for(const key of Object.keys(cellSelectionMethod)) {
-    //     if(selectionMethods.includes(key))
-    //         selectedMethods.push({ method: key, weight: cellSelectionMethod[key] });
-    // }
+    const total = Object.values(this.method).reduce((a, b) => a + b, 0);
+    let rand = this.random() * total;
+    for (const key of Object.keys(this.method) as Method[]) {
+      rand -= this.method[key];
+      if (rand <= 0) {
+        return key;
+      }
+    }
 
-    // if(selectedMethods.length === 0) throw 'Invalid cell selection method';
-
-    // const sum = selectedMethods.reduce((a, b) => a + b.weight, 0);
-    // let acc = 0;
-
-    // selectedMethods = selectedMethods.map((method) => {
-    //   return { ...method, weight: (acc += method.weight) };
-    // });
-
-    // const rand = this.random() * sum;
-    // const res = selectedMethods.find((method) => rand <= method.weight);
-
-    // return res.method;
+    return 'random';
   }
 
-  public selectCell(selectionMethod: SelectionMethod): number {
+  public selectCell(selectionMethod: Method): number {
     switch (selectionMethod) {
       case 'newest': {
         return this.list.length - 1;

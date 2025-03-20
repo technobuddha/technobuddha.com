@@ -163,10 +163,10 @@ export class SquareMaze extends Maze {
   }
 
   public drawFloor(cell: Cell, color = this.cellColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x0, x5, y0, y5 } = this.offsets(cell);
 
-      this.context.polygon(
+      this.drawing.polygon(
         [
           { x: x0, y: y0 },
           { x: x5, y: y0 },
@@ -179,24 +179,24 @@ export class SquareMaze extends Maze {
   }
 
   public drawWall(cd: CellDirection, color = this.wallColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x0, x1, x4, x5, y0, y1, y4, y5 } = this.offsets(cd);
 
       switch (cd.direction) {
         case 'N': {
-          this.context.rect({ x: x1, y: y0 }, { x: x4, y: y0 }, color);
+          this.drawing.rect({ x: x1, y: y0 }, { x: x4, y: y0 }, color);
           break;
         }
         case 'S': {
-          this.context.rect({ x: x1, y: y4 }, { x: x4, y: y5 }, color);
+          this.drawing.rect({ x: x1, y: y4 }, { x: x4, y: y5 }, color);
           break;
         }
         case 'E': {
-          this.context.rect({ x: x4, y: y1 }, { x: x5, y: y4 }, color);
+          this.drawing.rect({ x: x4, y: y1 }, { x: x5, y: y4 }, color);
           break;
         }
         case 'W': {
-          this.context.rect({ x: x0, y: y1 }, { x: x1, y: y4 }, color);
+          this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y4 }, color);
           break;
         }
 
@@ -206,33 +206,33 @@ export class SquareMaze extends Maze {
   }
 
   public drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x0, x1, x4, x5, y0, y1, y4, y5 } = this.offsets({ x, y });
 
       if (corner === 'NW') {
-        this.context.rect({ x: x0, y: y0 }, { x: x1, y: y1 }, color);
+        this.drawing.rect({ x: x0, y: y0 }, { x: x1, y: y1 }, color);
       }
       if (corner === 'NE') {
-        this.context.rect({ x: x4, y: y0 }, { x: x5, y: y1 }, color);
+        this.drawing.rect({ x: x4, y: y0 }, { x: x5, y: y1 }, color);
       }
       if (corner === 'SW') {
-        this.context.rect({ x: x0, y: y4 }, { x: x1, y: y5 }, color);
+        this.drawing.rect({ x: x0, y: y4 }, { x: x1, y: y5 }, color);
       }
       if (corner === 'SE') {
-        this.context.rect({ x: x4, y: y4 }, { x: x5, y: y5 }, color);
+        this.drawing.rect({ x: x4, y: y4 }, { x: x5, y: y5 }, color);
       }
     }
   }
 
   public drawPath(cell: CellDirection, color = 'red'): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x2, xc, x3, y2, yc, y3 } = this.offsets(cell);
 
       this.drawCell(cell);
 
       switch (cell.direction) {
         case 'N': {
-          this.context.polygon(
+          this.drawing.polygon(
             [
               { x: x2, y: y3 },
               { x: xc, y: y2 },
@@ -243,7 +243,7 @@ export class SquareMaze extends Maze {
           break;
         }
         case 'S': {
-          this.context.polygon(
+          this.drawing.polygon(
             [
               { x: x2, y: y2 },
               { x: xc, y: y3 },
@@ -254,7 +254,7 @@ export class SquareMaze extends Maze {
           break;
         }
         case 'E': {
-          this.context.polygon(
+          this.drawing.polygon(
             [
               { x: x2, y: y2 },
               { x: x3, y: yc },
@@ -265,7 +265,7 @@ export class SquareMaze extends Maze {
           break;
         }
         case 'W': {
-          this.context.polygon(
+          this.drawing.polygon(
             [
               { x: x3, y: y2 },
               { x: x2, y: yc },
@@ -282,13 +282,13 @@ export class SquareMaze extends Maze {
   }
 
   public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x1, x4, y1, y4 } = this.offsets(cell);
 
       this.drawCell(cell, cellColor);
 
-      this.context.line({ x: x1, y: y1 }, { x: x4, y: y4 }, color);
-      this.context.line({ x: x1, y: y4 }, { x: x4, y: y1 }, color);
+      this.drawing.line({ x: x1, y: y1 }, { x: x4, y: y4 }, color);
+      this.drawing.line({ x: x1, y: y4 }, { x: x4, y: y1 }, color);
     }
   }
 

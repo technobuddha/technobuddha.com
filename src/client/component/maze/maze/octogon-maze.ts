@@ -345,11 +345,11 @@ export class OctogonMaze extends Maze {
   }
 
   public drawFloor(cell: Cell, color = this.cellColor): void {
-    if (this.context) {
+    if (this.drawing) {
       if (cell.x % 2 === 0) {
         const { x0, x5, x6, xa, xf, y0, y5, ya, yf } = this.offsets(cell);
 
-        this.context.polygon(
+        this.drawing.polygon(
           [
             { x: x5, y: y0 },
             { x: xa, y: y0 },
@@ -365,7 +365,7 @@ export class OctogonMaze extends Maze {
       } else {
         const { x0, x4, x8, y0, y4, y8 } = this.offsets(cell);
 
-        this.context.polygon(
+        this.drawing.polygon(
           [
             { x: x4, y: y0 },
             { x: x8, y: y4 },
@@ -379,12 +379,12 @@ export class OctogonMaze extends Maze {
   }
 
   public drawWall(cd: CellDirection, color = this.wallColor): void {
-    if (this.context) {
+    if (this.drawing) {
       if (cd.x % 2 === 0) {
         switch (cd.direction) {
           case 'a': {
             const { x5, x9, xa, y0, y2 } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x5, y: y0 },
                 { x: xa, y: y0 },
@@ -398,7 +398,7 @@ export class OctogonMaze extends Maze {
 
           case 'b': {
             const { x9, xa, xd, xf, y0, y2, y5, y6 } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: xa, y: y0 },
                 { x: xf, y: y5 },
@@ -412,7 +412,7 @@ export class OctogonMaze extends Maze {
 
           case 'c': {
             const { xd, xf, y5, y6, y9, ya } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: xd, y: y6 },
                 { x: xf, y: y5 },
@@ -426,7 +426,7 @@ export class OctogonMaze extends Maze {
 
           case 'd': {
             const { x9, xa, xd, xf, y9, ya, yd, yf } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: xd, y: y9 },
                 { x: xf, y: ya },
@@ -440,7 +440,7 @@ export class OctogonMaze extends Maze {
 
           case 'e': {
             const { x5, x6, x9, xa, yd, yf } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x6, y: yd },
                 { x: x9, y: yd },
@@ -454,7 +454,7 @@ export class OctogonMaze extends Maze {
 
           case 'f': {
             const { x0, x2, x5, x6, y9, ya, yd, yf } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x2, y: y9 },
                 { x: x6, y: yd },
@@ -468,7 +468,7 @@ export class OctogonMaze extends Maze {
 
           case 'g': {
             const { x0, x2, y5, y6, y9, ya } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x0, y: y5 },
                 { x: x2, y: y6 },
@@ -482,7 +482,7 @@ export class OctogonMaze extends Maze {
 
           case 'h': {
             const { x0, x2, x5, x6, y0, y2, y5, y6 } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x5, y: y0 },
                 { x: x6, y: y2 },
@@ -500,7 +500,7 @@ export class OctogonMaze extends Maze {
         switch (cd.direction) {
           case 'i': {
             const { x4, x5, x6, x7, y1, y3 } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x5, y: y1 },
                 { x: x7, y: y3 },
@@ -514,7 +514,7 @@ export class OctogonMaze extends Maze {
 
           case 'j': {
             const { x4, x5, x6, x7, y4, y5, y6, y7 } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x6, y: y4 },
                 { x: x7, y: y5 },
@@ -528,7 +528,7 @@ export class OctogonMaze extends Maze {
 
           case 'k': {
             const { x1, x2, x3, x4, y4, y5, y6, y7 } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x2, y: y4 },
                 { x: x4, y: y6 },
@@ -542,7 +542,7 @@ export class OctogonMaze extends Maze {
 
           case 'l': {
             const { x1, x2, x3, x4, y1, y2, y3, y5 } = this.offsets(cd);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x3, y: y1 },
                 { x: x4, y: y2 },
@@ -561,13 +561,13 @@ export class OctogonMaze extends Maze {
   }
 
   public drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
-    if (this.context) {
+    if (this.drawing) {
       if (x % 2 === 0) {
         switch (corner) {
           case 'ab': {
             const { x8, x9, xa, xb, y0, y1, y2, y3 } = this.offsets({ x, y });
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x8, y: y0 },
                 { x: xa, y: y0 },
@@ -583,7 +583,7 @@ export class OctogonMaze extends Maze {
 
           case 'bc': {
             const { xc, xd, xe, xf, y4, y5, y6, y7 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: xe, y: y4 },
                 { x: xf, y: y5 },
@@ -599,7 +599,7 @@ export class OctogonMaze extends Maze {
 
           case 'cd': {
             const { xc, xd, xe, xf, y8, y9, ya, yb } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: xd, y: y8 },
                 { x: xf, y: y8 },
@@ -615,7 +615,7 @@ export class OctogonMaze extends Maze {
 
           case 'de': {
             const { x8, x9, xa, xb, yc, yd, ye, yf } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x8, y: yd },
                 { x: x9, y: yd },
@@ -631,7 +631,7 @@ export class OctogonMaze extends Maze {
 
           case 'ef': {
             const { x4, x5, x6, x7, yc, yd, ye, yf } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x5, y: yc },
                 { x: x6, y: yd },
@@ -647,7 +647,7 @@ export class OctogonMaze extends Maze {
 
           case 'fg': {
             const { x0, x1, x2, x3, y8, y9, ya, yb } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x0, y: y8 },
                 { x: x2, y: y8 },
@@ -663,7 +663,7 @@ export class OctogonMaze extends Maze {
 
           case 'gh': {
             const { x0, x1, x2, x3, y4, y5, y6, y7 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x0, y: y5 },
                 { x: x2, y: y7 },
@@ -677,7 +677,7 @@ export class OctogonMaze extends Maze {
 
           case 'ha': {
             const { x4, x5, x6, x7, y0, y1, y2, y3 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x6, y: y0 },
                 { x: x7, y: y0 },
@@ -697,7 +697,7 @@ export class OctogonMaze extends Maze {
         switch (corner) {
           case 'ij': {
             const { x6, x7, x8, y3, y4, y5 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x7, y: y3 },
                 { x: x8, y: y4 },
@@ -711,7 +711,7 @@ export class OctogonMaze extends Maze {
 
           case 'jk': {
             const { x3, x4, x5, y6, y7, y8 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x4, y: y6 },
                 { x: x5, y: y7 },
@@ -725,7 +725,7 @@ export class OctogonMaze extends Maze {
 
           case 'kl': {
             const { x0, x1, x2, y3, y4, y5 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x1, y: y3 },
                 { x: x2, y: y4 },
@@ -739,7 +739,7 @@ export class OctogonMaze extends Maze {
 
           case 'li': {
             const { x3, x4, x5, y0, y1, y2 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x4, y: y0 },
                 { x: x5, y: y1 },
@@ -758,7 +758,7 @@ export class OctogonMaze extends Maze {
   }
 
   public drawPath(cell: CellDirection, color = 'deepSkyBlue'): void {
-    if (this.context) {
+    if (this.drawing) {
       this.drawCell(cell);
 
       if (cell.x % 2 === 0) {
@@ -766,7 +766,7 @@ export class OctogonMaze extends Maze {
           case 'a': {
             const { x6, x9, y2, yd } = this.offsets(cell);
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x6, y: yd },
                 { x: (x6 + x9) / 2, y: y2 },
@@ -778,7 +778,7 @@ export class OctogonMaze extends Maze {
           }
           case 'b': {
             const { x3, x5, xa, xc, y3, y5, ya, yc } = this.offsets(cell);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x3, y: ya },
                 { x: (xa + xc) / 2, y: (y3 + y5) / 2 },
@@ -793,7 +793,7 @@ export class OctogonMaze extends Maze {
           case 'c': {
             const { x2, xd, y7, y8 } = this.offsets(cell);
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x2, y: y7 },
                 { x: xd, y: (y7 + y8) / 2 },
@@ -807,7 +807,7 @@ export class OctogonMaze extends Maze {
           case 'd': {
             const { x3, x6, xa, xc, y3, y5, ya, yc } = this.offsets(cell);
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x3, y: y5 },
                 { x: (xa + xc) / 2, y: (ya + yc) / 2 },
@@ -821,7 +821,7 @@ export class OctogonMaze extends Maze {
           case 'e': {
             const { x6, x9, y2, yd } = this.offsets(cell);
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x6, y: y2 },
                 { x: (x6 + x9) / 2, y: yd },
@@ -834,7 +834,7 @@ export class OctogonMaze extends Maze {
 
           case 'f': {
             const { x3, x5, xa, xc, y3, y5, ya, yc } = this.offsets(cell);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: xa, y: y3 },
                 { x: (x3 + x5) / 2, y: (ya + yc) / 2 },
@@ -849,7 +849,7 @@ export class OctogonMaze extends Maze {
           case 'g': {
             const { x2, xd, y7, y8 } = this.offsets(cell);
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: xd, y: y7 },
                 { x: x2, y: (y7 + y8) / 2 },
@@ -863,11 +863,11 @@ export class OctogonMaze extends Maze {
           case 'h': {
             const { x3, x6, xa, xc, y3, y5, ya, yc } = this.offsets(cell);
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
-                { x: xa, y: ya },
+                { x: xa, y: yc },
                 { x: (x3 + x6) / 2, y: (y3 + y5) / 2 },
-                { x: xc, y: yc },
+                { x: xc, y: ya },
               ],
               color,
             );
@@ -881,7 +881,7 @@ export class OctogonMaze extends Maze {
 
         switch (cell.direction) {
           case 'i': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x2, y: y4 },
                 { x: (x4 + x6) / 2, y: (y2 + y4) / 2 },
@@ -893,7 +893,7 @@ export class OctogonMaze extends Maze {
           }
 
           case 'j': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x4, y: y2 },
                 { x: (x4 + x6) / 2, y: (y4 + y6) / 2 },
@@ -906,7 +906,7 @@ export class OctogonMaze extends Maze {
           }
 
           case 'k': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x4, y: y2 },
                 { x: (x2 + x4) / 2, y: (y4 + y6) / 2 },
@@ -918,7 +918,7 @@ export class OctogonMaze extends Maze {
           }
 
           case 'l': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x4, y: y6 },
                 { x: (x2 + x4) / 2, y: (y2 + y4) / 2 },
@@ -937,7 +937,7 @@ export class OctogonMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
     const padding = 1;
-    if (this.context) {
+    if (this.drawing) {
       if (cell.x % 2 === 0) {
         this.drawCell(cell, cellColor);
         const { x0, x8, xf, y0, y8, yf } = this.offsets(cell);
@@ -947,15 +947,15 @@ export class OctogonMaze extends Maze {
         const w = (cell.x % 2 === 0 ? xf : x8) - left - padding;
         const h = (cell.x % 2 === 0 ? yf : y8) - top - padding;
 
-        this.context.line({ x: left, y: top }, { x: left + w, y: top + h }, color);
-        this.context.line({ x: left, y: top + h }, { x: left + w, y: top }, color);
+        this.drawing.line({ x: left, y: top }, { x: left + w, y: top + h }, color);
+        this.drawing.line({ x: left, y: top + h }, { x: left + w, y: top }, color);
       } else {
         this.drawCell(cell, cellColor);
 
         const { x0, x4, x8, y0, y4, y8 } = this.offsets(cell);
 
-        this.context.line({ x: x4, y: y0 + padding }, { x: x4, y: y8 - padding }, color);
-        this.context.line({ x: x0 + padding, y: y4 }, { x: x8 - padding, y: y4 }, color);
+        this.drawing.line({ x: x4, y: y0 + padding }, { x: x4, y: y8 - padding }, color);
+        this.drawing.line({ x: x0 + padding, y: y4 }, { x: x8 - padding, y: y4 }, color);
       }
     }
   }

@@ -1,7 +1,7 @@
-import { type Cell, type Direction } from '../maze/maze.js';
+import { type Cell, type Direction } from '../../maze/maze.js';
 
-import { type MazeGeneratorProperties } from './maze-generator.js';
-import { MazeGenerator } from './maze-generator.js';
+import { type MazeGeneratorProperties } from '../maze-generator.js';
+import { MazeGenerator } from '../maze-generator.js';
 
 export class Sidewinder extends MazeGenerator {
   private runSet: Cell[];
@@ -27,7 +27,7 @@ export class Sidewinder extends MazeGenerator {
     if (dirs.length > 0) {
       const carveDirection = this.selectNeighbor(
         this.maze.neighbors(this.currentCell, { directions: dirs }),
-      ).direction;
+      )!.direction;
 
       if (carveDirection === 'N') {
         const cell = this.runSet[Math.floor(this.random() * this.runSet.length)];

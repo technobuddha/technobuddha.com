@@ -1,4 +1,4 @@
-import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.js';
+import { MazeGenerator, type MazeGeneratorProperties } from '../maze-generator.js';
 
 export class BinaryTree extends MazeGenerator {
   public constructor(props: MazeGeneratorProperties) {
@@ -11,7 +11,7 @@ export class BinaryTree extends MazeGenerator {
     // TODO
     const neighbors = this.maze.neighbors(this.currentCell, { directions: ['S', 'E'] });
     if (neighbors.length > 0) {
-      this.maze.removeWall(this.currentCell, this.selectNeighbor(neighbors).direction);
+      this.maze.removeWall(this.currentCell, this.selectNeighbor(neighbors)!.direction);
     }
 
     this.currentCell.x++;

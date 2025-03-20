@@ -10,10 +10,10 @@ export type MazeGeneratorProperties = {
   selectNeighbor?(this: void, neighbors: CellDirection[], random: () => number): CellDirection;
 };
 
-export class MazeGenerator {
+export abstract class MazeGenerator {
   public maze: MazeGeneratorProperties['maze'];
   public random: Exclude<MazeGeneratorProperties['random'], undefined>;
-  public selectNeighbor: (neighbors: CellDirection[]) => CellDirection;
+  public selectNeighbor: (neighbors: CellDirection[]) => CellDirection | undefined;
   public start: Cell;
   public currentCell: Cell;
 
@@ -34,7 +34,6 @@ export class MazeGenerator {
     maze.draw();
     let building = true;
     while (building) {
-      // await new Promise((resolve) => void setTimeout(resolve, 50));
       building = await animate(() => {
         let go = true;
         for (let i = 0; go && i < 1; ++i) {
@@ -47,8 +46,5 @@ export class MazeGenerator {
     return maze;
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  protected step(): boolean {
-    return false;
-  }
+  protected abstract step(): boolean;
 }

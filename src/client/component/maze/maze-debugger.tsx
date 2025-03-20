@@ -118,9 +118,9 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
 
   React.useEffect(() => {
     if (canvasMaze.current) {
-      const contextMaze = new Drawing(canvasMaze.current.getContext('2d')!);
+      const contextMaze = new Drawing(canvasMaze.current);
 
-      const factory = new MazeFactory({ context: contextMaze });
+      const factory = new MazeFactory({ drawing: contextMaze });
 
       void factory.create(mazes[maze]).then((m) => {
         for (let i = 0; i < 2; ++i) {

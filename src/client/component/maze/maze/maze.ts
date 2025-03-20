@@ -38,7 +38,7 @@ export type CDSpecification = CellDirection | Cell | Location;
 export type Overrides = { directions?: Direction[]; walls?: Wall[][] };
 
 export type MazeProperties = {
-  context?: Drawing;
+  drawing?: Drawing;
   width?: number;
   height?: number;
   cellSize?: number;
@@ -51,7 +51,7 @@ export type MazeProperties = {
 
 export type Wall = Record<Direction, boolean | undefined>;
 export abstract class Maze {
-  public context: MazeProperties['context'];
+  public drawing: MazeProperties['drawing'];
 
   public readonly directions: Direction[] = [];
   public readonly corners: Corner[] = [];
@@ -67,7 +67,7 @@ export abstract class Maze {
 
   public constructor(
     {
-      context,
+      drawing,
       width,
       height,
       cellSize = 21,
@@ -82,13 +82,13 @@ export abstract class Maze {
   ) {
     this.directions = directions;
     this.corners = corners;
-    this.context = context;
+    this.drawing = drawing;
     this.cellSize = cellSize;
     this.cellColor = cellColor;
     this.wallSize = wallSize;
     this.wallColor = wallColor;
-    this.width = width ?? this.computeWidth(context?.width) ?? 25;
-    this.height = height ?? this.computeHeight(context?.height) ?? 25;
+    this.width = width ?? this.computeWidth(drawing?.width) ?? 25;
+    this.height = height ?? this.computeHeight(drawing?.height) ?? 25;
     this.entrance = this.resolveDirection(entrance);
     this.exit = this.resolveDirection(exit);
 
@@ -97,7 +97,7 @@ export abstract class Maze {
     this.walls[this.exit.x][this.exit.y][this.exit.direction] = false;
   }
 
-  private resolveDirection(spec: CDSpecification): CellDirection {
+  public resolveDirection(spec: CDSpecification): CellDirection {
     const cell = parsePointDirection(spec, this.width, this.height);
 
     if ('direction' in cell) {
@@ -130,8 +130,8 @@ export abstract class Maze {
   }
 
   public draw(): void {
-    if (this.context) {
-      this.context.clear();
+    if (this.drawing) {
+      this.drawing.clear();
 
       for (let x = 0; x < this.width; ++x) {
         for (let y = 0; y < this.height; ++y) {
@@ -204,6 +204,10 @@ export abstract class Maze {
     }
   }
 
+  public all(): Cell[] {
+    return create2DArray(this.width, this.height, (x, y) => ({ x, y })).flat();
+  }
+
   public adjacent(cell: Cell, { directions = this.directions }: Overrides = {}): CellDirection[] {
     return directions.map((direction) => this.move(cell, direction)).filter((c) => c !== null);
   }
@@ -268,12 +272,12 @@ export abstract class Maze {
   }
 
   public prepareContext(context?: Drawing): void {
-    this.context = context;
+    this.drawing = context;
     context?.clear();
   }
 
   public clear(color?: string): void {
-    this.context?.clear(color);
+    this.drawing?.clear(color);
   }
 
   public removeWall(

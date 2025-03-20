@@ -14,7 +14,7 @@ import { Maze } from './maze.js';
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class TriangleMaze extends Maze {
-  public constructor({ cellSize = 30, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 20, wallSize = 2, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       ['a', 'b', 'c', 'd', 'e', 'f'],
@@ -257,10 +257,10 @@ export class TriangleMaze extends Maze {
   }
 
   public drawFloor(cell: Cell, color = this.cellColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x0, x4, x8, y0, y5 } = this.offsets(cell);
 
-      this.context.polygon(
+      this.drawing.polygon(
         [
           { x: x0, y: y5 },
           { x: x4, y: y0 },
@@ -272,8 +272,8 @@ export class TriangleMaze extends Maze {
   }
 
   public drawWall(cd: CellDirection, color = this.wallColor): void {
-    if (this.context) {
-      const ctx = this.context;
+    if (this.drawing) {
+      const ctx = this.drawing;
 
       const { x1, x2, x3, x4, x5, x6, x7, y1, y2, y3, y4, y5 } = this.offsets(cd);
 
@@ -306,12 +306,15 @@ export class TriangleMaze extends Maze {
         }
         case 'c':
         case 'b': {
-          ctx.polygon([
-            { x: x4, y: y2 },
-            { x: x5, y: y1 },
-            { x: x7, y: y3 },
-            { x: x6, y: y4 },
-          ]);
+          ctx.polygon(
+            [
+              { x: x4, y: y2 },
+              { x: x5, y: y1 },
+              { x: x7, y: y3 },
+              { x: x6, y: y4 },
+            ],
+            color,
+          );
           break;
         }
 
@@ -321,8 +324,8 @@ export class TriangleMaze extends Maze {
   }
 
   public drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
-    if (this.context) {
-      const ctx = this.context;
+    if (this.drawing) {
+      const ctx = this.drawing;
       const { x0, x1, x2, x3, x4, x5, x6, x7, x8, y0, y1, y2, y3, y4, y5 } = this.offsets({ x, y });
 
       switch (corner) {
@@ -372,7 +375,7 @@ export class TriangleMaze extends Maze {
   }
 
   public drawPath(cell: CellDirection, color = 'red'): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x2, x4, x6, y2, y4 } = this.offsets(cell);
 
       this.drawCell(cell);
@@ -380,31 +383,31 @@ export class TriangleMaze extends Maze {
       switch (cell.direction) {
         case 'a':
         case 'd': {
-          this.context.line({ x: x4, y: y2 }, { x: x4, y: y4 }, color);
-          this.context.line({ x: x4, y: y4 }, { x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, color);
-          this.context.line({ x: x4, y: y4 }, { x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, color);
+          this.drawing.line({ x: x4, y: y2 }, { x: x4, y: y4 }, color);
+          this.drawing.line({ x: x4, y: y4 }, { x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, color);
+          this.drawing.line({ x: x4, y: y4 }, { x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, color);
           break;
         }
         case 'e':
         case 'f': {
-          this.context.line({ x: x6, y: y4 }, { x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, color);
-          this.context.line(
+          this.drawing.line({ x: x6, y: y4 }, { x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, color);
+          this.drawing.line(
             { x: (x4 + x2) / 2, y: (y2 + y4) / 2 },
             { x: (x4 + x6) / 2, y: (y2 + y4) / 2 },
             color,
           );
-          this.context.line({ x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, { x: x4, y: y4 }, color);
+          this.drawing.line({ x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, { x: x4, y: y4 }, color);
           break;
         }
         case 'c':
         case 'b': {
-          this.context.line({ x: x2, y: y4 }, { x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, color);
-          this.context.line(
+          this.drawing.line({ x: x2, y: y4 }, { x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, color);
+          this.drawing.line(
             { x: (x4 + x6) / 2, y: (y2 + y4) / 2 },
             { x: (x4 + x2) / 2, y: (y2 + y4) / 2 },
             color,
           );
-          this.context.line({ x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, { x: x4, y: y4 }, color);
+          this.drawing.line({ x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, { x: x4, y: y4 }, color);
           break;
         }
 
@@ -414,15 +417,15 @@ export class TriangleMaze extends Maze {
   }
 
   public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
-    if (this.context) {
+    if (this.drawing) {
       const { x2, x4, x6, y2, y4 } = this.offsets(cell);
       const yc = (y2 + y4) / 2;
 
       this.drawCell(cell, cellColor);
 
-      this.context.line({ x: x2, y: y4 }, { x: x4, y: yc }, color);
-      this.context.line({ x: x6, y: y4 }, { x: x4, y: yc }, color);
-      this.context.line({ x: x4, y: y2 }, { x: x4, y: yc }, color);
+      this.drawing.line({ x: x2, y: y4 }, { x: x4, y: yc }, color);
+      this.drawing.line({ x: x6, y: y4 }, { x: x4, y: yc }, color);
+      this.drawing.line({ x: x4, y: y2 }, { x: x4, y: yc }, color);
     }
   }
 }

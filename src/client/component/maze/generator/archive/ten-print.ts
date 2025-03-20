@@ -10,7 +10,7 @@ export class TenPrint extends MazeGenerator {
   public override step(): boolean {
     const neighbors = this.maze.neighbors(this.currentCell, { directions: ['S', 'E'] });
     if (neighbors.length > 0) {
-      const n1 = this.selectNeighbor(neighbors);
+      const n1 = this.selectNeighbor(neighbors)!;
       const n2 = this.maze.move(this.currentCell, this.maze.opposite(n1.direction))!;
 
       if (this.maze.inMaze(n1)) {

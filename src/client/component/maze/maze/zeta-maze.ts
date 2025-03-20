@@ -6,7 +6,7 @@ const SQ2 = Math.SQRT2;
 
 export class ZetaMaze extends OctogonMaze {
   public constructor({ ...props }: MazeProperties) {
-    super({ ...props, cellColor: 'black', wallColor: 'gray' });
+    super({ ...props, cellColor: '#B6B6B4', wallColor: 'black' });
   }
   protected override offsets({ x, y }: Cell): Record<string, number> {
     const ao = this.cellSize / Math.sqrt(4 + SQ2 * 2);
@@ -92,11 +92,11 @@ export class ZetaMaze extends OctogonMaze {
   }
 
   public override drawFloor(cell: Cell, color = this.cellColor): void {
-    if (this.context) {
+    if (this.drawing) {
       if (cell.x % 2 === 0) {
         const { x0, x4, x7, xb, y0, y4, y7, yb } = this.offsets(cell);
 
-        this.context.polygon(
+        this.drawing.polygon(
           [
             { x: x4, y: y0 },
             { x: x7, y: y0 },
@@ -112,7 +112,7 @@ export class ZetaMaze extends OctogonMaze {
       } else {
         const { x0, x4, x8, y0, y4, y8 } = this.offsets(cell);
 
-        this.context.polygon(
+        this.drawing.polygon(
           [
             { x: x4, y: y0 },
             { x: x8, y: y4 },
@@ -126,13 +126,13 @@ export class ZetaMaze extends OctogonMaze {
   }
 
   public override drawWall(cd: CellDirection, color = this.wallColor): void {
-    if (this.context) {
+    if (this.drawing) {
       if (cd.x % 2 === 0) {
         const { x0, x1, x2, x3, x5, x6, x8, x9, xa, xb, y0, y1, y2, y3, y5, y6, y8, y9, ya, yb } =
           this.offsets(cd);
         switch (cd.direction) {
           case 'a': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x5, y: y0 },
                 { x: x6, y: y0 },
@@ -145,7 +145,7 @@ export class ZetaMaze extends OctogonMaze {
           }
 
           case 'b': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x9, y: y1 },
                 { x: xa, y: y2 },
@@ -158,7 +158,7 @@ export class ZetaMaze extends OctogonMaze {
           }
 
           case 'c': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x8, y: y5 },
                 { x: xb, y: y5 },
@@ -171,7 +171,7 @@ export class ZetaMaze extends OctogonMaze {
           }
 
           case 'd': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x8, y: y6 },
                 { x: xa, y: y9 },
@@ -184,7 +184,7 @@ export class ZetaMaze extends OctogonMaze {
           }
 
           case 'e': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x5, y: y8 },
                 { x: x6, y: y8 },
@@ -197,7 +197,7 @@ export class ZetaMaze extends OctogonMaze {
           }
 
           case 'f': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x3, y: y6 },
                 { x: x5, y: y8 },
@@ -210,7 +210,7 @@ export class ZetaMaze extends OctogonMaze {
           }
 
           case 'g': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x0, y: y5 },
                 { x: x3, y: y5 },
@@ -223,7 +223,7 @@ export class ZetaMaze extends OctogonMaze {
           }
 
           case 'h': {
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x2, y: y1 },
                 { x: x5, y: y3 },
@@ -238,57 +238,18 @@ export class ZetaMaze extends OctogonMaze {
           // no default
         }
       } else {
-        // const { x1, x2, x3, x4, x5, x6, x7, y1, y2, y3, y4, y5, y6, y7 } = this.offsets(cd);
-        // switch (cd.direction) {
-        //   case 'i': {
-        //     this.context.beginPath();
-        //     this.context.moveTo(x5, y1);
-        //     this.context.lineTo(x7, y3);
-        //     this.context.lineTo(x6, y4);
-        //     this.context.lineTo(x5, y2);
-        //     this.context.fill();
-        //     break;
-        //   }
-        //   case 'j': {
-        //     this.context.beginPath();
-        //     this.context.moveTo(x6, y4);
-        //     this.context.lineTo(x7, y5);
-        //     this.context.lineTo(x5, y7);
-        //     this.context.lineTo(x4, y6);
-        //     this.context.fill();
-        //     break;
-        //   }
-        //   case 'k': {
-        //     this.context.beginPath();
-        //     this.context.moveTo(x2, y4);
-        //     this.context.lineTo(x4, y6);
-        //     this.context.lineTo(x3, y7);
-        //     this.context.lineTo(x1, y5);
-        //     this.context.fill();
-        //     break;
-        //   }
-        //   case 'l': {
-        //     this.context.beginPath();
-        //     this.context.moveTo(x3, y1);
-        //     this.context.lineTo(x4, y2);
-        //     this.context.lineTo(x2, y4);
-        //     this.context.lineTo(x1, y3);
-        //     this.context.fill();
-        //     break;
-        //   }
-        //   // no default
-        // }
+        super.drawWall(cd, color);
       }
     }
   }
 
   public override drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
-    if (this.context) {
+    if (this.drawing) {
       if (x % 2 === 0) {
         switch (corner) {
           case 'ab': {
             const { x6, x7, x9, y0, y1, y3 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x6, y: y0 },
                 { x: x7, y: y0 },
@@ -301,7 +262,7 @@ export class ZetaMaze extends OctogonMaze {
           }
           case 'bc': {
             const { x8, xa, xb, y2, y4, y5 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: xa, y: y2 },
                 { x: xb, y: y4 },
@@ -314,7 +275,7 @@ export class ZetaMaze extends OctogonMaze {
           }
           case 'cd': {
             const { x8, xa, xb, y6, y7, y9 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x8, y: y6 },
                 { x: xb, y: y6 },
@@ -327,7 +288,7 @@ export class ZetaMaze extends OctogonMaze {
           }
           case 'de': {
             const { x6, x7, x9, y9, ya, yb } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x6, y: y9 },
                 { x: x9, y: ya },
@@ -340,7 +301,7 @@ export class ZetaMaze extends OctogonMaze {
           }
           case 'ef': {
             const { x2, x4, x5, y8, ya, yb } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x5, y: y8 },
                 { x: x5, y: yb },
@@ -353,7 +314,7 @@ export class ZetaMaze extends OctogonMaze {
           }
           case 'fg': {
             const { x0, x1, x3, y6, y7, y9 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x0, y: y6 },
                 { x: x3, y: y6 },
@@ -366,7 +327,7 @@ export class ZetaMaze extends OctogonMaze {
           }
           case 'gh': {
             const { x0, x1, x3, y2, y4, y5 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x1, y: y2 },
                 { x: x3, y: y5 },
@@ -379,7 +340,7 @@ export class ZetaMaze extends OctogonMaze {
           }
           case 'ha': {
             const { x2, x4, x5, y0, y1, y2 } = this.offsets({ x, y });
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x4, y: y0 },
                 { x: x5, y: y0 },
@@ -400,7 +361,7 @@ export class ZetaMaze extends OctogonMaze {
   }
 
   public override drawPath(cell: CellDirection, color = 'deepSkyBlue'): void {
-    if (this.context) {
+    if (this.drawing) {
       this.drawCell(cell);
 
       if (cell.x % 2 === 0) {
@@ -408,7 +369,7 @@ export class ZetaMaze extends OctogonMaze {
           case 'a': {
             const { x5, x6, y2, y8 } = this.offsets(cell);
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x5, y: y8 },
                 { x: (x5 + x6) / 2, y: y2 },
@@ -420,7 +381,7 @@ export class ZetaMaze extends OctogonMaze {
           }
           case 'b': {
             const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.offsets(cell);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x3, y: y6 },
                 { x: (x6 + x8) / 2, y: (y3 + y5) / 2 },
@@ -435,7 +396,7 @@ export class ZetaMaze extends OctogonMaze {
           case 'c': {
             const { x3, x8, y5, y6 } = this.offsets(cell);
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x3, y: y5 },
                 { x: x8, y: (y5 + y6) / 2 },
@@ -449,7 +410,7 @@ export class ZetaMaze extends OctogonMaze {
           case 'd': {
             const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.offsets(cell);
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x5, y: y3 },
                 { x: (x6 + x8) / 2, y: (y6 + y8) / 2 },
@@ -463,7 +424,7 @@ export class ZetaMaze extends OctogonMaze {
           case 'e': {
             const { x5, x6, y2, y8 } = this.offsets(cell);
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x5, y: y2 },
                 { x: (x5 + x6) / 2, y: y8 },
@@ -476,7 +437,7 @@ export class ZetaMaze extends OctogonMaze {
 
           case 'f': {
             const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.offsets(cell);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x6, y: y3 },
                 { x: (x3 + x5) / 2, y: (y6 + y8) / 2 },
@@ -491,7 +452,7 @@ export class ZetaMaze extends OctogonMaze {
           case 'g': {
             const { x3, x8, y5, y6 } = this.offsets(cell);
 
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x8, y: y5 },
                 { x: x3, y: (y5 + y6) / 2 },
@@ -504,7 +465,7 @@ export class ZetaMaze extends OctogonMaze {
 
           case 'h': {
             const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.offsets(cell);
-            this.context.polygon(
+            this.drawing.polygon(
               [
                 { x: x8, y: y6 },
                 { x: (x3 + x5) / 2, y: (y3 + y5) / 2 },
@@ -525,16 +486,16 @@ export class ZetaMaze extends OctogonMaze {
   }
 
   public override drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
-    if (this.context) {
+    if (this.drawing) {
       if (cell.x % 2 === 0) {
         this.drawCell(cell, cellColor);
 
         const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.offsets(cell);
 
-        this.context.line({ x: x5, y: y3 }, { x: x6, y: y8 }, color);
-        this.context.line({ x: x6, y: y3 }, { x: x5, y: y8 }, color);
-        this.context.line({ x: x3, y: y5 }, { x: x8, y: y6 }, color);
-        this.context.line({ x: x3, y: y6 }, { x: x8, y: y5 }, color);
+        this.drawing.line({ x: x5, y: y3 }, { x: x6, y: y8 }, color);
+        this.drawing.line({ x: x6, y: y3 }, { x: x5, y: y8 }, color);
+        this.drawing.line({ x: x3, y: y5 }, { x: x8, y: y6 }, color);
+        this.drawing.line({ x: x3, y: y6 }, { x: x8, y: y5 }, color);
       } else {
         super.drawX(cell, color, cellColor);
       }

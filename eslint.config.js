@@ -15,7 +15,7 @@ const config = [
     files: ['src/client/**/*.tsx'],
     ignores: [],
     environment: 'browser',
-    tsConfig: 'src/tsconfig.json',
+    tsConfig: 'src/client/tsconfig.json',
     react: true,
   }),
   // src/tsconfig.json
@@ -60,6 +60,15 @@ const config = [
   app.lint({ files: ['*.config.js'], ignores: [], environment: 'node' }),
   // tsconfig.json
   app.lint({ files: ['*.config.ts'], ignores: [], environment: 'node' }),
+  // no tsconfig
+  app.lint({ files: ['migrations/*.cjs'], ignores: [], environment: 'node' }),
+  // scripts/tsconfig.json
+  app.lint({
+    files: ['scripts/**/*.ts'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: 'scripts/tsconfig.json',
+  }),
 ];
 
 export default config;

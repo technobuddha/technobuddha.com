@@ -3,6 +3,8 @@ import React from 'react';
 import { randomPick, toCapitalWordCase, toHumanCase } from '@technobuddha/library';
 import { Size } from '@technobuddha/mui-size';
 
+import { useUserInterface } from '#context/user-interface';
+
 import { CanvasDrawing } from './drawing/canvas-drawing.js';
 import { Blob } from './generator/blob.js';
 import { GrowingTree } from './generator/growing-tree.js';
@@ -31,20 +33,20 @@ const algorithms: Record<
   string,
   Record<string, (props: MazeGeneratorProperties) => MazeGenerator>
 > = {
-  blob: {
+  division: {
     normal: (props) => new Blob(props),
   },
-  huntAndKill: {
-    random: (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
-    topLeft: (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
-    topRight: (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
-    bottomLeft: (props) => new HuntAndKill({ huntMethod: 'bottom-left', ...props }),
-    bottomRight: (props) => new HuntAndKill({ huntMethod: 'bottom-right', ...props }),
-    leftTop: (props) => new HuntAndKill({ huntMethod: 'left-top', ...props }),
-    leftBottom: (props) => new HuntAndKill({ huntMethod: 'left-bottom', ...props }),
-    rightTop: (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
-    rightBottom: (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
-  },
+  // huntAndKill: {
+  //   random: (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
+  //   topLeft: (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
+  //   topRight: (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
+  //   bottomLeft: (props) => new HuntAndKill({ huntMethod: 'bottom-left', ...props }),
+  //   bottomRight: (props) => new HuntAndKill({ huntMethod: 'bottom-right', ...props }),
+  //   leftTop: (props) => new HuntAndKill({ huntMethod: 'left-top', ...props }),
+  //   leftBottom: (props) => new HuntAndKill({ huntMethod: 'left-bottom', ...props }),
+  //   rightTop: (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
+  //   rightBottom: (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
+  // },
   growingTree: {
     newest: (props) => new GrowingTree({ method: 'newest', ...props }),
     random: (props) => new GrowingTree({ method: 'random', ...props }),
@@ -116,12 +118,10 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
   children,
   maskColor,
 }) => {
+  const { setFooter } = useUserInterface();
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
   const grid = React.useRef<HTMLDivElement | null>(null);
   const [redraw, setRedraw] = React.useState(0);
-  const [mazeName, setMazeName] = React.useState('');
-  const [algorithmName, setAlgorithmName] = React.useState('');
-  const [solverName, setSolverName] = React.useState('');
 
   React.useEffect(() => {
     if (canvasMaze.current && grid.current) {
@@ -136,14 +136,12 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
       const algorithm1 = randomPick(Object.keys(algorithms))!;
       const algorithm2 = randomPick(Object.keys(algorithms[algorithm1]))!;
       const selectedAlgorithm = algorithms[algorithm1][algorithm2];
-
-      setMazeName(name);
-      setAlgorithmName(`${algorithm1} ${algorithm2}`);
+      const algorithmName = `${algorithm1} ${algorithm2}`;
 
       const solver1 = randomPick(Object.keys(solvers))!;
       const solver2 = randomPick(Object.keys(solvers[solver1]))!;
       const selectedSolver = solvers[solver1][solver2];
-      setSolverName(`${solver1} ${solver2}`);
+      const solverName = `${solver1} ${solver2}`;
 
       const crect = canvasMaze.current.getBoundingClientRect();
       const rects = Array.from(grid.current.children).flatMap((child) =>
@@ -164,26 +162,32 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         }
       }
 
+      setFooter(
+        <div id="maze" className={css.legend}>
+          <span>Generator:</span>
+          <span>{toCapitalWordCase(toHumanCase(algorithmName))}</span>
+          <span>Solver:</span>
+          <span>{toCapitalWordCase(toHumanCase(solverName))}</span>
+        </div>,
+      );
+
       void factory.create(selectedMaze, selectedAlgorithm, mask, selectedSolver).then(() => {
         setTimeout(() => {
           setRedraw((x) => x + 1);
         }, 10000);
       });
     }
-  }, [redraw, boxHeight, boxWidth, maskColor]);
+  }, [redraw, boxHeight, boxWidth, maskColor, setFooter]);
 
   return (
     <div className={css.mazeBackground} style={{ width: boxWidth, height: boxHeight }}>
-      {/* <div style={{ position: 'absolute', zIndex: 4, top: 0, left: 0 }}>
-        Maze Shape:&nbsp;
-        {toCapitalWordCase(toHumanCase(mazeName))}
-        &nbsp;|&nbsp;Generator:&nbsp;
-        {toCapitalWordCase(toHumanCase(algorithmName))}
-        &nbsp;|&nbsp; Solver:&nbsp;
-        {toCapitalWordCase(toHumanCase(solverName))}
-      </div> */}
-      {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-      <canvas ref={canvasMaze} width={boxWidth} height={boxHeight} className={css.canvas} />
+      <canvas
+        aria-label="A maze being created and solved"
+        ref={canvasMaze}
+        width={boxWidth}
+        height={boxHeight}
+        className={css.canvas}
+      />
       <div ref={grid} className={css.children} style={{ width: boxWidth, height: boxHeight }}>
         {children}
       </div>

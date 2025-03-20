@@ -2,8 +2,9 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import clsx from 'clsx';
 
-import { useComponents } from '#context/component';
+import { useTranslation } from '#context/i18n';
 import { Route, Routes } from '#context/router';
+import { components } from '#settings/components.jsx';
 
 import css from './main.module.css';
 
@@ -13,12 +14,13 @@ type MainProps = {
 };
 
 export const Main: React.FC<MainProps> = ({ className }) => {
-  const components = useComponents();
+  const { t } = useTranslation();
+  const translatedComponents = React.useMemo(() => components(t), [t]);
 
   return (
     <Box className={clsx(className, css.main)}>
       <Routes>
-        {components?.map(({ component, location, name }) => {
+        {translatedComponents?.map(({ component, location, name }) => {
           const Component = component;
           return <Route key={name} path={location} Component={Component} />;
         })}

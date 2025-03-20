@@ -3,8 +3,6 @@ import path from 'node:path';
 
 import { TranslationServiceClient } from '@google-cloud/translate';
 import { compareStrings, plural } from '@technobuddha/library';
-//TODO
-//@ts-expect-error - type definitions are missing
 import { cheferize } from 'cheferizeIt';
 
 import { paths } from '#config/paths';

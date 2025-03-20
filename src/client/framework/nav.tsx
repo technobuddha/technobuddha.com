@@ -8,9 +8,10 @@ import ListItemText from '@mui/material/ListItemText';
 import clsx from 'clsx';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 
-import { useComponents } from '#context/component';
+import { useTranslation } from '#context/i18n';
 import { makeStyles } from '#context/mui';
 import { useLocation, useNavigate } from '#context/router';
+import { components } from '#settings/components.jsx';
 
 const expansionTimeout = 1250;
 
@@ -79,7 +80,8 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
   const css = useStyles();
   const navigate = useNavigate();
   const location = useLocation();
-  const components = useComponents();
+  const { t } = useTranslation();
+  const translatedComponents = React.useMemo(() => components(t), [t]);
 
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [clicked, setClicked] = React.useState(false);
@@ -134,7 +136,7 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
         onMouseLeave={handleMouseLeave}
       >
         <List>
-          {components
+          {translatedComponents
             ?.filter((c) => c.active)
             .map((component, i) => {
               const Icon = component.icon;

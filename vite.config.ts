@@ -7,9 +7,15 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { theme } from './src/settings/mui-theme.js';
 
 export default defineConfig({
+  build: {
+    outDir: '../../dist',
+    emptyOutDir: true,
+  },
+  server: {
+    port: 3000,
+  },
   plugins: [tsconfigPaths(), react(), svgr()],
   root: './src/client',
-  // ...
   css: {
     modules: {
       localsConvention: 'camelCase',

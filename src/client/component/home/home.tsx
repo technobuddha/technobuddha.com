@@ -3,7 +3,7 @@ import React from 'react';
 import { MazeBackground } from '#component/maze/maze-background.jsx';
 import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
-import { components as componentSettings } from '#settings/components';
+import { components } from '#settings/components.jsx';
 
 import Logo from './logo.svg?react';
 import { Spinner } from './spinner.jsx';
@@ -17,7 +17,7 @@ export type HomeProps = {
 export const Home: React.FC<HomeProps> = () => {
   const theme = useTheme();
   const { t } = useTranslation();
-  const components = React.useMemo(() => componentSettings(t).filter((c) => c.active), [t]);
+  const translatedComponents = React.useMemo(() => components(t).filter((c) => c.active), [t]);
   const speed = 15;
 
   return (
@@ -39,7 +39,7 @@ export const Home: React.FC<HomeProps> = () => {
           </div>
         </div>
         <div className={css.wheelOfComponents}>
-          <Spinner speed={speed} components={components} />
+          <Spinner speed={speed} components={translatedComponents} />
         </div>
       </div>
     </MazeBackground>

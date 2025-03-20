@@ -1,7 +1,7 @@
-import { space } from '@technobuddha/library';
 import chalk from 'chalk';
-import { type Logger } from 'winston';
-import winston from 'winston';
+import winston, { type Logger } from 'winston';
+
+const space = ' ';
 
 function logLevel(level: string): string {
   let colored: string;

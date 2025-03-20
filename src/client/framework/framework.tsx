@@ -9,15 +9,15 @@ import { authenticationSettings } from '#settings/authentication';
 import { userInterfaceSettings } from '#settings/user-interface.js';
 
 //import { userInterfaceSettings } from '#settings/user-interface.js';
-import { Footer } from './footer.jsx';
-import { Header } from './header.jsx';
-import { Main } from './main.jsx';
+import { Footer } from './footer.js';
+import { Header } from './header.js';
+import { Main } from './main.js';
 // import Box from '@mui/material/Box';
-import { Nav } from './nav.jsx';
+import { Nav } from './nav.js';
 
-import css from './user-interface.module.css';
+import css from './framework.module.css';
 
-export const UserInterface: React.FC = () => (
+export const Framework: React.FC = () => (
   // const authentication = useAuthentication();
 
   <>

@@ -21,8 +21,15 @@ export async function getTracks(): Promise<GetTracks[]> {
   return db
     .manyOrNone<GetTracksInput>(
       `
-        SELECT  content_id, artist, album, disc_number, track_number, title, genre
-        FROM    track;
+        SELECT
+          content_id,
+          artist,
+          album,
+          disc_number,
+          track_number,
+          title,
+          genre
+        FROM track;
         `,
     )
     .then((data) =>

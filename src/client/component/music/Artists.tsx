@@ -1,6 +1,6 @@
 import React           from 'react';
 import DelayedLoading  from '#control/delayedLoading';
-import DataGrid        from '#control/datagrid';
+import DataGrid        from '@technobuddha/datagrid';
 import useApi          from '#context/api';
 
 import type { APIValue }     from '#context/api';

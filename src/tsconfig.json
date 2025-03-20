@@ -13,6 +13,7 @@
   "exclude": [],
   "references": [
     { "path": "./client" },
+    { "path": "./config" },
     { "path": "./schema" },
     { "path": "./server" },
     { "path": "./settings" },

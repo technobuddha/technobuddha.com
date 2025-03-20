@@ -10,5 +10,6 @@
     "lib": ["esnext", "dom"]
   },
   "include": ["**/*.tsx", "**/*.ts"],
-  "exclude": []
+  "exclude": [],
+  "references": [{ "path": "../settings/tsconfig.json" }]
 }

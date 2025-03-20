@@ -1,5 +1,5 @@
 import React          from 'react';
-import DataGrid       from '#control/datagrid';
+import DataGrid       from '@technobuddha/datagrid';
 import useApi         from '#context/api';
 import Album          from '@material-ui/icons/Album';
 import MusicNote      from '@material-ui/icons/MusicNote';

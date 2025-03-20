@@ -11,5 +11,10 @@
   },
   "include": ["**/*.ts"],
   "exclude": [],
-  "references": [{ "path": "../config" }, { "path": "../settings" }, { "path": "../util" }]
+  "references": [
+    { "path": "../config" },
+    { "path": "../schema" },
+    { "path": "../settings" },
+    { "path": "../util" }
+  ]
 }

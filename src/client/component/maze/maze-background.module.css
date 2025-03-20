@@ -18,3 +18,22 @@
     z-index: 2;
   }
 }
+
+.legend {
+  font-size: 0.75rem;
+  position: absolute;
+  z-index: 5;
+  bottom: 0;
+  right: 0;
+
+  span:nth-child(odd) {
+    margin-right: 0.5rem;
+  }
+  span:nth-child(even) {
+    padding-right: 0.5rem;
+    margin-right: 0.5rem;
+  }
+  span:nth-child(even):not(:last-child) {
+    border-right: 1px solid white;
+  }
+}

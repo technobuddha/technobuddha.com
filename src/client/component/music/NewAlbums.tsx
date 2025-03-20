@@ -1,15 +1,17 @@
 import React          from 'react';
 import MusicNote      from '@material-ui/icons/MusicNote';
 import DelayedLoading from '#control/delayedLoading';
-import DataGrid       from '#control/datagrid';
+import DataGrid       from '@technobuddha/datagrid';
 import useApi         from '#context/api';
-import css            from './NewAlbums.module.css';
+import useTranslation from '#context/i18n';
+import css            from './NewAlbums.css';
 
-import type { RowRenderer }  from '#control/datagrid';
+import type { RowRenderer }  from '@technobuddha/datagrid';
 import type { APIValue }     from '#context/api';
 import type { PromiseValue } from 'type-fest';
 
 export const NewAlbums: React.FC = () => {
+    const { t } = useTranslation();
     const api   = useApi();
     const [ dataset, setDataset ]   = React.useState<APIValue<PromiseValue<ReturnType<typeof api.music.newAlbums>>> | null>(null);
 
@@ -20,10 +22,9 @@ export const NewAlbums: React.FC = () => {
         []
     );
 
-    //todo translate
     const rowRenderer: RowRenderer = ({ datum }: { datum: any }) => (
         <div className={css.row}>
-            <img className={css.img} alt="Album Artwork" src={`/art/${datum.collectionGroupId.toUpperCase()}`}  />
+            <img className={css.img} alt={t('Album Artwork')} src={`/art/${datum.collectionGroupId.toUpperCase()}`}  />
             <div className={css.artist}>{datum.artist.join('; ')}</div>
             <div className={css.album}>{datum.album}</div>
             <div className={css.year}>{datum.year}</div>
@@ -37,17 +38,24 @@ export const NewAlbums: React.FC = () => {
         </div>
     );
 
+    // TODO [2021-12-31] Figure out why translations are giving a type error if used directly
+    const artist    = t('Artist');
+    const album     = t('Album');
+    const year      = t('Year');
+    const genre     = t('Genre');
+    const subgenre  = t('Style');
+
     if(dataset) {
         return (
             <DataGrid
                 data={dataset}
                 rowHeight={136}
                 columns={[
-                    { name: 'artist',        type: 'array',  sortBy: [ 'artist', 'album' ]},
-                    { name: 'album',         type: 'string', sortBy: [ 'album' ]},
-                    { name: 'year',          type: 'number', sortBy: [ 'year' ]}, //, width: 40},
-                    { name: 'genre',         type: 'array',  sortBy: [ 'genre', 'subgenre' ]},
-                    { name: 'subgenre',      type: 'array',  sortBy: [ 'subgenre' ]},
+                    { name: 'artist',        header: artist,   type: 'array',  sortBy: [ 'artist', 'album' ]},
+                    { name: 'album',         header: album,    type: 'string', sortBy: [ 'album' ]},
+                    { name: 'year',          header: year,     type: 'number', sortBy: [ 'year' ]},
+                    { name: 'genre',         header: genre,    type: 'array',  sortBy: [ 'genre', 'subgenre' ]},
+                    { name: 'subgenre',      header: subgenre, type: 'array',  sortBy: [ 'subgenre' ]},
                 ]}
                 rowRenderer={rowRenderer}
                 filters={[

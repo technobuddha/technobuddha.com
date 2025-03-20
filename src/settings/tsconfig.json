@@ -9,7 +9,7 @@
     "types": [],
     "lib": ["esnext"]
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": [],
-  "references": [{ "path": "../client" }]
+  "references": []
 }

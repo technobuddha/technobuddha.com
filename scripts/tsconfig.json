@@ -1,3 +1,19 @@
+// 🚨
+// 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
+// 🚨
 {
-    "extends": "../config/tsconfig.node.json"
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+    "types": ["node"],
+    "lib": ["esnext", "dom"]
+  },
+  "include": ["**/*.ts"],
+  "exclude": [],
+  "references": [
+    {
+      "path": "../src"
+    }
+  ]
 }

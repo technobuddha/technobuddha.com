@@ -3,3 +3,4 @@
 # 🚨
 tsconfig.base.json
 dist/
+migrations/

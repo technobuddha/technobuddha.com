@@ -1,4 +1,4 @@
-import { type Maze } from '../maze/maze.js';
+import { type Maze } from '../maze/maze.ts';
 
 export function donutMask(maze: Maze): void {
   const rx = Math.floor(maze.width / 2) + 1;

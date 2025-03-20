@@ -5,23 +5,23 @@ import { Size } from '@technobuddha/mui-size';
 
 import { useUserInterface } from '#context/user-interface';
 
-import { CanvasDrawing } from './drawing/canvas-drawing.js';
-import { Blob } from './generator/blob.js';
-import { GrowingTree } from './generator/growing-tree.js';
-import { HuntAndKill } from './generator/hunt-and-kill.js';
-import { Kruskals } from './generator/kruskals.js';
-import { type MazeGenerator, type MazeGeneratorProperties } from './generator/maze-generator.js';
-import { Prims } from './generator/prims.js';
-import { RecursiveBacktracker } from './generator/recursive-backtracker.js';
-import { Wilsons } from './generator/wilsons.js';
-import { type Maze, type MazeProperties } from './maze/maze.js';
-import { SquareMaze } from './maze/square-maze.js';
-import { MazeFactory } from './maze-factory.js';
-import { Dijkstras } from './solver/dijkstras.js';
-import { Filler } from './solver/filler.js';
-import { type MazeSolver, type MazeSolverProperties } from './solver/maze-solver.js';
-import { Search } from './solver/search.js';
-import { WallWalking } from './solver/wall-walking.js';
+import { CanvasDrawing } from './drawing/canvas-drawing.ts';
+import { Blob } from './generator/blob.ts';
+import { GrowingTree } from './generator/growing-tree.ts';
+import { HuntAndKill } from './generator/hunt-and-kill.ts';
+import { Kruskals } from './generator/kruskals.ts';
+import { type MazeGenerator, type MazeGeneratorProperties } from './generator/maze-generator.ts';
+import { Prims } from './generator/prims.ts';
+import { RecursiveBacktracker } from './generator/recursive-backtracker.ts';
+import { Wilsons } from './generator/wilsons.ts';
+import { type Maze, type MazeProperties } from './maze/maze.ts';
+import { SquareMaze } from './maze/square-maze.ts';
+import { MazeFactory } from './maze-factory.ts';
+import { Dijkstras } from './solver/dijkstras.ts';
+import { Filler } from './solver/filler.ts';
+import { type MazeSolver, type MazeSolverProperties } from './solver/maze-solver.ts';
+import { Search } from './solver/search.ts';
+import { WallWalking } from './solver/wall-walking.ts';
 
 import css from './maze-background.module.css';
 

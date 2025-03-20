@@ -1,5 +1,5 @@
 /* eslint-disable no-implicit-coercion */
-import { type Rect } from '../drawing/drawing.js';
+import { type Rect } from '../drawing/drawing.ts';
 
 import {
   type Cell,
@@ -7,8 +7,8 @@ import {
   type CellPillar,
   type Kind,
   type MazeProperties,
-} from './maze.js';
-import { OctogonMaze } from './octogon-maze.js';
+} from './maze.ts';
+import { OctogonMaze } from './octogon-maze.ts';
 
 const SQ2 = Math.SQRT2;
 

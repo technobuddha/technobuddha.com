@@ -1,4 +1,4 @@
-export { Router } from './router.jsx';
+export { Router } from './router.tsx';
 export type { Location } from 'history';
 export {
   Navigate,

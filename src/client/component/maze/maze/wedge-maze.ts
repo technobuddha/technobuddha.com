@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 import { modulo } from '@technobuddha/library';
 
-import { type Rect } from '../drawing/drawing.js';
+import { type Rect } from '../drawing/drawing.ts';
 
 import {
-  DrawingSizes,
   type Cell,
   type CellDirection,
   type CellPillar,
+  type DrawingSizes,
   type Kind,
   type MazeProperties,
-} from './maze.js';
-import { Maze } from './maze.js';
+} from './maze.ts';
+import { Maze } from './maze.ts';
 import {
   directionMatrix,
   edgesMatrix,
@@ -23,7 +23,7 @@ import {
   rightTurnMatrix,
   sidesMatrix,
   wallMatrix,
-} from './wedge-matrix.js';
+} from './wedge-matrix.ts';
 
 export class WedgeMaze extends Maze {
   public constructor({ cellSize = 24, wallSize = 1, ...props }: MazeProperties) {

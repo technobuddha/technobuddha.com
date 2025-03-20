@@ -1,13 +1,15 @@
 import '#config/env';
-import chalk           from 'chalk';
-import express         from 'express';
-import createLogger    from './create-logger';
-import proxy           from './proxy';
-import setup           from './setup';
-import staticContent   from './static-content';
-import api             from './api';
-import listener        from './listener';
-import invulnerability from './invulnerability';
+
+import chalk from 'chalk';
+import express from 'express';
+
+import api from './api/index.ts';
+import createLogger from './create-logger.ts';
+import invulnerability from './invulnerability.ts';
+import listener from './listener.ts';
+import proxy from './proxy.ts';
+import setup from './setup.ts';
+import staticContent from './static-content.ts';
 
 const logger = createLogger(false);
 

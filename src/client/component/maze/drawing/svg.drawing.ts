@@ -1,4 +1,4 @@
-import { Drawing, type Rect, type XY } from './drawing.js';
+import { Drawing, type Rect, type XY } from './drawing.ts';
 
 function create(tag: string, attributes: Record<string, string | number> = {}): Element {
   const element = document.createElementNS('http://www.w3.org/2000/svg', tag);

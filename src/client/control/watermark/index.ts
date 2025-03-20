@@ -1,1 +1,1 @@
-export { Watermark } from './watermark.jsx';
+export { Watermark, type WatermarkProps } from './watermark.tsx';

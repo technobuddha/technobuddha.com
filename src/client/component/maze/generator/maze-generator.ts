@@ -1,7 +1,7 @@
 import { randomPick, randomShuffle } from '@technobuddha/library';
 
-import { animate } from '../drawing/animate.js';
-import { type Cell, type Maze } from '../maze/maze.js';
+import { animate } from '../drawing/animate.ts';
+import { type Cell, type Maze } from '../maze/maze.ts';
 
 export type MazeGeneratorProperties = {
   maze: Maze;

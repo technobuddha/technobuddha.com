@@ -1,6 +1,5 @@
 import React from 'react';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Fade from '@material-ui/core/Fade';
+import { CircularProgress, Fade } from '@mui/material';
 
 import css from './delayed-loading.module.css';
 

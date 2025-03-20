@@ -1,1 +1,1 @@
-export { NBody } from './n-body.jsx';
+export { NBody } from './n-body.tsx';

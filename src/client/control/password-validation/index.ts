@@ -1,1 +1,1 @@
-export { PasswordValidation } from './password-validation.jsx';
+export { PasswordValidation, type PasswordValidationProps } from './password-validation.tsx';

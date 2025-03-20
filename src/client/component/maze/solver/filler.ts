@@ -1,7 +1,7 @@
-import { animate } from '../drawing/animate.js';
-import { type CellDirection } from '../maze/maze.js';
+import { animate } from '../drawing/animate.ts';
+import { type CellDirection } from '../maze/maze.ts';
 
-import { MazeSolver, type MazeSolverProperties } from './maze-solver.js';
+import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 type DeadEndProperties = MazeSolverProperties & {
   method?: 'cul-de-sac' | 'dead-end';

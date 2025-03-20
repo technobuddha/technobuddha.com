@@ -3,10 +3,10 @@ import React from 'react';
 import { MazeBackground } from '#component/maze/maze-background.jsx';
 import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
-import { components } from '#settings/components.jsx';
+import { components } from '#settings/components.tsx';
 
 import Logo from './logo.svg?react';
-import { Spinner } from './spinner.jsx';
+import { Spinner } from './spinner.tsx';
 
 import css from './home.module.css';
 

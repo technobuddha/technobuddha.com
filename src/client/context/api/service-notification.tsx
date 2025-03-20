@@ -1,6 +1,6 @@
 import React from 'react';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 import css from './service-notification.module.css';
 
@@ -14,5 +14,3 @@ export const ServiceNotification: React.FC<ServerErrorProps> = ({ err }) => (
     <Typography className={css.message}>{err.message}</Typography>
   </Box>
 );
-
-export default ServiceNotification;

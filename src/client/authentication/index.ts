@@ -1,1 +1,1 @@
-export { Authentication } from './authentication.jsx';
+export { Authentication } from './authentication.tsx';

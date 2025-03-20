@@ -3,7 +3,7 @@ import DataGrid from '@technobuddha/datagrid';
 
 import { type APIValue } from '#context/api';
 import { useAPI } from '#context/api';
-import { DelayedLoading } from '#control/delayed-loading';
+import { DelayedLoading } from '#control';
 
 export const Genres: React.FC = () => {
   const api = useAPI();

@@ -6,11 +6,11 @@
   "compilerOptions": {
     "composite": true,
     "allowJs": true,
-    "noEmit": true,
     "types": ["node"],
-    "lib": ["esnext"]
+    "lib": ["esnext"],
+    "noEmit": true
   },
   "include": ["*.config.js", "*.config.ts"],
   "exclude": [],
-  "references": [{ "path": "./src" }]
+  "references": [{ "path": "src" }]
 }

@@ -1,8 +1,8 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell } from '../maze/maze.js';
+import { type Cell } from '../maze/maze.ts';
 
-import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.js';
+import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
 type HuntMethod =
   | 'random'

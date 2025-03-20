@@ -1,1 +1,1 @@
-export { IconProvider } from './icon';
+export { IconProvider } from './icon.tsx';

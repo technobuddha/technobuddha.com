@@ -2,7 +2,7 @@
 
 import { modulo } from '@technobuddha/library';
 
-import { type Rect } from '../../drawing/drawing.js';
+import { type Rect } from '../../drawing/drawing.ts';
 
 import {
   type Cell,
@@ -11,8 +11,8 @@ import {
   type DrawingSizes,
   type Kind,
   type MazeProperties,
-} from '../maze.js';
-import { Maze } from '../maze.js';
+} from '../maze.ts';
+import { Maze } from '../maze.ts';
 
 import {
   directionMatrix,
@@ -25,7 +25,7 @@ import {
   rightTurnMatrix,
   sidesMatrix,
   wallMatrix,
-} from './cubic-matrix.js';
+} from './cubic-matrix.ts';
 
 export class CubicMaze extends Maze {
   public constructor({ cellSize = 24, wallSize = 1, ...props }: MazeProperties) {

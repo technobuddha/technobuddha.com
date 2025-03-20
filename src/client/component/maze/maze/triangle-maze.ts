@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 import { modulo } from '@technobuddha/library';
 
-import { type Rect } from '../drawing/drawing.js';
+import { type Rect } from '../drawing/drawing.ts';
 
 import {
   type Cell,
@@ -10,8 +10,8 @@ import {
   type DrawingSizes,
   type Kind,
   type MazeProperties,
-} from './maze.js';
-import { Maze } from './maze.js';
+} from './maze.ts';
+import { Maze } from './maze.ts';
 import {
   directionMatrix,
   edgesMatrix,
@@ -23,7 +23,7 @@ import {
   rightTurnMatrix,
   sidesMatrix,
   wallMatrix,
-} from './triangle-matrix.js';
+} from './triangle-matrix.ts';
 
 const SIN60 = Math.sin(Math.PI / 3);
 

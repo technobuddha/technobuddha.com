@@ -1,10 +1,12 @@
 import React from 'react';
-import { type CheckboxProps as MuiCheckboxProps } from '@mui/material/Checkbox';
-import MuiCheckBox from '@mui/material/Checkbox';
-import { type FormControlLabelProps as MuiFormControlLabelProps } from '@mui/material/FormControlLabel';
-import MuiFormControlLabel from '@mui/material/FormControlLabel';
+import {
+  Checkbox as MuiCheckbox,
+  type CheckboxProps as MuiCheckboxProps,
+  FormControlLabel as MuiFormControlLabel,
+  type FormControlLabelProps as MuiFormControlLabelProps,
+} from '@mui/material';
 
-type CheckboxProps = {
+export type CheckboxProps = {
   readonly checked?: MuiFormControlLabelProps['checked'];
   readonly icon?: {
     checked?: MuiCheckboxProps['checkedIcon'];
@@ -41,7 +43,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       labelPlacement={labelPlacement}
       onChange={handleChange}
       control={
-        <MuiCheckBox icon={icon?.unchecked} checkedIcon={icon?.checked} color={color} size={size} />
+        <MuiCheckbox icon={icon?.unchecked} checkedIcon={icon?.checked} color={color} size={size} />
       }
     />
   );

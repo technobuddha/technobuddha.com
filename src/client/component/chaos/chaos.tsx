@@ -6,7 +6,7 @@ import { useDerivedState } from '@technobuddha/react-hooks';
 
 import { useTranslation } from '#context/i18n';
 
-import { chaos } from './worker/index.js';
+import { chaos } from './worker/index.ts';
 
 import css from './chaos.module.css';
 

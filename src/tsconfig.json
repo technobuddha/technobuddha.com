@@ -3,20 +3,15 @@
 // 🚨
 {
   "extends": "../tsconfig.base.json",
-  "compilerOptions": {
-    "composite": true,
-    "rootDir": ".",
-    "types": ["vite/client"],
-    "lib": ["esnext", "dom"]
-  },
+  "compilerOptions": { "composite": true, "rootDir": ".", "outDir": "../dist" },
   "include": [],
   "exclude": [],
   "references": [
-    { "path": "./client" },
-    { "path": "./config" },
-    { "path": "./schema" },
-    { "path": "./server" },
-    { "path": "./settings" },
-    { "path": "./util" }
+    { "path": "client" },
+    { "path": "config" },
+    { "path": "schema" },
+    { "path": "server" },
+    { "path": "settings" },
+    { "path": "util" }
   ]
 }

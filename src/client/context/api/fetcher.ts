@@ -80,5 +80,3 @@ export async function fetcher(
       throw toError(error);
     });
 }
-
-export default fetcher;

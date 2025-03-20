@@ -2,9 +2,9 @@ import React from 'react';
 import { IconButton } from '@mui/material';
 import { MdLock, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
-import { TextField } from '#control/text-field';
+import { TextField } from '#control';
 
-type PasswordFieldProps = {
+export type PasswordFieldProps = {
   readonly className?: string;
   readonly label?: string;
   readonly helperText?: string;

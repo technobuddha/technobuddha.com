@@ -14,15 +14,15 @@ import {
 import { HiColorSwatch } from 'react-icons/hi';
 
 // import { Music } from '#component/music';
-import { Chaos } from '../client/component/chaos/index.js';
-import { Color } from '../client/component/color';
-import { Home } from '../client/component/home';
-import { Knight } from '../client/component/knight';
-import { Life } from '../client/component/life';
-import { MazeDebugger, MazeMaker } from '../client/component/maze';
-import { NBody } from '../client/component/n-body';
-import { Theme } from '../client/component/theme';
-import { type TFunction } from '../client/context/i18n';
+import { Chaos } from '../client/component/chaos/index.ts';
+import { Color } from '../client/component/color/index.ts';
+import { Home } from '../client/component/home/index.ts';
+import { Knight } from '../client/component/knight/index.ts';
+import { Life } from '../client/component/life/index.ts';
+import { MazeDebugger, MazeMaker } from '../client/component/maze/index.ts';
+import { NBody } from '../client/component/n-body/index.ts';
+import { Theme } from '../client/component/theme/index.ts';
+import { type TFunction } from '../client/context/i18n/index.ts';
 
 export type Component = {
   active: boolean;

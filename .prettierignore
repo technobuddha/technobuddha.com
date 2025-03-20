@@ -1,6 +1,2 @@
-# 🚨
-# 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
-# 🚨
-tsconfig.base.json
 dist/
 migrations/

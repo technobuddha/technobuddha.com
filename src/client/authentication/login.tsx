@@ -1,15 +1,11 @@
 import React from 'react';
-import Alert from '@mui/lab/Alert';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { Alert, Box, Button, Typography } from '@mui/material';
 import { MdEmail } from 'react-icons/md';
 
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useLocation, useNavigate } from '#context/router';
-import { PasswordField } from '#control/password-field';
-import { TextField } from '#control/text-field';
+import { PasswordField, TextField } from '#control';
 
 import css from './login.module.css';
 
@@ -101,7 +97,8 @@ export const Login: React.FC = () => {
 
       {errorMessage != null && (
         <Box className={css.message}>
-          <Alert severity="error">{t(errorMessage)}</Alert>
+          {/* <Alert severity="error">{t(errorMessage)}</Alert> */}
+          {t(errorMessage)}
         </Box>
       )}
     </Box>

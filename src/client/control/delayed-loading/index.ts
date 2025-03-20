@@ -1,1 +1,1 @@
-export { DelayedLoading } from './delayed-loading.jsx';
+export { DelayedLoading } from './delayed-loading.tsx';

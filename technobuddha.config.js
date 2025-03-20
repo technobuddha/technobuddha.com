@@ -4,105 +4,67 @@
 const config = {
   lint: {
     rules: {
-      'technobuddha/optimize-imports': { rule: ['error', { alias: 'shortest' }], typescript: true },
-      '@typescript-eslint/naming-convention': {
-        doc: 'https://typescript-eslint.io/rules/naming-convention/',
-        rule: [
-          'error',
-          {
-            selector: 'default',
-            format: ['camelCase'],
-          },
-
-          {
-            selector: 'variable',
-            format: ['camelCase'],
-          },
-          {
-            selector: ['variable'],
-            modifiers: ['const'],
-            format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
-          },
-          {
-            selector: ['objectLiteralProperty'],
-            modifiers: ['requiresQuotes'],
-            format: null,
-          },
-          {
-            selector: ['objectLiteralProperty'],
-            format: ['camelCase', 'snake_case', 'PascalCase', 'UPPER_CASE'],
-          },
-          {
-            selector: ['objectLiteralMethod'],
-            format: ['camelCase'],
-          },
-          {
-            selector: ['classicAccessor', 'autoAccessor'],
-            format: ['camelCase'],
-          },
-          {
-            selector: ['import'],
-            format: ['camelCase', 'PascalCase'],
-          },
-          {
-            selector: ['class'],
-            format: ['PascalCase'],
-          },
-          {
-            selector: ['classProperty'],
-            format: ['camelCase'],
-          },
-          {
-            selector: ['classProperty'],
-            modifiers: ['readonly', 'static'],
-            format: ['camelCase', 'UPPER_CASE'],
-          },
-          {
-            selector: ['classMethod'],
-            format: ['camelCase'],
-          },
-          {
-            selector: ['interface', 'typeAlias'],
-            format: ['PascalCase'],
-          },
-          {
-            selector: ['typeMethod', 'typeProperty'],
-            format: ['camelCase', 'snake_case'],
-          },
-          {
-            selector: 'function',
-            format: ['camelCase', 'PascalCase'],
-          },
-          {
-            selector: ['typeParameter'],
-            format: ['PascalCase'],
-          },
-          {
-            selector: ['parameter'],
-            format: ['camelCase'],
-            leadingUnderscore: 'allow',
-          },
-          {
-            selector: ['enum'],
-            format: ['PascalCase'],
-          },
-          {
-            selector: ['enumMember'],
-            format: null,
-          },
-        ],
-        typescript: true,
-      },
+      '@typescript-eslint/no-redundant-type-constituents': { rule: 'off' },
     },
   },
   directories: {
-    'src': {
-      environment: 'browser',
+    '.': {
+      tsconfig: {
+        references: ['./src'],
+      },
+    },
+    'scripts': {
+      environment: 'node',
+      tsconfig: {
+        references: ['src'],
+      },
     },
     'src/client': {
-      environment: 'browser',
+      environment: 'vite-client',
       tsconfig: {
-        references: ['src/settings'],
+        references: ['src/settings', 'src/schema', 'src/server'],
+      },
+    },
+    'src/config': {
+      environment: 'node',
+    },
+    'src/schema': {
+      environment: 'universal',
+    },
+    'src/server': {
+      environment: 'node',
+      tsconfig: {
+        references: ['src/config', 'src/settings', 'src/schema', 'src/util'],
+      },
+    },
+    'src/settings': {
+      environment: 'universal',
+      tsconfig: {
+        references: ['src/client'],
+      },
+    },
+    'src/util': {
+      environment: 'universal',
+      tsconfig: {
+        references: ['src/config', 'src/settings'],
+      },
+    },
+  },
+  tsconfig: {
+    base: {
+      compilerOptions: {
+        paths: {
+          /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+          '#context/*': ['./src/client/context/*/index.ts'],
+          '#control': ['./src/client/control/index.ts'],
+          '#component*': ['./src/client/component*'],
+          '#client*': ['./src/client*'],
+          '#server*': ['./src/server*'],
+          '#util*': ['./src/util*'],
+          '#schema': ['./src/schema/index.ts'],
+          '#settings*': ['./src/settings*'],
+          '#config*': ['./src/config*'],
+        },
       },
     },
   },

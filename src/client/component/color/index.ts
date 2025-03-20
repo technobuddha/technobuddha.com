@@ -1,1 +1,1 @@
-export { Color } from './color.jsx';
+export { Color } from './color.tsx';

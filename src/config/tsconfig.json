@@ -2,13 +2,8 @@
 // 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
 // 🚨
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "composite": true,
-    "rootDir": ".",
-    "types": ["node"],
-    "lib": ["esnext"]
-  },
-  "include": ["**/*.ts"],
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"] },
+  "include": ["*.ts"],
   "exclude": []
 }

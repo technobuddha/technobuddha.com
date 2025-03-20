@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { clean, space, create2DArray, splitLines } from '@technobuddha/library';
+import { clean, create2DArray, space, splitLines } from '@technobuddha/library';
 import { Size } from '@technobuddha/mui-size';
 import { useDerivedState } from '@technobuddha/react-hooks';
 

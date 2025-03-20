@@ -1,1 +1,1 @@
-export { Theme } from './theme.jsx';
+export { Theme } from './theme.tsx';

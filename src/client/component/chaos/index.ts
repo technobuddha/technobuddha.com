@@ -1,1 +1,1 @@
-export { Chaos } from './chaos.js';
+export { Chaos } from './chaos.tsx';

@@ -25,7 +25,7 @@ type Settings = {
 };
 
 export const authenticationSettings: Settings = {
-  login: false,
+  login: true,
   forgotPassword: false,
   signUp: false,
   session: {

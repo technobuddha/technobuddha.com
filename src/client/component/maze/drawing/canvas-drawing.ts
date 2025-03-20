@@ -1,4 +1,4 @@
-import { Drawing, type Rect, type XY } from './drawing.js';
+import { Drawing, type Rect, type XY } from './drawing.ts';
 
 export class CanvasDrawing extends Drawing {
   private readonly canvas: CanvasRenderingContext2D;

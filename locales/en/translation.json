@@ -102,6 +102,7 @@
   "Password strength must be": "Password strength must be",
   "Passwords must match": "Passwords must match",
   "Please enter a correct username and password": "Please enter a correct username and password",
+  "Please enter a correct username and password.": "Please enter a correct username and password.",
   "Predictable substitutions like '@' instead of 'a' don't help very much": "Predictable substitutions like '@' instead of 'a' don't help very much",
   "Recent years are easy to guess": "Recent years are easy to guess",
   "Repeats like \"aaa\" are easy to guess": "Repeats like \"aaa\" are easy to guess",

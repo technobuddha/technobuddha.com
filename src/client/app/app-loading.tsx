@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CircularProgress } from '#control/circular-progress';
+import { CircularProgress } from '#control';
 
 import css from './app-loading.module.css';
 

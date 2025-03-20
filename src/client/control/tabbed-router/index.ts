@@ -1,1 +1,1 @@
-export { TabbedRouter } from './tabbed-router.jsx';
+export { TabbedRouter, type TabbedRouterProps } from './tabbed-router.tsx';

@@ -1,9 +1,9 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { animate } from '../drawing/animate.js';
-import { type Cell, type Direction } from '../maze/maze.js';
+import { animate } from '../drawing/animate.ts';
+import { type Cell, type Direction } from '../maze/maze.ts';
 
-import { MazeSolver } from './maze-solver.js';
+import { MazeSolver } from './maze-solver.ts';
 
 type DD = {
   dir?: Direction;

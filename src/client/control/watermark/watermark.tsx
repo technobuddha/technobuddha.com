@@ -2,7 +2,7 @@ import React from 'react';
 
 import css from './watermark.module.css';
 
-type WatermarkProps = {
+export type WatermarkProps = {
   readonly children?: React.ReactNode;
 };
 

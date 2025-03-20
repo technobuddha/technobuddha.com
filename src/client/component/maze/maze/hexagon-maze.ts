@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 import { modulo } from '@technobuddha/library';
 
-import { type Rect } from '../drawing/drawing.js';
+import { type Rect } from '../drawing/drawing.ts';
 
 import {
   directionMatrix,
@@ -14,7 +14,7 @@ import {
   rightTurnMatrix,
   sidesMatrix,
   wallMatrix,
-} from './hexagon-matrix.js';
+} from './hexagon-matrix.ts';
 import {
   type Cell,
   type CellDirection,
@@ -22,8 +22,8 @@ import {
   type DrawingSizes,
   type Kind,
   type MazeProperties,
-} from './maze.js';
-import { Maze } from './maze.js';
+} from './maze.ts';
+import { Maze } from './maze.ts';
 
 const COS30 = Math.cos(Math.PI / 6);
 const TAN30 = Math.tan(Math.PI / 6);

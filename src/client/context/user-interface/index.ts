@@ -1,1 +1,1 @@
-export { UserInterfaceProvider, useUserInterface } from './user-interface.jsx';
+export { UserInterfaceProvider, useUserInterface } from './user-interface.tsx';

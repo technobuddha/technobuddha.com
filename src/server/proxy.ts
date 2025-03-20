@@ -7,7 +7,6 @@ import { type Logger } from 'winston';
 
 export function proxy(app: Application, logger: Logger): void {
   app.use(
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     createProxyMiddleware({
       pathFilter: (_path, req) => ['verdaccio.technobuddha.com'].includes(req.hostname),
       target: 'http://verdaccio.technobuddha.com',
@@ -33,5 +32,3 @@ export function proxy(app: Application, logger: Logger): void {
     }),
   );
 }
-
-export default proxy;

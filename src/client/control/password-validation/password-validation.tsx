@@ -1,15 +1,13 @@
 import React from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { Box, Typography } from '@mui/material';
 import { empty, nbsp } from '@technobuddha/library';
-import escapeRegExp from 'lodash/escapeRegExp';
-import zip from 'lodash/zip';
+import { escapeRegExp, zip } from 'lodash-es';
 import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 
 import { useAPI } from '#context/api';
 import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
-import { PasswordField } from '#control/password-field';
+import { PasswordField } from '#control';
 
 import css from './password-validation.module.css';
 
@@ -28,7 +26,7 @@ type ValidationArgs = {
   cCount: number;
 };
 
-type PasswordValidationProps = {
+export type PasswordValidationProps = {
   readonly minLength?: number;
   readonly maxLength?: number;
   readonly strength?: 1 | 2 | 3 | 4;

@@ -2,14 +2,9 @@
 // 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
 // 🚨
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "composite": true,
-    "rootDir": ".",
-    "types": [],
-    "lib": ["esnext"]
-  },
-  "include": ["**/*.ts"],
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "composite": true, "types": [], "lib": ["esnext"] },
+  "include": ["*.ts"],
   "exclude": [],
-  "references": [{ "path": "../settings" }, { "path": "../config" }]
+  "references": [{ "path": "../config" }, { "path": "../settings" }]
 }

@@ -1,1 +1,1 @@
-export { PasswordField } from './password-field.jsx';
+export { PasswordField, type PasswordFieldProps } from './password-field.tsx';

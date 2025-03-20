@@ -2,7 +2,7 @@ import React from 'react';
 import { GiMeepleGroup, GiMusicalKeyboard, GiMusicalScore, GiMusicSpell } from 'react-icons/gi';
 
 import { useTranslation } from '#context/i18n';
-import { TabbedRouter } from '#control/tabbed-router';
+import { TabbedRouter } from '#control';
 
 import { Artists } from './artists.js';
 import { Genres } from './genres.js';
@@ -30,5 +30,3 @@ export const Music: React.FC = () => {
     />
   );
 };
-
-export default Music;

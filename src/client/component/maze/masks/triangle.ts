@@ -1,4 +1,4 @@
-import { type Maze } from '../maze/maze.js';
+import { type Maze } from '../maze/maze.ts';
 
 export function triangleMask(maze: Maze): void {
   const a = { x: 0, y: maze.height - 1 };

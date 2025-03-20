@@ -1,10 +1,10 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { animate } from '../drawing/animate.js';
-import { type Cell, type CellDirection, type Direction, type XY } from '../maze/maze.js';
+import { animate } from '../drawing/animate.ts';
+import { type Cell, type CellDirection, type Direction, type XY } from '../maze/maze.ts';
 
-import { type MazeSolverProperties, type SolveArguments } from './maze-solver.js';
-import { MazeSolver } from './maze-solver.js';
+import { type MazeSolverProperties, type SolveArguments } from './maze-solver.ts';
+import { MazeSolver } from './maze-solver.ts';
 
 function manhattanDistance(a: XY, b: XY): number {
   return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);

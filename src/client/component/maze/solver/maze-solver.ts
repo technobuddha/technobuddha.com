@@ -1,7 +1,7 @@
 import { randomPick, randomShuffle } from '@technobuddha/library';
 
-import { type Drawing } from '../drawing/drawing.js';
-import { type CellDirection, type Maze } from '../maze/maze.js';
+import { type Drawing } from '../drawing/drawing.ts';
+import { type CellDirection, type Maze } from '../maze/maze.ts';
 
 export type MazeSolverProperties = {
   maze: Maze;

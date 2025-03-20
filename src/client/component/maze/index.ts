@@ -1,2 +1,2 @@
-export { MazeDebugger } from './maze-debugger.jsx';
-export { MazeMaker } from './maze-maker.jsx';
+export { MazeDebugger } from './maze-debugger.tsx';
+export { MazeMaker } from './maze-maker.tsx';

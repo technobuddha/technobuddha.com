@@ -4,14 +4,14 @@ import chalk from 'chalk';
 import express, { type Express } from 'express';
 import { type Logger } from 'winston';
 
-// import { api } from './api/index.js';
-import { createLogger } from './create-logger.js';
-import { invulnerability } from './invulnerability.js';
-import { proxy } from './proxy.js';
+import { api } from './api/index.ts';
+import { createLogger } from './create-logger.ts';
+import { invulnerability } from './invulnerability.ts';
+import { proxy } from './proxy.ts';
 // import { listener } from './listener.js';
-import { setup } from './setup.js';
-import { staticContent } from './static-content.js';
-import { translation } from './translation.js';
+import { setup } from './setup.ts';
+import { staticContent } from './static-content.ts';
+import { translation } from './translation.ts';
 
 export function server(): { app: Express; logger: Logger } {
   const logger = createLogger(true);
@@ -23,7 +23,7 @@ export function server(): { app: Express; logger: Logger } {
   setup(app, logger);
   proxy(app, logger);
   translation(app, logger);
-  // app.use('/api', api(logger));
+  api(app, logger);
   staticContent(app, logger);
 
   // void listener(app, logger);

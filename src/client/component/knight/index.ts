@@ -1,1 +1,1 @@
-export { Knight } from './knight.jsx';
+export { Knight } from './knight.tsx';

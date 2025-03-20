@@ -1,1 +1,1 @@
-export { CircularProgress } from './circular-progress.js';
+export { CircularProgress } from './circular-progress.ts';

@@ -1,9 +1,9 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { animate } from '../drawing/animate.js';
-import { type CellDirection, type Direction } from '../maze/maze.js';
+import { animate } from '../drawing/animate.ts';
+import { type CellDirection, type Direction } from '../maze/maze.ts';
 
-import { MazeSolver, type MazeSolverProperties, type SolveArguments } from './maze-solver.js';
+import { MazeSolver, type MazeSolverProperties, type SolveArguments } from './maze-solver.ts';
 
 type WallWalkingProperties = MazeSolverProperties & {
   turn?: 'right' | 'left';

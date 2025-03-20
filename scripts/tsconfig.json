@@ -3,17 +3,8 @@
 // 🚨
 {
   "extends": "../tsconfig.base.json",
-  "compilerOptions": {
-    "composite": true,
-    "rootDir": ".",
-    "types": ["node"],
-    "lib": ["esnext", "dom"]
-  },
-  "include": ["**/*.ts"],
+  "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"] },
+  "include": ["*.ts"],
   "exclude": [],
-  "references": [
-    {
-      "path": "../src"
-    }
-  ]
+  "references": [{ "path": "../src" }]
 }

@@ -1,4 +1,4 @@
-import { type Direction, type Kind, type Pillar, type XY } from './maze.js';
+import { type Direction, type Kind, type Pillar, type XY } from './maze.ts';
 
 export const directionMatrix: Direction[] = ['n', 'e', 'w', 's'];
 export const pillarMatrix: Pillar[] = ['ne', 'nw', 'se', 'sw'];

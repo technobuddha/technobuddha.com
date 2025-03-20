@@ -7,8 +7,8 @@ import {
   toPolar,
 } from '@technobuddha/library';
 
-import { animate } from '../drawing/animate.js';
-import { type Drawing, type Rect } from '../drawing/drawing.js';
+import { animate } from '../drawing/animate.ts';
+import { type Drawing, type Rect } from '../drawing/drawing.ts';
 
 export type Direction = string;
 export type Pillar = `${Direction}${Direction}`;

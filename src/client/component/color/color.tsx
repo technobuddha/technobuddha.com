@@ -2,7 +2,7 @@ import React from 'react';
 import { type ColorSpecification } from '@technobuddha/color';
 import { toLAB } from '@technobuddha/color';
 
-import { ColorSpace } from './color-space.jsx';
+import { ColorSpace } from './color-space.tsx';
 
 import css from './color.module.css';
 

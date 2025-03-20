@@ -1,9 +1,12 @@
 import React from 'react';
-import Box from '@mui/material/Box';
-import InputAdornment from '@mui/material/InputAdornment';
-import MuiTextField from '@mui/material/TextField';
+import {
+  Box,
+  InputAdornment,
+  TextField as MuiTextField,
+  type TextFieldProps as MuiTextFieldProps,
+} from '@mui/material';
 
-type TextFieldProps = {
+export type TextFieldProps = {
   readonly className?: string;
   readonly id?: string;
   readonly label?: string;
@@ -63,7 +66,7 @@ export const TextField: React.FC<TextFieldProps> = ({
     [onChange, onValidation, required, validation],
   );
 
-  const slotProps = {
+  const slotProps: MuiTextFieldProps['slotProps'] = {
     input: {
       startAdornment: (
         <InputAdornment position="start">
@@ -79,8 +82,9 @@ export const TextField: React.FC<TextFieldProps> = ({
   };
 
   return (
+    //TODO
     <MuiTextField
-      className={className}
+      // className={className}
       id={id}
       onChange={handleChange}
       variant="outlined"
@@ -94,9 +98,14 @@ export const TextField: React.FC<TextFieldProps> = ({
       fullWidth
       helperText={helperText}
       required={required}
-      margin="dense"
+      // margin="dense"
       color="primary"
-      slotProps={slotProps}
+      slotProps={{
+        input: {
+          startAdornment: <InputAdornment position="start">kg</InputAdornment>,
+        },
+      }}
+      // slotProps={slotProps}
     />
   );
 };

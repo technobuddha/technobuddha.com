@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
-import { type Rect } from '../drawing/drawing.js';
+import { type Rect } from '../drawing/drawing.ts';
 
 import {
   directionMatrix,
@@ -12,7 +12,7 @@ import {
   rightTurnMatrix,
   sidesMatrix,
   wallMatrix,
-} from './brick-matrix.js';
+} from './brick-matrix.ts';
 import {
   type Cell,
   type CellDirection,
@@ -20,8 +20,8 @@ import {
   type DrawingSizes,
   type Kind,
   type MazeProperties,
-} from './maze.js';
-import { Maze } from './maze.js';
+} from './maze.ts';
+import { Maze } from './maze.ts';
 
 export class BrickMaze extends Maze {
   public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {

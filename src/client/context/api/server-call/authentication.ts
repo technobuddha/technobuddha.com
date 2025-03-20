@@ -1,8 +1,10 @@
-import type { FetchAPI } from '../api-context';
-import type { Account } from '#schema/account';
+import { type Account } from '#schema';
+
+import { type FetchAPI } from '../api-context.tsx';
 
 type CPS = { score: number; warning: string; suggestions: string[] };
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const authentication = (fetchAPI: FetchAPI) => ({
   async readSession() {
     return fetchAPI<Account>('/api/authentication/session', {
@@ -20,7 +22,7 @@ export const authentication = (fetchAPI: FetchAPI) => ({
   },
 
   async deleteSession() {
-    return fetchAPI<void>('/api/authentication/session', {
+    return fetchAPI<unknown>('/api/authentication/session', {
       method: 'DELETE',
       validStatuses: [200],
     });

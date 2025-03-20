@@ -6,7 +6,7 @@ import { MdMusicNote } from 'react-icons/md';
 import { type APIValue } from '#context/api';
 import { useAPI } from '#context/api';
 import { useTranslation } from '#context/i18n';
-import { DelayedLoading } from '#control/delayed-loading';
+import { DelayedLoading } from '#control';
 
 import css from './new-albums.module.css';
 
@@ -76,5 +76,3 @@ export const NewAlbums: React.FC = () => {
 
   return <DelayedLoading />;
 };
-
-export default NewAlbums;

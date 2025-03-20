@@ -2,17 +2,17 @@ import React from 'react';
 import { FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent } from '@mui/material';
 import { range } from 'lodash-es';
 
-import { CanvasDrawing } from './drawing/canvas-drawing.js';
-import { BrickMaze } from './maze/brick-maze.js';
-import { HexagonMaze } from './maze/hexagon-maze.js';
-import { type Maze, type MazeProperties } from './maze/maze.js';
-import { OctogonMaze } from './maze/octogon-maze.js';
-import { PentagonMaze } from './maze/pentagon-maze.js';
-import { SquareMaze } from './maze/square-maze.js';
-import { TriangleMaze } from './maze/triangle-maze.js';
-import { WedgeMaze } from './maze/wedge-maze.js';
-import { ZetaMaze } from './maze/zeta-maze.js';
-import { MazeFactory } from './maze-factory.js';
+import { CanvasDrawing } from './drawing/canvas-drawing.ts';
+import { BrickMaze } from './maze/brick-maze.ts';
+import { HexagonMaze } from './maze/hexagon-maze.ts';
+import { type Maze, type MazeProperties } from './maze/maze.ts';
+import { OctogonMaze } from './maze/octogon-maze.ts';
+import { PentagonMaze } from './maze/pentagon-maze.ts';
+import { SquareMaze } from './maze/square-maze.ts';
+import { TriangleMaze } from './maze/triangle-maze.ts';
+import { WedgeMaze } from './maze/wedge-maze.ts';
+import { ZetaMaze } from './maze/zeta-maze.ts';
+import { MazeFactory } from './maze-factory.ts';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   pentagon: (props) => new PentagonMaze(props),

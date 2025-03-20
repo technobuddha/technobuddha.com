@@ -1,8 +1,8 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellDirection } from '../maze/maze.js';
+import { type Cell, type CellDirection } from '../maze/maze.ts';
 
-import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.js';
+import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
 export class Wilsons extends MazeGenerator {
   private readonly visited: boolean[][];

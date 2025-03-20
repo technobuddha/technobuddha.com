@@ -1,7 +1,7 @@
 // eslint-disable-next-line import-x/default
 import viteExpress from 'vite-express';
 
-import { server } from './server-development.js';
+import { server } from './server-development.ts';
 
 const { app, logger } = server();
 

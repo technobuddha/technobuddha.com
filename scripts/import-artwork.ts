@@ -13,16 +13,18 @@ function out(text: string | undefined): void {
   }
 }
 
+const destination = path.join('.', 'artwork');
+
 void (async function main() {
   out(chalk.magenta('Scanning for new artwork...'));
 
-  const files = await glob('/media/music/Library/**/AlbumArt*_@(Large|Small).jpg').then(
+  const files = await glob('/media/music/Library/**/AlbumArt*_Large.jpg').then(
     async (artwork) =>
       (
         await Promise.all(
           artwork.map(async (art) =>
             fs
-              .stat(art)
+              .stat(path.join(destination, path.basename(art)))
               .then(() => null)
               .catch(() => art),
           ),
@@ -40,7 +42,10 @@ void (async function main() {
   b1.start(files.length, 0, { speed: 'N/A' });
 
   for (const file of files) {
-    await fs.copyFile(file, path.join('../artwork', path.basename(file)));
+    await fs
+      .readFile(file)
+      .then(async (content) => fs.writeFile(path.join(destination, path.basename(file)), content));
+    // await fs.chmod(path.join('./artwork', path.basename(file)), 0o644);
     b1.increment();
   }
 

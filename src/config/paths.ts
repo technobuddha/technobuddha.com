@@ -31,6 +31,7 @@ export const paths = {
   env: resolveHome('.env'),
   data: resolveHome('data'),
   src: resolveHome('src'),
+  artwork: resolveHome('artwork'),
   node_modules: resolveHome('node_modules'),
   wellKnown: resolveHome('.well-known'),
   client: resolveHome('src', 'client'),

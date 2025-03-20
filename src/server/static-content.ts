@@ -1,13 +1,8 @@
 import path from 'node:path';
 
 import { splitLines } from '@technobuddha/library';
-// import { splitLines } from '@technobuddha/library';
-// import { matchesUA } from 'browserslist-useragent';
 import { type Application, /*type NextFunction,*/ type Request, type Response } from 'express';
 import express from 'express';
-// import mime from 'mime';
-// import { readPackageUp } from 'read-package-up';
-// import { type PackageJson } from 'type-fest';
 import { type Logger } from 'winston';
 
 import { paths } from '#config/paths';
@@ -15,9 +10,6 @@ import { browserSettings } from '#settings/browser';
 import { userInterfaceSettings } from '#settings/user-interface';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
-
-// const packageResult = await readPackageUp();
-// const packageJson: PackageJson = packageResult?.packageJson ?? {};
 
 function status404(_req: Request, res: Response): void {
   res.statusMessage = 'NOT FOUND';
@@ -50,7 +42,7 @@ export function staticContent(app: Application, logger: Logger): void {
         req.url = `AlbumArt_{${req.params.id.toUpperCase()}}_Large.jpg`;
         next();
       },
-      express.static(path.join(paths.home, '../artwork/')),
+      express.static(paths.artwork),
       status404,
     );
 

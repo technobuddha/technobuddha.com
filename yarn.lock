@@ -2655,9 +2655,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/project@npm:0.0.159":
-  version: 0.0.159
-  resolution: "@technobuddha/project@npm:0.0.159"
+"@technobuddha/project@npm:0.0.161":
+  version: 0.0.161
+  resolution: "@technobuddha/project@npm:0.0.161"
   dependencies:
     "@eslint/js": "npm:9.19.0"
     "@inquirer/prompts": "npm:7.2.3"
@@ -2706,7 +2706,7 @@ __metadata:
     watch: "npm:^1.0.2"
   bin:
     tbproject: dist/bin/tbproject
-  checksum: 10c0/42f8c87b7b3e2c7c2bdbfcfe9e1d1fa6fae24a2259b158e26a73748338a10e34bc7e9f148b1c71b486f73c5a858c6d50d0046a1c1572b243bb5df1ed930beeac
+  checksum: 10c0/8e3d36b1360f0191567746fb531f18f4f1b033930688e4c17eeb85fe00217a74f04a06d054c658c4a196beafff01cde7ecfc455f3230ee7d67b59efc2f0d954d
   languageName: node
   linkType: hard
 
@@ -9836,7 +9836,7 @@ __metadata:
     "@technobuddha/color": "npm:0.3.1"
     "@technobuddha/library": "npm:1.9.1"
     "@technobuddha/mui-size": "npm:1.2.0"
-    "@technobuddha/project": "npm:0.0.159"
+    "@technobuddha/project": "npm:0.0.161"
     "@technobuddha/react-hooks": "npm:1.5.1"
     "@types/express": "npm:^4"
     "@types/node": "npm:22.13.4"

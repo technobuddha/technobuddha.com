@@ -22,7 +22,7 @@
   "devDependencies": {
     "@react-router/dev": "7.1.5",
     "@tailwindcss/vite": "4.0.6",
-    "@technobuddha/project": "0.0.159",
+    "@technobuddha/project": "0.0.161",
     "@types/express": "^4",
     "@types/node": "22.13.4",
     "@types/react": "19.0.8",
@@ -38,9 +38,9 @@
     "vite-tsconfig-paths": "5.1.4"
   },
   "technobuddhaProject": {
-    "version": "0.0.157",
+    "version": "0.0.161",
     "created": "2020-04-01T04:20:42.690Z",
-    "updated": "2025-02-19T13:57:29.982Z"
+    "updated": "2025-03-06T17:34:29.926Z"
   },
   "type": "module",
   "engines": {

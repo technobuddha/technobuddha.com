@@ -1,12 +1,14 @@
 import { range } from 'lodash-es';
 
+import { type Rect } from '../drawing/drawing.js';
+
 import {
   type Cell,
   type CellCorner,
   type CellDirection,
   type Direction,
+  type Kind,
   type MazeProperties,
-  type Overrides,
   type Wall,
 } from './maze.js';
 import { Maze } from './maze.js';
@@ -14,7 +16,7 @@ import { Maze } from './maze.js';
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class TriangleMaze extends Maze {
-  public constructor({ cellSize = 20, wallSize = 2, ...props }: MazeProperties) {
+  public constructor({ cellSize = 30, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       ['a', 'b', 'c', 'd', 'e', 'f'],
@@ -163,11 +165,10 @@ export class TriangleMaze extends Maze {
     );
   }
 
-  public edges(cell: Cell, { walls = this.walls }: Overrides = {}): string[] {
-    return this.neighbors(cell, {
-      directions: this.cellKind(cell) === 1 ? ['c'] : ['b', 'd'],
-      walls,
-    }).map((cd) => cd.direction);
+  public edges(cell: Cell): string[] {
+    return this.neighbors(cell)
+      .filter((cd) => (this.cellKind(cd) === 1 ? ['c'] : ['b', 'd']).includes(cd.direction))
+      .map((cd) => cd.direction);
   }
 
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
@@ -207,10 +208,16 @@ export class TriangleMaze extends Maze {
     throw new Error('Cells must be aligned vertically or horizontally');
   }
 
-  private offsets({ x, y }: Cell): Record<string, number> {
-    //const margin = Math.floor(this.cellSize / 8);
+  protected cellOffsets(cell: Cell): Record<string, number> {
+    return this.translateOffsets(
+      cell,
+      cell.x * this.cellSize * 0.5,
+      cell.y * this.cellSize * SIN60,
+    );
+  }
 
-    const x0 = (x / 2) * this.cellSize;
+  protected offsets(kind: Kind): Record<string, number> {
+    const x0 = 0;
     const x1 = x0 + this.wallSize * SIN60;
     const x2 = x1 + this.wallSize * SIN60;
     const x8 = x0 + this.cellSize;
@@ -220,7 +227,7 @@ export class TriangleMaze extends Maze {
     const x3 = x4 - this.wallSize * SIN60;
     const x5 = x4 + this.wallSize * SIN60;
 
-    const y5 = y * this.cellSize * SIN60;
+    const y5 = 0;
     const y4 = y5 + this.wallSize;
     const y3 = y4 + this.wallSize * 0.5;
     const y0 = y5 + this.cellSize * SIN60;
@@ -230,7 +237,7 @@ export class TriangleMaze extends Maze {
     const sx0 = x0 + this.cellSize * 0.375;
     const sx1 = sx0 + this.cellSize / 4;
 
-    if (this.cellKind({ x, y }) === 1) {
+    if (kind === 1) {
       const sy1 = y5 + (this.cellSize * SIN60) / 2;
       const sy0 = sy1 - (this.cellSize * SIN60) / 4;
       return { x0, x1, x2, x3, x4, x5, x6, x7, x8, y0, y1, y2, y3, y4, y5, sx0, sx1, sy0, sy1 };
@@ -263,7 +270,7 @@ export class TriangleMaze extends Maze {
 
   public drawFloor(cell: Cell, color = this.cellColor): void {
     if (this.drawing) {
-      const { x0, x4, x8, y0, y5 } = this.offsets(cell);
+      const { x0, x4, x8, y0, y5 } = this.cellOffsets(cell);
 
       this.drawing.polygon(
         [
@@ -280,7 +287,7 @@ export class TriangleMaze extends Maze {
     if (this.drawing) {
       const ctx = this.drawing;
 
-      const { x1, x2, x3, x4, x5, x6, x7, y1, y2, y3, y4, y5 } = this.offsets(cd);
+      const { x1, x2, x3, x4, x5, x6, x7, y1, y2, y3, y4, y5 } = this.cellOffsets(cd);
 
       switch (cd.direction) {
         case 'a':
@@ -331,7 +338,10 @@ export class TriangleMaze extends Maze {
   public drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
     if (this.drawing) {
       const ctx = this.drawing;
-      const { x0, x1, x2, x3, x4, x5, x6, x7, x8, y0, y1, y2, y3, y4, y5 } = this.offsets({ x, y });
+      const { x0, x1, x2, x3, x4, x5, x6, x7, x8, y0, y1, y2, y3, y4, y5 } = this.cellOffsets({
+        x,
+        y,
+      });
 
       switch (corner) {
         case 'ac':
@@ -379,51 +389,59 @@ export class TriangleMaze extends Maze {
     }
   }
 
+  // public drawPath(cell: CellDirection, color = 'red'): void {
+  //   if (this.drawing) {
+  //     const { x2, x4, x6, y2, y4 } = this.cellOffsets(cell);
+
+  //     this.drawCell(cell);
+
+  //     switch (cell.direction) {
+  //       case 'a':
+  //       case 'd': {
+  //         this.drawing.line({ x: x4, y: y2 }, { x: x4, y: y4 }, color);
+  //         this.drawing.line({ x: x4, y: y4 }, { x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, color);
+  //         this.drawing.line({ x: x4, y: y4 }, { x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, color);
+  //         break;
+  //       }
+  //       case 'e':
+  //       case 'f': {
+  //         this.drawing.line({ x: x6, y: y4 }, { x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, color);
+  //         this.drawing.line(
+  //           { x: (x4 + x2) / 2, y: (y2 + y4) / 2 },
+  //           { x: (x4 + x6) / 2, y: (y2 + y4) / 2 },
+  //           color,
+  //         );
+  //         this.drawing.line({ x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, { x: x4, y: y4 }, color);
+  //         break;
+  //       }
+  //       case 'c':
+  //       case 'b': {
+  //         this.drawing.line({ x: x2, y: y4 }, { x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, color);
+  //         this.drawing.line(
+  //           { x: (x4 + x6) / 2, y: (y2 + y4) / 2 },
+  //           { x: (x4 + x2) / 2, y: (y2 + y4) / 2 },
+  //           color,
+  //         );
+  //         this.drawing.line({ x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, { x: x4, y: y4 }, color);
+  //         break;
+  //       }
+
+  //       // no default
+  //     }
+  //   }
+  // }
+
   public drawPath(cell: CellDirection, color = 'red'): void {
     if (this.drawing) {
-      const { x2, x4, x6, y2, y4 } = this.offsets(cell);
-
+      const angle = { a: 270, b: 30, c: 150, d: 270, e: 30, f: 150 }[cell.direction]!;
       this.drawCell(cell);
-
-      switch (cell.direction) {
-        case 'a':
-        case 'd': {
-          this.drawing.line({ x: x4, y: y2 }, { x: x4, y: y4 }, color);
-          this.drawing.line({ x: x4, y: y4 }, { x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, color);
-          this.drawing.line({ x: x4, y: y4 }, { x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, color);
-          break;
-        }
-        case 'e':
-        case 'f': {
-          this.drawing.line({ x: x6, y: y4 }, { x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, color);
-          this.drawing.line(
-            { x: (x4 + x2) / 2, y: (y2 + y4) / 2 },
-            { x: (x4 + x6) / 2, y: (y2 + y4) / 2 },
-            color,
-          );
-          this.drawing.line({ x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, { x: x4, y: y4 }, color);
-          break;
-        }
-        case 'c':
-        case 'b': {
-          this.drawing.line({ x: x2, y: y4 }, { x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, color);
-          this.drawing.line(
-            { x: (x4 + x6) / 2, y: (y2 + y4) / 2 },
-            { x: (x4 + x2) / 2, y: (y2 + y4) / 2 },
-            color,
-          );
-          this.drawing.line({ x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, { x: x4, y: y4 }, color);
-          break;
-        }
-
-        // no default
-      }
+      this.drawArrow(this.getRect(cell), angle, color);
     }
   }
 
   public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
     if (this.drawing) {
-      const { x2, x4, x6, y2, y4 } = this.offsets(cell);
+      const { x2, x4, x6, y2, y4 } = this.cellOffsets(cell);
       const yc = (y2 + y4) / 2;
 
       this.drawCell(cell, cellColor);
@@ -432,5 +450,16 @@ export class TriangleMaze extends Maze {
       this.drawing.line({ x: x6, y: y4 }, { x: x4, y: yc }, color);
       this.drawing.line({ x: x4, y: y2 }, { x: x4, y: yc }, color);
     }
+  }
+
+  public getRect(cell: Cell): Rect {
+    const { x2, x6, y2, y4 } = this.cellOffsets(cell);
+
+    return {
+      x: x2 + this.wallSize,
+      y: y2 + this.wallSize,
+      w: x6 - x2 - this.wallSize * 2,
+      h: y4 - y2 - this.wallSize * 2,
+    };
   }
 }

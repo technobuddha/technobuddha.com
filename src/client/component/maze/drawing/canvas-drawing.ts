@@ -1,4 +1,4 @@
-import { Drawing, type XY } from './drawing.js';
+import { Drawing, type Rect, type XY } from './drawing.js';
 
 export class CanvasDrawing extends Drawing {
   private readonly canvas: CanvasRenderingContext2D;
@@ -57,8 +57,14 @@ export class CanvasDrawing extends Drawing {
     this.canvas.fill();
   }
 
-  public override text(xy: XY, text: string, color: string): void {
+  public override text(rect: Rect, text: string, color: string): void {
     this.canvas.fillStyle = color;
-    this.canvas.fillText(text, xy.x, xy.y);
+
+    const metrics = this.canvas.measureText(text);
+
+    const x = rect.x + (rect.w - metrics.width) / 2;
+    const y =
+      rect.y + (rect.h + (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)) / 2;
+    this.canvas.fillText(text, x, y);
   }
 }

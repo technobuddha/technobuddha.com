@@ -32,11 +32,16 @@ type MazeType = keyof typeof mazes;
 
 export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
   const [selectedMaze, setSelectedMaze] = React.useState<MazeType>('pentagon');
+  const [show, setShow] = React.useState('moves');
   const [x, setX] = React.useState(0);
   const [y, setY] = React.useState(0);
 
   const handleMazeChange = React.useCallback((event: SelectChangeEvent): void => {
     setSelectedMaze(event.target.value);
+  }, []);
+
+  const handleShowChange = React.useCallback((event: SelectChangeEvent): void => {
+    setShow(event.target.value);
   }, []);
 
   const handleXChange = React.useCallback((event: SelectChangeEvent<number>): void => {
@@ -58,19 +63,13 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'row' }}>
       <div style={{ backgroundColor: 'lightBlue' }}>
-        <MazeBoard boxWidth={500} boxHeight={500} maze={selectedMaze} x={x} y={y} />
+        <MazeBoard boxWidth={500} boxHeight={500} maze={selectedMaze} show={show} x={x} y={y} />
       </div>
       <div style={{ flexGrow: 1 }}>
+        <br />
         <FormControl>
-          <InputLabel htmlFor="startX">Maze Type</InputLabel>
-          <Select<MazeType>
-            value={selectedMaze}
-            onChange={handleMazeChange}
-            inputProps={{
-              name: 'startX',
-              id: 'startX',
-            }}
-          >
+          <InputLabel htmlFor="startX">Maze</InputLabel>
+          <Select<MazeType> value={selectedMaze} onChange={handleMazeChange}>
             {Object.keys(mazes).map((m) => (
               <MenuItem key={m} value={m}>
                 {m}
@@ -78,16 +77,20 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
             ))}
           </Select>
         </FormControl>
+        <br />
+        <br />
+        <FormControl>
+          <InputLabel htmlFor="show">Show</InputLabel>
+          <Select<MazeType> value={show} onChange={handleShowChange}>
+            <MenuItem value="moves">Moves</MenuItem>
+            <MenuItem value="paths">Paths</MenuItem>
+          </Select>
+        </FormControl>
+        <br />
+        <br />
         <FormControl>
           <InputLabel htmlFor="x">X</InputLabel>
-          <Select<number>
-            value={x}
-            onChange={handleXChange}
-            inputProps={{
-              name: 'x',
-              id: 'x',
-            }}
-          >
+          <Select<number> value={x} onChange={handleXChange}>
             {range(0, 100).map((m) => (
               <MenuItem key={m} value={m}>
                 {m}
@@ -97,14 +100,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         </FormControl>
         <FormControl>
           <InputLabel htmlFor="y">Y</InputLabel>
-          <Select<number>
-            value={y}
-            onChange={handleYChange}
-            inputProps={{
-              name: 'y',
-              id: 'y',
-            }}
-          >
+          <Select<number> value={y} onChange={handleYChange}>
             {range(0, 100).map((m) => (
               <MenuItem key={m} value={m}>
                 {m}
@@ -124,6 +120,7 @@ type MazeBoardProps = {
   readonly boxWidth: number;
   readonly boxHeight: number;
   readonly children?: never;
+  readonly show: string;
   readonly x: number;
   readonly y: number;
 };
@@ -134,6 +131,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
   boxWidth,
   boxHeight,
   maze,
+  show,
   x,
   y,
 }) => {
@@ -149,36 +147,27 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         m.drawX({ x, y }, 'red');
         const moves = m.neighbors({ x, y });
         for (const move of moves) {
-          m.drawText(move, move.direction, 'cyan');
-          // if (!mvd || mvd.x !== x || mvd.y !== y) {
-          //   console.log(
-          //     'move',
-          //     x,
-          //     y,
-          //     'kind',
-          //     m.cellKind({ x, y }),
-          //     move,
-          //     'kind',
-          //     m.cellKind(move),
-          //     mvd,
-          //   );
-          // }
+          if (m.inMaze(move)) {
+            switch (show) {
+              case 'moves': {
+                m.drawText(move, move.direction, 'cyan');
+                break;
+              }
+              case 'paths': {
+                m.drawPath({ ...move, direction: m.opposite(move.direction) }, 'cyan');
+                break;
+              }
+              case 'walls': {
+                break;
+              }
+
+              // no default
+            }
+          }
         }
-        // for (let i = 0; i < 2; ++i) {
-        //   let j = i;
-        //   for (const direction of m.directions) {
-        //     m.drawPath({ y: i, x: j++, direction });
-        //   }
-        // }
-        // for (let i = 0; i < 2; ++i) {
-        //   let j = i;
-        //   for (const direction of m.directions) {
-        //     m.removeWall({ y: i + 4, x: 2 + j++ }, direction);
-        //   }
-        // }
       });
     }
-  }, [boxHeight, boxWidth, maze, x, y]);
+  }, [boxHeight, boxWidth, maze, show, x, y]);
 
   return (
     <div

@@ -1,4 +1,5 @@
 export type XY = { x: number; y: number };
+export type Rect = XY & { w: number; h: number };
 
 export abstract class Drawing {
   public readonly width: number;
@@ -17,5 +18,5 @@ export abstract class Drawing {
 
   public abstract polygon(points: XY[], color: string): void;
 
-  public abstract text(xy: XY, text: string, color: string): void;
+  public abstract text(rect: Rect, text: string, color?: string): void;
 }

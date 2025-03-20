@@ -92,12 +92,12 @@ export const oppositeMatrix: Record<Direction, Direction> = {
 
 export const rightTurnMatrix: Record<Direction, Direction[]> = {
   a: ['l', 'k', 'o', 'n', 'm'],
-  b: ['i', 'n', 'g', 'h', 'j'],
+  b: ['i', 'h', 'g', 'f', 'j'],
   c: ['n', 'm', 'l', 'k', 'o'],
   d: ['f', 'j', 'i', 'h', 'g'],
   e: ['q', 'p', 't', 's', 'r'],
   f: ['r', 'q', 'p', 't', 's'],
-  g: ['c', 'b', 'f', 'e', 'd'],
+  g: ['c', 'b', 'a', 'e', 'd'],
   h: ['t', 's', 'r', 'q', 'p'],
   i: ['o', 'n', 'm', 'l', 'k'],
   j: ['a', 'e', 'd', 'c', 'b'],
@@ -115,12 +115,12 @@ export const rightTurnMatrix: Record<Direction, Direction[]> = {
 
 export const leftTurnMatrix: Record<Direction, Direction[]> = {
   a: ['n', 'o', 'k', 'l', 'm'],
-  b: ['h', 'g', 'n', 'i', 'j'],
+  b: ['f', 'g', 'h', 'i', 'j'],
   c: ['k', 'l', 'm', 'n', 'o'],
   d: ['h', 'i', 'j', 'f', 'g'],
   e: ['s', 't', 'p', 'q', 'r'],
   f: ['t', 'p', 'q', 'r', 's'],
-  g: ['e', 'f', 'b', 'c', 'd'],
+  g: ['e', 'a', 'b', 'c', 'd'],
   h: ['q', 'r', 's', 't', 'p'],
   i: ['l', 'm', 'n', 'o', 'k'],
   j: ['c', 'd', 'e', 'a', 'b'],

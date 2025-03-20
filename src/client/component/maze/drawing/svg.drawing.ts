@@ -1,4 +1,4 @@
-import { Drawing, type XY } from './drawing.js';
+import { Drawing, type Rect, type XY } from './drawing.js';
 
 function create(tag: string, attributes: Record<string, string | number> = {}): Element {
   const element = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -56,7 +56,7 @@ export class SVGDrawing extends Drawing {
   }
 
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public text(_xy: XY, _text: string, _color: string): void {
+  public text(_rect: Rect, _text: string, _color: string): void {
     throw new Error('Method not implemented.');
   }
 }

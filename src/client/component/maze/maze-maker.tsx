@@ -40,12 +40,12 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => (
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   pentagon: (props) => new PentagonMaze(props),
-  // brick: (props) => new BrickMaze(props),
-  // square: (props) => new SquareMaze(props),
-  // triangle: (props) => new TriangleMaze(props),
-  // hexagon: (props) => new HexagonMaze(props),
-  // octogon: (props) => new OctogonMaze(props),
-  // zeta: (props) => new ZetaMaze(props),
+  brick: (props) => new BrickMaze(props),
+  square: (props) => new SquareMaze(props),
+  triangle: (props) => new TriangleMaze(props),
+  hexagon: (props) => new HexagonMaze(props),
+  octogon: (props) => new OctogonMaze(props),
+  zeta: (props) => new ZetaMaze(props),
 };
 
 const algorithms: Record<
@@ -83,11 +83,11 @@ const algorithms: Record<
 };
 
 const solvers: Record<string, (props: MazeSolverProperties) => MazeSolver> = {
-  // depthFirstSearch: (props) => new DepthFirstSearch(props),
+  depthFirstSearch: (props) => new DepthFirstSearch(props),
   deadEndFiller: (props) => new DeadEndFiller(props),
   deadEndRemover: (props) => new DeadEndRemover(props),
-  // followTheRightWall: (props) => new WallWalking({ ...props, turn: 'right' }),
-  // followTheLeftWall: (props) => new WallWalking({ ...props, turn: 'left' }),
+  followTheRightWall: (props) => new WallWalking({ ...props, turn: 'right' }),
+  followTheLeftWall: (props) => new WallWalking({ ...props, turn: 'left' }),
   breadthFirstSearch: (props) => new BreadthFirstSearch(props),
 };
 
@@ -137,7 +137,6 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => 
               }, 5000);
             });
         }, 0);
-        // setTimeout(() => setRedraw((x) => x + 1), 300000);
       });
     }
   }, [redraw, boxHeight, boxWidth]);

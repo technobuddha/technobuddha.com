@@ -1,12 +1,14 @@
 import { modulo } from '@technobuddha/library';
 
+import { type Rect } from '../drawing/drawing.js';
+
 import {
   type Cell,
   type CellCorner,
   type CellDirection,
   type Direction,
+  type Kind,
   type MazeProperties,
-  type Overrides,
   type Wall,
 } from './maze.js';
 import { Maze } from './maze.js';
@@ -83,11 +85,10 @@ export class PentagonMaze extends Maze {
     );
   }
 
-  public edges(cell: Cell, { walls = this.walls }: Overrides = {}): string[] {
-    return this.neighbors(cell, {
-      directions: edgeMatrix[this.cellKind(cell)],
-      walls,
-    }).map((cd) => cd.direction);
+  public edges(cell: Cell): string[] {
+    return this.neighbors(cell)
+      .filter((cd) => edgeMatrix[this.cellKind(cell)].includes(cd.direction))
+      .map((cd) => cd.direction);
   }
 
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
@@ -95,13 +96,21 @@ export class PentagonMaze extends Maze {
     throw new Error('Not Implemented');
   }
 
-  private offsets({ x, y }: Cell): Record<string, number> {
-    const xx = offsetXMatrix[modulo(y, 5)][modulo(x, 4)] * this.cellSize;
-    const yy = offsetYMatrix[modulo(y, 5)][modulo(x, 4)] * this.cellSize;
+  protected cellOffsets(cell: Cell): Record<string, number> {
+    const x = offsetXMatrix[modulo(cell.y, 5)][modulo(cell.x, 4)] * this.cellSize;
+    const y = offsetYMatrix[modulo(cell.y, 5)][modulo(cell.x, 4)] * this.cellSize;
 
-    switch (this.cellKind({ x, y })) {
+    return this.translateOffsets(
+      cell,
+      x + Math.floor(cell.x / 4) * this.cellSize * 5,
+      y + Math.floor(cell.y / 5) * this.cellSize * 5,
+    );
+  }
+
+  protected offsets(kind: Kind): Record<string, number> {
+    switch (kind) {
       case 0: {
-        const x0 = xx + Math.floor(x / 4) * this.cellSize * 5;
+        const x0 = 0;
         const x2 = x0 + this.wallSize;
         const x4 = x0 + this.cellSize / 2;
         const x8 = x0 + this.cellSize;
@@ -111,7 +120,7 @@ export class PentagonMaze extends Maze {
         const x1 = x0 + (this.wallSize - Math.sqrt(this.wallSize ** 2 / 2));
         const x7 = x8 - (this.wallSize - Math.sqrt(this.wallSize ** 2 / 2));
 
-        const y0 = yy + Math.floor(y / 5) * this.cellSize * 5;
+        const y0 = 0;
         const y1 = y0 + this.wallSize;
         const y4 = y0 + this.cellSize;
         const y2 = y4 - this.wallSize;
@@ -125,7 +134,7 @@ export class PentagonMaze extends Maze {
       }
 
       case 1: {
-        const x0 = xx + Math.floor(x / 4) * this.cellSize * 5;
+        const x0 = 0;
         const x1 = x0 + this.wallSize;
         const x4 = x0 + this.cellSize;
         const x8 = x0 + this.cellSize * 1.5;
@@ -135,7 +144,7 @@ export class PentagonMaze extends Maze {
         const x7 = x8 - Math.sqrt(this.wallSize ** 2 * 2);
         const x6 = x7 - Math.sqrt(this.wallSize ** 2 * 2);
 
-        const y0 = yy + Math.floor(y / 5) * this.cellSize * 5;
+        const y0 = 0;
         const y2 = y0 + this.wallSize;
         const y4 = y0 + this.cellSize / 2;
         const y8 = y0 + this.cellSize;
@@ -149,7 +158,7 @@ export class PentagonMaze extends Maze {
       }
 
       case 2: {
-        const x0 = xx + Math.floor(x / 4) * this.cellSize * 5;
+        const x0 = 0;
         const x4 = x0 + this.cellSize * 0.5;
         const x8 = x0 + this.cellSize * 1.5;
         const x7 = x8 - this.wallSize;
@@ -159,7 +168,7 @@ export class PentagonMaze extends Maze {
         const x5 = x4 + this.wallSize * 0.5;
         const x6 = x5 + this.wallSize;
 
-        const y0 = yy + Math.floor(y / 5) * this.cellSize * 5;
+        const y0 = 0;
         const y2 = y0 + this.wallSize;
         const y4 = y0 + this.cellSize / 2;
         const y8 = y0 + this.cellSize;
@@ -173,7 +182,7 @@ export class PentagonMaze extends Maze {
       }
 
       case 3: {
-        const x0 = xx + Math.floor(x / 4) * this.cellSize * 5;
+        const x0 = 0;
         const x8 = x0 + this.cellSize;
         const x2 = x0 + this.wallSize;
         const x6 = x8 - this.wallSize;
@@ -183,7 +192,7 @@ export class PentagonMaze extends Maze {
         const x1 = x0 + (this.wallSize - Math.sqrt(this.wallSize ** 2 / 2));
         const x7 = x8 - (this.wallSize - Math.sqrt(this.wallSize ** 2 / 2));
 
-        const y0 = yy + Math.floor(y / 5) * this.cellSize * 5;
+        const y0 = 0;
         const y4 = y0 + this.cellSize * 0.5;
         const y6 = y4 + this.wallSize;
         const y8 = y0 + this.cellSize * 1.5;
@@ -206,7 +215,7 @@ export class PentagonMaze extends Maze {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0: {
-          const { x0, x4, x8, y0, y4, y8 } = this.offsets(cell);
+          const { x0, x4, x8, y0, y4, y8 } = this.cellOffsets(cell);
 
           this.drawing.polygon(
             [
@@ -223,7 +232,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 1: {
-          const { x0, x4, x8, y0, y4, y8 } = this.offsets(cell);
+          const { x0, x4, x8, y0, y4, y8 } = this.cellOffsets(cell);
 
           this.drawing.polygon(
             [
@@ -240,7 +249,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 2: {
-          const { x0, x4, x8, y0, y4, y8 } = this.offsets(cell);
+          const { x0, x4, x8, y0, y4, y8 } = this.cellOffsets(cell);
 
           this.drawing.polygon(
             [
@@ -256,7 +265,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 3: {
-          const { x0, x4, x8, y0, y4, y8 } = this.offsets(cell);
+          const { x0, x4, x8, y0, y4, y8 } = this.cellOffsets(cell);
 
           this.drawing.polygon(
             [
@@ -282,7 +291,7 @@ export class PentagonMaze extends Maze {
         case 0: {
           switch (cd.direction) {
             case 'a': {
-              const { x2, x6, y0, y1 } = this.offsets(cd);
+              const { x2, x6, y0, y1 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -297,7 +306,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'b': {
-              const { x6, x8, y1, y2 } = this.offsets(cd);
+              const { x6, x8, y1, y2 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -312,7 +321,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'c': {
-              const { x4, x5, x6, x7, y3, y5, y6, y7 } = this.offsets(cd);
+              const { x4, x5, x6, x7, y3, y5, y6, y7 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -327,7 +336,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'd': {
-              const { x1, x2, x3, x4, y3, y5, y6, y7 } = this.offsets(cd);
+              const { x1, x2, x3, x4, y3, y5, y6, y7 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -342,7 +351,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'e': {
-              const { x0, x2, y1, y2 } = this.offsets(cd);
+              const { x0, x2, y1, y2 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -364,7 +373,7 @@ export class PentagonMaze extends Maze {
         case 1: {
           switch (cd.direction) {
             case 'f': {
-              const { x1, x2, y0, y2 } = this.offsets(cd);
+              const { x1, x2, y0, y2 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -379,7 +388,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'g': {
-              const { x3, x5, x6, x7, y1, y2, y3, y4 } = this.offsets(cd);
+              const { x3, x5, x6, x7, y1, y2, y3, y4 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -394,7 +403,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'h': {
-              const { x3, x6, x5, x7, y4, y5, y6, y7 } = this.offsets(cd);
+              const { x3, x6, x5, x7, y4, y5, y6, y7 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -409,7 +418,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'i': {
-              const { x1, x2, y6, y8 } = this.offsets(cd);
+              const { x1, x2, y6, y8 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -424,7 +433,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'j': {
-              const { x0, x1, y2, y6 } = this.offsets(cd);
+              const { x0, x1, y2, y6 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -446,7 +455,7 @@ export class PentagonMaze extends Maze {
         case 2: {
           switch (cd.direction) {
             case 'k': {
-              const { x6, x7, y0, y2 } = this.offsets(cd);
+              const { x6, x7, y0, y2 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -461,7 +470,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'l': {
-              const { x7, x8, y2, y6 } = this.offsets(cd);
+              const { x7, x8, y2, y6 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -476,7 +485,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'm': {
-              const { x6, x7, y6, y8 } = this.offsets(cd);
+              const { x6, x7, y6, y8 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -491,7 +500,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'n': {
-              const { x1, x2, x3, x5, y4, y5, y6, y7 } = this.offsets(cd);
+              const { x1, x2, x3, x5, y4, y5, y6, y7 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -506,7 +515,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'o': {
-              const { x1, x2, x3, x5, y1, y2, y3, y4 } = this.offsets(cd);
+              const { x1, x2, x3, x5, y1, y2, y3, y4 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -529,7 +538,7 @@ export class PentagonMaze extends Maze {
         case 3: {
           switch (cd.direction) {
             case 'p': {
-              const { x1, x2, x3, x4, y1, y2, y3, y5 } = this.offsets(cd);
+              const { x1, x2, x3, x4, y1, y2, y3, y5 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -544,7 +553,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'q': {
-              const { x4, x5, x6, x7, y1, y2, y3, y5 } = this.offsets(cd);
+              const { x4, x5, x6, x7, y1, y2, y3, y5 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -559,7 +568,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'r': {
-              const { x6, x8, y6, y7 } = this.offsets(cd);
+              const { x6, x8, y6, y7 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -574,7 +583,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 's': {
-              const { x2, x6, y7, y8 } = this.offsets(cd);
+              const { x2, x6, y7, y8 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -589,7 +598,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 't': {
-              const { x0, x2, y6, y7 } = this.offsets(cd);
+              const { x0, x2, y6, y7 } = this.cellOffsets(cd);
 
               this.drawing.polygon(
                 [
@@ -620,7 +629,7 @@ export class PentagonMaze extends Maze {
         case 0: {
           switch (corner) {
             case 'ab': {
-              const { x6, x8, y0, y1 } = this.offsets({ x, y });
+              const { x6, x8, y0, y1 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -636,7 +645,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'bc': {
-              const { x6, x7, x8, y2, y3, y4, y5 } = this.offsets({ x, y });
+              const { x6, x7, x8, y2, y3, y4, y5 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -652,7 +661,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'cd': {
-              const { x3, x4, x5, y6, y7, y8 } = this.offsets({ x, y });
+              const { x3, x4, x5, y6, y7, y8 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -667,7 +676,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'de': {
-              const { x0, x1, x2, y2, y3, y4, y5 } = this.offsets({ x, y });
+              const { x0, x1, x2, y2, y3, y4, y5 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -683,7 +692,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'ea': {
-              const { x0, x2, y0, y1 } = this.offsets({ x, y });
+              const { x0, x2, y0, y1 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -707,7 +716,7 @@ export class PentagonMaze extends Maze {
         case 1: {
           switch (corner) {
             case 'fg': {
-              const { x2, x3, x4, x5, y0, y1, y2 } = this.offsets({ x, y });
+              const { x2, x3, x4, x5, y0, y1, y2 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -723,7 +732,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'gh': {
-              const { x6, x7, x8, y3, y4, y5 } = this.offsets({ x, y });
+              const { x6, x7, x8, y3, y4, y5 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -739,7 +748,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'hi': {
-              const { x2, x3, x4, x5, y6, y7, y8 } = this.offsets({ x, y });
+              const { x2, x3, x4, x5, y6, y7, y8 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -755,7 +764,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'ij': {
-              const { x0, x1, y6, y8 } = this.offsets({ x, y });
+              const { x0, x1, y6, y8 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -771,7 +780,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'jf': {
-              const { x0, x1, y0, y2 } = this.offsets({ x, y });
+              const { x0, x1, y0, y2 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -795,7 +804,7 @@ export class PentagonMaze extends Maze {
         case 2: {
           switch (corner) {
             case 'kl': {
-              const { x7, x8, y0, y2 } = this.offsets({ x, y });
+              const { x7, x8, y0, y2 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -811,7 +820,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'lm': {
-              const { x7, x8, y6, y8 } = this.offsets({ x, y });
+              const { x7, x8, y6, y8 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -827,7 +836,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'mn': {
-              const { x3, x4, x5, x6, y6, y7, y8 } = this.offsets({ x, y });
+              const { x3, x4, x5, x6, y6, y7, y8 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -843,7 +852,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'no': {
-              const { x0, x1, x2, y3, y4, y5 } = this.offsets({ x, y });
+              const { x0, x1, x2, y3, y4, y5 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -859,7 +868,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'ok': {
-              const { x3, x4, x5, x6, y0, y1, y2 } = this.offsets({ x, y });
+              const { x3, x4, x5, x6, y0, y1, y2 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -882,7 +891,7 @@ export class PentagonMaze extends Maze {
         case 3: {
           switch (corner) {
             case 'pq': {
-              const { x3, x4, x5, y0, y1, y2 } = this.offsets({ x, y });
+              const { x3, x4, x5, y0, y1, y2 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -898,7 +907,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'qr': {
-              const { x6, x7, x8, y3, y4, y5, y6 } = this.offsets({ x, y });
+              const { x6, x7, x8, y3, y4, y5, y6 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -914,7 +923,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'rs': {
-              const { x6, x8, y7, y8 } = this.offsets({ x, y });
+              const { x6, x8, y7, y8 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -930,7 +939,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'st': {
-              const { x0, x2, y7, y8 } = this.offsets({ x, y });
+              const { x0, x2, y7, y8 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -946,7 +955,7 @@ export class PentagonMaze extends Maze {
             }
 
             case 'tp': {
-              const { x0, x1, x2, y3, y4, y5, y6 } = this.offsets({ x, y });
+              const { x0, x1, x2, y3, y4, y5, y6 } = this.cellOffsets({ x, y });
 
               this.drawing.polygon(
                 [
@@ -973,9 +982,34 @@ export class PentagonMaze extends Maze {
     }
   }
 
-  public drawPath(_cell: CellDirection, _color = 'red'): void {
+  public drawPath(cell: CellDirection, color = 'red'): void {
     if (this.drawing) {
-      //
+      let angle = 0;
+      switch (this.cellKind(cell)) {
+        case 0: {
+          angle = { a: 90, b: 0, c: 315, d: 225, e: 180 }[cell.direction]!;
+          break;
+        }
+
+        case 1: {
+          angle = { f: 90, g: 45, h: 315, i: 270, j: 180 }[cell.direction]!;
+          break;
+        }
+
+        case 2: {
+          angle = { k: 90, l: 0, m: 270, n: 225, o: 135 }[cell.direction]!;
+          break;
+        }
+
+        case 3: {
+          angle = { p: 135, q: 45, r: 0, s: 270, t: 180 }[cell.direction]!;
+          break;
+        }
+
+        // no default
+      }
+
+      this.drawArrow(this.getRect(cell), angle, color);
     }
   }
 
@@ -983,7 +1017,7 @@ export class PentagonMaze extends Maze {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0: {
-          const { x0, x2, x4, x6, x8, y0, y1, y4, y6, y8 } = this.offsets(cell);
+          const { x0, x2, x4, x6, x8, y0, y1, y4, y6, y8 } = this.cellOffsets(cell);
 
           this.drawing.line({ x: x2, y: y1 }, { x: (x0 + x8) / 2, y: (y0 + y8) / 2 }, color);
           this.drawing.line({ x: x6, y: y1 }, { x: (x0 + x8) / 2, y: (y0 + y8) / 2 }, color);
@@ -994,7 +1028,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 1: {
-          const { x0, x1, x3, x6, x8, y0, y2, y4, y6, y8 } = this.offsets(cell);
+          const { x0, x1, x3, x6, x8, y0, y2, y4, y6, y8 } = this.cellOffsets(cell);
 
           this.drawing.line({ x: x1, y: y2 }, { x: (x0 + x8) / 2, y: (y0 + y8) / 2 }, color);
           this.drawing.line({ x: x3, y: y2 }, { x: (x0 + x8) / 2, y: (y0 + y8) / 2 }, color);
@@ -1005,7 +1039,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 2: {
-          const { x0, x2, x5, x7, x8, y0, y2, y4, y6, y8 } = this.offsets(cell);
+          const { x0, x2, x5, x7, x8, y0, y2, y4, y6, y8 } = this.cellOffsets(cell);
 
           this.drawing.line({ x: x5, y: y2 }, { x: (x0 + x8) / 2, y: (y0 + y8) / 2 }, color);
           this.drawing.line({ x: x7, y: y2 }, { x: (x0 + x8) / 2, y: (y0 + y8) / 2 }, color);
@@ -1016,7 +1050,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 3: {
-          const { x0, x2, x4, x6, x8, y0, y2, y5, y7, y8 } = this.offsets(cell);
+          const { x0, x2, x4, x6, x8, y0, y2, y5, y7, y8 } = this.cellOffsets(cell);
 
           this.drawing.line({ x: x2, y: y7 }, { x: (x0 + x8) / 2, y: (y0 + y8) / 2 }, color);
           this.drawing.line({ x: x6, y: y7 }, { x: (x0 + x8) / 2, y: (y0 + y8) / 2 }, color);
@@ -1030,11 +1064,9 @@ export class PentagonMaze extends Maze {
     }
   }
 
-  public override drawText(cell: Cell, text: string, color = this.wallColor): void {
-    if (this.drawing) {
-      const { x0, x8, y0, y8 } = this.offsets(cell);
+  public override getRect(cell: Cell): Rect {
+    const { x0, x8, y0, y8 } = this.cellOffsets(cell);
 
-      this.drawing.text({ x: (x0 + x8) / 2, y: (y0 + y8) / 2 }, text, color);
-    }
+    return { x: x0, y: y0, w: x8 - x0, h: y8 - y0 };
   }
 }

@@ -53,16 +53,15 @@ export class GrowingTree extends MazeGenerator {
       case 'middle': {
         return Math.floor(this.list.length / 2);
       }
-      case 'random': {
+      case 'random':
+      default: {
         return Math.floor(this.random() * this.list.length);
       }
-
-      // no default
     }
   }
 
   public override step(): boolean {
-    for (let i = 0; i < 10 && this.list.length > 0; ++i) {
+    for (let i = 0; i < 5 && this.list.length > 0; ++i) {
       const index = this.selectCell(this.selectMethod());
       this.currentCell = this.list[index];
 
@@ -77,6 +76,7 @@ export class GrowingTree extends MazeGenerator {
         this.list.push(cell);
       } else {
         this.list.splice(index, 1);
+        i--;
       }
     }
 

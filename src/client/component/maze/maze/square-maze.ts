@@ -4,28 +4,38 @@ import { type Rect } from '../drawing/drawing.js';
 
 import {
   type Cell,
-  type CellCorner,
   type CellDirection,
-  type Direction,
+  type CellPillar,
   type Kind,
   type MazeProperties,
-  type Overrides,
-  type Wall,
 } from './maze.js';
 import { Maze } from './maze.js';
 import {
-  cornerMatrix,
   directionMatrix,
+  edgesMatrix,
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
+  pillarMatrix,
   rightTurnMatrix,
+  sidesMatrix,
   wallMatrix,
 } from './square-matrix.js';
 
 export class SquareMaze extends Maze {
   public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
-    super({ cellSize, wallSize, ...props }, directionMatrix, cornerMatrix);
+    super(
+      { cellSize, wallSize, ...props },
+      directionMatrix,
+      pillarMatrix,
+      wallMatrix,
+      oppositeMatrix,
+      rightTurnMatrix,
+      leftTurnMatrix,
+      moveMatrix,
+      sidesMatrix,
+      edgesMatrix,
+    );
   }
 
   protected drawingWidth(): [cell: number, padding: number] {
@@ -38,59 +48,6 @@ export class SquareMaze extends Maze {
 
   protected cellKind(_cell: Cell): number {
     return 0;
-  }
-
-  protected initialWalls(): Wall {
-    return { ...wallMatrix };
-  }
-
-  public opposite(direction: Direction): Direction {
-    const opposite = oppositeMatrix[direction];
-    if (opposite) {
-      return opposite;
-    }
-
-    throw new Error(`"${direction}" is not a valid direction`);
-  }
-
-  public rightTurn(direction: Direction): Direction[] {
-    const rightTurn = rightTurnMatrix[direction];
-    if (rightTurn) {
-      return rightTurn;
-    }
-
-    throw new Error(`"${direction}" is not a valid direction`);
-  }
-
-  public leftTurn(direction: Direction): Direction[] {
-    const leftTurn = leftTurnMatrix[direction];
-    if (leftTurn) {
-      return leftTurn;
-    }
-
-    throw new Error(`"${direction}" is not a valid direction`);
-  }
-
-  public move(cell: Cell, direction: Direction): CellDirection {
-    const move = moveMatrix[direction];
-    if (move) {
-      return { ...cell, x: cell.x + move.x, y: cell.y + move.y, direction };
-    }
-    throw new Error(`"${direction}" is not a valid direction`);
-  }
-
-  public isDeadEnd(cell: Cell, { walls = this.walls }: Overrides = {}): boolean {
-    return (
-      this.sides(cell, { walls }) === 3 &&
-      (cell.x !== this.entrance.x || cell.y !== this.entrance.y) &&
-      (cell.x !== this.exit.x || cell.y !== this.exit.y)
-    );
-  }
-
-  public edges(cell: Cell): string[] {
-    return this.neighbors(cell)
-      .filter((cd) => ['s', 'w'].includes(cd.direction))
-      .map((cd) => cd.direction);
   }
 
   private cellOffsets(cell: Cell): Record<string, number> {
@@ -154,20 +111,20 @@ export class SquareMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
+  public drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
     if (this.drawing) {
       const { x0, x1, x2, x3, y0, y1, y2, y3 } = this.cellOffsets({ x, y });
 
-      if (corner === 'nw') {
+      if (pillar === 'nw') {
         this.drawing.rect({ x: x0, y: y0 }, { x: x1, y: y1 }, color);
       }
-      if (corner === 'ne') {
+      if (pillar === 'ne') {
         this.drawing.rect({ x: x2, y: y0 }, { x: x3, y: y1 }, color);
       }
-      if (corner === 'sw') {
+      if (pillar === 'sw') {
         this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, color);
       }
-      if (corner === 'se') {
+      if (pillar === 'se') {
         this.drawing.rect({ x: x2, y: y2 }, { x: x3, y: y3 }, color);
       }
     }
@@ -181,11 +138,9 @@ export class SquareMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
+  public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
       const { x1, x2, y1, y2 } = this.cellOffsets(cell);
-
-      this.drawCell(cell, cellColor);
 
       this.drawing.line({ x: x1, y: y1 }, { x: x2, y: y2 }, color);
       this.drawing.line({ x: x1, y: y2 }, { x: x2, y: y1 }, color);

@@ -1,7 +1,7 @@
 import { create2DArray } from '@technobuddha/library';
 
+import { animate } from '../drawing/animate.js';
 import { type Cell, type Direction } from '../maze/maze.js';
-import { animate } from '../util/animate.js';
 
 import { type SolveArguments } from './maze-solver.js';
 import { MazeSolver } from './maze-solver.js';
@@ -11,7 +11,7 @@ type DD = {
   dist: number;
 };
 
-export class BreadthFirstSearch extends MazeSolver {
+export class Dijkstras extends MazeSolver {
   public async solve({
     color = 'lime',
     entrance = this.maze.entrance,
@@ -25,11 +25,11 @@ export class BreadthFirstSearch extends MazeSolver {
     queue.unshift(entrance);
     this.maze.drawCell(entrance, color);
 
-    for (const direction of this.maze.directions) {
-      if (!this.maze.walls[entrance.x][entrance.y][direction]) {
-        this.maze.drawWall({ ...entrance, direction }, color);
-      }
-    }
+    // for (const direction of this.maze.directions) {
+    //   if (!this.maze.walls[entrance.x][entrance.y][direction]) {
+    //     this.maze.drawWall({ ...entrance, direction }, color);
+    //   }
+    // }
 
     while (queue.length > 0) {
       await animate(() => {
@@ -47,11 +47,6 @@ export class BreadthFirstSearch extends MazeSolver {
             for (const neighbor of neighbors) {
               distances[neighbor.x][neighbor.y] = { dir: neighbor.direction, dist: distance };
               this.maze.drawCell(neighbor, color);
-              for (const direction of this.maze.directions) {
-                if (this.maze.walls[neighbor.x][neighbor.y][direction] === false) {
-                  this.maze.drawWall({ ...neighbor, direction }, color);
-                }
-              }
               queue.unshift(neighbor);
             }
           }
@@ -60,6 +55,7 @@ export class BreadthFirstSearch extends MazeSolver {
     }
 
     this.maze.draw();
+    this.maze.drawDistances();
 
     let cell = { ...exit, direction: this.maze.opposite(exit.direction) };
 

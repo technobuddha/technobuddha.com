@@ -1,7 +1,7 @@
 import { randomPick, randomShuffle } from '@technobuddha/library';
 
+import { animate } from '../drawing/animate.js';
 import { type Cell, type Maze } from '../maze/maze.js';
-import { animate } from '../util/animate.js';
 import { type CSpecification } from '../util/specs.js';
 import { parsePoint } from '../util/specs.js';
 

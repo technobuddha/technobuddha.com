@@ -40,7 +40,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
   const yMax = React.useRef(+1.25);
 
   const mouseIsDown = React.useRef(false);
-  const corner = React.useRef({ x: 0, y: 0 });
+  const pillar = React.useRef({ x: 0, y: 0 });
 
   const coordinates = (event: React.MouseEvent<HTMLCanvasElement>): { x: number; y: number } => {
     const { top, left } = canvas.current!.getBoundingClientRect();
@@ -85,7 +85,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
         setMode('compute');
       } else {
         mouseIsDown.current = true;
-        corner.current = coordinates(event);
+        pillar.current = coordinates(event);
       }
     }
   };
@@ -94,10 +94,10 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
     if (mode === 'display' && mouseIsDown.current) {
       const click = coordinates(event);
 
-      if (Math.abs(click.x - corner.current.x) < 10 || Math.abs(click.y - corner.current.y) < 10) {
+      if (Math.abs(click.x - pillar.current.x) < 10 || Math.abs(click.y - pillar.current.y) < 10) {
         clearOverlay();
       } else {
-        const first = scaledCoordinates(corner.current);
+        const first = scaledCoordinates(pillar.current);
         const second = scaledCoordinates(click);
 
         xMin.current = Math.min(first.x, second.x);
@@ -115,7 +115,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
       const { x, y } = coordinates(event);
       const context = clearOverlay();
       context.strokeStyle = 'white';
-      context.strokeRect(x, y, corner.current.x - x, corner.current.y - y);
+      context.strokeRect(x, y, pillar.current.x - x, pillar.current.y - y);
     }
   };
 

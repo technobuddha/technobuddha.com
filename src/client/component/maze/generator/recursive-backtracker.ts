@@ -32,6 +32,8 @@ export class RecursiveBacktracker extends MazeGenerator {
       .filter((cell) => !this.visited[cell.x][cell.y]);
     if (unvisitedNeighbors.length > 0) {
       const newCell = this.randomPick(unvisitedNeighbors)!;
+      this.maze.drawCell(this.currentCell);
+      this.maze.drawX(this.currentCell);
       this.maze.removeWall(this.currentCell, newCell.direction);
       this.visited[newCell.x][newCell.y] = true;
 

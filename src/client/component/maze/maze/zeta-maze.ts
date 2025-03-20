@@ -3,8 +3,8 @@ import { type Rect } from '../drawing/drawing.js';
 
 import {
   type Cell,
-  type CellCorner,
   type CellDirection,
+  type CellPillar,
   type Kind,
   type MazeProperties,
 } from './maze.js';
@@ -14,7 +14,7 @@ const SQ2 = Math.SQRT2;
 
 export class ZetaMaze extends OctogonMaze {
   public constructor({ ...props }: MazeProperties) {
-    super({ ...props, cellColor: '#B6B6B4', wallColor: 'black' });
+    super({ ...props, cellSize: 30, cellColor: '#B6B6B4', wallColor: 'black' });
   }
 
   protected override offsets(kind: Kind): Record<string, number> {
@@ -250,10 +250,10 @@ export class ZetaMaze extends OctogonMaze {
     }
   }
 
-  public override drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
+  public override drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
     if (this.drawing) {
       if (this.cellKind({ x, y }) === 0) {
-        switch (corner) {
+        switch (pillar) {
           case 'ab': {
             const { x6, x7, x9, y0, y1, y3 } = this.cellOffsets({ x, y });
             this.drawing.polygon(
@@ -362,141 +362,14 @@ export class ZetaMaze extends OctogonMaze {
           // no default
         }
       } else {
-        super.drawPillar({ x, y, corner }, color);
+        super.drawPillar({ x, y, pillar }, color);
       }
     }
   }
 
-  public override drawPath(cell: CellDirection, color = 'deepSkyBlue'): void {
-    if (this.drawing) {
-      this.drawCell(cell);
-
-      if (this.cellKind(cell) === 0) {
-        switch (cell.direction) {
-          case 'a': {
-            const { x5, x6, y2, y8 } = this.cellOffsets(cell);
-
-            this.drawing.polygon(
-              [
-                { x: x5, y: y8 },
-                { x: (x5 + x6) / 2, y: y2 },
-                { x: x6, y: y8 },
-              ],
-              color,
-            );
-            break;
-          }
-          case 'b': {
-            const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.cellOffsets(cell);
-            this.drawing.polygon(
-              [
-                { x: x3, y: y6 },
-                { x: (x6 + x8) / 2, y: (y3 + y5) / 2 },
-                { x: x5, y: y8 },
-              ],
-              color,
-            );
-
-            break;
-          }
-
-          case 'c': {
-            const { x3, x8, y5, y6 } = this.cellOffsets(cell);
-
-            this.drawing.polygon(
-              [
-                { x: x3, y: y5 },
-                { x: x8, y: (y5 + y6) / 2 },
-                { x: x3, y: y6 },
-              ],
-              color,
-            );
-            break;
-          }
-
-          case 'd': {
-            const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.cellOffsets(cell);
-
-            this.drawing.polygon(
-              [
-                { x: x5, y: y3 },
-                { x: (x6 + x8) / 2, y: (y6 + y8) / 2 },
-                { x: x3, y: y5 },
-              ],
-              color,
-            );
-            break;
-          }
-
-          case 'e': {
-            const { x5, x6, y2, y8 } = this.cellOffsets(cell);
-
-            this.drawing.polygon(
-              [
-                { x: x5, y: y2 },
-                { x: (x5 + x6) / 2, y: y8 },
-                { x: x6, y: y2 },
-              ],
-              color,
-            );
-            break;
-          }
-
-          case 'f': {
-            const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.cellOffsets(cell);
-            this.drawing.polygon(
-              [
-                { x: x6, y: y3 },
-                { x: (x3 + x5) / 2, y: (y6 + y8) / 2 },
-                { x: x8, y: y5 },
-              ],
-              color,
-            );
-
-            break;
-          }
-
-          case 'g': {
-            const { x3, x8, y5, y6 } = this.cellOffsets(cell);
-
-            this.drawing.polygon(
-              [
-                { x: x8, y: y5 },
-                { x: x3, y: (y5 + y6) / 2 },
-                { x: x8, y: y6 },
-              ],
-              color,
-            );
-            break;
-          }
-
-          case 'h': {
-            const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.cellOffsets(cell);
-            this.drawing.polygon(
-              [
-                { x: x8, y: y6 },
-                { x: (x3 + x5) / 2, y: (y3 + y5) / 2 },
-                { x: x6, y: y8 },
-              ],
-              color,
-            );
-
-            break;
-          }
-
-          // no default
-        }
-      } else {
-        super.drawPath(cell, color);
-      }
-    }
-  }
-
-  public override drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
+  public override drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
       if (this.cellKind(cell) === 0) {
-        this.drawCell(cell, cellColor);
-
         const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.cellOffsets(cell);
 
         this.drawing.line({ x: x5, y: y3 }, { x: x6, y: y8 }, color);
@@ -504,7 +377,7 @@ export class ZetaMaze extends OctogonMaze {
         this.drawing.line({ x: x3, y: y5 }, { x: x8, y: y6 }, color);
         this.drawing.line({ x: x3, y: y6 }, { x: x8, y: y5 }, color);
       } else {
-        super.drawX(cell, color, cellColor);
+        super.drawX(cell, color);
       }
     }
   }

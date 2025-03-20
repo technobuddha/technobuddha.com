@@ -1,17 +1,28 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 /* eslint-disable no-implicit-coercion */
+import { modulo } from '@technobuddha/library';
+
 import { type Rect } from '../drawing/drawing.js';
 
 import {
   type Cell,
-  type CellCorner,
   type CellDirection,
-  type Direction,
+  type CellPillar,
   type Kind,
   type MazeProperties,
-  type Wall,
 } from './maze.js';
 import { Maze } from './maze.js';
+import {
+  directionMatrix,
+  edgesMatrix,
+  leftTurnMatrix,
+  moveMatrix,
+  oppositeMatrix,
+  pillarMatrix,
+  rightTurnMatrix,
+  sidesMatrix,
+  wallMatrix,
+} from './octogon-matrix.js';
 
 const SQ2 = Math.SQRT2;
 
@@ -19,8 +30,15 @@ export class OctogonMaze extends Maze {
   public constructor({ cellSize = 30, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
-      ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'],
-      ['ab', 'bc', 'cd', 'de', 'ef', 'fg', 'gh', 'ha', 'ij', 'jk', 'kl', 'li'],
+      directionMatrix,
+      pillarMatrix,
+      wallMatrix,
+      oppositeMatrix,
+      rightTurnMatrix,
+      leftTurnMatrix,
+      moveMatrix,
+      sidesMatrix,
+      edgesMatrix,
     );
   }
 
@@ -33,211 +51,7 @@ export class OctogonMaze extends Maze {
   }
 
   protected cellKind(cell: Cell): number {
-    return cell.x % 2;
-  }
-
-  protected initialWalls(x: number, y: number): Wall {
-    return this.cellKind({ x, y }) === 0 ?
-        { a: true, b: true, c: true, d: true, e: true, f: true, g: true, h: true }
-      : { i: true, j: true, k: true, l: true };
-  }
-
-  public opposite(direction: Direction): Direction {
-    switch (direction) {
-      case 'a': {
-        return 'e';
-      }
-      case 'b': {
-        return 'k';
-      }
-      case 'c': {
-        return 'g';
-      }
-      case 'd': {
-        return 'l';
-      }
-      case 'e': {
-        return 'a';
-      }
-      case 'f': {
-        return 'i';
-      }
-      case 'g': {
-        return 'c';
-      }
-      case 'h': {
-        return 'j';
-      }
-      case 'i': {
-        return 'f';
-      }
-      case 'j': {
-        return 'h';
-      }
-      case 'k': {
-        return 'b';
-      }
-      case 'l': {
-        return 'd';
-      }
-      default: {
-        throw new Error(`"${direction}" is not a valid direction`);
-      }
-    }
-  }
-
-  public rightTurn(direction: Direction): Direction[] {
-    switch (direction) {
-      case 'a': {
-        return ['d', 'c', 'b', 'a', 'h', 'g', 'f', 'e'];
-      }
-      case 'b': {
-        return ['j', 'i', 'l', 'k'];
-      }
-      case 'c': {
-        return ['f', 'e', 'd', 'c', 'b', 'a', 'h', 'g'];
-      }
-      case 'd': {
-        return ['k', 'j', 'i', 'l'];
-      }
-      case 'e': {
-        return ['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a'];
-      }
-      case 'f': {
-        return ['l', 'k', 'j', 'i'];
-      }
-      case 'g': {
-        return ['b', 'a', 'h', 'g', 'f', 'e', 'd', 'c'];
-      }
-      case 'h': {
-        return ['i', 'l', 'k', 'j'];
-      }
-      case 'i': {
-        return ['e', 'd', 'c', 'b', 'a', 'h', 'g', 'f'];
-      }
-      case 'j': {
-        return ['g', 'f', 'e', 'd', 'c', 'b', 'a', 'h'];
-      }
-      case 'k': {
-        return ['a', 'h', 'g', 'f', 'e', 'd', 'c', 'b'];
-      }
-      case 'l': {
-        return ['c', 'b', 'a', 'h', 'g', 'f', 'e', 'd'];
-      }
-      default: {
-        throw new Error(`"${direction}" is not a valid direction`);
-      }
-    }
-  }
-
-  public leftTurn(direction: Direction): Direction[] {
-    switch (direction) {
-      case 'a': {
-        return ['f', 'g', 'h', 'a', 'b', 'c', 'd', 'e'];
-      }
-      case 'b': {
-        return ['l', 'i', 'j', 'k'];
-      }
-      case 'c': {
-        return ['h', 'a', 'b', 'c', 'd', 'e', 'f', 'g'];
-      }
-      case 'd': {
-        return ['i', 'j', 'k', 'l'];
-      }
-      case 'e': {
-        return ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'a'];
-      }
-      case 'f': {
-        return ['j', 'k', 'l', 'i'];
-      }
-      case 'g': {
-        return ['d', 'e', 'f', 'g', 'h', 'a', 'b', 'c'];
-      }
-      case 'h': {
-        return ['k', 'l', 'i', 'j'];
-      }
-      case 'i': {
-        return ['g', 'h', 'a', 'b', 'c', 'd', 'e', 'f'];
-      }
-      case 'j': {
-        return ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-      }
-      case 'k': {
-        return ['c', 'd', 'e', 'f', 'g', 'h', 'a', 'b'];
-      }
-      case 'l': {
-        return ['e', 'f', 'g', 'h', 'a', 'b', 'c', 'd'];
-      }
-      default: {
-        throw new Error(`"${direction}" is not a valid direction`);
-      }
-    }
-  }
-
-  public move(cell: Cell, direction: Direction): CellDirection | null {
-    if (this.cellKind(cell) === 0) {
-      switch (direction) {
-        case 'a': {
-          return { x: cell.x, y: cell.y - 1, direction };
-        }
-        case 'b': {
-          return { x: cell.x + 1, y: cell.y - 1, direction };
-        }
-        case 'c': {
-          return { x: cell.x + 2, y: cell.y, direction };
-        }
-        case 'd': {
-          return { x: cell.x + 1, y: cell.y, direction };
-        }
-        case 'e': {
-          return { x: cell.x, y: cell.y + 1, direction };
-        }
-        case 'f': {
-          return { x: cell.x - 1, y: cell.y, direction };
-        }
-        case 'g': {
-          return { x: cell.x - 2, y: cell.y, direction };
-        }
-
-        case 'h': {
-          return { x: cell.x - 1, y: cell.y - 1, direction };
-        }
-
-        // no default
-      }
-    } else {
-      switch (direction) {
-        case 'i': {
-          return { x: cell.x + 1, y: cell.y, direction };
-        }
-        case 'j': {
-          return { x: cell.x + 1, y: cell.y + 1, direction };
-        }
-        case 'k': {
-          return { x: cell.x - 1, y: cell.y + 1, direction };
-        }
-        case 'l': {
-          return { x: cell.x - 1, y: cell.y, direction };
-        }
-
-        // no default
-      }
-    }
-    return null;
-  }
-
-  public isDeadEnd(cell: Cell): boolean {
-    return (
-      this.sides(cell) === (this.cellKind(cell) === 0 ? 7 : 3) &&
-      (cell.x !== this.entrance.x || cell.y !== this.entrance.y) &&
-      (cell.x !== this.exit.x || cell.y !== this.exit.y)
-    );
-  }
-
-  public edges(cell: Cell): string[] {
-    return this.neighbors(cell)
-      .filter((cd) => (this.cellKind(cell) === 0 ? ['c', 'd', 'e'] : ['j']).includes(cd.direction))
-      .map((cd) => cd.direction);
+    return modulo(cell.x, 2);
   }
 
   public divider(_cell1: Cell, _cell2: Cell): CellDirection[] {
@@ -576,10 +390,10 @@ export class OctogonMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
+  public drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
     if (this.drawing) {
       if (this.cellKind({ x, y }) === 0) {
-        switch (corner) {
+        switch (pillar) {
           case 'ab': {
             const { x8, x9, xa, xb, y0, y1, y2, y3 } = this.cellOffsets({ x, y });
 
@@ -711,7 +525,7 @@ export class OctogonMaze extends Maze {
           // no default
         }
       } else {
-        switch (corner) {
+        switch (pillar) {
           case 'ij': {
             const { x6, x7, x8, y3, y4, y5 } = this.cellOffsets({ x, y });
             this.drawing.polygon(
@@ -952,10 +766,9 @@ export class OctogonMaze extends Maze {
   //   }
   // }
 
-  public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
+  public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
       if (this.cellKind(cell) === 0) {
-        this.drawCell(cell, cellColor);
         const { x2, x6, x9, xd, y2, y6, y9, yd } = this.cellOffsets(cell);
 
         this.drawing.line({ x: x2, y: y9 }, { x: xd, y: y6 }, color);
@@ -963,7 +776,6 @@ export class OctogonMaze extends Maze {
         this.drawing.line({ x: x6, y: y2 }, { x: x9, y: yd }, color);
         this.drawing.line({ x: x6, y: yd }, { x: x9, y: y2 }, color);
       } else {
-        this.drawCell(cell, cellColor);
         const { x2, x4, x6, y2, y4, y6 } = this.cellOffsets(cell);
 
         this.drawing.line({ x: x2, y: y4 }, { x: x6, y: y4 }, color);

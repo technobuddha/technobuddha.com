@@ -4,23 +4,22 @@ import { modulo } from '@technobuddha/library';
 import { type Rect } from '../drawing/drawing.js';
 
 import {
-  cornerMatrix,
   directionMatrix,
+  edgesMatrix,
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
+  pillarMatrix,
   rightTurnMatrix,
+  sidesMatrix,
   wallMatrix,
 } from './hexagon-matrix.js';
 import {
   type Cell,
-  type CellCorner,
   type CellDirection,
-  type Direction,
+  type CellPillar,
   type Kind,
   type MazeProperties,
-  type Overrides,
-  type Wall,
 } from './maze.js';
 import { Maze } from './maze.js';
 
@@ -30,7 +29,18 @@ const SIN60 = Math.sin(Math.PI / 3);
 
 export class HexagonMaze extends Maze {
   public constructor({ cellSize = 25, wallSize = 1, ...props }: MazeProperties) {
-    super({ cellSize, wallSize, ...props }, directionMatrix, cornerMatrix);
+    super(
+      { cellSize, wallSize, ...props },
+      directionMatrix,
+      pillarMatrix,
+      wallMatrix,
+      oppositeMatrix,
+      rightTurnMatrix,
+      leftTurnMatrix,
+      moveMatrix,
+      sidesMatrix,
+      edgesMatrix,
+    );
   }
 
   protected drawingWidth(): [cell: number, padding: number] {
@@ -43,64 +53,6 @@ export class HexagonMaze extends Maze {
 
   protected cellKind(cell: Cell): number {
     return modulo(cell.x, 2);
-  }
-
-  protected initialWalls(): Wall {
-    return { ...wallMatrix };
-  }
-
-  public opposite(direction: Direction): Direction {
-    const opp = oppositeMatrix[direction];
-
-    if (opp) {
-      return opp;
-    }
-
-    throw new Error(`"${direction}" is not a valid direction`);
-  }
-
-  public rightTurn(direction: Direction): Direction[] {
-    const rt = rightTurnMatrix[direction];
-
-    if (rt) {
-      return rt;
-    }
-
-    throw new Error(`"${direction}" is not a valid direction`);
-  }
-
-  public leftTurn(direction: Direction): Direction[] {
-    const lt = leftTurnMatrix[direction];
-
-    if (lt) {
-      return lt;
-    }
-
-    throw new Error(`"${direction}" is not a valid direction`);
-  }
-
-  public move(cell: Cell, direction: Direction): CellDirection {
-    const mv = moveMatrix[this.cellKind(cell)][direction];
-
-    if (mv) {
-      return { x: cell.x + mv.x, y: cell.y + mv.y, direction };
-    }
-
-    throw new Error(`"${direction}" is not a valid direction`);
-  }
-
-  public isDeadEnd(cell: Cell, { walls = this.walls }: Overrides = {}): boolean {
-    return (
-      this.sides(cell, { walls }) === 5 &&
-      (cell.x !== this.entrance.x || cell.y !== this.entrance.y) &&
-      (cell.x !== this.exit.x || cell.y !== this.exit.y)
-    );
-  }
-
-  public edges(cell: Cell): string[] {
-    return this.neighbors(cell)
-      .filter((cd) => ['b', 'c', 'd'].includes(cd.direction))
-      .map((cd) => cd.direction);
   }
 
   protected cellOffsets(cell: Cell): Record<string, number> {
@@ -243,13 +195,13 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public drawPillar(cell: CellCorner, color = this.wallColor): void {
+  public drawPillar(cell: CellPillar, color = this.wallColor): void {
     if (this.drawing) {
       const ctx = this.drawing;
       const { x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xa, xb, y0, y1, y2, y3, y4, y5, y6, y7, y8 } =
         this.cellOffsets(cell);
 
-      switch (cell.corner) {
+      switch (cell.pillar) {
         case 'ab': {
           ctx.polygon(
             [
@@ -413,11 +365,9 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
+  public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
       const { x2, x5, x6, x9, y2, y4, y6 } = this.cellOffsets(cell);
-
-      this.drawCell(cell, cellColor);
 
       this.drawing.line({ x: x2, y: y4 }, { x: x9, y: y4 }, color);
       this.drawing.line({ x: x5, y: y2 }, { x: x6, y: y6 }, color);

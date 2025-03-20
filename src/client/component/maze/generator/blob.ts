@@ -129,8 +129,8 @@ export class Blob extends MazeGenerator {
   }
 
   protected override step(): boolean {
-    if (this.walls.length > 0) {
-      const wall = this.walls.shift()!;
+    const wall = this.walls.shift();
+    if (wall) {
       this.maze.addWall(wall, wall.direction);
       return true;
     }

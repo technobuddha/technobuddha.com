@@ -15,17 +15,17 @@ import { Wilsons } from './generator/wilsons.js';
 import { BrickMaze } from './maze/brick-maze.js';
 import { HexagonMaze } from './maze/hexagon-maze.js';
 import { type Maze, type MazeProperties } from './maze/maze.js';
-import { MazeFactory } from './maze/maze-factory.js';
 import { OctogonMaze } from './maze/octogon-maze.js';
 import { PentagonMaze } from './maze/pentagon-maze.js';
 import { SquareMaze } from './maze/square-maze.js';
 import { TriangleMaze } from './maze/triangle-maze.js';
+import { WedgeMaze } from './maze/wedge-maze.js';
 import { ZetaMaze } from './maze/zeta-maze.js';
-import { BreadthFirstSearch } from './solver/breadth-first-search.js';
-import { DeadEndFiller } from './solver/dead-end-filler.js';
-import { DeadEndRemover } from './solver/dead-end-remover.js';
-import { DepthFirstSearch } from './solver/depth-first-search.js';
+import { MazeFactory } from './maze-factory.js';
+import { DeadEnd } from './solver/dead-end.js';
+import { Dijkstras } from './solver/dijkstras.js';
 import { type MazeSolver, type MazeSolverProperties } from './solver/maze-solver.js';
+import { Search } from './solver/search.js';
 import { WallWalking } from './solver/wall-walking.js';
 
 type MazeMakerProps = {
@@ -46,6 +46,7 @@ const mazes: Record<string, (props: MazeProperties) => Maze> = {
   hexagon: (props) => new HexagonMaze(props),
   octogon: (props) => new OctogonMaze(props),
   zeta: (props) => new ZetaMaze(props),
+  wedge: (props) => new WedgeMaze(props),
 };
 
 const algorithms: Record<
@@ -63,10 +64,10 @@ const algorithms: Record<
     reverseColumns: (props) => new HuntAndKill({ huntMethod: 'reverse-columns', ...props }),
   },
   growingTree: {
-    random: (props) => new GrowingTree({ method: 'random', ...props }),
-    oldest: (props) => new GrowingTree({ method: 'oldest', ...props }),
     newest: (props) => new GrowingTree({ method: 'newest', ...props }),
-    middle: (props) => new GrowingTree({ method: 'middle', ...props }),
+    random: (props) => new GrowingTree({ method: 'random', ...props }),
+    // oldest: (props) => new GrowingTree({ method: 'oldest', ...props }),
+    // middle: (props) => new GrowingTree({ method: 'middle', ...props }),
   },
   kruskals: {
     normal: (props) => new Kruskals(props),
@@ -82,13 +83,24 @@ const algorithms: Record<
   },
 };
 
-const solvers: Record<string, (props: MazeSolverProperties) => MazeSolver> = {
-  depthFirstSearch: (props) => new DepthFirstSearch(props),
-  deadEndFiller: (props) => new DeadEndFiller(props),
-  deadEndRemover: (props) => new DeadEndRemover(props),
-  followTheRightWall: (props) => new WallWalking({ ...props, turn: 'right' }),
-  followTheLeftWall: (props) => new WallWalking({ ...props, turn: 'left' }),
-  breadthFirstSearch: (props) => new BreadthFirstSearch(props),
+const solvers: Record<string, Record<string, (props: MazeSolverProperties) => MazeSolver>> = {
+  search: {
+    random: (props) => new Search({ method: 'random', ...props }),
+    seekExit: (props) => new Search({ method: 'seek', ...props }),
+    leftTurn: (props) => new Search({ method: 'left-turn', ...props }),
+    rightTurn: (props) => new Search({ method: 'right-turn', ...props }),
+  },
+  deadEnd: {
+    filler: (props) => new DeadEnd({ ...props, method: 'fill' }),
+    remover: (props) => new DeadEnd({ ...props, method: 'remove' }),
+  },
+  followWall: {
+    right: (props) => new WallWalking({ ...props, turn: 'right' }),
+    left: (props) => new WallWalking({ ...props, turn: 'left' }),
+  },
+  dijkstras: {
+    normal: (props) => new Dijkstras(props),
+  },
 };
 
 type MazeBoardProps = {
@@ -122,9 +134,10 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => 
       setMazeName(name);
       setAlgorithmName(`${algorithm1} ${algorithm2}`);
 
-      const solver = randomPick(Object.keys(solvers))!;
-      const selectedSolver = solvers[solver];
-      setSolverName(solver);
+      const solver1 = randomPick(Object.keys(solvers))!;
+      const solver2 = randomPick(Object.keys(solvers[solver1]))!;
+      const selectedSolver = solvers[solver1][solver2];
+      setSolverName(`${solver1} ${solver2}`);
 
       void factory.create(selectedMaze, selectedAlgorithm).then((maze) => {
         maze.draw();
@@ -134,7 +147,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => 
             .then(() => {
               setTimeout(() => {
                 setRedraw((x) => x + 1);
-              }, 5000);
+              }, 10000);
             });
         }, 0);
       });
@@ -155,7 +168,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => 
       <div style={{ position: 'absolute', zIndex: 4, top: 0, left: 0 }}>
         Maze Shape:&nbsp;
         {toCapitalWordCase(toHumanCase(mazeName))}
-        Generator:&nbsp;
+        &nbsp;|&nbsp;Generator:&nbsp;
         {toCapitalWordCase(toHumanCase(algorithmName))}
         &nbsp;|&nbsp; Solver:&nbsp;
         {toCapitalWordCase(toHumanCase(solverName))}

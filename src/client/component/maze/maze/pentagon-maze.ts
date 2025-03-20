@@ -1,34 +1,45 @@
+/* eslint-disable @typescript-eslint/class-methods-use-this */
 import { modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.js';
 
 import {
   type Cell,
-  type CellCorner,
   type CellDirection,
-  type Direction,
+  type CellPillar,
   type Kind,
   type MazeProperties,
-  type Wall,
 } from './maze.js';
 import { Maze } from './maze.js';
 import {
-  cornerMatrix,
   directionMatrix,
-  edgeMatrix,
+  edgesMatrix,
   kindMatrix,
   leftTurnMatrix,
   moveMatrix,
   offsetXMatrix,
   offsetYMatrix,
   oppositeMatrix,
+  pillarMatrix,
   rightTurnMatrix,
+  sidesMatrix,
   wallMatrix,
 } from './pentagon-matrix.js';
 
 export class PentagonMaze extends Maze {
   public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
-    super({ cellSize, wallSize, ...props }, directionMatrix, cornerMatrix);
+    super(
+      { cellSize, wallSize, ...props },
+      directionMatrix,
+      pillarMatrix,
+      wallMatrix,
+      oppositeMatrix,
+      rightTurnMatrix,
+      leftTurnMatrix,
+      moveMatrix,
+      sidesMatrix,
+      edgesMatrix,
+    );
   }
 
   protected drawingWidth(): [cell: number, padding: number] {
@@ -39,59 +50,10 @@ export class PentagonMaze extends Maze {
     return [this.cellSize, this.cellSize];
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   protected cellKind(cell: Cell): number {
     return kindMatrix[modulo(cell.y, 5)][modulo(cell.x, 4)];
   }
 
-  protected initialWalls(x: number, y: number): Wall {
-    return { ...wallMatrix[this.cellKind({ x, y })] };
-  }
-
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public opposite(direction: Direction): Direction {
-    return oppositeMatrix[direction];
-  }
-
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public rightTurn(direction: Direction): Direction[] {
-    return rightTurnMatrix[direction];
-  }
-
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public leftTurn(direction: Direction): Direction[] {
-    return leftTurnMatrix[direction];
-  }
-
-  public move(cell: Cell, direction: Direction): CellDirection | null {
-    const mover = moveMatrix[this.cellKind(cell)]?.[direction]?.[modulo(cell.y, 5)];
-
-    if (mover) {
-      return {
-        x: cell.x + mover.x,
-        y: cell.y + mover.y,
-        direction,
-      };
-    }
-
-    return null;
-  }
-
-  public isDeadEnd(cell: Cell): boolean {
-    return (
-      this.sides(cell) === 4 &&
-      (cell.x !== this.entrance.x || cell.y !== this.entrance.y) &&
-      (cell.x !== this.exit.x || cell.y !== this.exit.y)
-    );
-  }
-
-  public edges(cell: Cell): string[] {
-    return this.neighbors(cell)
-      .filter((cd) => edgeMatrix[this.cellKind(cell)].includes(cd.direction))
-      .map((cd) => cd.direction);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public divider(_cell1: Cell, _cell2: Cell): CellDirection[] {
     throw new Error('Not Implemented');
   }
@@ -623,11 +585,11 @@ export class PentagonMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
+  public drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
     if (this.drawing) {
       switch (this.cellKind({ x, y })) {
         case 0: {
-          switch (corner) {
+          switch (pillar) {
             case 'ab': {
               const { x6, x8, y0, y1 } = this.cellOffsets({ x, y });
 
@@ -714,7 +676,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 1: {
-          switch (corner) {
+          switch (pillar) {
             case 'fg': {
               const { x2, x3, x4, x5, y0, y1, y2 } = this.cellOffsets({ x, y });
 
@@ -802,7 +764,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 2: {
-          switch (corner) {
+          switch (pillar) {
             case 'kl': {
               const { x7, x8, y0, y2 } = this.cellOffsets({ x, y });
 
@@ -889,7 +851,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 3: {
-          switch (corner) {
+          switch (pillar) {
             case 'pq': {
               const { x3, x4, x5, y0, y1, y2 } = this.cellOffsets({ x, y });
 
@@ -984,36 +946,34 @@ export class PentagonMaze extends Maze {
 
   public drawPath(cell: CellDirection, color = 'red'): void {
     if (this.drawing) {
-      let angle = 0;
-      switch (this.cellKind(cell)) {
-        case 0: {
-          angle = { a: 90, b: 0, c: 315, d: 225, e: 180 }[cell.direction]!;
-          break;
-        }
-
-        case 1: {
-          angle = { f: 90, g: 45, h: 315, i: 270, j: 180 }[cell.direction]!;
-          break;
-        }
-
-        case 2: {
-          angle = { k: 90, l: 0, m: 270, n: 225, o: 135 }[cell.direction]!;
-          break;
-        }
-
-        case 3: {
-          angle = { p: 135, q: 45, r: 0, s: 270, t: 180 }[cell.direction]!;
-          break;
-        }
-
-        // no default
-      }
+      const angle = {
+        a: 90,
+        b: 0,
+        c: 315,
+        d: 225,
+        e: 180,
+        f: 90,
+        g: 45,
+        h: 315,
+        i: 270,
+        j: 180,
+        k: 90,
+        l: 0,
+        m: 270,
+        n: 225,
+        o: 135,
+        p: 135,
+        q: 45,
+        r: 0,
+        s: 270,
+        t: 180,
+      }[cell.direction]!;
 
       this.drawArrow(this.getRect(cell), angle, color);
     }
   }
 
-  public drawX(cell: Cell, color = 'red', _cellColor = this.cellColor): void {
+  public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0: {

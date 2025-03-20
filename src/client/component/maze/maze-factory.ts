@@ -1,7 +1,6 @@
-import { type Drawing } from '../drawing/drawing.js';
-import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/maze-generator.js';
-
-import { type Maze, type MazeProperties } from './maze.js';
+import { type Drawing } from './drawing/drawing.js';
+import { type MazeGenerator, type MazeGeneratorProperties } from './generator/maze-generator.js';
+import { type Maze, type MazeProperties } from './maze/maze.js';
 
 export type MazeSettings = Partial<MazeProperties> & Partial<MazeGeneratorProperties>;
 
@@ -66,7 +65,9 @@ export class MazeFactory {
         start: this.start,
         random: this.random,
       });
-      return mg.generate();
+
+      const m = await mg.generate();
+      return m.termini();
     }
 
     maze.draw();

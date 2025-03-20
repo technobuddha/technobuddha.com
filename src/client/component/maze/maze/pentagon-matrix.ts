@@ -1,4 +1,4 @@
-import { type Direction } from './maze.js';
+import { type Direction, type Kind, type XY } from './maze.js';
 
 export const directionMatrix: Direction[] = [
   'a',
@@ -23,7 +23,7 @@ export const directionMatrix: Direction[] = [
   't',
 ];
 
-export const cornerMatrix: `${Direction}${Direction}`[] = [
+export const pillarMatrix: `${Direction}${Direction}`[] = [
   'ab',
   'bc',
   'cd',
@@ -46,13 +46,6 @@ export const cornerMatrix: `${Direction}${Direction}`[] = [
   'tp',
 ];
 
-export const edgeMatrix: Direction[][] = [
-  ['b', 'c', 'd'],
-  ['h', 'i', 'j'],
-  ['l', 'm'],
-  ['r', 's'],
-];
-
 export const kindMatrix: number[][] = [
   [0, 1, 2, 3],
   [2, 3, 0, 1],
@@ -60,6 +53,13 @@ export const kindMatrix: number[][] = [
   [1, 2, 3, 0],
   [2, 3, 0, 1],
 ];
+
+export const sidesMatrix: Record<Kind, number> = {
+  0: 5,
+  1: 5,
+  2: 5,
+  3: 5,
+};
 
 export const wallMatrix: Record<Direction, boolean>[] = [
   { a: true, b: true, c: true, d: true, e: true },
@@ -136,8 +136,8 @@ export const leftTurnMatrix: Record<Direction, Direction[]> = {
   t: ['m', 'n', 'o', 'k', 'l'],
 };
 
-export const moveMatrix: Record<Direction, { x: number; y: number }[]>[] = [
-  {
+export const moveMatrix: Record<Kind, Record<Direction, XY[]>> = {
+  0: {
     a: [
       { x: +0, y: -1 },
       { x: +0, y: -1 },
@@ -174,7 +174,7 @@ export const moveMatrix: Record<Direction, { x: number; y: number }[]>[] = [
       { x: -1, y: +0 },
     ],
   },
-  {
+  1: {
     f: [
       { x: +0, y: -1 },
       { x: +0, y: -1 },
@@ -211,7 +211,7 @@ export const moveMatrix: Record<Direction, { x: number; y: number }[]>[] = [
       { x: -1, y: +0 },
     ],
   },
-  {
+  2: {
     k: [
       { x: +1, y: -1 },
       { x: +1, y: -1 },
@@ -248,7 +248,7 @@ export const moveMatrix: Record<Direction, { x: number; y: number }[]>[] = [
       { x: -1, y: -1 },
     ],
   },
-  {
+  3: {
     p: [
       { x: +0, y: -1 },
       { x: +0, y: -1 },
@@ -285,7 +285,7 @@ export const moveMatrix: Record<Direction, { x: number; y: number }[]>[] = [
       { x: -1, y: +0 },
     ],
   },
-];
+};
 
 export const offsetXMatrix = [
   [+0.0, +1.0, +2.5, +4.0],
@@ -302,3 +302,10 @@ export const offsetYMatrix = [
   [+3.0, +3.0, +2.5, +3.0],
   [+4.0, +3.5, +4.0, +4.0],
 ];
+
+export const edgesMatrix: Record<Kind, Direction[]> = {
+  0: ['b', 'c', 'd'],
+  1: ['h', 'i', 'j'],
+  2: ['l', 'm'],
+  3: ['r', 's'],
+};

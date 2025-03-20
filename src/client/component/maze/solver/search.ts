@@ -1,18 +1,65 @@
-import { create2DArray, randomShuffle } from '@technobuddha/library';
+import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type Direction } from '../maze/maze.js';
-import { animate } from '../util/animate.js';
+import { animate } from '../drawing/animate.js';
+import { type Cell, type CellDirection, type Direction, type XY } from '../maze/maze.js';
 
-import { type SolveArguments } from './maze-solver.js';
+import { type MazeSolverProperties, type SolveArguments } from './maze-solver.js';
 import { MazeSolver } from './maze-solver.js';
 
-export class DepthFirstSearch extends MazeSolver {
+function manhattanDistance(a: XY, b: XY): number {
+  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+}
+
+type Method = 'random' | 'seek' | 'left-turn' | 'right-turn';
+
+type SearchProperties = MazeSolverProperties & {
+  method?: Method;
+};
+
+export class Search extends MazeSolver {
+  protected readonly method: Method;
+
+  public constructor({ method = 'random', ...props }: SearchProperties) {
+    super(props);
+    this.method = method;
+  }
+
+  protected decide(array: CellDirection[], direction: Direction): CellDirection[] {
+    switch (this.method) {
+      case 'random': {
+        return this.randomShuffle(array);
+      }
+
+      case 'seek': {
+        return array.sort(
+          (a, b) =>
+            manhattanDistance({ x: a.x, y: a.y }, this.maze.exit) -
+            manhattanDistance({ x: b.x, y: b.y }, this.maze.exit),
+        );
+      }
+
+      case 'left-turn': {
+        const left = this.maze.leftTurn(direction);
+        return array.sort((a, b) => left.indexOf(a.direction) - left.indexOf(b.direction));
+      }
+
+      case 'right-turn': {
+        const right = this.maze.rightTurn(direction);
+        return array.sort((a, b) => right.indexOf(a.direction) - right.indexOf(b.direction));
+      }
+
+      default: {
+        return array;
+      }
+    }
+  }
+
   public async solve({
     color = '#1589FF',
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   }: SolveArguments = {}): Promise<void> {
-    this.maze.prepareContext(this.context);
+    this.maze.prepareDrawing(this.context);
 
     type CP = Cell & { parent?: CP; direction: Direction };
 
@@ -21,17 +68,16 @@ export class DepthFirstSearch extends MazeSolver {
     const distances = create2DArray(this.maze.width, this.maze.height, 0);
 
     discovered[entrance.x][entrance.y] = true;
-    this.maze.drawPath(entrance);
     queue.unshift(entrance);
 
-    let direction: 'forward' | 'backward' | 'solve' = 'forward';
+    let mode: 'forward' | 'backward' | 'solve' = 'forward';
 
     while (queue.length > 0) {
       // eslint-disable-next-line @typescript-eslint/no-loop-func
       await animate(() => {
         const cell = queue.pop()!;
 
-        switch (direction) {
+        switch (mode) {
           case 'forward': {
             discovered[cell.x][cell.y] = true;
             if (cell.parent) {
@@ -40,20 +86,23 @@ export class DepthFirstSearch extends MazeSolver {
 
             if (cell.x === exit.x && cell.y === exit.y) {
               this.maze.clear();
-              direction = 'solve';
+              this.maze.drawDistances();
+              mode = 'solve';
               queue.length = 0;
               queue.push(cell);
             } else {
-              const moves = randomShuffle(
+              const moves = this.decide(
                 this.maze.validMoves(cell).filter((n) => !discovered[n.x][n.y]),
+                cell.direction,
               );
               if (moves.length === 0) {
+                this.maze.drawCell(cell);
                 this.maze.drawX(cell);
                 if (cell.parent) {
-                  direction = 'backward';
+                  mode = 'backward';
                   queue.push(cell.parent);
                 } else {
-                  direction = 'solve';
+                  mode = 'solve';
                 }
               } else {
                 const [next, ...others] = moves;
@@ -77,8 +126,9 @@ export class DepthFirstSearch extends MazeSolver {
                 },
                 color,
               );
-              direction = 'forward';
+              mode = 'forward';
             } else {
+              this.maze.drawCell(cell);
               this.maze.drawX(cell);
               queue.push(cell.parent!);
             }
@@ -87,13 +137,14 @@ export class DepthFirstSearch extends MazeSolver {
           }
 
           case 'solve': {
-            const next: CP | undefined = cell.parent;
-            if (next) {
-              this.maze.drawPath({ ...next, direction: cell.direction }, color);
-              queue.push(next);
-            } else {
-              queue.length = 0;
+            let next: CP | undefined = cell.parent;
+            let prev: CP = cell;
+            while (next) {
+              this.maze.drawPath({ ...next, direction: prev.direction }, color);
+              prev = next;
+              next = next.parent;
             }
+            queue.length = 0;
           }
 
           // no default

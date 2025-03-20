@@ -1,26 +1,43 @@
-import { range } from 'lodash-es';
+/* eslint-disable @typescript-eslint/class-methods-use-this */
+import { modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.js';
 
 import {
   type Cell,
-  type CellCorner,
   type CellDirection,
-  type Direction,
+  type CellPillar,
   type Kind,
   type MazeProperties,
-  type Wall,
 } from './maze.js';
 import { Maze } from './maze.js';
+import {
+  directionMatrix,
+  edgesMatrix,
+  leftTurnMatrix,
+  moveMatrix,
+  oppositeMatrix,
+  pillarMatrix,
+  rightTurnMatrix,
+  sidesMatrix,
+  wallMatrix,
+} from './triangle-matrix.js';
 
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class TriangleMaze extends Maze {
-  public constructor({ cellSize = 30, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
-      ['a', 'b', 'c', 'd', 'e', 'f'],
-      ['ac', 'ce', 'ea', 'bd', 'df', 'fb'],
+      directionMatrix,
+      pillarMatrix,
+      wallMatrix,
+      oppositeMatrix,
+      rightTurnMatrix,
+      leftTurnMatrix,
+      moveMatrix,
+      sidesMatrix,
+      edgesMatrix,
     );
   }
 
@@ -32,180 +49,8 @@ export class TriangleMaze extends Maze {
     return [this.cellSize * SIN60, 0];
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   protected cellKind(cell: Cell): number {
-    return (cell.x + cell.y) % 2;
-  }
-
-  protected initialWalls(x: number, y: number): Wall {
-    return this.cellKind({ x, y }) === 0 ?
-        { b: true, d: true, f: true }
-      : { a: true, c: true, e: true };
-  }
-
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public opposite(direction: Direction): Direction {
-    switch (direction) {
-      case 'a': {
-        return 'd';
-      }
-      case 'b': {
-        return 'e';
-      }
-      case 'c': {
-        return 'f';
-      }
-      case 'd': {
-        return 'a';
-      }
-      case 'e': {
-        return 'b';
-      }
-      case 'f': {
-        return 'c';
-      }
-      default: {
-        throw new Error(`"${direction}" is not a valid direction`);
-      }
-    }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public rightTurn(direction: Direction): Direction[] {
-    switch (direction) {
-      case 'a': {
-        return ['b', 'f', 'd'];
-      }
-      case 'b': {
-        return ['c', 'a', 'e'];
-      }
-      case 'c': {
-        return ['d', 'b', 'f'];
-      }
-      case 'd': {
-        return ['e', 'c', 'a'];
-      }
-      case 'e': {
-        return ['f', 'd', 'b'];
-      }
-      case 'f': {
-        return ['a', 'e', 'c'];
-      }
-      default: {
-        throw new Error(`"${direction}" is not a valid direction`);
-      }
-    }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public leftTurn(direction: Direction): Direction[] {
-    switch (direction) {
-      case 'a': {
-        return ['f', 'b', 'd'];
-      }
-      case 'b': {
-        return ['a', 'c', 'e'];
-      }
-      case 'c': {
-        return ['b', 'd', 'f'];
-      }
-      case 'd': {
-        return ['c', 'e', 'a'];
-      }
-      case 'e': {
-        return ['d', 'f', 'b'];
-      }
-      case 'f': {
-        return ['e', 'a', 'c'];
-      }
-      default: {
-        throw new Error(`"${direction}" is not a valid direction`);
-      }
-    }
-  }
-
-  public move(cell: Cell, direction: Direction): CellDirection | null {
-    if (this.cellKind(cell) === 1) {
-      switch (direction) {
-        case 'a': {
-          return { x: cell.x, y: cell.y - 1, direction };
-        }
-        case 'c': {
-          return { x: cell.x + 1, y: cell.y, direction };
-        }
-        case 'e': {
-          return { x: cell.x - 1, y: cell.y, direction };
-        }
-
-        // no default
-      }
-    } else {
-      switch (direction) {
-        case 'b': {
-          return { x: cell.x + 1, y: cell.y, direction };
-        }
-        case 'd': {
-          return { x: cell.x, y: cell.y + 1, direction };
-        }
-        case 'f': {
-          return { x: cell.x - 1, y: cell.y, direction };
-        }
-
-        // no default
-      }
-    }
-    return null;
-  }
-
-  public isDeadEnd(cell: Cell): boolean {
-    return (
-      this.sides(cell) === 2 &&
-      (cell.x !== this.entrance.x || cell.y !== this.entrance.y) &&
-      (cell.x !== this.exit.x || cell.y !== this.exit.y)
-    );
-  }
-
-  public edges(cell: Cell): string[] {
-    return this.neighbors(cell)
-      .filter((cd) => (this.cellKind(cd) === 1 ? ['c'] : ['b', 'd']).includes(cd.direction))
-      .map((cd) => cd.direction);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public divider(cell1: Cell, cell2: Cell): CellDirection[] {
-    if (cell1.x === cell2.x) {
-      const dividers = range(cell1.y, cell2.y).map((y) =>
-        cell1.x % 2 === 0 ?
-          y % 2 === 0 ?
-            { x: cell1.x, y, direction: 'f' }
-          : { x: cell1.x, y, direction: 'e' }
-        : y % 2 === 1 ? { x: cell1.x, y, direction: 'b' }
-        : { x: cell1.x, y, direction: 'c' },
-      );
-
-      // if (cell1.y === 0) {
-      //   dividers.unshift();
-      // }
-      // if (cell2.y === this.height) {
-      //   dividers.pop();
-      // }
-
-      return dividers;
-    } else if (cell1.y === cell2.y) {
-      const dividers = range(cell1.x, cell2.x).flatMap(
-        (x) => ((x + cell1.y) % 2 === 1 ? { x, y: cell1.y, direction: 'a' } : []), //{ x, y: cell1.y, direction: 'a' },
-      );
-
-      if ((cell1.x + cell1.y) % 2 === 0) {
-        // dividers.pop();
-      } else {
-        // dividers.shift();
-      }
-
-      return dividers;
-    }
-
-    throw new Error('Cells must be aligned vertically or horizontally');
+    return modulo(cell.x + cell.y, 2);
   }
 
   protected cellOffsets(cell: Cell): Record<string, number> {
@@ -335,7 +180,7 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y, corner }: CellCorner, color = this.wallColor): void {
+  public drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
     if (this.drawing) {
       const ctx = this.drawing;
       const { x0, x1, x2, x3, x4, x5, x6, x7, x8, y0, y1, y2, y3, y4, y5 } = this.cellOffsets({
@@ -343,7 +188,7 @@ export class TriangleMaze extends Maze {
         y,
       });
 
-      switch (corner) {
+      switch (pillar) {
         case 'ac':
         case 'bd': {
           ctx.polygon(
@@ -439,12 +284,10 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
+  public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
       const { x2, x4, x6, y2, y4 } = this.cellOffsets(cell);
       const yc = (y2 + y4) / 2;
-
-      this.drawCell(cell, cellColor);
 
       this.drawing.line({ x: x2, y: y4 }, { x: x4, y: yc }, color);
       this.drawing.line({ x: x6, y: y4 }, { x: x4, y: yc }, color);

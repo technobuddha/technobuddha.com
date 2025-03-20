@@ -1,15 +1,16 @@
-import { type Corner, type Direction, type Kind, type XY } from './maze.js';
+import { type Direction, type Kind, type Pillar, type XY } from './maze.js';
 
 export const directionMatrix: Direction[] = ['a', 'b', 'c', 'd', 'e', 'f'];
-export const cornerMatrix: Corner[] = ['ab', 'bc', 'cd', 'de', 'ef', 'fa'];
+export const pillarMatrix: Pillar[] = ['ab', 'bc', 'cd', 'de', 'ef', 'fa'];
 
-export const wallMatrix: Record<Direction, boolean> = {
-  a: true,
-  b: true,
-  c: true,
-  d: true,
-  e: true,
-  f: true,
+export const wallMatrix: Record<Kind, Record<Direction, boolean>> = {
+  0: { a: true, b: true, c: true, d: true, e: true, f: true },
+  1: { a: true, b: true, c: true, d: true, e: true, f: true },
+};
+
+export const sidesMatrix: Record<Kind, number> = {
+  0: 6,
+  1: 6,
 };
 
 export const oppositeMatrix: Record<Direction, Direction> = {
@@ -56,4 +57,9 @@ export const moveMatrix: Record<Kind, Record<Direction, XY>> = {
     e: { x: -1, y: +1 },
     f: { x: -1, y: +0 },
   },
+};
+
+export const edgesMatrix: Record<Kind, Direction[]> = {
+  0: ['b', 'c', 'd'],
+  1: ['b', 'c', 'd'],
 };

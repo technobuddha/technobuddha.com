@@ -27,6 +27,7 @@ import { type TFunction } from '#context/i18n';
 
 export type Component = {
   active: boolean;
+  loggedIn: boolean;
   name: string;
   icon: IconType;
   primary: string;
@@ -41,6 +42,7 @@ export type Component = {
 export const components: (t: TFunction) => Component[] = (t) => [
   {
     active: true,
+    loggedIn: false,
     name: 'home',
     icon: GiHouse,
     primary: t('Home'),
@@ -73,6 +75,7 @@ export const components: (t: TFunction) => Component[] = (t) => [
   },
   {
     active: true,
+    loggedIn: true,
     name: 'music',
     icon: GiMusicalNotes,
     primary: t('Music'),
@@ -80,13 +83,14 @@ export const components: (t: TFunction) => Component[] = (t) => [
     location: '/music',
     route: '/music/*',
     component: Music,
-    xxxtodo: [
+    todo: [
       t('Add a description to this component'),
       t('Increase functionality to show individual artists/albums/genres'),
     ],
   },
   {
     active: true,
+    loggedIn: false,
     name: 'maze',
     icon: GiMaze,
     primary: t('Maze'),
@@ -112,6 +116,7 @@ export const components: (t: TFunction) => Component[] = (t) => [
   },
   {
     active: true,
+    loggedIn: false,
     name: 'chaos',
     icon: GiOilySpiral,
     primary: t('Chaos'),
@@ -141,6 +146,7 @@ export const components: (t: TFunction) => Component[] = (t) => [
   },
   {
     active: true,
+    loggedIn: false,
     name: 'life',
     icon: GiConwayLifeGlider,
     primary: t('Life'),
@@ -189,6 +195,7 @@ export const components: (t: TFunction) => Component[] = (t) => [
   },
   {
     active: true,
+    loggedIn: false,
     name: 'space',
     icon: GiOrbital,
     primary: t('Space'),
@@ -208,7 +215,8 @@ export const components: (t: TFunction) => Component[] = (t) => [
     todo: [t('Add zoom and pan ability'), t('Add ability to add a new body')],
   },
   {
-    active: false,
+    active: true,
+    loggedIn: true,
     name: 'knight',
     icon: GiChessKnight,
     primary: t('Knight'),
@@ -219,6 +227,7 @@ export const components: (t: TFunction) => Component[] = (t) => [
   },
   {
     active: true,
+    loggedIn: true,
     name: 'maze-debugger',
     icon: GiMaze,
     primary: t('Maze'),
@@ -228,7 +237,8 @@ export const components: (t: TFunction) => Component[] = (t) => [
     todo: [t('Add a description to this component')],
   },
   {
-    active: false,
+    active: true,
+    loggedIn: true,
     name: 'theme',
     icon: GiPalette,
     primary: t('Theme'),
@@ -238,7 +248,8 @@ export const components: (t: TFunction) => Component[] = (t) => [
     todo: [t('Add a description to this component')],
   },
   {
-    active: false,
+    active: true,
+    loggedIn: true,
     name: 'color',
     icon: HiColorSwatch,
     primary: t('Color'),

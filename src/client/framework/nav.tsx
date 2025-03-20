@@ -8,6 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import clsx from 'clsx';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 
+import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { makeStyles } from '#context/mui';
 import { useLocation, useNavigate } from '#context/router';
@@ -81,7 +82,11 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-  const translatedComponents = React.useMemo(() => components(t), [t]);
+  const { account } = useAuthentication();
+  const translatedComponents = React.useMemo(
+    () => components(t).filter((c) => c.active && (c.loggedIn === false || account != null)),
+    [t, account],
+  );
 
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [clicked, setClicked] = React.useState(false);

@@ -14,7 +14,7 @@ export function api(app: Express, logger: Logger): void {
       .use('/authentication', authentication(logger))
       .use('/music', music(logger))
       .use((_req, res) => {
-        res.status(404).render('error/404.hbs', {
+        res.status(404).render('error/404.mustache', {
           favicon: browserSettings.favicon,
           homePage: userInterfaceSettings.homePage,
         });

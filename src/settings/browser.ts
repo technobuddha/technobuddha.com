@@ -5,5 +5,5 @@ type Settings = {
 
 export const browserSettings: Settings = {
   title: 'Technobuddha',
-  favicon: '/favicon.png',
+  favicon: 'favicon.ico',
 };

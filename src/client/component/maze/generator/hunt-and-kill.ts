@@ -1,27 +1,16 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell } from '../maze/maze.ts';
+import { type AllOrder, type Cell } from '../maze/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
-type HuntMethod =
-  | 'random'
-  | 'top-left'
-  | 'left-top'
-  | 'top-right'
-  | 'right-top'
-  | 'bottom-left'
-  | 'left-bottom'
-  | 'bottom-right'
-  | 'right-bottom';
-
 type HuntAndKillProperties = MazeGeneratorProperties & {
-  huntMethod?: HuntMethod;
+  huntMethod?: AllOrder;
 };
 
 export class HuntAndKill extends MazeGenerator {
   private readonly visited: boolean[][];
-  private readonly huntMethod: HuntMethod;
+  private readonly huntMethod: AllOrder;
 
   public constructor({ huntMethod = 'top-left', ...props }: HuntAndKillProperties) {
     super(props);
@@ -32,39 +21,6 @@ export class HuntAndKill extends MazeGenerator {
       x: Math.floor(this.random() * this.maze.width),
       y: Math.floor(this.random() * this.maze.height),
     };
-  }
-
-  public selectHunted(cells: Cell[]): Cell[] {
-    switch (this.huntMethod) {
-      case 'top-left': {
-        return cells.sort((a, b) => a.y - b.y || a.x - b.x);
-      }
-      case 'left-top': {
-        return cells.sort((a, b) => a.x - b.x || a.y - b.y);
-      }
-      case 'top-right': {
-        return cells.sort((a, b) => a.y - b.y || b.x - a.x);
-      }
-      case 'right-top': {
-        return cells.sort((a, b) => b.x - a.x || a.y - b.y);
-      }
-      case 'bottom-left': {
-        return cells.sort((a, b) => b.y - a.y || a.x - b.x);
-      }
-      case 'left-bottom': {
-        return cells.sort((a, b) => a.x - b.x || b.y - a.y);
-      }
-      case 'bottom-right': {
-        return cells.sort((a, b) => b.y - a.y || b.x - a.x);
-      }
-      case 'right-bottom': {
-        return cells.sort((a, b) => b.x - a.x || b.y - a.y);
-      }
-      case 'random':
-      default: {
-        return this.randomShuffle(cells);
-      }
-    }
   }
 
   public override step(): boolean {
@@ -81,9 +37,7 @@ export class HuntAndKill extends MazeGenerator {
     }
 
     // hunt
-    for (const target of this.selectHunted(
-      this.maze.all().filter((c) => !this.visited[c.x][c.y]),
-    )) {
+    for (const target of this.maze.all(this.huntMethod).filter((c) => !this.visited[c.x][c.y])) {
       const hunted = this.randomPick(
         this.maze.neighbors(target).filter((n) => this.visited[n.x][n.y]),
       );

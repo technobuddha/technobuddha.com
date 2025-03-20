@@ -36,17 +36,17 @@ const algorithms: Record<
   division: {
     normal: (props) => new Blob(props),
   },
-  // huntAndKill: {
-  //   random: (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
-  //   topLeft: (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
-  //   topRight: (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
-  //   bottomLeft: (props) => new HuntAndKill({ huntMethod: 'bottom-left', ...props }),
-  //   bottomRight: (props) => new HuntAndKill({ huntMethod: 'bottom-right', ...props }),
-  //   leftTop: (props) => new HuntAndKill({ huntMethod: 'left-top', ...props }),
-  //   leftBottom: (props) => new HuntAndKill({ huntMethod: 'left-bottom', ...props }),
-  //   rightTop: (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
-  //   rightBottom: (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
-  // },
+  huntAndKill: {
+    random: (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
+    topLeft: (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
+    topRight: (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
+    bottomLeft: (props) => new HuntAndKill({ huntMethod: 'bottom-left', ...props }),
+    bottomRight: (props) => new HuntAndKill({ huntMethod: 'bottom-right', ...props }),
+    leftTop: (props) => new HuntAndKill({ huntMethod: 'left-top', ...props }),
+    leftBottom: (props) => new HuntAndKill({ huntMethod: 'left-bottom', ...props }),
+    rightTop: (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
+    rightBottom: (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
+  },
   growingTree: {
     newest: (props) => new GrowingTree({ method: 'newest', ...props }),
     random: (props) => new GrowingTree({ method: 'random', ...props }),

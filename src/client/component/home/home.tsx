@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 
 import { MazeBackground } from '#component/maze/maze-background.jsx';
+import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
 import { useNavigate } from '#context/router';
@@ -18,9 +19,13 @@ export type HomeProps = {
 
 export const Home: React.FC<HomeProps> = () => {
   const theme = useTheme();
+  const { account } = useAuthentication();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const translatedComponents = React.useMemo(() => components(t).filter((c) => c.active), [t]);
+  const translatedComponents = React.useMemo(
+    () => components(t).filter((c) => c.active && (c.loggedIn === false || account != null)),
+    [t, account],
+  );
 
   const handleClick = React.useCallback(
     (component: Component) => {

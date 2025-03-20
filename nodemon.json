@@ -1,0 +1,6 @@
+{
+  "exec": "tsx src/server/server.ts",
+  "watch": ["./src/server", "./views"],
+  "ext": "ts,tsx",
+  "quiet": true
+}

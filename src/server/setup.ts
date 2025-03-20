@@ -3,16 +3,17 @@ import chalk from 'chalk';
 import cookieParser from 'cookie-parser';
 import { type Application } from 'express';
 import express from 'express';
+import mustacheExpress from 'mustache-express';
 import responseTime from 'response-time';
-// import hbs                          from 'hbs';
 import { type Logger } from 'winston';
 
 import { paths } from '#config/paths.js';
 
 export function setup(app: Application, logger: Logger): void {
   app
-    // .set('view engine', hbs)
+    .set('view engine', 'mustache')
     .set('views', paths.views)
+    .engine('mustache', mustacheExpress())
     .use(cookieParser())
     .use(express.json({ reviver }))
     .use(express.urlencoded({ extended: true }))

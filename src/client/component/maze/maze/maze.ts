@@ -71,6 +71,17 @@ export type MazeProperties = {
   mask?(this: void, maze: Maze): void;
 };
 
+export type AllOrder =
+  | 'top-left'
+  | 'left-top'
+  | 'top-right'
+  | 'right-top'
+  | 'bottom-left'
+  | 'left-bottom'
+  | 'bottom-right'
+  | 'right-bottom'
+  | 'random';
+
 export type Wall = Record<Direction, boolean | undefined>;
 
 export type DrawingSizes = {
@@ -237,10 +248,42 @@ export abstract class Maze {
   }
   //#endregion
   //#region Maze
-  public all(): Cell[] {
-    return create2DArray(this.width, this.height, (x, y) => ({ x, y }))
+
+  public all(order: AllOrder = 'top-left'): Cell[] {
+    const cells = create2DArray(this.width, this.height, (x, y) => ({ x, y }))
       .flat()
       .filter(({ x, y }) => this.inMaze({ x, y }));
+
+    switch (order) {
+      case 'top-left': {
+        return cells.sort((a, b) => a.y - b.y || a.x - b.x);
+      }
+      case 'left-top': {
+        return cells.sort((a, b) => a.x - b.x || a.y - b.y);
+      }
+      case 'top-right': {
+        return cells.sort((a, b) => a.y - b.y || b.x - a.x);
+      }
+      case 'right-top': {
+        return cells.sort((a, b) => b.x - a.x || a.y - b.y);
+      }
+      case 'bottom-left': {
+        return cells.sort((a, b) => b.y - a.y || a.x - b.x);
+      }
+      case 'left-bottom': {
+        return cells.sort((a, b) => a.x - b.x || b.y - a.y);
+      }
+      case 'bottom-right': {
+        return cells.sort((a, b) => b.y - a.y || b.x - a.x);
+      }
+      case 'right-bottom': {
+        return cells.sort((a, b) => b.x - a.x || b.y - a.y);
+      }
+      case 'random':
+      default: {
+        return this.randomShuffle(cells);
+      }
+    }
   }
 
   public deadEnds({ walls = this.walls }: Overrides = {}): Cell[] {

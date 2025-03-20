@@ -1,13 +1,15 @@
-import type { Cell } from '../maze/maze';
-import { MazeGenerator } from './maze-generator';
-import type { MazeGeneratorProperties } from './maze-generator';
-import create2DArray from '@technobuddha/library/create2DArray';
+import { create2DArray } from '@technobuddha/library';
+
+import { type Cell } from '../maze/maze.js';
+
+import { type MazeGeneratorProperties } from './maze-generator.js';
+import { MazeGenerator } from './maze-generator.js';
 
 export class RecursiveBacktracker extends MazeGenerator {
   private readonly visited: boolean[][];
   public stack: Cell[];
 
-  constructor(props: MazeGeneratorProperties) {
+  public constructor(props: MazeGeneratorProperties) {
     super(props);
 
     this.visited = create2DArray(this.maze.width, this.maze.height, false);

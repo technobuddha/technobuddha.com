@@ -1,7 +1,8 @@
-import { db } from './driver';
+import { type SnakeCase } from 'type-fest';
 
-import type { SnakeCase } from 'type-fest';
-import type { Track } from '#schema/track.ts';
+import { type Track } from '#schema/track.js';
+
+import { db } from './driver.js';
 
 type DBTrack = { [Key in keyof Track as SnakeCase<Key>]: Track[Key] };
 type Scalar<T extends unknown[]> = T[0];

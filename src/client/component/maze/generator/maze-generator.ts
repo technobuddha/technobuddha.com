@@ -1,12 +1,13 @@
+import { type Cell, type CellDirection, type Maze } from '../maze/maze.js';
+import { animate } from '../util/animate.js';
+import { type CSpecification } from '../util/specs.js';
 import { parsePoint } from '../util/specs.js';
-import type { Maze, Cell, CellDirection } from '../maze/maze';
-import type { CSpecification } from '../util/specs.js';
 
 export type MazeGeneratorProperties = {
   maze: Maze;
   start?: CSpecification;
-  random?: () => number;
-  selectNeighbor?: (neighbors: CellDirection[], random: () => number) => CellDirection;
+  random?(this: void): number;
+  selectNeighbor?(this: void, neighbors: CellDirection[], random: () => number): CellDirection;
 };
 
 export class MazeGenerator {
@@ -16,7 +17,7 @@ export class MazeGenerator {
   public start: Cell;
   public currentCell: Cell;
 
-  constructor({ maze, start, random, selectNeighbor }: MazeGeneratorProperties) {
+  public constructor({ maze, start, random, selectNeighbor }: MazeGeneratorProperties) {
     this.maze = maze;
     this.start = parsePoint(start ?? 'random', this.maze.width, this.maze.height);
     this.currentCell = this.start;
@@ -27,29 +28,26 @@ export class MazeGenerator {
       : (neighbors: CellDirection[]) => neighbors[Math.floor(neighbors.length * this.random())];
   }
 
-  public async generate(speed: number): Promise<Maze> {
-    return new Promise((resolve) => {
-      const { maze } = this;
+  public async generate(): Promise<Maze> {
+    const { maze } = this;
 
-      maze.draw();
-      if (speed) {
-        const go = () => {
-          let building = true;
-          for (let i = 0; i < speed; ++i) {
-            if (building) building = this.step();
-          }
+    maze.draw();
+    let building = true;
+    while (building) {
+      // await new Promise((resolve) => void setTimeout(resolve, 50));
+      building = await animate(() => {
+        let go = true;
+        for (let i = 0; go && i < 1; ++i) {
+          go = this.step();
+        }
+        return go;
+      });
+    }
 
-          if (building) requestAnimationFrame(go);
-          else resolve(maze);
-        };
-        go();
-      } else {
-        while (this.step());
-        resolve(maze);
-      }
-    });
+    return maze;
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   protected step(): boolean {
     return false;
   }

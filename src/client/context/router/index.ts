@@ -1,11 +1,10 @@
 export { Router } from './router.jsx';
-
-export { type Location } from 'history';
+export type { Location } from 'history';
 export {
+  Navigate,
   Route,
   Routes,
-  Navigate,
   useLocation,
-  useParams /*useRouteMatch*/,
   useNavigate,
+  useParams /*useRouteMatch*/,
 } from 'react-router';

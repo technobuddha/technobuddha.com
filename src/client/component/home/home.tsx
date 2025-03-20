@@ -1,14 +1,18 @@
 import React from 'react';
 import memoize from 'lodash/memoize';
-import { useTranslation } from '#context/i18n';
+
 import { useComponents } from '#context/component';
+import { useTranslation } from '#context/i18n';
+
 import { Spinner } from './spinner.jsx';
+
 import css from './home.module.css';
 
 export type HomeProps = {
   children?: never;
 };
 
+// eslint-disable-next-line no-bitwise
 const FADE = `fade${((Math.random() * 0xffffffff) >>> 0).toString(16)}`;
 
 export const Home: React.FC<HomeProps> = () => {
@@ -31,13 +35,15 @@ export const Home: React.FC<HomeProps> = () => {
     `;
   }, [speed, components]);
 
-  const articleStyle = React.useMemo(() => {
-    return memoize<(i: number) => React.CSSProperties>((i) => ({
-      animationName: FADE,
-      animationDuration: `${components.length * speed}s`,
-      animationDelay: `${-(components.length - i - 1) * speed}s`,
-    }));
-  }, [speed]);
+  const articleStyle = React.useMemo(
+    () =>
+      memoize<(i: number) => React.CSSProperties>((i) => ({
+        animationName: FADE,
+        animationDuration: `${components.length * speed}s`,
+        animationDelay: `${-(components.length - i - 1) * speed}s`,
+      })),
+    [speed, components.length],
+  );
 
   return (
     <div className={css.root}>
@@ -45,27 +51,29 @@ export const Home: React.FC<HomeProps> = () => {
       <div className={css.spinnerContainer}>
         <Spinner speed={speed} icons={components.map((component) => component.icon)} />
       </div>
-      {components.map((component, i) => {
-        return (
-          <div key={i} className={css.box} style={articleStyle(i)}>
-            <div className={css.primary}>{component.primary}</div>
-            {component.secondary && <div className={css.secondary}>{component.secondary}</div>}
-            {component.description && (
-              <div className={css.description}>{component.description}</div>
-            )}
-            {component.todo && (
-              <div className={css.todo}>
-                {t('To Do')}
-                <ul>
-                  {component.todo.map((td, j) => (
-                    <li key={j}>{td}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        );
-      })}
+      {components.map((component, i) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <div key={i} className={css.box} style={articleStyle(i)}>
+          <div className={css.primary}>{component.primary}</div>
+          {Boolean(component.secondary) && (
+            <div className={css.secondary}>{component.secondary}</div>
+          )}
+          {Boolean(component.description) && (
+            <div className={css.description}>{component.description}</div>
+          )}
+          {Boolean(component.todo) && (
+            <div className={css.todo}>
+              {t('To Do')}
+              <ul>
+                {(component.todo ?? []).map((td, j) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <li key={j}>{td}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 };

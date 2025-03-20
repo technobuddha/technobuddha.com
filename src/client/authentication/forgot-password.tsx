@@ -1,11 +1,11 @@
 import React from 'react';
-import { email as emailRegExp } from '@technobuddha/library/regexp';
-import { empty } from '@technobuddha/library/constants';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { TextField } from '#control/text-field';
+import Typography from '@mui/material/Typography';
+import { empty, email as emailRegExp } from '@technobuddha/library';
 import { MdEmail } from 'react-icons/md';
+
 import { useTranslation } from '#context/i18n';
+import { TextField } from '#control/text-field';
 
 export type LoginMode = 'login' | 'forgotPassword' | 'signUp';
 export type LoginState = { mode: LoginMode };
@@ -15,17 +15,22 @@ export const ForgotPassword: React.FC = () => {
   const [email, setEmail] = React.useState(empty);
   const [validEmail, setValidEmail] = React.useState(false);
 
-  const handleEmailChange = (text: string) => {
+  const handleEmailChange = React.useCallback((text: string): void => {
     setEmail(text);
-  };
-  const isEnabled = () => validEmail;
+  }, []);
 
-  const handleExecute = /*async*/ (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleValidation = React.useCallback((valid: boolean): void => {
+    setValidEmail(valid);
+  }, []);
+
+  const isEnabled = (): boolean => validEmail;
+
+  const handleExecute = React.useCallback((e: React.FormEvent<HTMLButtonElement>): void => {
     e.preventDefault();
 
     //if(!await authentication.login(username!, password!))
     //    setErrorMessage(`${t('Please enter a correct username and password')}.`)
-  };
+  }, []);
 
   return (
     <>
@@ -33,13 +38,13 @@ export const ForgotPassword: React.FC = () => {
 
       <TextField
         onChange={handleEmailChange}
-        onValidation={setValidEmail}
+        onValidation={handleValidation}
         label={t('Email address')}
         value={email}
         startAdornment={<MdEmail />}
         name="username"
         validation={emailRegExp}
-        required={true}
+        required
       />
 
       <Button
@@ -48,7 +53,7 @@ export const ForgotPassword: React.FC = () => {
         type="submit"
         color="primary"
         disabled={!isEnabled()}
-        fullWidth={true}
+        fullWidth
       >
         {t('Reset Password')}
       </Button>

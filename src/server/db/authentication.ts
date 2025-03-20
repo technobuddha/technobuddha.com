@@ -1,8 +1,8 @@
-import { db } from './driver.js';
+import { type Account, type AccountCreate } from '#schema/account';
+import { type Session } from '#schema/session.js';
 import { authenticationSettings } from '#settings/authentication';
 
-import type { Account, AccountCreate } from '#schema/account';
-import type { Session } from '#schema/session.js';
+import { db } from './driver.js';
 
 export async function getAccountById(id: number): Promise<Account | null> {
   return db.oneOrNone<Account>(
@@ -79,18 +79,18 @@ export async function getSession(id: string): Promise<Session | null> {
   );
 }
 
-export async function createSession(account_id: number): Promise<Session> {
+export async function createSession(accountId: number): Promise<Session> {
   return db.one<Session>(
     `
         INSERT INTO session(account_id, created, expires)
         VALUES      ($(account_id), NOW(), (NOW() + $(duration)::interval))
         RETURNING   id, account_id, created
         `,
-    { account_id, duration: `${authenticationSettings.session.duration}ms` },
+    { account_id: accountId, duration: `${authenticationSettings.session.duration}ms` },
   );
 }
 
-export async function renewSession(session_id: string): Promise<Session> {
+export async function renewSession(sessionId: string): Promise<Session> {
   return db.one<Session>(
     `
         UPDATE      session
@@ -98,7 +98,7 @@ export async function renewSession(session_id: string): Promise<Session> {
         WHERE       id = $(session_id)
         RETURNING   id, account_id, created, expires
         `,
-    { session_id, duration: `${authenticationSettings.session.duration}ms` },
+    { session_id: sessionId, duration: `${authenticationSettings.session.duration}ms` },
   );
 }
 
@@ -111,11 +111,11 @@ export async function deleteSession(id: string): Promise<null> {
   );
 }
 
-export async function deleteConcurrentSessions(account_id: number): Promise<null> {
+export async function deleteConcurrentSessions(accountId: number): Promise<null> {
   return db.none(
     `
         DELETE FROM session WHERE account_id = $(account_id)
         `,
-    { account_id },
+    { account_id: accountId },
   );
 }

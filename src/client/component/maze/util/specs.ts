@@ -1,4 +1,4 @@
-import type { Cell, CellDirection } from '../maze/maze';
+import { type Cell, type CellDirection } from '../maze/maze.js';
 
 type Location =
   | 'top left'
@@ -75,10 +75,18 @@ export function parsePoint(p: CSpecification, width: number, height: number): Ce
     }
   }
 
-  if (x < 0) x = 0;
-  if (x >= width) x = width - 1;
-  if (y < 0) y = 0;
-  if (y >= height) y = height - 1;
+  if (x < 0) {
+    x = 0;
+  }
+  if (x >= width) {
+    x = width - 1;
+  }
+  if (y < 0) {
+    y = 0;
+  }
+  if (y >= height) {
+    y = height - 1;
+  }
 
   return { x, y };
 }
@@ -90,7 +98,9 @@ export function parsePointDirection(
 ): Cell | CellDirection {
   const { x, y } = parsePoint(pd, width, height);
 
-  if (typeof pd !== 'string' && 'direction' in pd) return { x, y, direction: pd.direction };
+  if (typeof pd !== 'string' && 'direction' in pd) {
+    return { x, y, direction: pd.direction };
+  }
 
   return { x, y };
 }

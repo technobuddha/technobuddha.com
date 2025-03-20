@@ -1,4 +1,4 @@
-import { ticksPerWeek, ticksPerHour } from '@technobuddha/library/constants';
+import { ticksPerHour, ticksPerWeek } from '@technobuddha/library';
 
 type Settings = {
   login: boolean;

@@ -11,11 +11,18 @@ import { app } from '@technobuddha/project';
 const config = [
   // src/tsconfig.json
   app.lint({
-    files: ['src/*.tsx'],
+    files: ['src/**/*.tsx'],
     ignores: [],
     environment: 'browser',
     tsConfig: 'src/tsconfig.json',
     react: true,
+  }),
+  // src/tsconfig.json
+  app.lint({
+    files: ['src/**/*.ts'],
+    ignores: [],
+    environment: 'browser',
+    tsConfig: 'src/tsconfig.json',
   }),
   // tsconfig.json
   app.lint({ files: ['*.config.js'], ignores: [], environment: 'node' }),

@@ -4,74 +4,99 @@ import InputAdornment from '@mui/material/InputAdornment';
 import MuiTextField from '@mui/material/TextField';
 
 type TextFieldProps = {
-  className?: string;
-  id?: string;
-  label?: string;
-  helperText?: string;
-  autoFocus?: boolean;
-  value?: string | null;
-  startAdornment?: React.ReactNode;
-  endAdornment?: React.ReactNode;
-  name?: string;
-  disabled?: boolean;
-  error?: boolean;
-  validation?: RegExp;
-  required?: boolean;
-  type?: 'text' | 'password';
-  onChange?: (text: string) => void;
-  onValidation?: (valid: boolean) => void;
+  readonly className?: string;
+  readonly id?: string;
+  readonly label?: string;
+  readonly helperText?: string;
+  readonly autoFocus?: boolean;
+  readonly value?: string | null;
+  readonly startAdornment?: React.ReactNode;
+  readonly endAdornment?: React.ReactNode;
+  readonly name?: string;
+  readonly disabled?: boolean;
+  readonly error?: boolean;
+  readonly validation?: RegExp;
+  readonly required?: boolean;
+  readonly type?: 'text' | 'password';
+  onChange?(this: void, text: string): void;
+  onValidation?(this: void, valid: boolean): void;
 };
 
-export const TextField: React.FC<TextFieldProps> = (props: TextFieldProps) => {
-  const [text, setText] = React.useState<string>(props.value ?? '');
+export const TextField: React.FC<TextFieldProps> = ({
+  className,
+  id,
+  label,
+  helperText,
+  autoFocus,
+  value,
+  startAdornment,
+  endAdornment,
+  name,
+  disabled,
+  error,
+  validation,
+  required,
+  type,
+  onChange,
+  onValidation,
+}) => {
+  const [text, setText] = React.useState<string>(value ?? '');
   const [valid, setValid] = React.useState<boolean>(true);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newText = event.target.value;
-    let isValid = true;
+  const handleChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>): void => {
+      const newText = event.target.value;
+      let isValid = true;
 
-    if (props.required && newText.trim().length === 0) isValid = false;
-    else if (props.validation) isValid = props.validation.test(newText);
+      if (required && newText.trim().length === 0) {
+        isValid = false;
+      } else if (validation) {
+        isValid = validation.test(newText);
+      }
 
-    setValid(isValid);
-    props.onValidation?.(isValid);
+      setValid(isValid);
+      onValidation?.(isValid);
 
-    setText(newText);
-    props.onChange?.(newText);
+      setText(newText);
+      onChange?.(newText);
+    },
+    [onChange, onValidation, required, validation],
+  );
+
+  const slotProps = {
+    input: {
+      startAdornment: (
+        <InputAdornment position="start">
+          {startAdornment ?? <Box width={52} height={52} />}
+        </InputAdornment>
+      ),
+      endAdornment: (
+        <InputAdornment position="end">
+          {endAdornment ?? <Box width={52} height={52} />}
+        </InputAdornment>
+      ),
+    },
   };
 
   return (
     <MuiTextField
-      className={props.className}
-      id={props.id}
+      className={className}
+      id={id}
       onChange={handleChange}
       variant="outlined"
-      type={props.type ?? 'text'}
-      label={props.label}
+      type={type ?? 'text'}
+      label={label}
       value={text}
-      autoFocus={props.autoFocus}
-      name={props.name}
-      disabled={props.disabled}
-      error={props.error || !valid || (props.required && text.trim() === '')}
-      fullWidth={true}
-      helperText={props.helperText}
-      required={props.required}
+      autoFocus={autoFocus}
+      name={name}
+      disabled={disabled}
+      error={(error ?? !valid) || (required && text.trim() === '')}
+      fullWidth
+      helperText={helperText}
+      required={required}
       margin="dense"
       color="primary"
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            {props.startAdornment ?? <Box width={52} height={52} />}
-          </InputAdornment>
-        ),
-        endAdornment: (
-          <InputAdornment position="end">
-            {props.endAdornment ?? <Box width={52} height={52} />}
-          </InputAdornment>
-        ),
-      }}
+      slotProps={slotProps}
     />
   );
 };
-
-export default TextField;

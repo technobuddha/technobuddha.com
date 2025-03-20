@@ -1,10 +1,10 @@
 import React from 'react';
-import { BrowserRouter /*, useNavigate */ } from 'react-router';
+import { BrowserRouter } from 'react-router';
 
 type RouterProps = {
-  children?: React.ReactNode;
+  readonly children?: React.ReactNode;
 };
 
-export const Router: React.FC<RouterProps> = ({ children }) => {
-  return <BrowserRouter>{children}</BrowserRouter>;
-};
+export const Router: React.FC<RouterProps> = ({ children }) => (
+  <BrowserRouter>{children}</BrowserRouter>
+);

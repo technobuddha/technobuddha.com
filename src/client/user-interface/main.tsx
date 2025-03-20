@@ -1,13 +1,15 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import { Route, Routes } from '#context/router';
-import { useComponents } from '#context/component';
-import css from './main.module.css';
 import clsx from 'clsx';
 
+import { useComponents } from '#context/component';
+import { Route, Routes } from '#context/router';
+
+import css from './main.module.css';
+
 type MainProps = {
-  className?: string;
-  children?: never;
+  readonly className?: string;
+  readonly children?: never;
 };
 
 export const Main: React.FC<MainProps> = ({ className }) => {
@@ -18,6 +20,7 @@ export const Main: React.FC<MainProps> = ({ className }) => {
       <Routes>
         {components.map((component, i) => {
           const Component = component.component;
+          // eslint-disable-next-line react/no-array-index-key
           return <Route key={i} path={component.location} Component={Component} />;
         })}
         <Route path="*" element={<div>Catch-all route</div>} />

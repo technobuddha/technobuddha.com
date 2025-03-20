@@ -1,9 +1,9 @@
-import create2DArray from '@technobuddha/library/create2DArray';
-import randomShuffle from '@technobuddha/library/randomShuffle';
-import type { Cell, CellDirection } from '../maze/maze';
+import { create2DArray, randomShuffle } from '@technobuddha/library';
 
+import { type Cell, type CellDirection } from '../maze/maze.js';
+
+import { type MazeGeneratorProperties } from './maze-generator.js';
 import { MazeGenerator } from './maze-generator.js';
-import type { MazeGeneratorProperties } from './maze-generator.js';
 
 type SubRegion = 'a' | 'b' | 'm';
 
@@ -12,25 +12,27 @@ class Region {
   private readonly height: number;
   public subregions: (SubRegion | null)[][];
 
-  constructor({ width, height }: { width: number; height: number }) {
+  public constructor({ width, height }: { width: number; height: number }) {
     this.width = width;
     this.height = height;
     this.subregions = create2DArray(width, height, null);
   }
 
-  public cells(subregion = 'm') {
+  public cells(subregion = 'm'): Cell[] {
     const cs: Cell[] = [];
 
     for (let x = 0; x < this.width; ++x) {
       for (let y = 0; y < this.height; ++y) {
-        if (this.subregions[x][y] === subregion) cs.push({ x, y });
+        if (this.subregions[x][y] === subregion) {
+          cs.push({ x, y });
+        }
       }
     }
 
     return cs;
   }
 
-  public split(threshold: number) {
+  public split(threshold: number): Region[] {
     const rs: Region[] = [];
 
     const a = this.cells('a');
@@ -38,33 +40,37 @@ class Region {
 
     if (a.length >= threshold) {
       const r = new Region({ width: this.width, height: this.height });
-      for (const c of a) r.addCell(c);
+      for (const c of a) {
+        r.addCell(c);
+      }
       rs.push(r);
     }
 
     if (b.length >= threshold) {
       const r = new Region({ width: this.width, height: this.height });
-      for (const c of b) r.addCell(c);
+      for (const c of b) {
+        r.addCell(c);
+      }
       rs.push(r);
     }
 
     return rs;
   }
 
-  public addCell(cell: Cell) {
+  public addCell(cell: Cell): void {
     this.subregions[cell.x][cell.y] = 'm';
   }
 }
 
 type BlobProperties = MazeGeneratorProperties & {
-  threshold: number;
+  threshold?: number;
 };
 
 export class Blob extends MazeGenerator {
   private readonly threshold: number;
   private readonly walls: CellDirection[] = [];
 
-  constructor({ threshold = 3, ...props }: BlobProperties) {
+  public constructor({ threshold = 3, ...props }: BlobProperties) {
     super({ ...props });
 
     this.threshold = threshold;
@@ -74,7 +80,9 @@ export class Blob extends MazeGenerator {
 
     const allRegion = new Region({ width: this.maze.width, height: this.maze.height });
     for (let x = 0; x < this.maze.width; ++x) {
-      for (let y = 0; y < this.maze.height; ++y) allRegion.addCell({ x, y });
+      for (let y = 0; y < this.maze.height; ++y) {
+        allRegion.addCell({ x, y });
+      }
     }
 
     const stack = [allRegion];
@@ -112,8 +120,9 @@ export class Blob extends MazeGenerator {
 
       boundary.splice(Math.floor(Math.random() * boundary.length), 1);
 
-      for (const cd of boundary)
+      for (const cd of boundary) {
         this.walls.push({ ...cd, direction: this.maze.opposite(cd.direction) });
+      }
 
       stack.push(...region.split(this.threshold));
     }

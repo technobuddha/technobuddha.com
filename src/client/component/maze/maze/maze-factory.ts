@@ -1,10 +1,12 @@
-import type { Maze, MazeProperties } from './maze';
-import type { MazeGenerator, MazeGeneratorProperties } from '../generator/maze-generator';
+import { type Drawing } from '../drawing/drawing.js';
+import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/maze-generator.js';
+
+import { type Maze, type MazeProperties } from './maze.js';
 
 export type MazeSettings = Partial<MazeProperties> & Partial<MazeGeneratorProperties>;
 
 export class MazeFactory {
-  public context: CanvasRenderingContext2D | undefined;
+  public context: Drawing | undefined;
   public width: MazeSettings['width'];
   public height: MazeSettings['height'];
   public cellSize: MazeSettings['cellSize'];
@@ -17,7 +19,7 @@ export class MazeFactory {
   public random: MazeSettings['random'];
   public selectNeighbor: MazeSettings['selectNeighbor'];
 
-  constructor({
+  public constructor({
     context,
     random = Math.random,
     selectNeighbor,
@@ -46,27 +48,32 @@ export class MazeFactory {
   }
 
   public async create(
-    mazeMaker: (props: MazeProperties) => Maze,
-    Generator: typeof MazeGenerator,
-    speed = 0,
+    mazeMaker: (props: MazeSettings) => Maze,
+    generator?: (props: MazeGeneratorProperties) => MazeGenerator,
   ): Promise<Maze> {
-    const mg = new Generator({
-      maze: mazeMaker({
-        context: this.context,
-        width: this.width,
-        height: this.height,
-        cellSize: this.cellSize,
-        cellColor: this.cellColor,
-        wallSize: this.wallSize,
-        wallColor: this.wallColor,
-        entrance: this.entrance,
-        exit: this.exit,
-      }),
-      start: this.start,
-      selectNeighbor: this.selectNeighbor,
-      random: this.random,
+    const maze = mazeMaker({
+      context: this.context,
+      width: this.width,
+      height: this.height,
+      cellSize: this.cellSize,
+      cellColor: this.cellColor,
+      wallSize: this.wallSize,
+      wallColor: this.wallColor,
+      entrance: this.entrance,
+      exit: this.exit,
     });
 
-    return mg.generate(speed);
+    if (generator) {
+      const mg = generator({
+        maze,
+        start: this.start,
+        selectNeighbor: this.selectNeighbor,
+        random: this.random,
+      });
+      return mg.generate();
+    }
+
+    maze.draw();
+    return maze;
   }
 }

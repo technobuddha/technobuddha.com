@@ -1,101 +1,141 @@
 import range from 'lodash/range';
-import { Maze } from './maze';
-import type { Cell, CellDirection, CellCorner, Direction, MazeProperties, Wall } from './maze';
+
+import {
+  type Cell,
+  type CellCorner,
+  type CellDirection,
+  type Direction,
+  type MazeProperties,
+  type Overrides,
+  type Wall,
+} from './maze.js';
+import { Maze } from './maze.js';
 
 export class SquareMaze extends Maze {
-  constructor({ cellSize = 67, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
     super({ cellSize, wallSize, ...props }, ['N', 'E', 'W', 'S'], ['NE', 'NW', 'SE', 'SW']);
   }
 
-  protected drawingWidth(): [border: number, cell: number] {
-    return [this.wallSize * 2, this.cellSize];
+  protected drawingWidth(): [cell: number, padding: number] {
+    return [this.cellSize, 0];
   }
 
-  protected drawingHeight(): [border: number, cell: number] {
-    return [this.wallSize * 2, this.cellSize];
+  protected drawingHeight(): [cell: number, padding: number] {
+    return [this.cellSize, 0];
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   protected initialWalls(): Wall {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     return { N: true, E: true, W: true, S: true };
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public opposite(direction: Direction): Direction {
     switch (direction) {
-      case 'N':
+      case 'N': {
         return 'S';
-      case 'E':
+      }
+      case 'E': {
         return 'W';
-      case 'W':
+      }
+      case 'W': {
         return 'E';
-      case 'S':
+      }
+      case 'S': {
         return 'N';
-      default:
+      }
+      default: {
         throw new Error(`"${direction}" is not a valid direction`);
+      }
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public rightTurn(direction: Direction): Direction[] {
     switch (direction) {
-      case 'N':
+      case 'N': {
         return ['E', 'N', 'W', 'S'];
-      case 'E':
+      }
+      case 'E': {
         return ['S', 'E', 'N', 'W'];
-      case 'W':
+      }
+      case 'W': {
         return ['N', 'W', 'S', 'E'];
-      case 'S':
+      }
+      case 'S': {
         return ['W', 'S', 'E', 'N'];
-      default:
+      }
+      default: {
         throw new Error(`"${direction}" is not a valid direction`);
+      }
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public leftTurn(direction: Direction): Direction[] {
     switch (direction) {
-      case 'N':
+      case 'N': {
         return ['W', 'N', 'E', 'S'];
-      case 'E':
+      }
+      case 'E': {
         return ['N', 'E', 'S', 'W'];
-      case 'W':
+      }
+      case 'W': {
         return ['S', 'W', 'N', 'E'];
-      case 'S':
+      }
+      case 'S': {
         return ['E', 'S', 'W', 'N'];
-      default:
+      }
+      default: {
         throw new Error(`"${direction}" is not a valid direction`);
+      }
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public move(cell: Cell, direction: Direction): CellDirection {
     switch (direction) {
-      case 'N':
+      case 'N': {
         return { x: cell.x, y: cell.y - 1, direction };
-      case 'E':
+      }
+      case 'E': {
         return { x: cell.x + 1, y: cell.y, direction };
-      case 'W':
+      }
+      case 'W': {
         return { x: cell.x - 1, y: cell.y, direction };
-      case 'S':
+      }
+      case 'S': {
         return { x: cell.x, y: cell.y + 1, direction };
-      default:
+      }
+      default: {
         throw new Error(`"${direction}" is not a valid direction`);
+      }
     }
   }
 
-  public isDeadEnd(cell: Cell): boolean {
+  public isDeadEnd(
+    cell: Cell,
+    { directions = this.directions, walls = this.walls }: Overrides = {},
+  ): boolean {
     return (
-      this.sides(cell) === 3 &&
+      this.sides(cell, { directions, walls }) === 3 &&
       (cell.x !== this.entrance.x || cell.y !== this.entrance.y) &&
       (cell.x !== this.exit.x || cell.y !== this.exit.y)
     );
   }
 
-  public edges(cell: Cell): string[] {
-    return this.neighbors(cell, { dirs: ['S', 'W'] }).map((cd) => cd.direction);
+  public edges(cell: Cell, { walls = this.walls }: Overrides = {}): string[] {
+    return this.neighbors(cell, { directions: ['S', 'W'], walls }).map((cd) => cd.direction);
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public divider(cell1: Cell, cell2: Cell): CellDirection[] {
-    if (cell1.x === cell2.x)
+    if (cell1.x === cell2.x) {
       return range(cell1.y, cell2.y).map((y) => ({ x: cell1.x, y, direction: 'E' }));
-    else if (cell1.y === cell2.y)
+    } else if (cell1.y === cell2.y) {
       return range(cell1.x, cell2.x).map((x) => ({ x, y: cell1.y, direction: 'S' }));
+    }
 
     throw new Error('Cells must be aligned vertically or horizontally');
   }
@@ -126,13 +166,15 @@ export class SquareMaze extends Maze {
     if (this.context) {
       const { x0, x5, y0, y5 } = this.offsets(cell);
 
-      this.context.fillStyle = color;
-      this.context.beginPath();
-      this.context.moveTo(x0, y0);
-      this.context.lineTo(x5, y0);
-      this.context.lineTo(x5, y5);
-      this.context.lineTo(x0, y5);
-      this.context.fill();
+      this.context.polygon(
+        [
+          { x: x0, y: y0 },
+          { x: x5, y: y0 },
+          { x: x5, y: y5 },
+          { x: x0, y: y5 },
+        ],
+        color,
+      );
     }
   }
 
@@ -140,20 +182,25 @@ export class SquareMaze extends Maze {
     if (this.context) {
       const { x0, x1, x4, x5, y0, y1, y4, y5 } = this.offsets(cd);
 
-      this.context.fillStyle = color;
       switch (cd.direction) {
-        case 'N':
-          this.context.fillRect(x1, y0, x4 - x1, y1 - y0);
+        case 'N': {
+          this.context.rect({ x: x1, y: y0 }, { x: x4, y: y0 }, color);
           break;
-        case 'S':
-          this.context.fillRect(x1, y4, x4 - x1, y5 - y4);
+        }
+        case 'S': {
+          this.context.rect({ x: x1, y: y4 }, { x: x4, y: y5 }, color);
           break;
-        case 'E':
-          this.context.fillRect(x4, y1, x5 - x4, y4 - y1);
+        }
+        case 'E': {
+          this.context.rect({ x: x4, y: y1 }, { x: x5, y: y4 }, color);
           break;
-        case 'W':
-          this.context.fillRect(x0, y1, x1 - x0, y4 - y1);
+        }
+        case 'W': {
+          this.context.rect({ x: x0, y: y1 }, { x: x1, y: y4 }, color);
           break;
+        }
+
+        // no default
       }
     }
   }
@@ -162,71 +209,86 @@ export class SquareMaze extends Maze {
     if (this.context) {
       const { x0, x1, x4, x5, y0, y1, y4, y5 } = this.offsets({ x, y });
 
-      this.context.fillStyle = color;
-      if (corner === 'NW') this.context.fillRect(x0, y0, x1 - x0, y1 - y0);
-      if (corner === 'NE') this.context.fillRect(x4, y0, x5 - x4, y1 - y0);
-      if (corner === 'SW') this.context.fillRect(x0, y4, x1 - x0, y5 - y4);
-      if (corner === 'SE') this.context.fillRect(x4, y4, x5 - x4, y5 - y4);
+      if (corner === 'NW') {
+        this.context.rect({ x: x0, y: y0 }, { x: x1, y: y1 }, color);
+      }
+      if (corner === 'NE') {
+        this.context.rect({ x: x4, y: y0 }, { x: x5, y: y1 }, color);
+      }
+      if (corner === 'SW') {
+        this.context.rect({ x: x0, y: y4 }, { x: x1, y: y5 }, color);
+      }
+      if (corner === 'SE') {
+        this.context.rect({ x: x4, y: y4 }, { x: x5, y: y5 }, color);
+      }
     }
   }
 
   public drawPath(cell: CellDirection, color = 'red'): void {
     if (this.context) {
-      const { x1, x2, xc, x3, x4, y1, y2, yc, y3, y4 } = this.offsets(cell);
+      const { x2, xc, x3, y2, yc, y3 } = this.offsets(cell);
 
-      this.context.fillStyle = color;
-      this.context.clearRect(x1, y1, x4 - x1, y4 - y1);
+      this.drawCell(cell);
 
       switch (cell.direction) {
-        case 'N':
-          this.context.beginPath();
-          this.context.moveTo(x2, y3);
-          this.context.lineTo(xc, y2);
-          this.context.lineTo(x3, y3);
-          this.context.closePath();
-          this.context.fill();
+        case 'N': {
+          this.context.polygon(
+            [
+              { x: x2, y: y3 },
+              { x: xc, y: y2 },
+              { x: x3, y: y3 },
+            ],
+            color,
+          );
           break;
-        case 'S':
-          this.context.beginPath();
-          this.context.moveTo(x2, y2);
-          this.context.lineTo(xc, y3);
-          this.context.lineTo(x3, y2);
-          this.context.closePath();
-          this.context.fill();
+        }
+        case 'S': {
+          this.context.polygon(
+            [
+              { x: x2, y: y2 },
+              { x: xc, y: y3 },
+              { x: x3, y: y2 },
+            ],
+            color,
+          );
           break;
-        case 'E':
-          this.context.beginPath();
-          this.context.moveTo(x2, y2);
-          this.context.lineTo(x3, yc);
-          this.context.lineTo(x2, y3);
-          this.context.closePath();
-          this.context.fill();
+        }
+        case 'E': {
+          this.context.polygon(
+            [
+              { x: x2, y: y2 },
+              { x: x3, y: yc },
+              { x: x2, y: y3 },
+            ],
+            color,
+          );
           break;
-        case 'W':
-          this.context.beginPath();
-          this.context.moveTo(x3, y2);
-          this.context.lineTo(x2, yc);
-          this.context.lineTo(x3, y3);
-          this.context.closePath();
-          this.context.fill();
+        }
+        case 'W': {
+          this.context.polygon(
+            [
+              { x: x3, y: y2 },
+              { x: x2, y: yc },
+              { x: x3, y: y3 },
+            ],
+            color,
+          );
           break;
+        }
+
+        // no default
       }
     }
   }
 
-  public drawX(cell: Cell, color = 'black', cellColor = this.cellColor): void {
+  public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
     if (this.context) {
       const { x1, x4, y1, y4 } = this.offsets(cell);
 
       this.drawCell(cell, cellColor);
 
-      this.context.strokeStyle = color;
-      this.context.beginPath();
-      this.context.moveTo(x1, y1);
-      this.context.lineTo(x4, y4);
-      this.context.moveTo(x1, y4);
-      this.context.lineTo(x4, y1);
-      this.context.stroke();
+      this.context.line({ x: x1, y: y1 }, { x: x4, y: y4 }, color);
+      this.context.line({ x: x1, y: y4 }, { x: x4, y: y1 }, color);
     }
   }
 
@@ -234,12 +296,18 @@ export class SquareMaze extends Maze {
     let str = '';
 
     for (let y = 0; y < this.height; ++y) {
-      for (let x = 0; x < this.width; ++x) str += this.walls[x][y].N ? '+==' : '+  ';
+      for (let x = 0; x < this.width; ++x) {
+        str += this.walls[x][y].N ? '+==' : '+  ';
+      }
       str += '+\n';
-      for (let x = 0; x < this.width; ++x) str += this.walls[x][y].W ? '|  ' : '   ';
+      for (let x = 0; x < this.width; ++x) {
+        str += this.walls[x][y].W ? '|  ' : '   ';
+      }
       str += this.walls[this.width - 1][y].E ? '|\n' : ' \n';
     }
-    for (let x = 0; x < this.width; ++x) str += this.walls[x][this.height - 1].S ? '+==' : '+  ';
+    for (let x = 0; x < this.width; ++x) {
+      str += this.walls[x][this.height - 1].S ? '+==' : '+  ';
+    }
     str += '+\n';
 
     return str;

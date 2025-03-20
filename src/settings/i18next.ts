@@ -1,4 +1,4 @@
-import type { InitOptions } from 'i18next';
+import { type InitOptions } from 'i18next';
 
 const isDevelopment = import.meta.env.NODE_ENV !== 'production';
 

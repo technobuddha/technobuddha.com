@@ -1,7 +1,9 @@
-import create2DArray from '@technobuddha/library/create2DArray';
-import type { Cell } from '../maze/maze';
+import { create2DArray } from '@technobuddha/library';
+
+import { type Cell } from '../maze/maze.js';
+
+import { type MazeGeneratorProperties } from './maze-generator.js';
 import { MazeGenerator } from './maze-generator.js';
-import type { MazeGeneratorProperties } from './maze-generator.js';
 
 type SelectionMethod = 'newest' | 'oldest' | 'middle' | 'random';
 
@@ -9,7 +11,7 @@ export class GrowingTree extends MazeGenerator {
   private readonly visited: boolean[][];
   private readonly list: Cell[];
 
-  constructor(props: MazeGeneratorProperties) {
+  public constructor(props: MazeGeneratorProperties) {
     super(props);
 
     this.visited = create2DArray(this.maze.width, this.maze.height, false);
@@ -17,7 +19,8 @@ export class GrowingTree extends MazeGenerator {
     this.visited[this.start.x][this.start.y] = true;
   }
 
-  private selectMethod(cellSelectionMethod: SelectionMethod = 'random') {
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  private selectMethod(cellSelectionMethod: SelectionMethod = 'random'): SelectionMethod {
     //if(typeof cellSelectionMethod === 'string')
     return cellSelectionMethod;
 
@@ -45,32 +48,40 @@ export class GrowingTree extends MazeGenerator {
 
   public selectCell(selectionMethod: SelectionMethod): number {
     switch (selectionMethod) {
-      case 'newest':
+      case 'newest': {
         return this.list.length - 1;
-      case 'oldest':
+      }
+      case 'oldest': {
         return 0;
-      case 'middle':
+      }
+      case 'middle': {
         return Math.floor(this.list.length / 2);
-      case 'random':
+      }
+      case 'random': {
         return Math.floor(this.random() * this.list.length);
+      }
+
+      // no default
     }
   }
 
   public override step(): boolean {
-    const index = this.selectCell(this.selectMethod());
-    this.currentCell = this.list[index];
+    for (let i = 0; i < 10 && this.list.length > 0; ++i) {
+      const index = this.selectCell(this.selectMethod());
+      this.currentCell = this.list[index];
 
-    const unvisitedNeighbors = this.maze
-      .neighbors(this.currentCell)
-      .filter((cell) => !this.visited[cell.x][cell.y]);
-    if (unvisitedNeighbors.length > 0) {
-      const cell = this.selectNeighbor(unvisitedNeighbors);
-      this.maze.removeWall(this.currentCell, cell.direction);
-      this.visited[cell.x][cell.y] = true;
+      const unvisitedNeighbors = this.maze
+        .neighbors(this.currentCell)
+        .filter((cell) => !this.visited[cell.x][cell.y]);
+      if (unvisitedNeighbors.length > 0) {
+        const cell = this.selectNeighbor(unvisitedNeighbors);
+        this.maze.removeWall(this.currentCell, cell.direction);
+        this.visited[cell.x][cell.y] = true;
 
-      this.list.push(cell);
-    } else {
-      this.list.splice(index, 1);
+        this.list.push(cell);
+      } else {
+        this.list.splice(index, 1);
+      }
     }
 
     return this.list.length > 0;

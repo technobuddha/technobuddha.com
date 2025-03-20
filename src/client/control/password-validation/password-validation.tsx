@@ -1,21 +1,21 @@
 import React from 'react';
-import escapeRegExp from 'lodash/escapeRegExp';
-import zip from 'lodash/zip';
-import { empty, nbsp } from '@technobuddha/library/constants';
-import { useAPI } from '#context/api';
-import { useTranslation } from '#context/i18n';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { PasswordField } from '#control/password-field';
-import { FaThumbsDown } from 'react-icons/fa';
-import { FaThumbsUp } from 'react-icons/fa';
+import { empty, nbsp } from '@technobuddha/library';
+import escapeRegExp from 'lodash/escapeRegExp';
+import zip from 'lodash/zip';
+import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
+
+import { useAPI } from '#context/api';
+import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
+import { PasswordField } from '#control/password-field';
 
 import css from './password-validation.module.css';
 
 type ValidationRule = {
   text: string;
-  test: (args: ValidationArgs) => boolean;
+  test(args: ValidationArgs): boolean;
 };
 
 type ValidationArgs = {
@@ -29,17 +29,17 @@ type ValidationArgs = {
 };
 
 type PasswordValidationProps = {
-  minLength?: number;
-  maxLength?: number;
-  strength?: 1 | 2 | 3 | 4;
-  uppercase?: number;
-  lowercase?: number;
-  digit?: number;
-  special?: number;
-  categories?: 2 | 3 | 4;
-  showInvalidOnly?: boolean;
-  userInputs?: string[];
-  onChange?: (password: string, valid: boolean) => void;
+  readonly minLength?: number;
+  readonly maxLength?: number;
+  readonly strength?: 1 | 2 | 3 | 4;
+  readonly uppercase?: number;
+  readonly lowercase?: number;
+  readonly digit?: number;
+  readonly special?: number;
+  readonly categories?: 2 | 3 | 4;
+  readonly showInvalidOnly?: boolean;
+  readonly userInputs?: string[];
+  onChange?(this: void, password: string, valid: boolean): void;
 };
 
 export const PasswordValidation: React.FC<PasswordValidationProps> = ({
@@ -93,15 +93,15 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
     }
 
     if (minLength !== undefined) {
-      if (maxLength !== undefined) {
-        rules.push({
-          text: `${t('Password must be between')} ${minLength} ${t('and')} ${maxLength} ${t('character', { count: maxLength })} ${t('long')}.`,
-          test: ({ password }) => password.length >= minLength && password.length <= maxLength,
-        });
-      } else {
+      if (maxLength === undefined) {
         rules.push({
           text: `${t('Password must be at least')} ${minLength} ${t('character', { count: minLength })} ${t('long')}.`,
           test: ({ password }) => password.length >= minLength,
+        });
+      } else {
+        rules.push({
+          text: `${t('Password must be between')} ${minLength} ${t('and')} ${maxLength} ${t('character', { count: maxLength })} ${t('long')}.`,
+          test: ({ password }) => password.length >= minLength && password.length <= maxLength,
         });
       }
     } else if (maxLength !== undefined) {
@@ -147,14 +147,26 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
     }
 
     return rules;
-  }, [strength, minLength, maxLength, uppercase, lowercase, digit, special, categories]);
+  }, [
+    strength,
+    minLength,
+    maxLength,
+    uppercase,
+    lowercase,
+    digit,
+    special,
+    categories,
+    scoreWords,
+    t,
+  ]);
 
-  const handlePasswordChange = (text: string) => {
+  const handlePasswordChange = React.useCallback((text: string): void => {
     setMyPassword(text);
-  };
-  const handlePasswordConfirmationChange = (text: string) => {
+  }, []);
+
+  const handlePasswordConfirmationChange = React.useCallback((text: string): void => {
     setPasswordConfirmation(text);
-  };
+  }, []);
 
   React.useEffect(() => {
     authentication
@@ -175,14 +187,25 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
         setPasswordScore(score);
         setPasswordWarning(warning);
 
-        onChange?.(myPassword, validPasswordConfirmation && test.every((x) => x));
+        onChange?.(myPassword, validPasswordConfirmation && test.every(Boolean));
       })
-      .catch((err: any) => {
+      .catch((err) => {
         setPass([]);
         setPasswordScore(0);
         setPasswordWarning(err.toString());
       });
-  }, [myPassword, validPasswordConfirmation, userInputs, onChange]);
+  }, [
+    myPassword,
+    validPasswordConfirmation,
+    userInputs,
+    onChange,
+    authentication,
+    validationRules,
+  ]);
+
+  const handleValidation = React.useCallback((valid: boolean): void => {
+    setValidPasswordConfirmation(valid);
+  }, []);
 
   return (
     <Box className={css.passwordValidation}>
@@ -191,19 +214,19 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
         label={t('Password')}
         helperText={`${t('Password is case-sensitive')}.`}
         value={myPassword}
-        required={true}
+        required
       />
       <PasswordField
         label={t('Verify Password')}
         onChange={handlePasswordConfirmationChange}
-        onValidation={setValidPasswordConfirmation}
+        onValidation={handleValidation}
         value={passwordConfirmation}
         helperText={validPasswordConfirmation ? nbsp : t('Passwords must match')}
-        required={true}
+        required
         validation={new RegExp(`^${escapeRegExp(myPassword)}$`, 'u')}
       />
       <Box className={css.validation}>
-        {strength && (
+        {Boolean(strength) && (
           <Box className={css.strength}>
             <Box className={css.header}>
               <Box className={css.title}>
@@ -232,7 +255,7 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
               />
             </Box>
             <Box height={40}>
-              {passwordWarning && (
+              {Boolean(passwordWarning) && (
                 <Typography color="error" variant="caption" component="div">
                   {passwordWarning}
                 </Typography>
@@ -244,6 +267,7 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
           {(zip(validationRules, pass) as [ValidationRule, boolean][])
             .filter(([, ok]) => !showInvalidOnly && !ok)
             .map(([rule, ok], i) => (
+              // eslint-disable-next-line react/no-array-index-key
               <React.Fragment key={i}>
                 {ok ?
                   <FaThumbsUp className={css.good} />

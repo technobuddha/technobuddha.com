@@ -2,11 +2,11 @@ import React from 'react';
 import { IconContext } from 'react-icons';
 
 type IconProviderProps = {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 };
 
 export const IconProvider: React.FC<IconProviderProps> = ({ children }: IconProviderProps) => {
-  return <IconContext.Provider value={{ size: '1.5rem' }}>{children}</IconContext.Provider>;
-};
+  const size = React.useMemo(() => ({ size: '1.5rem' }), []);
 
-export default IconProvider;
+  return <IconContext.Provider value={size}>{children}</IconContext.Provider>;
+};

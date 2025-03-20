@@ -1,8 +1,9 @@
-import type { Maze, CellDirection } from '../maze/maze';
+import { type Drawing } from '../drawing/drawing.js';
+import { type CellDirection, type Maze } from '../maze/maze.js';
 
 export type MazeSolverProperties = {
   maze: Maze;
-  context: CanvasRenderingContext2D;
+  context: Drawing;
 };
 
 export type SolveArguments = {
@@ -15,7 +16,7 @@ export abstract class MazeSolver {
   protected maze: MazeSolverProperties['maze'];
   protected context: MazeSolverProperties['context'];
 
-  constructor({ maze, context }: MazeSolverProperties) {
+  public constructor({ maze, context }: MazeSolverProperties) {
     this.maze = maze;
     this.context = context;
   }

@@ -1,12 +1,13 @@
 import React from 'react';
 import memoize from 'lodash/memoize';
+import { type IconType } from 'react-icons';
+
 import css from './spinner.module.css';
-import type { IconType } from 'react-icons';
 
 export type SpinnerProps = {
-  icons: IconType[];
-  speed?: number;
-  children?: never;
+  readonly icons: IconType[];
+  readonly speed?: number;
+  readonly children?: never;
 };
 
 export const Spinner: React.FC<SpinnerProps> = ({ icons, speed = 10 }) => {
@@ -55,15 +56,20 @@ export const Spinner: React.FC<SpinnerProps> = ({ icons, speed = 10 }) => {
           <div className={css.segment} style={segmentStyle2} />
         </div>
         <div className={css.iconContainer} style={containerStyle}>
-          {icons.map((Icon, i) => (
+          {icons.map((icon, i) => {
+            const Icon = icon;
+
+            return (
+            // eslint-disable-next-line react/no-array-index-key
             <div key={i} className={css.iconBox} style={iconBoxStyle(i)}>
-              <div className={css.iconInner} style={iconInnerStyle(i)}>
-                <div className={css.icon} style={iconStyle}>
-                  <Icon />
+                <div className={css.iconInner} style={iconInnerStyle(i)}>
+                  <div className={css.icon} style={iconStyle}>
+                    <Icon />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

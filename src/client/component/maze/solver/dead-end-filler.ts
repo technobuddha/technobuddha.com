@@ -1,54 +1,31 @@
-import { MazeSolver } from './maze-solver';
+import { randomShuffle } from '@technobuddha/library';
+
+import { animate } from '../util/animate.js';
+
+import { MazeSolver } from './maze-solver.js';
 
 export class DeadEndFiller extends MazeSolver {
   public async solve(): Promise<void> {
-    const walls = this.maze.walls.map((row) => [...row]);
+    const walls = this.maze.cloneWalls();
 
     this.maze.prepareContext(this.context);
-    return new Promise<void>((resolve) => {
-      const deadEnds = this.maze.deadEnds();
-      for (const end of deadEnds) this.maze.drawX(end, 'red');
 
-      const go = () => {
-        if (deadEnds.length > 0) {
-          const index = Math.floor(deadEnds.length * Math.random());
-          let cell = deadEnds[index];
-          deadEnds.splice(index, 1);
+    const deadEnds = randomShuffle(this.maze.deadEnds());
+    // for (const end of deadEnds) {
+    //   this.maze.drawX(end, 'red');
+    // }
 
-          const gogo = () => {
-            requestAnimationFrame(() => {
-              if (cell) {
-                const moves = this.maze.validMoves(cell, { walls });
+    for (const deadEnd of deadEnds) {
+      for (let cell = deadEnd; this.maze.isDeadEnd(cell, { walls }); ) {
+        const [move] = this.maze.validMoves(cell, { walls });
 
-                if (this.maze.isDeadEnd(cell)) {
-                  for (const direction of this.maze.directions) {
-                    if (!walls[cell.x][cell.y][direction]) {
-                      walls[cell.x][cell.y][direction] = true;
-                      this.maze.drawWall({ ...cell, direction });
-
-                      const cell2 = this.maze.move(cell, direction);
-                      if (cell2 && this.maze.inMaze(cell2)) {
-                        walls[cell2.x][cell2.y][this.maze.opposite(direction)] = true;
-                        this.maze.drawWall({ ...cell2, direction: this.maze.opposite(direction) });
-                      }
-                    }
-                  }
-
-                  this.maze.drawCell(cell, this.maze.wallColor);
-                  [cell] = moves;
-                  gogo();
-                } else {
-                  go();
-                }
-              }
-            });
-          };
-          gogo();
-        } else {
-          resolve();
-        }
-      };
-      go();
-    });
+        await animate(() => {
+          this.maze.addWall(cell, move.direction, { walls });
+          this.maze.drawX(cell, 'red');
+        });
+        // eslint-disable-next-line require-atomic-updates
+        cell = { x: move.x, y: move.y };
+      }
+    }
   }
 }

@@ -1,8 +1,9 @@
-import create2DArray from '@technobuddha/library/create2DArray';
-import randomShuffle from '@technobuddha/library/randomShuffle';
-import { MazeSolver } from './maze-solver';
-import type { Cell, Direction } from '../maze/maze';
-import type { SolveArguments } from './maze-solver';
+import { create2DArray, randomShuffle } from '@technobuddha/library';
+
+import { type Cell, type Direction } from '../maze/maze.js';
+
+import { type SolveArguments } from './maze-solver.js';
+import { MazeSolver } from './maze-solver.js';
 
 export class DepthFirstSearch extends MazeSolver {
   public async solve({
@@ -23,7 +24,7 @@ export class DepthFirstSearch extends MazeSolver {
       this.maze.drawPath(entrance);
       queue.unshift(entrance);
 
-      const go = () => {
+      const go = (): void => {
         if (queue.length > 0) {
           requestAnimationFrame(() => {
             this.maze.clear();
@@ -32,7 +33,9 @@ export class DepthFirstSearch extends MazeSolver {
             let path = cell;
             while (path) {
               const next = path.parent;
-              if (next) this.maze.drawPath({ ...next, direction: path.direction }, color);
+              if (next) {
+                this.maze.drawPath({ ...next, direction: path.direction }, color);
+              }
               path = next;
             }
 

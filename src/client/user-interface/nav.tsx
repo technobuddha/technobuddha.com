@@ -1,17 +1,16 @@
 import React from 'react';
-import clsx from 'clsx';
-import { MdMenu } from 'react-icons/md';
-import { MdMenuOpen } from 'react-icons/md';
-
-import ListItem from '@mui/material/ListItem';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import IconButton from '@mui/material/IconButton';
-import { useNavigate, useLocation } from '#context/router';
-import { makeStyles } from '#context/mui';
+import clsx from 'clsx';
+import { MdMenu, MdMenuOpen } from 'react-icons/md';
+
 import { useComponents } from '#context/component';
+import { makeStyles } from '#context/mui';
+import { useLocation, useNavigate } from '#context/router';
 
 const expansionTimeout = 1250;
 
@@ -72,8 +71,8 @@ const useStyles = makeStyles((theme) => {
 });
 
 type NavProps = {
-  className?: string;
-  children?: never;
+  readonly className?: string;
+  readonly children?: never;
 };
 
 export const Nav: React.FC<NavProps> = ({ className }) => {
@@ -84,9 +83,9 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
 
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [clicked, setClicked] = React.useState(false);
-  const timer = React.useRef<number | undefined>(0);
+  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  const cancelTimer = () => {
+  const cancelTimer = (): void => {
     if (timer.current) {
       clearTimeout(timer.current);
       timer.current = undefined;
@@ -96,27 +95,28 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
   const handleListClick = (loc: string) => () => {
     setMenuOpen(false);
     setClicked(true);
-    navigate(loc);
+    void navigate(loc);
     cancelTimer();
   };
 
-  const handleMouseOver = () => {
+  const handleMouseOver = React.useCallback((): void => {
     cancelTimer();
-    if (!clicked)
-      timer.current = window.setTimeout(() => {
+    if (!clicked) {
+      timer.current = setTimeout(() => {
         setMenuOpen(true);
       }, expansionTimeout);
-  };
+    }
+  }, [clicked]);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = React.useCallback((): void => {
     setMenuOpen(false);
     setClicked(false);
     cancelTimer();
-  };
+  }, []);
 
-  const handleMenuClick = () => {
+  const handleMenuClick = React.useCallback((): void => {
     setMenuOpen((m) => !m);
-  };
+  }, []);
 
   return (
     <Box className={clsx(className, css.root)}>
@@ -139,6 +139,7 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
             const current = location.pathname.startsWith(component.location);
 
             return (
+              // eslint-disable-next-line react/no-array-index-key
               <ListItem onClick={handleListClick(component.location)} key={i}>
                 <ListItemIcon>
                   <Icon

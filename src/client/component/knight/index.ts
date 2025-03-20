@@ -1,1 +1,1 @@
-export { default, Knight } from './Knight';
+export { Knight } from './knight.jsx';

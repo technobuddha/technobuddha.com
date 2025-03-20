@@ -1,6 +1,5 @@
+import { type Theme as MuiTheme } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
-
-import type { Theme as MuiTheme } from '@mui/material/styles';
 
 export type Theme = MuiTheme & {
   iconSize: number;
@@ -61,7 +60,7 @@ export const theme: Theme = {
   userInterface: {
     headerHeight: '40px',
   },
-  // TODO [2024-03-01]: Add overrides
+  // TODO [2025-03-01]: Add overrides
   // overrides: {
   //   MuiLink: {
   //     root: {

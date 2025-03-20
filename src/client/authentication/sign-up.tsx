@@ -1,20 +1,19 @@
 import React from 'react';
-import { useTranslation } from '#context/i18n';
-import { authenticationSettings } from '#settings/authentication';
-import { useNavigate } from '#context/router';
-import { useAuthentication } from '#context/authentication';
-import { email as emailRegExp } from '@technobuddha/library/regexp';
-import { empty } from '@technobuddha/library/constants';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import Alert from '@mui/lab/Alert';
-import { TextField } from '#control/text-field';
-import { PasswordValidation } from '#control/password-validation';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { empty, email as emailRegExp } from '@technobuddha/library';
+import { MdEmail, MdPerson } from 'react-icons/md';
+
+import { useAuthentication } from '#context/authentication';
+import { useTranslation } from '#context/i18n';
+import { useNavigate } from '#context/router';
 import { Checkbox } from '#control/checkbox';
 import { Link } from '#control/link';
-import Typography from '@mui/material/Typography';
-import { MdPerson } from 'react-icons/md';
-import { MdEmail } from 'react-icons/md';
+import { PasswordValidation } from '#control/password-validation';
+import { TextField } from '#control/text-field';
+import { authenticationSettings } from '#settings/authentication';
 
 export const SignUp: React.FC = () => {
   const { t } = useTranslation();
@@ -31,88 +30,115 @@ export const SignUp: React.FC = () => {
   const [tosAccepted, setTosAccepted] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string>(empty);
 
-  const handleFirstChange = (text: string) => {
+  const handleFirstChange = React.useCallback((text: string): void => {
     setFirst(text);
     setErrorMessage(empty);
-  };
-  const handleLastChange = (text: string) => {
+  }, []);
+
+  const handleFirstValidate = React.useCallback((valid: boolean): void => {
+    setValidFirst(valid);
+  }, []);
+
+  const handleLastChange = React.useCallback((text: string): void => {
     setLast(text);
     setErrorMessage(empty);
-  };
-  const handleEmailChange = (text: string) => {
+  }, []);
+
+  const handleLastValidate = React.useCallback((valid: boolean): void => {
+    setValidLast(valid);
+  }, []);
+
+  const handleEmailChange = React.useCallback((text: string): void => {
     setEmail(text);
     setErrorMessage(empty);
-  };
-  const handlePasswordChange = (text: string, valid: boolean) => {
+  }, []);
+
+  const handleEmailValidate = React.useCallback((valid: boolean): void => {
+    setValidEmail(valid);
+  }, []);
+
+  const handlePasswordChange = React.useCallback((text: string, valid: boolean): void => {
     setPassword(text);
     setValidPassword(valid);
     setErrorMessage(empty);
-  };
-  const handleTosAcceptedChange = (checked: boolean) => {
+  }, []);
+
+  const handleTosAcceptedChange = React.useCallback((checked: boolean): void => {
     setTosAccepted(checked);
     setErrorMessage(empty);
-  };
+  }, []);
 
-  const isEnabled = () =>
-    validFirst &&
-    validLast &&
-    validEmail &&
-    validPassword &&
-    (tosAccepted || authenticationSettings.tos === false);
+  const isEnabled = React.useCallback(
+    (): boolean =>
+      validFirst &&
+      validLast &&
+      validEmail &&
+      validPassword &&
+      (tosAccepted || authenticationSettings.tos === false),
+    [tosAccepted, validFirst, validLast, validEmail, validPassword],
+  );
 
-  const handleExecute = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    handleSignup();
-  };
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (isEnabled() && event.key === 'Enter') {
-      event.preventDefault();
-      handleSignup();
-    }
-  };
-  const handleSignup = () => {
+  const handleSignup = React.useCallback((): void => {
     authentication
       .createAccount(first, last, email, password)
       .then(async () => {
         await authentication.login(email, password);
-        navigate('/');
+        void navigate('/');
       })
       .catch(() => {
         setErrorMessage(`${t('Email address already in use')}.`);
       });
-  };
+  }, [authentication, email, first, last, password, navigate, t]);
+
+  const handleExecute = React.useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>): void => {
+      event.preventDefault();
+      handleSignup();
+    },
+    [handleSignup],
+  );
+
+  const handleKeyPress = React.useCallback(
+    (event: React.KeyboardEvent<HTMLElement>): void => {
+      if (isEnabled() && event.key === 'Enter') {
+        event.preventDefault();
+        handleSignup();
+      }
+    },
+    [handleSignup, isEnabled],
+  );
 
   return (
-    <Box onKeyPress={handleKeyPress}>
+    <Box onKeyUp={handleKeyPress}>
       <Typography variant="h1">{t('Sign Up')}</Typography>
       <TextField
         onChange={handleFirstChange}
-        onValidation={setValidFirst}
-        autoFocus={true}
+        onValidation={handleFirstValidate}
+        autoFocus
         label={t('First Name')}
         value={first}
         startAdornment={<MdPerson />}
         name="first"
-        required={true}
+        required
       />
       <TextField
         onChange={handleLastChange}
-        onValidation={setValidLast}
+        onValidation={handleLastValidate}
         label={t('Last Name')}
         value={last}
         startAdornment={<MdPerson />}
         name="last"
-        required={true}
+        required
       />
       <TextField
         onChange={handleEmailChange}
-        onValidation={setValidEmail}
+        onValidation={handleEmailValidate}
         label={t('Email address')}
         value={email}
         startAdornment={<MdEmail />}
         name="username"
         validation={emailRegExp}
-        required={true}
+        required
       />
       <PasswordValidation
         userInputs={[first, last, email]}
@@ -127,7 +153,7 @@ export const SignUp: React.FC = () => {
         categories={authenticationSettings.password.categories}
       />
 
-      {authenticationSettings.tos && (
+      {authenticationSettings.tos !== false && (
         <Checkbox
           label={
             <Typography variant="caption">
@@ -147,13 +173,13 @@ export const SignUp: React.FC = () => {
           type="submit"
           color="primary"
           disabled={!isEnabled()}
-          fullWidth={true}
+          fullWidth
         >
           {t('Create Account')}
         </Button>
       </Box>
 
-      {errorMessage && (
+      {Boolean(errorMessage) && (
         <Box marginY={1}>
           <Alert severity="error">{t(errorMessage)}</Alert>
         </Box>

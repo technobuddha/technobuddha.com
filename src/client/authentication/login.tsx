@@ -1,14 +1,16 @@
 import React from 'react';
-import { useTranslation } from '#context/i18n';
-import { useAuthentication } from '#context/authentication';
-import { useNavigate, useLocation } from '#context/router';
-import { PasswordField } from '#control/password-field';
-import { TextField } from '#control/text-field';
-import { MdEmail } from 'react-icons/md';
+import Alert from '@mui/lab/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Alert from '@mui/lab/Alert';
+import { MdEmail } from 'react-icons/md';
+
+import { useAuthentication } from '#context/authentication';
+import { useTranslation } from '#context/i18n';
+import { useLocation, useNavigate } from '#context/router';
+import { PasswordField } from '#control/password-field';
+import { TextField } from '#control/text-field';
+
 import css from './login.module.css';
 
 export const Login: React.FC = () => {
@@ -20,43 +22,60 @@ export const Login: React.FC = () => {
   const [password, setPassword] = React.useState<string>('');
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
-  const handleUsernameChange = (text: string) => {
+  const handleUsernameChange = React.useCallback((text: string): void => {
     setUsername(text);
     setErrorMessage(null);
-  };
-  const handlePasswordChange = (text: string) => {
+  }, []);
+
+  const handlePasswordChange = React.useCallback((text: string): void => {
     setPassword(text);
     setErrorMessage(null);
-  };
-  const isEnabled = () => Boolean(username && password);
-  const handleExecute = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    handleLogin();
-  };
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (isEnabled() && event.key === 'Enter') {
-      event.preventDefault();
-      handleLogin();
-    }
-  };
-  const handleLogin = () => {
-    authentication.login(username, password).then((response) => {
+  }, []);
+
+  const isEnabled = React.useCallback(
+    (): boolean => Boolean(username && password),
+    [username, password],
+  );
+
+  const handleLogin = React.useCallback((): void => {
+    void authentication.login(username, password).then((response) => {
       if (response) {
-        if (location.state?.referrer) navigate(location.state.referrer);
-        else navigate('/');
+        if (location.state?.referrer) {
+          void navigate(location.state.referrer);
+        } else {
+          void navigate('/');
+        }
       } else {
         setErrorMessage(`${t('Please enter a correct username and password')}.`);
       }
     });
-  };
+  }, [authentication, location.state?.referrer, navigate, password, t, username]);
+
+  const handleExecute = React.useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>): void => {
+      event.preventDefault();
+      handleLogin();
+    },
+    [handleLogin],
+  );
+
+  const handleKeyPress = React.useCallback(
+    (event: React.KeyboardEvent<HTMLElement>): void => {
+      if (isEnabled() && event.key === 'Enter') {
+        event.preventDefault();
+        handleLogin();
+      }
+    },
+    [handleLogin, isEnabled],
+  );
 
   return (
-    <Box className={css.login} onKeyPress={handleKeyPress}>
+    <Box className={css.login} onKeyUp={handleKeyPress}>
       <Typography variant="h5">{t('Log In')}</Typography>
       <Box className={css.input}>
         <TextField
           onChange={handleUsernameChange}
-          autoFocus={true}
+          autoFocus
           label={t('Email address')}
           value={username}
           name="username"
@@ -75,12 +94,12 @@ export const Login: React.FC = () => {
         variant="contained"
         type="submit"
         disabled={!isEnabled()}
-        fullWidth={true}
+        fullWidth
       >
         {t('Log In')}
       </Button>
 
-      {errorMessage && (
+      {errorMessage != null && (
         <Box className={css.message}>
           <Alert severity="error">{t(errorMessage)}</Alert>
         </Box>

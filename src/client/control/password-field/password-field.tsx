@@ -1,48 +1,67 @@
 import React from 'react';
-import { TextField } from '#control/text-field';
 import { IconButton } from '@mui/material';
-import { MdLock } from 'react-icons/md';
-import { MdVisibility } from 'react-icons/md';
-import { MdVisibilityOff } from 'react-icons/md';
+import { MdLock, MdVisibility, MdVisibilityOff } from 'react-icons/md';
+
+import { TextField } from '#control/text-field';
 
 type PasswordFieldProps = {
-  className?: string;
-  label?: string;
-  helperText?: string;
-  error?: boolean;
-  value?: string;
-  required?: boolean;
-  validation?: RegExp;
-  onChange?: (text: string) => void;
-  onValidation?: (valid: boolean) => void;
+  readonly className?: string;
+  readonly label?: string;
+  readonly helperText?: string;
+  readonly error?: boolean;
+  readonly value?: string;
+  readonly required?: boolean;
+  readonly validation?: RegExp;
+  onChange?(this: void, text: string): void;
+  onValidation?(this: void, valid: boolean): void;
 };
 
-export const PasswordField: React.FC<PasswordFieldProps> = (props: PasswordFieldProps) => {
-  const [password, setPassword] = React.useState<string>(props.value ?? '');
+export const PasswordField: React.FC<PasswordFieldProps> = ({
+  className,
+  label,
+  helperText,
+  error,
+  value,
+  required,
+  validation,
+  onChange,
+  onValidation,
+}) => {
+  const [password, setPassword] = React.useState<string>(value ?? '');
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
-  const handleChange = (text: string) => {
-    setPassword(text);
-    props.onChange?.(text);
-  };
+  const handleChange = React.useCallback(
+    (text: string): void => {
+      setPassword(text);
+      onChange?.(text);
+    },
+    [onChange],
+  );
 
-  const handleVisibility = () => {
+  const handleValidation = React.useCallback(
+    (valid: boolean): void => {
+      onValidation?.(valid);
+    },
+    [onValidation],
+  );
+
+  const handleVisibility = React.useCallback((): void => {
     setShowPassword(!showPassword);
-  };
+  }, [showPassword]);
 
   return (
     <TextField
-      className={props.className}
+      className={className}
       onChange={handleChange}
-      onValidation={props.onValidation}
+      onValidation={handleValidation}
       type={showPassword ? 'text' : 'password'}
-      label={props.label}
+      label={label}
       value={password}
-      helperText={props.helperText}
-      error={props.error}
+      helperText={helperText}
+      error={error}
       startAdornment={<MdLock />}
-      required={props.required}
-      validation={props.validation}
+      required={required}
+      validation={validation}
       endAdornment={
         <IconButton onClick={handleVisibility} tabIndex={-1}>
           {showPassword ?

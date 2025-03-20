@@ -1,164 +1,222 @@
 import range from 'lodash/range';
-import { Maze } from './maze';
-import type { Cell, CellDirection, CellCorner, Direction, MazeProperties, Wall } from './maze';
+
+import {
+  type Cell,
+  type CellCorner,
+  type CellDirection,
+  type Direction,
+  type MazeProperties,
+  type Overrides,
+  type Wall,
+} from './maze.js';
+import { Maze } from './maze.js';
 
 const COS30 = Math.cos(Math.PI / 6);
 const TAN30 = Math.tan(Math.PI / 6);
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class HexagonMaze extends Maze {
-  constructor({ cellSize = 17, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
-      ['A', 'B', 'C', 'D', 'E', 'F'],
-      ['AB', 'BC', 'CD', 'DE', 'EF', 'FA'],
+      ['a', 'b', 'c', 'd', 'e', 'f'],
+      ['ab', 'bc', 'cd', 'de', 'ef', 'fa'],
     );
   }
 
-  protected drawingWidth(): [border: number, cell: number] {
-    return [this.wallSize * 2 + this.cellSize * 0.25, this.cellSize * 0.75];
+  protected drawingWidth(): [cell: number, padding: number] {
+    return [this.cellSize * 0.75, this.cellSize * 0.5];
   }
 
-  protected drawingHeight(): [border: number, cell: number] {
-    return [this.wallSize * 2 + (this.cellSize * SIN60) / 2, this.cellSize * SIN60];
+  protected drawingHeight(): [cell: number, padding: number] {
+    return [this.cellSize * SIN60, (this.cellSize * SIN60) / 20];
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   protected initialWalls(): Wall {
-    return { A: true, B: true, C: true, D: true, E: true, F: true };
+    return { a: true, b: true, c: true, d: true, e: true, f: true };
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public opposite(direction: Direction): Direction {
     switch (direction) {
-      case 'A':
-        return 'D';
-      case 'B':
-        return 'E';
-      case 'C':
-        return 'F';
-      case 'D':
-        return 'A';
-      case 'E':
-        return 'B';
-      case 'F':
-        return 'C';
-      default:
+      case 'a': {
+        return 'd';
+      }
+      case 'b': {
+        return 'e';
+      }
+      case 'c': {
+        return 'f';
+      }
+      case 'd': {
+        return 'a';
+      }
+      case 'e': {
+        return 'b';
+      }
+      case 'f': {
+        return 'c';
+      }
+      default: {
         throw new Error(`"${direction}" is not a valid direction`);
+      }
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public rightTurn(direction: Direction): Direction[] {
     switch (direction) {
-      case 'A':
-        return ['C', 'B', 'A', 'F', 'E', 'D'];
-      case 'B':
-        return ['D', 'C', 'B', 'A', 'F', 'E'];
-      case 'C':
-        return ['E', 'D', 'C', 'B', 'A', 'F'];
-      case 'D':
-        return ['F', 'E', 'D', 'C', 'B', 'A'];
-      case 'E':
-        return ['A', 'F', 'E', 'D', 'C', 'B'];
-      case 'F':
-        return ['B', 'A', 'F', 'E', 'D', 'C'];
-      default:
+      case 'a': {
+        return ['c', 'b', 'a', 'f', 'e', 'd'];
+      }
+      case 'b': {
+        return ['d', 'c', 'b', 'a', 'f', 'e'];
+      }
+      case 'c': {
+        return ['e', 'd', 'c', 'b', 'a', 'f'];
+      }
+      case 'd': {
+        return ['f', 'e', 'd', 'c', 'b', 'a'];
+      }
+      case 'e': {
+        return ['a', 'f', 'e', 'd', 'c', 'b'];
+      }
+      case 'f': {
+        return ['b', 'a', 'f', 'e', 'd', 'c'];
+      }
+      default: {
         throw new Error(`"${direction}" is not a valid direction`);
+      }
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public leftTurn(direction: Direction): Direction[] {
     switch (direction) {
-      case 'A':
-        return ['E', 'F', 'A', 'B', 'C', 'D'];
-      case 'B':
-        return ['F', 'A', 'B', 'C', 'D', 'E'];
-      case 'C':
-        return ['A', 'B', 'C', 'D', 'E', 'F'];
-      case 'D':
-        return ['B', 'C', 'D', 'E', 'F', 'A'];
-      case 'E':
-        return ['C', 'D', 'E', 'F', 'A', 'B'];
-      case 'F':
-        return ['D', 'E', 'F', 'A', 'B', 'C'];
-      default:
+      case 'a': {
+        return ['e', 'f', 'a', 'b', 'c', 'd'];
+      }
+      case 'b': {
+        return ['f', 'a', 'b', 'c', 'd', 'e'];
+      }
+      case 'c': {
+        return ['a', 'b', 'c', 'd', 'e', 'f'];
+      }
+      case 'd': {
+        return ['b', 'c', 'd', 'e', 'f', 'a'];
+      }
+      case 'e': {
+        return ['c', 'd', 'e', 'f', 'a', 'b'];
+      }
+      case 'f': {
+        return ['d', 'e', 'f', 'a', 'b', 'c'];
+      }
+      default: {
         throw new Error(`"${direction}" is not a valid direction`);
+      }
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public move(cell: Cell, direction: Direction): CellDirection {
     if (cell.x % 2 === 0) {
       switch (direction) {
-        case 'A':
+        case 'a': {
           return { x: cell.x, y: cell.y - 1, direction };
-        case 'B':
+        }
+        case 'b': {
           return { x: cell.x + 1, y: cell.y - 1, direction };
-        case 'C':
+        }
+        case 'c': {
           return { x: cell.x + 1, y: cell.y, direction };
-        case 'D':
+        }
+        case 'd': {
           return { x: cell.x, y: cell.y + 1, direction };
-        case 'E':
+        }
+        case 'e': {
           return { x: cell.x - 1, y: cell.y, direction };
-        case 'F':
+        }
+        case 'f': {
           return { x: cell.x - 1, y: cell.y - 1, direction };
-        default:
+        }
+        default: {
           throw new Error(`"${direction}" is not a valid direction`);
+        }
       }
     }
 
     switch (direction) {
-      case 'A':
+      case 'a': {
         return { x: cell.x, y: cell.y - 1, direction };
-      case 'B':
+      }
+      case 'b': {
         return { x: cell.x + 1, y: cell.y, direction };
-      case 'C':
+      }
+      case 'c': {
         return { x: cell.x + 1, y: cell.y + 1, direction };
-      case 'D':
+      }
+      case 'd': {
         return { x: cell.x, y: cell.y + 1, direction };
-      case 'E':
+      }
+      case 'e': {
         return { x: cell.x - 1, y: cell.y + 1, direction };
-      case 'F':
+      }
+      case 'f': {
         return { x: cell.x - 1, y: cell.y, direction };
-      default:
+      }
+      default: {
         throw new Error(`"${direction}" is not a valid direction`);
+      }
     }
   }
 
-  public isDeadEnd(cell: Cell): boolean {
+  public isDeadEnd(
+    cell: Cell,
+    { directions = this.directions, walls = this.walls }: Overrides = {},
+  ): boolean {
     return (
-      this.sides(cell) === 5 &&
+      this.sides(cell, { directions, walls }) === 5 &&
       (cell.x !== this.entrance.x || cell.y !== this.entrance.y) &&
       (cell.x !== this.exit.x || cell.y !== this.exit.y)
     );
   }
 
-  public edges(cell: Cell): string[] {
-    return this.neighbors(cell, { dirs: ['B', 'C', 'D'] }).map((cd) => cd.direction);
+  public edges(cell: Cell, { walls = this.walls }: Overrides = {}): string[] {
+    return this.neighbors(cell, { directions: ['b', 'c', 'd'], walls }).map((cd) => cd.direction);
   }
 
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public divider(cell1: Cell, cell2: Cell): CellDirection[] {
     if (cell1.x === cell2.x) {
       const walls: CellDirection[] = range(cell1.y, cell2.y).flatMap((y) => [
-        { x: cell1.x, y, direction: 'B' },
-        { x: cell1.x, y, direction: 'C' },
+        { x: cell1.x, y, direction: 'b' },
+        { x: cell1.x, y, direction: 'c' },
       ]);
 
-      if (cell1.x % 2 === 0) walls.shift();
-      else walls.pop();
+      if (cell1.x % 2 === 0) {
+        walls.shift();
+      } else {
+        walls.pop();
+      }
 
       return walls;
     } else if (cell1.y === cell2.y) {
       const walls: CellDirection[] = range(cell1.x, cell2.x).flatMap((x) =>
         x % 2 === 0 ?
-          { x, y: cell1.y, direction: 'D' }
+          { x, y: cell1.y, direction: 'd' }
         : [
-            { x, y: cell1.y, direction: 'E' },
-            { x, y: cell1.y, direction: 'D' },
-            { x, y: cell1.y, direction: 'C' },
+            { x, y: cell1.y, direction: 'e' },
+            { x, y: cell1.y, direction: 'd' },
+            { x, y: cell1.y, direction: 'c' },
           ],
       );
 
-      if (cell1.x % 2 === 1) walls.shift();
-
-      if (cell2.x % 2 === 0) walls.pop();
+      if (cell1.x % 2 === 1) {
+        walls.shift();
+      } else {
+        walls.pop();
+      }
 
       return walls;
     }
@@ -166,11 +224,32 @@ export class HexagonMaze extends Maze {
     throw new Error('Cells must be aligned vertically or horizontally');
   }
 
-  private offsets({ x, y }: Cell) {
+  private offsets({ x, y }: Cell): {
+    x0: number;
+    x1: number;
+    x2: number;
+    x3: number;
+    x4: number;
+    x5: number;
+    x6: number;
+    x7: number;
+    x8: number;
+    x9: number;
+    xA: number;
+    xB: number;
+    y0: number;
+    y1: number;
+    y2: number;
+    y3: number;
+    y4: number;
+    y5: number;
+    y6: number;
+    y7: number;
+    y8: number;
+  } {
     //const margin = Math.floor(this.cellSize / 8);
     const even = x % 2 === 0;
 
-    // Corner EF
     const x0 = x * this.cellSize * 0.75;
     const x1 = x0 + (this.wallSize * TAN30) / 2;
     const x2 = x0 + this.wallSize / COS30;
@@ -181,7 +260,7 @@ export class HexagonMaze extends Maze {
     const x6 = x7 - this.wallSize * TAN30;
     const x8 = x7 + (this.wallSize * TAN30) / 2;
     const xB = x0 + this.cellSize;
-    const xA = xB - (this.wallSize * TAN30) / 2; // corner BC
+    const xA = xB - (this.wallSize * TAN30) / 2; // corner bc
     const x9 = xB - this.wallSize / COS30;
 
     const y0 = y * this.cellSize * SIN60 + (even ? 0 : (this.cellSize * SIN60) / 2);
@@ -203,15 +282,17 @@ export class HexagonMaze extends Maze {
     if (this.context) {
       const { x0, x3, x8, xB, y0, y4, y8 } = this.offsets(cell);
 
-      this.context.fillStyle = color;
-      this.context.beginPath();
-      this.context.moveTo(x0, y4);
-      this.context.lineTo(x3, y0);
-      this.context.lineTo(x8, y0);
-      this.context.lineTo(xB, y4);
-      this.context.lineTo(x8, y8);
-      this.context.lineTo(x3, y8);
-      this.context.fill();
+      this.context.polygon(
+        [
+          { x: x0, y: y4 },
+          { x: x3, y: y0 },
+          { x: x8, y: y0 },
+          { x: xB, y: y4 },
+          { x: x8, y: y8 },
+          { x: x3, y: y8 },
+        ],
+        color,
+      );
     }
   }
 
@@ -222,56 +303,81 @@ export class HexagonMaze extends Maze {
       const { x1, x2, x3, x5, x6, x8, x9, xA, y0, y1, y2, y3, y4, y5, y6, y7, y8 } =
         this.offsets(cd);
 
-      ctx.fillStyle = color;
       switch (cd.direction) {
-        case 'A':
-          ctx.beginPath();
-          ctx.moveTo(x5, y0);
-          ctx.lineTo(x6, y0);
-          ctx.lineTo(x6, y2);
-          ctx.lineTo(x5, y2);
-          ctx.fill();
+        case 'a': {
+          ctx.polygon(
+            [
+              { x: x5, y: y0 },
+              { x: x6, y: y0 },
+              { x: x6, y: y2 },
+              { x: x5, y: y2 },
+            ],
+            color,
+          );
           break;
-        case 'B':
-          ctx.beginPath();
-          ctx.moveTo(x6, y2);
-          ctx.lineTo(x8, y1);
-          ctx.lineTo(x9, y4);
-          ctx.lineTo(xA, y3);
-          ctx.fill();
+        }
+        case 'b': {
+          ctx.polygon(
+            [
+              { x: x6, y: y2 },
+              { x: x8, y: y1 },
+              { x: x9, y: y4 },
+              { x: xA, y: y3 },
+            ],
+            color,
+          );
           break;
-        case 'C':
-          ctx.beginPath();
-          ctx.moveTo(x9, y4);
-          ctx.lineTo(xA, y5);
-          ctx.lineTo(x8, y7);
-          ctx.lineTo(x6, y6);
-          ctx.fill();
+        }
+        case 'c': {
+          ctx.polygon(
+            [
+              { x: x9, y: y4 },
+              { x: xA, y: y5 },
+              { x: x8, y: y7 },
+              { x: x6, y: y6 },
+            ],
+            color,
+          );
           break;
-        case 'D':
-          ctx.beginPath();
-          ctx.moveTo(x5, y6);
-          ctx.lineTo(x6, y6);
-          ctx.lineTo(x6, y8);
-          ctx.lineTo(x5, y8);
-          ctx.fill();
+        }
+        case 'd': {
+          ctx.polygon(
+            [
+              { x: x5, y: y6 },
+              { x: x6, y: y6 },
+              { x: x6, y: y8 },
+              { x: x5, y: y8 },
+            ],
+            color,
+          );
           break;
-        case 'E':
-          ctx.beginPath();
-          ctx.moveTo(x5, y6);
-          ctx.lineTo(x3, y7);
-          ctx.lineTo(x1, y5);
-          ctx.lineTo(x2, y4);
-          ctx.fill();
+        }
+        case 'e': {
+          ctx.polygon(
+            [
+              { x: x2, y: y4 },
+              { x: x1, y: y5 },
+              { x: x3, y: y7 },
+              { x: x5, y: y6 },
+            ],
+            color,
+          );
           break;
-        case 'F':
-          ctx.beginPath();
-          ctx.moveTo(x2, y4);
-          ctx.lineTo(x1, y3);
-          ctx.lineTo(x3, y1);
-          ctx.lineTo(x5, y2);
-          ctx.fill();
+        }
+        case 'f': {
+          ctx.polygon(
+            [
+              { x: x2, y: y4 },
+              { x: x1, y: y3 },
+              { x: x3, y: y1 },
+              { x: x5, y: y2 },
+            ],
+            color,
+          );
           break;
+        }
+
+        // no default
       }
     }
   }
@@ -282,47 +388,81 @@ export class HexagonMaze extends Maze {
       const { x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xA, xB, y0, y1, y2, y3, y4, y5, y6, y7, y8 } =
         this.offsets(cell);
 
-      ctx.fillStyle = color;
-      ctx.beginPath();
       switch (cell.corner) {
-        case 'AB':
-          ctx.moveTo(x6, y2);
-          ctx.lineTo(x8, y1);
-          ctx.lineTo(x7, y0);
-          ctx.lineTo(x6, y0);
+        case 'ab': {
+          ctx.polygon(
+            [
+              { x: x6, y: y2 },
+              { x: x8, y: y1 },
+              { x: x7, y: y0 },
+              { x: x6, y: y0 },
+            ],
+            color,
+          );
           break;
-        case 'BC':
-          ctx.moveTo(x9, y4);
-          ctx.lineTo(xA, y3);
-          ctx.lineTo(xB, y4);
-          ctx.lineTo(xA, y5);
+        }
+        case 'bc': {
+          ctx.polygon(
+            [
+              { x: x9, y: y4 },
+              { x: xA, y: y3 },
+              { x: xB, y: y4 },
+              { x: xA, y: y5 },
+            ],
+            color,
+          );
           break;
-        case 'CD':
-          ctx.moveTo(x6, y6);
-          ctx.lineTo(x6, y8);
-          ctx.lineTo(x7, y8);
-          ctx.lineTo(x8, y7);
+        }
+        case 'cd': {
+          ctx.polygon(
+            [
+              { x: x6, y: y6 },
+              { x: x7, y: y8 },
+              { x: x8, y: y7 },
+              { x: x6, y: y6 },
+            ],
+            color,
+          );
           break;
-        case 'DE':
-          ctx.moveTo(x5, y6);
-          ctx.lineTo(x5, y8);
-          ctx.lineTo(x4, y8);
-          ctx.lineTo(x3, y7);
+        }
+        case 'de': {
+          ctx.polygon(
+            [
+              { x: x5, y: y6 },
+              { x: x4, y: y8 },
+              { x: x3, y: y7 },
+            ],
+            color,
+          );
           break;
-        case 'EF':
-          ctx.moveTo(x2, y4);
-          ctx.lineTo(x1, y3);
-          ctx.lineTo(x0, y4);
-          ctx.lineTo(x1, y5);
+        }
+        case 'ef': {
+          ctx.polygon(
+            [
+              { x: x2, y: y4 },
+              { x: x1, y: y3 },
+              { x: x0, y: y4 },
+              { x: x1, y: y5 },
+            ],
+            color,
+          );
           break;
-        case 'FA':
-          ctx.moveTo(x5, y2);
-          ctx.lineTo(x5, y0);
-          ctx.lineTo(x4, y0);
-          ctx.lineTo(x3, y1);
+        }
+        case 'fa': {
+          ctx.polygon(
+            [
+              { x: x5, y: y2 },
+              { x: x5, y: y0 },
+              { x: x4, y: y0 },
+              { x: x3, y: y1 },
+            ],
+            color,
+          );
           break;
+        }
+
+        // no default
       }
-      ctx.fill();
     }
   }
 
@@ -334,59 +474,88 @@ export class HexagonMaze extends Maze {
 
       this.drawCell(cd);
 
-      this.context.fillStyle = color;
-      ctx.beginPath();
       switch (cd.direction) {
-        case 'A':
-          ctx.moveTo(x5, y6);
-          ctx.lineTo(x6, y6);
-          ctx.lineTo((x5 + x6) / 2, y2);
+        case 'a': {
+          ctx.polygon(
+            [
+              { x: x5, y: y6 },
+              { x: x6, y: y6 },
+              { x: (x5 + x6) / 2, y: y2 },
+            ],
+            color,
+          );
           break;
-        case 'B':
-          ctx.moveTo(x2, y4);
-          ctx.lineTo(x5, y6);
-          ctx.lineTo((x6 + x9) / 2, (y2 + y4) / 2);
+        }
+        case 'b': {
+          ctx.polygon(
+            [
+              { x: x2, y: y4 },
+              { x: x5, y: y6 },
+              { x: (x6 + x9) / 2, y: (y2 + y4) / 2 },
+            ],
+            color,
+          );
           break;
-        case 'C':
-          ctx.moveTo(x2, y4);
-          ctx.lineTo(x5, y2);
-          ctx.lineTo((x6 + x9) / 2, (y4 + y6) / 2);
+        }
+        case 'c': {
+          ctx.polygon(
+            [
+              { x: x2, y: y4 },
+              { x: x5, y: y2 },
+              { x: (x6 + x9) / 2, y: (y4 + y6) / 2 },
+            ],
+            color,
+          );
           break;
-        case 'D':
-          ctx.moveTo(x5, y2);
-          ctx.lineTo(x6, y2);
-          ctx.lineTo((x5 + x6) / 2, y6);
+        }
+        case 'd': {
+          ctx.polygon(
+            [
+              { x: x5, y: y2 },
+              { x: x6, y: y2 },
+              { x: (x5 + x6) / 2, y: y6 },
+            ],
+            color,
+          );
           break;
-        case 'E':
-          ctx.moveTo(x6, y2);
-          ctx.lineTo(x9, y5);
-          ctx.lineTo((x2 + x5) / 2, (y4 + y6) / 2);
+        }
+        case 'e': {
+          ctx.polygon(
+            [
+              { x: x6, y: y2 },
+              { x: x9, y: y5 },
+              { x: (x2 + x5) / 2, y: (y4 + y6) / 2 },
+            ],
+            color,
+          );
           break;
-        case 'F':
-          ctx.moveTo(x9, y4);
-          ctx.lineTo(x6, y6);
-          ctx.lineTo((x2 + x5) / 2, (y2 + y4) / 2);
+        }
+        case 'f': {
+          ctx.polygon(
+            [
+              { x: x9, y: y4 },
+              { x: x6, y: y6 },
+              { x: (x2 + x5) / 2, y: (y2 + y4) / 2 },
+            ],
+            color,
+          );
           break;
+        }
+
+        // no default
       }
-      ctx.fill();
     }
   }
 
-  public drawX(cell: Cell, color = 'black', cellColor = this.cellColor): void {
+  public drawX(cell: Cell, color = 'red', cellColor = this.cellColor): void {
     if (this.context) {
       const { x2, x5, x6, x9, y2, y4, y6 } = this.offsets(cell);
 
       this.drawCell(cell, cellColor);
 
-      this.context.strokeStyle = color;
-      this.context.beginPath();
-      this.context.moveTo(x2, y4);
-      this.context.lineTo(x9, y4);
-      this.context.moveTo(x5, y2);
-      this.context.lineTo(x6, y6);
-      this.context.moveTo(x6, y2);
-      this.context.lineTo(x5, y6);
-      this.context.stroke();
+      this.context.line({ x: x2, y: y4 }, { x: x9, y: y6 }, color);
+      this.context.line({ x: x5, y: y2 }, { x: x6, y: y6 }, color);
+      this.context.line({ x: x6, y: y2 }, { x: x5, y: y6 }, color);
     }
   }
 }

@@ -1,13 +1,15 @@
-import create2DArray from '@technobuddha/library/create2DArray';
-import type { Cell, CellDirection } from '../maze/maze';
-import { MazeGenerator } from './maze-generator';
-import type { MazeGeneratorProperties } from './maze-generator';
+import { create2DArray } from '@technobuddha/library';
+
+import { type Cell, type CellDirection } from '../maze/maze.js';
+
+import { type MazeGeneratorProperties } from './maze-generator.js';
+import { MazeGenerator } from './maze-generator.js';
 
 export class Wilsons extends MazeGenerator {
   private readonly visited: boolean[][];
   private readonly unvisited: Cell[];
 
-  constructor(props: MazeGeneratorProperties) {
+  public constructor(props: MazeGeneratorProperties) {
     super(props);
 
     const { width, height } = this.maze;
@@ -19,41 +21,47 @@ export class Wilsons extends MazeGenerator {
     this.markAsVisited(this.currentCell);
   }
 
-  private markAsVisited(cell: Cell) {
+  private markAsVisited(cell: Cell): void {
     this.visited[cell.x][cell.y] = true;
 
     const index = this.unvisited.findIndex((c) => c.x === cell.x && c.y === cell.y);
-    if (index >= 0) this.unvisited.splice(index, 1);
+    if (index >= 0) {
+      this.unvisited.splice(index, 1);
+    }
   }
 
   public override step(): boolean {
-    this.currentCell = this.unvisited[Math.floor(this.random() * this.unvisited.length)];
-    let path: (Cell | CellDirection)[] = [this.currentCell];
+    for (let i = 0; i < 10 && this.unvisited.length > 0; ++i) {
+      this.currentCell = this.unvisited[Math.floor(this.random() * this.unvisited.length)];
+      let path: (Cell | CellDirection)[] = [this.currentCell];
 
-    while (!this.visited[this.currentCell.x][this.currentCell.y]) {
-      const cell = this.selectNeighbor(this.maze.neighbors(this.currentCell));
+      while (!this.visited[this.currentCell.x][this.currentCell.y]) {
+        const cell = this.selectNeighbor(this.maze.neighbors(this.currentCell));
 
-      let cellVisited = false;
-      let cellPreviousIndex = -1;
-      for (const [index, pathCell] of path.entries()) {
-        if (pathCell.x === cell.x && pathCell.y === cell.y) {
-          cellVisited = true;
-          cellPreviousIndex = index;
+        let cellVisited = false;
+        let cellPreviousIndex = -1;
+        for (const [index, pathCell] of path.entries()) {
+          if (pathCell.x === cell.x && pathCell.y === cell.y) {
+            cellVisited = true;
+            cellPreviousIndex = index;
+          }
+        }
+
+        if (cellVisited) {
+          this.currentCell = path[cellPreviousIndex];
+          path = path.slice(0, cellPreviousIndex + 1);
+        } else {
+          path.push(cell);
+          this.currentCell = cell;
         }
       }
 
-      if (!cellVisited) {
-        path.push(cell);
-        this.currentCell = cell;
-      } else {
-        this.currentCell = path[cellPreviousIndex];
-        path = path.slice(0, cellPreviousIndex + 1);
+      for (const cell of path) {
+        if ('direction' in cell) {
+          this.maze.removeWall(cell, this.maze.opposite(cell.direction));
+        }
+        this.markAsVisited(cell);
       }
-    }
-
-    for (const cell of path) {
-      if ('direction' in cell) this.maze.removeWall(cell, this.maze.opposite(cell.direction));
-      this.markAsVisited(cell);
     }
 
     return this.unvisited.length > 0;

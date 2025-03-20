@@ -1,17 +1,28 @@
-import create2DArray from '@technobuddha/library/create2DArray';
-import type { CellDirection, Direction } from '../maze/maze';
+import { create2DArray } from '@technobuddha/library';
 
-import { MazeSolver } from './maze-solver';
-import type { MazeSolverProperties, SolveArguments } from './maze-solver';
+import { type CellDirection, type Direction } from '../maze/maze.js';
+
+import { type MazeSolverProperties, type SolveArguments } from './maze-solver.js';
+import { MazeSolver } from './maze-solver.js';
+
+type WallWalkingProperties = MazeSolverProperties & {
+  turn?: 'right' | 'left';
+};
 
 export class WallWalking extends MazeSolver {
   private readonly turn: (direction: Direction) => Direction[];
 
-  constructor(props: MazeSolverProperties) {
+  public constructor(props: WallWalkingProperties) {
     super(props);
 
-    this.turn =
-      Math.random() < 0.5 ? this.maze.rightTurn.bind(this) : this.maze.leftTurn.bind(this);
+    if (props.turn === 'right') {
+      this.turn = this.maze.rightTurn.bind(this);
+    } else if (props.turn === 'left') {
+      this.turn = this.maze.leftTurn.bind(this);
+    } else {
+      this.turn =
+        Math.random() < 0.0 ? this.maze.rightTurn.bind(this) : this.maze.leftTurn.bind(this);
+    }
   }
 
   public async solve({
@@ -26,13 +37,14 @@ export class WallWalking extends MazeSolver {
         y: entrance.y,
         direction: this.maze.opposite(entrance.direction),
       };
-      let cells: { visits: number; direction?: Direction }[][] = create2DArray(
+
+      const cells: { visits: number; direction?: Direction }[][] = create2DArray(
         this.maze.width,
         this.maze.height,
         () => ({ visits: 0 }),
       );
 
-      const go = () => {
+      const go = (): void => {
         requestAnimationFrame(() => {
           const v = ++cells[cell.x][cell.y].visits;
           if (cell.x === exit.x && cell.y === exit.y) {
@@ -56,7 +68,8 @@ export class WallWalking extends MazeSolver {
             }
           } else {
             const turns = this.turn(cell.direction);
-            const dir = turns.find((d) => this.maze.walls[cell.x][cell.y][d] === false)!;
+            const moves = this.maze.validMoves(cell);
+            const dir = turns.find((d) => moves.find((m) => m.direction === d))!;
             const next = this.maze.move(cell, dir)!;
             this.maze.drawPath({ ...cell, direction: dir }, `rgba(255, 255, 0, ${(v + 1) * 0.25})`);
             cells[cell.x][cell.y].direction = dir;

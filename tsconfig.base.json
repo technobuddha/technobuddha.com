@@ -113,8 +113,6 @@
     "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
 
     "paths": {                                          /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
-      "~*":           [ "./*"                     ],
-      "#config*":     [ "./*"                      ],
       "#context*":    [ "./src/client/context*"   ],
       "#control*":    [ "./src/client/control*"   ],
       "#component*":  [ "./src/client/component*" ],
@@ -125,7 +123,6 @@
       "#schema":      [ "./src/schema"            ],
       "#schema*":     [ "./src/schema*"           ],
       "#settings*":   [ "./src/settings*"         ],
-      "$*":           [ "./src/*"                 ],
       // "%icons":       [ "../node_modules/@react-icons/all-files" ],
       // "%icons/*":     [ "../node_modules/@react-icons/all-files/*"]
     }

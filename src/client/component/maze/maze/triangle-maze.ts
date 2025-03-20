@@ -7,6 +7,7 @@ import {
   type Cell,
   type CellDirection,
   type CellPillar,
+  type DrawingSizes,
   type Kind,
   type MazeProperties,
 } from './maze.js';
@@ -17,6 +18,7 @@ import {
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
+  pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
   sidesMatrix,
@@ -38,15 +40,18 @@ export class TriangleMaze extends Maze {
       moveMatrix,
       sidesMatrix,
       edgesMatrix,
+      pathMatrix,
     );
   }
 
-  protected drawingWidth(): [cell: number, padding: number] {
-    return [this.cellSize / 2, this.cellSize / 4];
-  }
-
-  protected drawingHeight(): [cell: number, padding: number] {
-    return [this.cellSize * SIN60, 0];
+  protected drawingSize(): DrawingSizes {
+    return {
+      groupWidth: this.cellSize,
+      horizontalCellsPerGroup: 2,
+      groupHeight: this.cellSize * SIN60,
+      leftPadding: this.cellSize * 0.25,
+      rightPadding: this.cellSize * 0.25,
+    };
   }
 
   protected cellKind(cell: Cell): number {
@@ -231,56 +236,6 @@ export class TriangleMaze extends Maze {
 
         // no default
       }
-    }
-  }
-
-  // public drawPath(cell: CellDirection, color = 'red'): void {
-  //   if (this.drawing) {
-  //     const { x2, x4, x6, y2, y4 } = this.cellOffsets(cell);
-
-  //     this.drawCell(cell);
-
-  //     switch (cell.direction) {
-  //       case 'a':
-  //       case 'd': {
-  //         this.drawing.line({ x: x4, y: y2 }, { x: x4, y: y4 }, color);
-  //         this.drawing.line({ x: x4, y: y4 }, { x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, color);
-  //         this.drawing.line({ x: x4, y: y4 }, { x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, color);
-  //         break;
-  //       }
-  //       case 'e':
-  //       case 'f': {
-  //         this.drawing.line({ x: x6, y: y4 }, { x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, color);
-  //         this.drawing.line(
-  //           { x: (x4 + x2) / 2, y: (y2 + y4) / 2 },
-  //           { x: (x4 + x6) / 2, y: (y2 + y4) / 2 },
-  //           color,
-  //         );
-  //         this.drawing.line({ x: (x4 + x2) / 2, y: (y2 + y4) / 2 }, { x: x4, y: y4 }, color);
-  //         break;
-  //       }
-  //       case 'c':
-  //       case 'b': {
-  //         this.drawing.line({ x: x2, y: y4 }, { x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, color);
-  //         this.drawing.line(
-  //           { x: (x4 + x6) / 2, y: (y2 + y4) / 2 },
-  //           { x: (x4 + x2) / 2, y: (y2 + y4) / 2 },
-  //           color,
-  //         );
-  //         this.drawing.line({ x: (x4 + x6) / 2, y: (y2 + y4) / 2 }, { x: x4, y: y4 }, color);
-  //         break;
-  //       }
-
-  //       // no default
-  //     }
-  //   }
-  // }
-
-  public drawPath(cell: CellDirection, color = 'red'): void {
-    if (this.drawing) {
-      const angle = { a: 270, b: 30, c: 150, d: 270, e: 30, f: 150 }[cell.direction]!;
-      this.drawCell(cell);
-      this.drawArrow(this.getRect(cell), angle, color);
     }
   }
 

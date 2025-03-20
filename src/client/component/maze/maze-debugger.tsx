@@ -6,13 +6,13 @@ import { CanvasDrawing } from './drawing/canvas-drawing.js';
 import { BrickMaze } from './maze/brick-maze.js';
 import { HexagonMaze } from './maze/hexagon-maze.js';
 import { type Maze, type MazeProperties } from './maze/maze.js';
-import { MazeFactory } from './maze-factory.js';
 import { OctogonMaze } from './maze/octogon-maze.js';
 import { PentagonMaze } from './maze/pentagon-maze.js';
 import { SquareMaze } from './maze/square-maze.js';
 import { TriangleMaze } from './maze/triangle-maze.js';
 import { WedgeMaze } from './maze/wedge-maze.js';
 import { ZetaMaze } from './maze/zeta-maze.js';
+import { MazeFactory } from './maze-factory.js';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   pentagon: (props) => new PentagonMaze(props),
@@ -32,11 +32,13 @@ type MazeDebuggerProps = {
 type MazeType = keyof typeof mazes;
 
 export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
-  const [selectedMaze, setSelectedMaze] = React.useState<MazeType>('pentagon');
+  const [selectedMaze, setSelectedMaze] = React.useState<MazeType>('square');
   const [show, setShow] = React.useState('moves');
   const [x, setX] = React.useState(0);
   const [y, setY] = React.useState(0);
   const [wall, setWall] = React.useState('a');
+  const [maze, setMaze] = React.useState<Maze>();
+  const [errors, setErrors] = React.useState<string[]>([]);
 
   const handleMazeChange = React.useCallback((event: SelectChangeEvent): void => {
     setSelectedMaze(event.target.value);
@@ -78,49 +80,101 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
       const factory = new MazeFactory({ drawing: contextMaze });
 
       void factory.create(mazes[selectedMaze]).then((m) => {
-        switch (show) {
-          case 'walls': {
-            for (let i = 0; i < m.width; ++i) {
-              for (let j = 0; j < m.height; ++j) {
-                if (m.walls[i][j][wall]) {
-                  m.drawWall({ x: i, y: j, direction: wall }, 'magenta');
-                }
-              }
-            }
-
-            break;
-          }
-
-          default: {
-            m.drawX({ x, y }, 'red');
-            const moves = m.neighbors({ x, y });
-            for (const move of moves) {
-              if (m.inMaze(move)) {
-                switch (show) {
-                  case 'moves': {
-                    m.drawText(move, move.direction, 'cyan');
-                    break;
-                  }
-                  case 'paths': {
-                    m.drawPath({ ...move, direction: m.opposite(move.direction) }, 'cyan');
-                    break;
-                  }
-
-                  // no default
-                }
-              }
-            }
-            break;
-          }
-        }
+        setMaze(m);
       });
     }
-  }, [selectedMaze, show, x, y, wall]);
+  }, [selectedMaze]);
+
+  React.useEffect(() => {
+    if (maze) {
+      maze.draw();
+      switch (show) {
+        case 'walls': {
+          for (let i = 0; i < maze.width; ++i) {
+            for (let j = 0; j < maze.height; ++j) {
+              if (maze.walls[i][j][wall]) {
+                maze.drawWall({ x: i, y: j, direction: wall }, 'magenta');
+              }
+            }
+          }
+
+          break;
+        }
+
+        default: {
+          maze.drawX({ x, y }, 'red');
+          const moves = maze.neighbors({ x, y });
+          for (const move of moves) {
+            if (maze.inMaze(move)) {
+              switch (show) {
+                case 'moves': {
+                  maze.drawText(move, move.direction, 'cyan');
+                  break;
+                }
+                case 'paths': {
+                  maze.drawPath({ ...move, direction: maze.opposite(move.direction) }, 'cyan');
+                  break;
+                }
+
+                // no default
+              }
+            }
+          }
+          break;
+        }
+      }
+    }
+  }, [maze, selectedMaze, show, x, y, wall]);
+
+  React.useEffect(() => {
+    const err: string[] = [];
+
+    if (maze) {
+      for (const direction of maze.directions) {
+        if (maze.opposite(maze.opposite(direction)) !== direction) {
+          err.push(`opposite(opposite(${direction})) !== ${direction}`);
+        }
+
+        const rt = [...maze.rightTurn(direction)];
+        const lt = [...maze.leftTurn(direction)];
+        const rtOpposite = rt.pop();
+        const ltOpposite = lt.pop();
+
+        if (rtOpposite !== maze.opposite(direction)) {
+          err.push(`last(rightTurn(${direction})) = ${rtOpposite} !== opposite(${direction})`);
+        }
+
+        if (ltOpposite !== maze.opposite(direction)) {
+          err.push(`last(leftTurn(${direction})) = ${ltOpposite} !== opposite(${direction})`);
+        }
+
+        if (!rt.reverse().every((t, i) => t === lt[i])) {
+          err.push(`reverse(rightTurn.reverse(${direction}) !== leftTurn`);
+        }
+      }
+
+      for (const cell of maze.all()) {
+        for (const move of maze.neighbors(cell)) {
+          const back = maze.move(move, maze.opposite(move.direction));
+          if (back) {
+            if (cell.x !== back.x || cell.y !== back.y) {
+              err.push(
+                `{ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}} = { x: ${move.x}, y: ${move.y} } back = { x: ${back.x}, y: ${back.y}, ${maze.opposite(move.direction)} }`,
+              );
+            }
+          } else {
+            err.push(`back({ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}) = NULL`);
+          }
+        }
+      }
+    }
+
+    setErrors(err);
+  }, [maze]);
 
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'row' }}>
       <div style={{ backgroundColor: 'lightBlue' }}>
-        {/* <MazeBoard boxWidth={500} boxHeight={500} maze={selectedMaze} show={show} x={x} y={y} /> */}
         <div style={{ position: 'relative', width: boxWidth, height: boxHeight }}>
           {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
           <canvas
@@ -180,7 +234,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
           <FormControl>
             <InputLabel htmlFor="wall">Wall</InputLabel>
             <Select<string> value={wall} onChange={handleWallChange}>
-              {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'].map((m) => (
+              {maze?.directions.map((m) => (
                 <MenuItem key={m} value={m}>
                   {m}
                 </MenuItem>
@@ -188,6 +242,15 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
             </Select>
           </FormControl>
         )}
+      </div>
+      <div style={{ flexGrow: 1 }}>
+        <div style={{ height: '100%', overflowY: 'auto' }}>
+          <ul>
+            {errors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

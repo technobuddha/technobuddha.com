@@ -1,10 +1,9 @@
-.root {
-  height: 288px;
+.spinner {
+  height: 18rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  background: mui-theme(palette-common-black);
 
-  .spinner {
+  .wheel {
     width: 288px;
     height: 288px;
     position: relative;
@@ -12,6 +11,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background: magenta;
 
     .iconContainer {
       animation-name: rotate;
@@ -71,6 +71,61 @@
         position: absolute;
         transform-origin: 50% 100%;
         background: mui-theme(palette-secondary-dark);
+      }
+    }
+  }
+
+  .descriptions {
+    flex: 1;
+    position: relative;
+  }
+
+  .box {
+    position: absolute;
+    left: 2rem;
+    max-height: 0;
+    height: 100%;
+    text-align: justify;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-play-state: run;
+    animation-timing-function: linear;
+    color: white;
+
+    .primary {
+      font-size: 3rem;
+    }
+
+    .secondary {
+      margin-top: mui-spacing(1);
+      font-size: 2rem;
+    }
+
+    .description {
+      font-size: 1.1rem;
+
+      div {
+        margin-top: mui-spacing(1);
+      }
+
+      a:link,
+      a:visited,
+      a:active {
+        font-weight: bold;
+        color: mui-theme(palette-secondary-main);
+      }
+    }
+
+    .todo {
+      clear: left;
+      font-size: 1.3rem;
+      margin-top: mui-spacing(3);
+
+      ul {
+        li {
+          font-size: 1.1rem;
+        }
       }
     }
   }

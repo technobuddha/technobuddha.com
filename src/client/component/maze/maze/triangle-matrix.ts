@@ -58,3 +58,12 @@ export const edgesMatrix: Record<Kind, Direction[]> = {
   0: ['b', 'd'],
   1: ['c'],
 };
+
+export const pathMatrix: Record<Direction, number> = {
+  a: 270,
+  b: 30,
+  c: 150,
+  d: 270,
+  e: 30,
+  f: 150,
+};

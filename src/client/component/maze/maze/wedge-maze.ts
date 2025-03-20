@@ -4,6 +4,7 @@ import { modulo } from '@technobuddha/library';
 import { type Rect } from '../drawing/drawing.js';
 
 import {
+  DrawingSizes,
   type Cell,
   type CellDirection,
   type CellPillar,
@@ -17,6 +18,7 @@ import {
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
+  pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
   sidesMatrix,
@@ -36,15 +38,16 @@ export class WedgeMaze extends Maze {
       moveMatrix,
       sidesMatrix,
       edgesMatrix,
+      pathMatrix,
     );
   }
 
-  protected drawingWidth(): [cell: number, padding: number] {
-    return [this.cellSize * 0.5, 0];
-  }
-
-  protected drawingHeight(): [cell: number, padding: number] {
-    return [this.cellSize, 0];
+  protected drawingSize(): DrawingSizes {
+    return {
+      groupWidth: this.cellSize,
+      horizontalCellsPerGroup: 2,
+      groupHeight: this.cellSize,
+    };
   }
 
   protected cellKind(cell: Cell): number {
@@ -605,27 +608,6 @@ export class WedgeMaze extends Maze {
         }
         // no default
       }
-    }
-  }
-
-  public drawPath(cell: CellDirection, color = 'red'): void {
-    if (this.drawing) {
-      const angle = {
-        a: 90,
-        b: 315,
-        c: 180,
-        d: 135,
-        e: 0,
-        f: 270,
-        g: 45,
-        h: 270,
-        i: 180,
-        j: 90,
-        k: 0,
-        l: 225,
-      }[cell.direction]!;
-      this.drawCell(cell);
-      this.drawArrow(this.getRect(cell), angle, color);
     }
   }
 

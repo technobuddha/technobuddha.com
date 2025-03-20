@@ -44,3 +44,5 @@ export const moveMatrix: Record<Kind, Record<Direction, XY>> = {
 export const edgesMatrix: Record<Kind, Direction[]> = {
   0: ['s', 'w'],
 };
+
+export const pathMatrix: Record<Direction, number> = { n: 90, s: 270, e: 0, w: 180 };

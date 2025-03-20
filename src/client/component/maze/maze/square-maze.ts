@@ -3,6 +3,7 @@
 import { type Rect } from '../drawing/drawing.js';
 
 import {
+  DrawingSizes,
   type Cell,
   type CellDirection,
   type CellPillar,
@@ -16,6 +17,7 @@ import {
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
+  pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
   sidesMatrix,
@@ -35,15 +37,15 @@ export class SquareMaze extends Maze {
       moveMatrix,
       sidesMatrix,
       edgesMatrix,
+      pathMatrix,
     );
   }
 
-  protected drawingWidth(): [cell: number, padding: number] {
-    return [this.cellSize, 0];
-  }
-
-  protected drawingHeight(): [cell: number, padding: number] {
-    return [this.cellSize, 0];
+  protected drawingSize(): DrawingSizes {
+    return {
+      groupWidth: this.cellSize,
+      groupHeight: this.cellSize,
+    };
   }
 
   protected cellKind(_cell: Cell): number {
@@ -127,14 +129,6 @@ export class SquareMaze extends Maze {
       if (pillar === 'se') {
         this.drawing.rect({ x: x2, y: y2 }, { x: x3, y: y3 }, color);
       }
-    }
-  }
-
-  public drawPath(cell: CellDirection, color = 'red'): void {
-    if (this.drawing) {
-      const angle = { n: 90, s: 270, e: 0, w: 180 }[cell.direction]!;
-
-      this.drawArrow(this.getRect(cell), angle, color);
     }
   }
 

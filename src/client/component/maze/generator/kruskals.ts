@@ -1,7 +1,6 @@
 import { type Cell, type CellDirection } from '../maze/maze.js';
 
-import { type MazeGeneratorProperties } from './maze-generator.js';
-import { MazeGenerator } from './maze-generator.js';
+import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.js';
 
 class DisjointSet {
   private sets: number[];

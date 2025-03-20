@@ -2,10 +2,18 @@ import { create2DArray } from '@technobuddha/library';
 
 import { type Cell } from '../maze/maze.js';
 
-import { type MazeGeneratorProperties } from './maze-generator.js';
-import { MazeGenerator } from './maze-generator.js';
+import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.js';
 
-type HuntMethod = 'random' | 'rows' | 'columns' | 'reverse-rows' | 'reverse-columns';
+type HuntMethod =
+  | 'random'
+  | 'top-left'
+  | 'left-top'
+  | 'top-right'
+  | 'right-top'
+  | 'bottom-left'
+  | 'left-bottom'
+  | 'bottom-right'
+  | 'right-bottom';
 
 type HuntAndKillProperties = MazeGeneratorProperties & {
   huntMethod?: HuntMethod;
@@ -15,7 +23,7 @@ export class HuntAndKill extends MazeGenerator {
   private readonly visited: boolean[][];
   private readonly huntMethod: HuntMethod;
 
-  public constructor({ huntMethod = 'rows', ...props }: HuntAndKillProperties) {
+  public constructor({ huntMethod = 'top-left', ...props }: HuntAndKillProperties) {
     super(props);
 
     this.huntMethod = huntMethod;
@@ -28,22 +36,34 @@ export class HuntAndKill extends MazeGenerator {
 
   public selectHunted(cells: Cell[]): Cell[] {
     switch (this.huntMethod) {
-      case 'rows': {
+      case 'top-left': {
         return cells.sort((a, b) => a.y - b.y || a.x - b.x);
       }
-      case 'columns': {
+      case 'left-top': {
         return cells.sort((a, b) => a.x - b.x || a.y - b.y);
       }
-      case 'reverse-rows': {
+      case 'top-right': {
         return cells.sort((a, b) => a.y - b.y || b.x - a.x);
       }
-      case 'reverse-columns': {
+      case 'right-top': {
         return cells.sort((a, b) => b.x - a.x || a.y - b.y);
       }
-      case 'random': {
+      case 'bottom-left': {
+        return cells.sort((a, b) => b.y - a.y || a.x - b.x);
+      }
+      case 'left-bottom': {
+        return cells.sort((a, b) => a.x - b.x || b.y - a.y);
+      }
+      case 'bottom-right': {
+        return cells.sort((a, b) => b.y - a.y || b.x - a.x);
+      }
+      case 'right-bottom': {
+        return cells.sort((a, b) => b.x - a.x || b.y - a.y);
+      }
+      case 'random':
+      default: {
         return this.randomShuffle(cells);
       }
-      // no default
     }
   }
 

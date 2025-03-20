@@ -2,8 +2,7 @@ import { create2DArray } from '@technobuddha/library';
 
 import { type Cell, type Direction } from '../maze/maze.js';
 
-import { type MazeGeneratorProperties } from './maze-generator.js';
-import { MazeGenerator } from './maze-generator.js';
+import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.js';
 
 export type RecursiveBacktrackerProperties = MazeGeneratorProperties;
 
@@ -16,10 +15,11 @@ export class RecursiveBacktracker extends MazeGenerator {
     super(props);
 
     this.currentCell = this.start;
-    this.direction =
-      this.start.x === this.maze.entrance.x && this.maze.entrance.y === 0 ?
-        this.maze.entrance.direction
-      : this.maze.resolveDirection(this.maze.exit).direction;
+    // TODO
+    this.direction = 'a';
+    // this.start.x === this.maze.entrance.x && this.maze.entrance.y === 0 ?
+    // this.maze.entrance.direction
+    // : this.maze.resolveDirection(this.maze.exit).direction;
     this.stack = [this.currentCell];
 
     this.visited = create2DArray(this.maze.width, this.maze.height, false);

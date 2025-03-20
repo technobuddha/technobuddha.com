@@ -5,6 +5,7 @@ import { modulo } from '@technobuddha/library';
 import { type Rect } from '../drawing/drawing.js';
 
 import {
+  DrawingSizes,
   type Cell,
   type CellDirection,
   type CellPillar,
@@ -18,6 +19,7 @@ import {
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
+  pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
   sidesMatrix,
@@ -39,23 +41,24 @@ export class OctogonMaze extends Maze {
       moveMatrix,
       sidesMatrix,
       edgesMatrix,
+      pathMatrix,
     );
   }
 
-  protected drawingWidth(): [cell: number, padding: number] {
-    return [this.cellSize / 2, this.cellSize / 2];
-  }
-
-  protected drawingHeight(): [cell: number, padding: number] {
-    return [this.cellSize, this.cellSize / 2];
+  protected drawingSize(): DrawingSizes {
+    return {
+      groupWidth: this.cellSize,
+      horizontalCellsPerGroup: 2,
+      groupHeight: this.cellSize,
+      leftPadding: this.cellSize * 0.25,
+      rightPadding: this.cellSize * 0.5,
+      topPadding: this.cellSize * 0.25,
+      bottomPadding: this.cellSize * 0.5,
+    };
   }
 
   protected cellKind(cell: Cell): number {
     return modulo(cell.x, 2);
-  }
-
-  public divider(_cell1: Cell, _cell2: Cell): CellDirection[] {
-    throw new Error('not implemented for zeta');
   }
 
   protected cellOffsets(cell: Cell): Record<string, number> {
@@ -588,184 +591,6 @@ export class OctogonMaze extends Maze {
     }
   }
 
-  // public drawPath(cell: CellDirection, color = 'deepSkyBlue'): void {
-  //   if (this.drawing) {
-  //     this.drawCell(cell);
-
-  //     if (this.cellKind(cell) === 0) {
-  //       switch (cell.direction) {
-  //         case 'a': {
-  //           const { x6, x9, y2, yd } = this.cellOffsets(cell);
-
-  //           this.drawing.polygon(
-  //             [
-  //               { x: x6, y: yd },
-  //               { x: (x6 + x9) / 2, y: y2 },
-  //               { x: x9, y: yd },
-  //             ],
-  //             color,
-  //           );
-  //           break;
-  //         }
-  //         case 'b': {
-  //           const { x3, x5, xa, xc, y3, y5, ya, yc } = this.cellOffsets(cell);
-  //           this.drawing.polygon(
-  //             [
-  //               { x: x3, y: ya },
-  //               { x: (xa + xc) / 2, y: (y3 + y5) / 2 },
-  //               { x: x5, y: yc },
-  //             ],
-  //             color,
-  //           );
-
-  //           break;
-  //         }
-
-  //         case 'c': {
-  //           const { x2, xd, y7, y8 } = this.cellOffsets(cell);
-
-  //           this.drawing.polygon(
-  //             [
-  //               { x: x2, y: y7 },
-  //               { x: xd, y: (y7 + y8) / 2 },
-  //               { x: x2, y: y8 },
-  //             ],
-  //             color,
-  //           );
-  //           break;
-  //         }
-
-  //         case 'd': {
-  //           const { x3, x6, xa, xc, y3, y5, ya, yc } = this.cellOffsets(cell);
-
-  //           this.drawing.polygon(
-  //             [
-  //               { x: x3, y: y5 },
-  //               { x: (xa + xc) / 2, y: (ya + yc) / 2 },
-  //               { x: x6, y: y3 },
-  //             ],
-  //             color,
-  //           );
-  //           break;
-  //         }
-
-  //         case 'e': {
-  //           const { x6, x9, y2, yd } = this.cellOffsets(cell);
-
-  //           this.drawing.polygon(
-  //             [
-  //               { x: x6, y: y2 },
-  //               { x: (x6 + x9) / 2, y: yd },
-  //               { x: x9, y: y2 },
-  //             ],
-  //             color,
-  //           );
-  //           break;
-  //         }
-
-  //         case 'f': {
-  //           const { x3, x5, xa, xc, y3, y5, ya, yc } = this.cellOffsets(cell);
-  //           this.drawing.polygon(
-  //             [
-  //               { x: xa, y: y3 },
-  //               { x: (x3 + x5) / 2, y: (ya + yc) / 2 },
-  //               { x: xc, y: y5 },
-  //             ],
-  //             color,
-  //           );
-
-  //           break;
-  //         }
-
-  //         case 'g': {
-  //           const { x2, xd, y7, y8 } = this.cellOffsets(cell);
-
-  //           this.drawing.polygon(
-  //             [
-  //               { x: xd, y: y7 },
-  //               { x: x2, y: (y7 + y8) / 2 },
-  //               { x: xd, y: y8 },
-  //             ],
-  //             color,
-  //           );
-  //           break;
-  //         }
-
-  //         case 'h': {
-  //           const { x3, x6, xa, xc, y3, y5, ya, yc } = this.cellOffsets(cell);
-
-  //           this.drawing.polygon(
-  //             [
-  //               { x: xa, y: yc },
-  //               { x: (x3 + x6) / 2, y: (y3 + y5) / 2 },
-  //               { x: xc, y: ya },
-  //             ],
-  //             color,
-  //           );
-  //           break;
-  //         }
-
-  //         // no default
-  //       }
-  //     } else {
-  //       const { x2, x4, x6, y2, y4, y6 } = this.cellOffsets(cell);
-
-  //       switch (cell.direction) {
-  //         case 'i': {
-  //           this.drawing.polygon(
-  //             [
-  //               { x: x2, y: y4 },
-  //               { x: (x4 + x6) / 2, y: (y2 + y4) / 2 },
-  //               { x: x4, y: y6 },
-  //             ],
-  //             color,
-  //           );
-  //           break;
-  //         }
-
-  //         case 'j': {
-  //           this.drawing.polygon(
-  //             [
-  //               { x: x4, y: y2 },
-  //               { x: (x4 + x6) / 2, y: (y4 + y6) / 2 },
-  //               { x: x2, y: y4 },
-  //             ],
-  //             color,
-  //           );
-
-  //           break;
-  //         }
-
-  //         case 'k': {
-  //           this.drawing.polygon(
-  //             [
-  //               { x: x4, y: y2 },
-  //               { x: (x2 + x4) / 2, y: (y4 + y6) / 2 },
-  //               { x: x6, y: y4 },
-  //             ],
-  //             color,
-  //           );
-  //           break;
-  //         }
-
-  //         case 'l': {
-  //           this.drawing.polygon(
-  //             [
-  //               { x: x4, y: y6 },
-  //               { x: (x2 + x4) / 2, y: (y2 + y4) / 2 },
-  //               { x: x6, y: y4 },
-  //             ],
-  //             color,
-  //           );
-  //           break;
-  //         }
-
-  //         // no default
-  //       }
-  //     }
-  //   }
-  // }
-
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
       if (this.cellKind(cell) === 0) {
@@ -781,26 +606,6 @@ export class OctogonMaze extends Maze {
         this.drawing.line({ x: x2, y: y4 }, { x: x6, y: y4 }, color);
         this.drawing.line({ x: x4, y: y2 }, { x: x4, y: y6 }, color);
       }
-    }
-  }
-
-  public drawPath(cell: CellDirection, color = 'deepSkyBlue'): void {
-    if (this.drawing) {
-      const angle = {
-        a: 90,
-        b: 45,
-        c: 0,
-        d: 315,
-        e: 270,
-        f: 225,
-        g: 180,
-        h: 135,
-        i: 45,
-        j: 315,
-        k: 225,
-        l: 135,
-      }[cell.direction]!;
-      this.drawArrow(this.getRect(cell), angle, color);
     }
   }
 

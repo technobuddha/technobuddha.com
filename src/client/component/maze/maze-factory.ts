@@ -1,11 +1,12 @@
 import { type Drawing } from './drawing/drawing.js';
 import { type MazeGenerator, type MazeGeneratorProperties } from './generator/maze-generator.js';
 import { type Maze, type MazeProperties } from './maze/maze.js';
+import { type MazeSolver, type MazeSolverProperties } from './solver/maze-solver.js';
 
 export type MazeSettings = Partial<MazeProperties> & Partial<MazeGeneratorProperties>;
 
 export class MazeFactory {
-  public context: Drawing | undefined;
+  public drawing: Drawing | undefined;
   public width: MazeSettings['width'];
   public height: MazeSettings['height'];
   public cellSize: MazeSettings['cellSize'];
@@ -16,9 +17,10 @@ export class MazeFactory {
   public exit: MazeSettings['exit'];
   public start: MazeSettings['start'];
   public random: MazeSettings['random'];
+  public maskColor: MazeSettings['maskColor'];
 
   public constructor({
-    drawing: context,
+    drawing,
     random = Math.random,
     width,
     height,
@@ -26,11 +28,12 @@ export class MazeFactory {
     cellColor,
     wallSize,
     wallColor,
-    entrance = 'top left',
-    exit = 'bottom right',
-    start = 'random',
+    entrance,
+    exit,
+    start, // = 'random',
+    maskColor,
   }: MazeSettings = {}) {
-    this.context = context;
+    this.drawing = drawing;
     this.random = random;
     this.width = width;
     this.height = height;
@@ -41,14 +44,17 @@ export class MazeFactory {
     this.entrance = entrance;
     this.exit = exit;
     this.start = start;
+    this.maskColor = maskColor;
   }
 
   public async create(
     mazeMaker: (props: MazeSettings) => Maze,
     generator?: (props: MazeGeneratorProperties) => MazeGenerator,
+    mask?: (maze: Maze) => void,
+    solver?: (props: MazeSolverProperties) => MazeSolver,
   ): Promise<Maze> {
     const maze = mazeMaker({
-      drawing: this.context,
+      drawing: this.drawing,
       width: this.width,
       height: this.height,
       cellSize: this.cellSize,
@@ -57,20 +63,36 @@ export class MazeFactory {
       wallColor: this.wallColor,
       entrance: this.entrance,
       exit: this.exit,
+      maskColor: this.maskColor,
+      mask,
     });
 
+    maze.draw();
+
     if (generator) {
-      const mg = generator({
+      const gen = generator({
         maze,
         start: this.start,
         random: this.random,
       });
 
-      const m = await mg.generate();
-      return m.termini();
+      await gen.generate();
+      maze.addTermini();
+      maze.draw();
     }
 
-    maze.draw();
+    if (solver) {
+      const sol = solver({
+        maze,
+        drawing: this.drawing!,
+        random: this.random,
+      });
+
+      await sol.solve({
+        solutionColor: '#00FF00',
+      });
+    }
+
     return maze;
   }
 }

@@ -11,23 +11,23 @@ export type Theme = MuiTheme & {
 export const themeSettings = {
   palette: {
     primary: {
-      main: '#1B6CA8',
+      main: '#1B5CA8',
       contrastText: '#FFF',
     },
     secondary: {
-      main: '#F49F0A',
+      main: '#12664F',
     },
     error: {
-      main: '#DD2323',
+      main: '#BA1200',
     },
     warning: {
-      main: '#FEC601',
+      main: '#F4D35E',
     },
     info: {
-      main: '#610F7F',
+      main: '#A4036F',
     },
     success: {
-      main: '#07BF6C',
+      main: '#23CE6B',
     },
   },
   typography: {

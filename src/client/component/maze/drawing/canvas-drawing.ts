@@ -9,11 +9,6 @@ export class CanvasDrawing extends Drawing {
       super(context.canvas.width, context.canvas.height);
 
       this.canvas = context;
-
-      this.canvas.setTransform(1, 0, 0, 1, 0, 0);
-      this.canvas.translate(0.5, 0.5);
-
-      this.clear();
     } else {
       throw new Error('Failed to get 2D context');
     }
@@ -66,5 +61,12 @@ export class CanvasDrawing extends Drawing {
     const y =
       rect.y + (rect.h + (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)) / 2;
     this.canvas.fillText(text, x, y);
+  }
+
+  public override circle(center: XY, radius: number, color = 'black'): void {
+    this.canvas.fillStyle = color;
+    this.canvas.beginPath();
+    this.canvas.arc(center.x, center.y, radius, 0, 2 * Math.PI);
+    this.canvas.fill();
   }
 }

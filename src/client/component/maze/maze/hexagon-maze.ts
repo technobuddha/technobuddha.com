@@ -9,6 +9,7 @@ import {
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
+  pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
   sidesMatrix,
@@ -18,6 +19,7 @@ import {
   type Cell,
   type CellDirection,
   type CellPillar,
+  type DrawingSizes,
   type Kind,
   type MazeProperties,
 } from './maze.js';
@@ -40,15 +42,19 @@ export class HexagonMaze extends Maze {
       moveMatrix,
       sidesMatrix,
       edgesMatrix,
+      pathMatrix,
     );
   }
 
-  protected drawingWidth(): [cell: number, padding: number] {
-    return [this.cellSize * 0.75, this.cellSize * 0.5];
-  }
-
-  protected drawingHeight(): [cell: number, padding: number] {
-    return [this.cellSize * SIN60, this.cellSize * SIN60];
+  protected drawingSize(): DrawingSizes {
+    return {
+      groupWidth: this.cellSize * 0.75,
+      groupHeight: this.cellSize * SIN60,
+      leftPadding: this.cellSize * 0.25,
+      rightPadding: this.cellSize * 0.25,
+      topPadding: (this.cellSize * SIN60) / 2,
+      bottomPadding: (this.cellSize * SIN60) / 2,
+    };
   }
 
   protected cellKind(cell: Cell): number {
@@ -276,92 +282,6 @@ export class HexagonMaze extends Maze {
 
         // no default
       }
-    }
-  }
-
-  // public drawPath(cd: CellDirection, color = 'red'): void {
-  //   if (this.drawing) {
-  //     const { x2, x5, x6, x9, y2, y4, y5, y6 } = this.offsets(cd);
-
-  //     this.drawCell(cd);
-
-  //     switch (cd.direction) {
-  //       case 'a': {
-  //         this.drawing.polygon(
-  //           [
-  //             { x: x5, y: y6 },
-  //             { x: x6, y: y6 },
-  //             { x: (x5 + x6) / 2, y: y2 },
-  //           ],
-  //           color,
-  //         );
-  //         break;
-  //       }
-  //       case 'b': {
-  //         this.drawing.polygon(
-  //           [
-  //             { x: x2, y: y4 },
-  //             { x: x5, y: y6 },
-  //             { x: (x6 + x9) / 2, y: (y2 + y4) / 2 },
-  //           ],
-  //           color,
-  //         );
-  //         break;
-  //       }
-  //       case 'c': {
-  //         this.drawing.polygon(
-  //           [
-  //             { x: x2, y: y4 },
-  //             { x: x5, y: y2 },
-  //             { x: (x6 + x9) / 2, y: (y4 + y6) / 2 },
-  //           ],
-  //           color,
-  //         );
-  //         break;
-  //       }
-  //       case 'd': {
-  //         this.drawing.polygon(
-  //           [
-  //             { x: x5, y: y2 },
-  //             { x: x6, y: y2 },
-  //             { x: (x5 + x6) / 2, y: y6 },
-  //           ],
-  //           color,
-  //         );
-  //         break;
-  //       }
-  //       case 'e': {
-  //         this.drawing.polygon(
-  //           [
-  //             { x: x6, y: y2 },
-  //             { x: x9, y: y5 },
-  //             { x: (x2 + x5) / 2, y: (y4 + y6) / 2 },
-  //           ],
-  //           color,
-  //         );
-  //         break;
-  //       }
-  //       case 'f': {
-  //         this.drawing.polygon(
-  //           [
-  //             { x: x9, y: y4 },
-  //             { x: x6, y: y6 },
-  //             { x: (x2 + x5) / 2, y: (y2 + y4) / 2 },
-  //           ],
-  //           color,
-  //         );
-  //         break;
-  //       }
-
-  //       // no default
-  //     }
-  //   }
-  // }
-
-  public drawPath(cd: CellDirection, color = 'red'): void {
-    if (this.drawing) {
-      const angle = { a: 90, b: 30, c: 330, d: 270, e: 210, f: 150 }[cd.direction]!;
-      this.drawArrow(this.getRect(cd), angle, color);
     }
   }
 

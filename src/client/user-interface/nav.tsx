@@ -134,33 +134,35 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
         onMouseLeave={handleMouseLeave}
       >
         <List>
-          {components.map((component, i) => {
-            const Icon = component.icon;
-            const current = location.pathname.startsWith(component.location);
+          {components
+            ?.filter((c) => c.active)
+            .map((component, i) => {
+              const Icon = component.icon;
+              const current = location.pathname.startsWith(component.location);
 
-            return (
-              // eslint-disable-next-line react/no-array-index-key
-              <ListItem onClick={handleListClick(component.location)} key={i}>
-                <ListItemIcon>
-                  <Icon
-                    className={clsx(css.icon, {
-                      [css.current]: current,
-                      [css.available]: !current,
-                    })}
+              return (
+                // eslint-disable-next-line react/no-array-index-key
+                <ListItem onClick={handleListClick(component.location)} key={i}>
+                  <ListItemIcon>
+                    <Icon
+                      className={clsx(css.icon, {
+                        [css.current]: current,
+                        [css.available]: !current,
+                      })}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={component.primary}
+                    secondary={component.secondary}
+                    classes={{
+                      root: css.listItemText,
+                      primary: css.primary,
+                      secondary: css.secondary,
+                    }}
                   />
-                </ListItemIcon>
-                <ListItemText
-                  primary={component.primary}
-                  secondary={component.secondary}
-                  classes={{
-                    root: css.listItemText,
-                    primary: css.primary,
-                    secondary: css.secondary,
-                  }}
-                />
-              </ListItem>
-            );
-          })}
+                </ListItem>
+              );
+            })}
         </List>
       </Box>
     </Box>

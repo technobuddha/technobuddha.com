@@ -4,32 +4,31 @@ import { type CellDirection } from '../maze/maze.js';
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.js';
 
 type DeadEndProperties = MazeSolverProperties & {
-  method?: 'fill' | 'remove';
+  method?: 'cul-de-sac' | 'dead-end';
 };
 
-export class DeadEnd extends MazeSolver {
+export class Filler extends MazeSolver {
   protected method: DeadEndProperties['method'];
 
-  public constructor({ method = 'fill', ...props }: DeadEndProperties) {
+  public constructor({ method = 'cul-de-sac', ...props }: DeadEndProperties) {
     super(props);
     this.method = method;
   }
 
-  public async solve(): Promise<void> {
+  public async solve({ solutionColor = '#00FF00' }): Promise<void> {
     const walls = this.maze.cloneWalls();
-    this.maze.prepareDrawing(this.context);
+    this.maze.prepareDrawing(this.drawing);
 
     let deadEnds = this.randomShuffle(this.maze.deadEnds({ walls }));
     while (deadEnds.length > 0) {
       for (const deadEnd of deadEnds) {
-        if (this.method === 'fill') {
+        if (this.method === 'cul-de-sac') {
           for (let cell = deadEnd; this.maze.isDeadEnd(cell, { walls }); ) {
             const [move] = this.maze.validMoves(cell, { walls });
 
             await animate(() => {
               this.maze.addWall(cell, move.direction, { walls }, false);
-              // this.maze.drawCell(cell, this.maze.cellColor, this.maze.wallColor, { walls });
-              this.maze.drawX(cell, 'red');
+              this.maze.drawX(cell);
             });
             // eslint-disable-next-line require-atomic-updates
             cell = { x: move.x, y: move.y };
@@ -42,7 +41,7 @@ export class DeadEnd extends MazeSolver {
               this.maze.addWall(deadEnd, move.direction, { walls }, false);
             }
 
-            this.maze.drawX(deadEnd, 'pink');
+            this.maze.drawX(deadEnd);
           });
         }
       }
@@ -66,6 +65,7 @@ export class DeadEnd extends MazeSolver {
       cell = move;
     }
 
-    this.maze.drawPath(this.maze.exit);
+    this.maze.drawCell(this.maze.exit);
+    this.maze.drawPath(this.maze.exit, solutionColor);
   }
 }

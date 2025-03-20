@@ -2,8 +2,7 @@ import { create2DArray } from '@technobuddha/library';
 
 import { type Cell, type CellDirection } from '../maze/maze.js';
 
-import { type MazeGeneratorProperties } from './maze-generator.js';
-import { MazeGenerator } from './maze-generator.js';
+import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.js';
 
 export class Wilsons extends MazeGenerator {
   private readonly visited: boolean[][];
@@ -15,7 +14,9 @@ export class Wilsons extends MazeGenerator {
     const { width, height } = this.maze;
 
     this.visited = create2DArray(width, height, false);
-    this.unvisited = create2DArray(width, height, (x, y) => ({ x, y })).flat();
+    this.unvisited = create2DArray(width, height, (x, y) => ({ x, y }))
+      .flat()
+      .filter((cell) => this.maze.inMaze(cell));
 
     this.currentCell = this.start;
     this.markAsVisited(this.currentCell);

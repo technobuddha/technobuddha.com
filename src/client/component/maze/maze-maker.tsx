@@ -12,7 +12,12 @@ import { type MazeGenerator, type MazeGeneratorProperties } from './generator/ma
 import { Prims } from './generator/prims.js';
 import { RecursiveBacktracker } from './generator/recursive-backtracker.js';
 import { Wilsons } from './generator/wilsons.js';
+// import { Sample } from './generator/wip/sample.js';
+import { donutMask as donutMask } from './masks/donut.js';
+import { ellipiseMask } from './masks/ellipse.js';
+import { triangleMask } from './masks/triangle.js';
 import { BrickMaze } from './maze/brick-maze.js';
+// import { CubicMaze } from './maze/cubic-maze.js';
 import { HexagonMaze } from './maze/hexagon-maze.js';
 import { type Maze, type MazeProperties } from './maze/maze.js';
 import { OctogonMaze } from './maze/octogon-maze.js';
@@ -22,8 +27,8 @@ import { TriangleMaze } from './maze/triangle-maze.js';
 import { WedgeMaze } from './maze/wedge-maze.js';
 import { ZetaMaze } from './maze/zeta-maze.js';
 import { MazeFactory } from './maze-factory.js';
-import { DeadEnd } from './solver/dead-end.js';
 import { Dijkstras } from './solver/dijkstras.js';
+import { Filler } from './solver/filler.js';
 import { type MazeSolver, type MazeSolverProperties } from './solver/maze-solver.js';
 import { Search } from './solver/search.js';
 import { WallWalking } from './solver/wall-walking.js';
@@ -39,6 +44,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => (
 );
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
+  // cubic: (props) => new CubicMaze(props),
   pentagon: (props) => new PentagonMaze(props),
   brick: (props) => new BrickMaze(props),
   square: (props) => new SquareMaze(props),
@@ -58,10 +64,14 @@ const algorithms: Record<
   },
   huntAndKill: {
     random: (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
-    rows: (props) => new HuntAndKill({ huntMethod: 'rows', ...props }),
-    columns: (props) => new HuntAndKill({ huntMethod: 'columns', ...props }),
-    reverseRows: (props) => new HuntAndKill({ huntMethod: 'reverse-rows', ...props }),
-    reverseColumns: (props) => new HuntAndKill({ huntMethod: 'reverse-columns', ...props }),
+    topLeft: (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
+    topRight: (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
+    bottomLeft: (props) => new HuntAndKill({ huntMethod: 'bottom-left', ...props }),
+    bottomRight: (props) => new HuntAndKill({ huntMethod: 'bottom-right', ...props }),
+    leftTop: (props) => new HuntAndKill({ huntMethod: 'left-top', ...props }),
+    leftBottom: (props) => new HuntAndKill({ huntMethod: 'left-bottom', ...props }),
+    rightTop: (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
+    rightBottom: (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
   },
   growingTree: {
     newest: (props) => new GrowingTree({ method: 'newest', ...props }),
@@ -81,18 +91,24 @@ const algorithms: Record<
   wilsons: {
     normal: (props) => new Wilsons(props),
   },
+  // sample: {
+  // normal: (props) => new Sample(props),
+  // },
 };
 
 const solvers: Record<string, Record<string, (props: MazeSolverProperties) => MazeSolver>> = {
+  // trémaux: {
+  //   normal: (props) => new Trémaux(props),
+  // },
   search: {
     random: (props) => new Search({ method: 'random', ...props }),
     seekExit: (props) => new Search({ method: 'seek', ...props }),
     leftTurn: (props) => new Search({ method: 'left-turn', ...props }),
     rightTurn: (props) => new Search({ method: 'right-turn', ...props }),
   },
-  deadEnd: {
-    filler: (props) => new DeadEnd({ ...props, method: 'fill' }),
-    remover: (props) => new DeadEnd({ ...props, method: 'remove' }),
+  fill: {
+    deadEnd: (props) => new Filler({ ...props, method: 'dead-end' }),
+    culDeSac: (props) => new Filler({ ...props, method: 'cul-de-sac' }),
   },
   followWall: {
     right: (props) => new WallWalking({ ...props, turn: 'right' }),
@@ -101,6 +117,12 @@ const solvers: Record<string, Record<string, (props: MazeSolverProperties) => Ma
   dijkstras: {
     normal: (props) => new Dijkstras(props),
   },
+};
+
+const masks: Record<string, (maze: Maze) => void> = {
+  ellipse: ellipiseMask,
+  donut: donutMask,
+  triangle: triangleMask,
 };
 
 type MazeBoardProps = {
@@ -116,13 +138,17 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => 
   const [mazeName, setMazeName] = React.useState('');
   const [algorithmName, setAlgorithmName] = React.useState('');
   const [solverName, setSolverName] = React.useState('');
+  const [maskName, setMaskName] = React.useState('');
 
   React.useEffect(() => {
     if (canvasMaze.current && canvasSolve.current) {
-      const contextMaze = new CanvasDrawing(canvasMaze.current);
-      const contextSolve = new CanvasDrawing(canvasSolve.current);
+      const drawingMaze = new CanvasDrawing(canvasMaze.current);
+      const drawingSolve = new CanvasDrawing(canvasSolve.current);
 
-      const factory = new MazeFactory({ drawing: contextMaze });
+      drawingMaze.clear();
+      drawingSolve.clear();
+
+      const factory = new MazeFactory({ drawing: drawingMaze });
 
       const name = randomPick(Object.keys(mazes))!;
       const selectedMaze = mazes[name];
@@ -139,11 +165,22 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => 
       const selectedSolver = solvers[solver1][solver2];
       setSolverName(`${solver1} ${solver2}`);
 
-      void factory.create(selectedMaze, selectedAlgorithm).then((maze) => {
+      let mask: ((maze: Maze) => void) | undefined = undefined;
+      if (Math.random() < 0) {
+        const key = randomPick(Object.keys(masks))!;
+        setMaskName(key);
+        mask = masks[key];
+      } else {
+        setMaskName('');
+      }
+
+      void factory.create(selectedMaze, selectedAlgorithm, mask).then((maze) => {
         maze.draw();
         setTimeout(() => {
-          void selectedSolver({ maze, context: contextSolve })
-            .solve({})
+          void selectedSolver({ maze, drawing: drawingSolve })
+            .solve({
+              solutionColor: '#00FF00',
+            })
             .then(() => {
               setTimeout(() => {
                 setRedraw((x) => x + 1);
@@ -172,6 +209,9 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({ boxWidth, boxHeight }) => 
         {toCapitalWordCase(toHumanCase(algorithmName))}
         &nbsp;|&nbsp; Solver:&nbsp;
         {toCapitalWordCase(toHumanCase(solverName))}
+        {maskName !== '' && (
+          <span>&nbsp;|&nbsp; Mask:&nbsp;{toCapitalWordCase(toHumanCase(maskName))}</span>
+        )}
       </div>
       {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
       <canvas

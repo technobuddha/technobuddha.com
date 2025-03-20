@@ -1,0 +1,20 @@
+.maze-background {
+  position: relative;
+  background-color: black;
+  color: white;
+  z-index: 0;
+
+  .canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  .children {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+}

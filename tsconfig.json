@@ -11,5 +11,6 @@
     "lib": ["esnext"]
   },
   "include": ["*.config.js", "*.config.ts"],
-  "exclude": []
+  "exclude": [],
+  "references": [{ "path": "./src" }]
 }

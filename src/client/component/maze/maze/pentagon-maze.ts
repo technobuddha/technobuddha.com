@@ -7,6 +7,7 @@ import {
   type Cell,
   type CellDirection,
   type CellPillar,
+  type DrawingSizes,
   type Kind,
   type MazeProperties,
 } from './maze.js';
@@ -20,6 +21,7 @@ import {
   offsetXMatrix,
   offsetYMatrix,
   oppositeMatrix,
+  pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
   sidesMatrix,
@@ -39,23 +41,24 @@ export class PentagonMaze extends Maze {
       moveMatrix,
       sidesMatrix,
       edgesMatrix,
+      pathMatrix,
     );
   }
 
-  protected drawingWidth(): [cell: number, padding: number] {
-    return [(this.cellSize * 5) / 4, this.cellSize];
-  }
-
-  protected drawingHeight(): [cell: number, padding: number] {
-    return [this.cellSize, this.cellSize];
+  protected drawingSize(): DrawingSizes {
+    return {
+      groupWidth: this.cellSize * 5,
+      horizontalCellsPerGroup: 4,
+      groupHeight: this.cellSize,
+      topPadding: this.cellSize * 0.5,
+      bottomPadding: this.cellSize * 0.5,
+      leftPadding: this.cellSize * 0.5,
+      rightPadding: this.cellSize * 0.5,
+    };
   }
 
   protected cellKind(cell: Cell): number {
     return kindMatrix[modulo(cell.y, 5)][modulo(cell.x, 4)];
-  }
-
-  public divider(_cell1: Cell, _cell2: Cell): CellDirection[] {
-    throw new Error('Not Implemented');
   }
 
   protected cellOffsets(cell: Cell): Record<string, number> {
@@ -941,35 +944,6 @@ export class PentagonMaze extends Maze {
         // no default
       }
       //
-    }
-  }
-
-  public drawPath(cell: CellDirection, color = 'red'): void {
-    if (this.drawing) {
-      const angle = {
-        a: 90,
-        b: 0,
-        c: 315,
-        d: 225,
-        e: 180,
-        f: 90,
-        g: 45,
-        h: 315,
-        i: 270,
-        j: 180,
-        k: 90,
-        l: 0,
-        m: 270,
-        n: 225,
-        o: 135,
-        p: 135,
-        q: 45,
-        r: 0,
-        s: 270,
-        t: 180,
-      }[cell.direction]!;
-
-      this.drawArrow(this.getRect(cell), angle, color);
     }
   }
 

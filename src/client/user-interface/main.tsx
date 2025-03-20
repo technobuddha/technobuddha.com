@@ -18,10 +18,9 @@ export const Main: React.FC<MainProps> = ({ className }) => {
   return (
     <Box className={clsx(className, css.main)}>
       <Routes>
-        {components.map((component, i) => {
-          const Component = component.component;
-          // eslint-disable-next-line react/no-array-index-key
-          return <Route key={i} path={component.location} Component={Component} />;
+        {components?.map(({ component, location, name }) => {
+          const Component = component;
+          return <Route key={name} path={location} Component={Component} />;
         })}
         <Route path="*" element={<div>Catch-all route</div>} />
       </Routes>

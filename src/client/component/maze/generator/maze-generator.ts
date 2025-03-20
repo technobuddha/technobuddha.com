@@ -2,12 +2,10 @@ import { randomPick, randomShuffle } from '@technobuddha/library';
 
 import { animate } from '../drawing/animate.js';
 import { type Cell, type Maze } from '../maze/maze.js';
-import { type CSpecification } from '../util/specs.js';
-import { parsePoint } from '../util/specs.js';
 
 export type MazeGeneratorProperties = {
   maze: Maze;
-  start?: CSpecification;
+  start?: Cell;
   random?(this: void): number;
 };
 
@@ -19,7 +17,7 @@ export abstract class MazeGenerator {
 
   public constructor({ maze, start, random }: MazeGeneratorProperties) {
     this.maze = maze;
-    this.start = parsePoint(start ?? 'random', this.maze.width, this.maze.height);
+    this.start = start ?? this.maze.randomCell();
     this.currentCell = this.start;
     this.random = random ?? Math.random;
   }

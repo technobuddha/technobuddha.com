@@ -5,24 +5,25 @@ import { type CellDirection, type Maze } from '../maze/maze.js';
 
 export type MazeSolverProperties = {
   maze: Maze;
-  context: Drawing;
+  drawing: Drawing;
   random?(this: void): number;
 };
 
 export type SolveArguments = {
   color?: string;
+  solutionColor?: string;
   entrance?: CellDirection;
   exit?: CellDirection;
 };
 
 export abstract class MazeSolver {
   protected maze: MazeSolverProperties['maze'];
-  protected context: MazeSolverProperties['context'];
+  protected drawing: MazeSolverProperties['drawing'];
   protected random: () => number;
 
-  public constructor({ maze, context, random = Math.random }: MazeSolverProperties) {
+  public constructor({ maze, drawing, random = Math.random }: MazeSolverProperties) {
     this.maze = maze;
-    this.context = context;
+    this.drawing = drawing;
     this.random = random;
   }
 
@@ -34,5 +35,5 @@ export abstract class MazeSolver {
     return randomShuffle(array, this.random);
   }
 
-  public abstract solve({ color, entrance, exit }: SolveArguments): Promise<void>;
+  public abstract solve(args: SolveArguments): Promise<void>;
 }

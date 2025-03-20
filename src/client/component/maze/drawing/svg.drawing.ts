@@ -59,4 +59,8 @@ export class SVGDrawing extends Drawing {
   public text(_rect: Rect, _text: string, _color: string): void {
     throw new Error('Method not implemented.');
   }
+
+  public circle(center: XY, radius: number, color = 'black'): void {
+    this.svg.append(create('circle', { cx: center.x, cy: center.y, r: radius, fill: color }));
+  }
 }

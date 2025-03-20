@@ -19,4 +19,6 @@ export abstract class Drawing {
   public abstract polygon(points: XY[], color: string): void;
 
   public abstract text(rect: Rect, text: string, color?: string): void;
+
+  public abstract circle(center: XY, radius: number, color?: string): void;
 }

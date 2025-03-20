@@ -2,8 +2,7 @@ import { create2DArray } from '@technobuddha/library';
 
 import { type Cell } from '../maze/maze.js';
 
-import { type MazeGeneratorProperties } from './maze-generator.js';
-import { MazeGenerator } from './maze-generator.js';
+import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.js';
 
 export type Method = 'newest' | 'oldest' | 'middle' | 'random';
 

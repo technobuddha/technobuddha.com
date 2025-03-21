@@ -11,8 +11,8 @@ import { type Logger } from 'winston';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 export function listener(app: Express, logger: Logger): void {
-  const httpPort = Number.parseInt((process.env.HTTP_PORT ?? isDevelopment) ? '3000' : '8080');
-  const httpsPort = Number.parseInt(process.env.HTTPS_PORT ?? '8443');
+  const httpPort = Number.parseInt(process.env.HTTP_PORT ?? (isDevelopment ? '3000' : '80'));
+  const httpsPort = Number.parseInt(process.env.HTTPS_PORT ?? (isDevelopment ? '3443' : '443'));
 
   if (isDevelopment) {
     viteExpress.listen(app, httpPort, () => {

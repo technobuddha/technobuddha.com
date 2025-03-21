@@ -10,6 +10,9 @@ export type SpinnerComponent = {
 };
 
 export type SpinnerProps<T extends SpinnerComponent> = {
+  readonly size?: string;
+  readonly borderSize?: string;
+  readonly iconSize?: string;
   readonly components: T[];
   readonly speed?: number;
   onClick?(this: void, component: T): void;
@@ -17,15 +20,14 @@ export type SpinnerProps<T extends SpinnerComponent> = {
 };
 
 export function Spinner<T extends SpinnerComponent>({
+  size = '15rem',
+  borderSize = '6px',
+  iconSize = '20px',
   components,
-  speed = 10,
+  speed = 12,
   onClick,
   children,
 }: SpinnerProps<T>): React.ReactNode {
-  const size = '15rem';
-  const borderSize = '6px';
-  const iconSize = '20px';
-
   const animationId = React.useMemo(
     () => `spinner${Math.floor(Math.random() * 0xffffffff).toString(16)}`,
     [],
@@ -36,11 +38,11 @@ export function Spinner<T extends SpinnerComponent>({
 
     return `
       @keyframes ${animationId} {
-        0%                                     { opacity: 0; z-index: -1; max-height: 0;    }
-        ${(duration - speed + 0) * oneSecond}% { opacity: 0; z-index: -1; max-height: 0;    }
-        ${(duration - speed + 1) * oneSecond}% { opacity: 1; z-index: +1; max-height: 100%; }
-        ${(duration - 1) * oneSecond}%         { opacity: 1; z-index: +1; max-height: 100%; }
-        100%                                   { opacity: 0; z-index: -1; max-height: 0;    }
+        0%                                     { opacity: 0; z-index: -1; }
+        ${(duration - speed + 0) * oneSecond}% { opacity: 0; z-index: -1; }
+        ${(duration - speed + 1) * oneSecond}% { opacity: 1; z-index: +1; }
+        ${(duration - 1) * oneSecond}%         { opacity: 1; z-index: +1; }
+        100%                                   { opacity: 0; z-index: -1; }
       }
     `;
   }, [speed, components, animationId]);

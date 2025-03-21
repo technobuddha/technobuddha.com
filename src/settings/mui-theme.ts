@@ -1,5 +1,4 @@
-import { type Theme as MuiTheme } from '@mui/material/styles';
-import { createTheme } from '@mui/material/styles';
+import { createTheme, type Theme as MuiTheme } from '@mui/material';
 
 export type Theme = MuiTheme & {
   iconSize: number;
@@ -34,22 +33,22 @@ export const themeSettings = {
     fontSize: 14,
     fontFamily: '"Noto Sans", Arial, Helvetica, sans-serif',
     h1: {
-      fontSize: '2rem',
+      fontSize: '4.0rem',
     },
     h2: {
-      fontSize: '1.5rem',
+      fontSize: '3.0rem',
     },
     h3: {
-      fontSize: '1.17rem',
+      fontSize: '2.5rem',
     },
     h4: {
-      fontSize: '1rem',
+      fontSize: '2.0rem',
     },
     h5: {
-      fontSize: '.83rem',
+      fontSize: '1.5rem',
     },
     h6: {
-      fontSize: '0.67rem',
+      fontSize: '1.25rem',
     },
   },
 };

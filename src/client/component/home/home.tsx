@@ -38,19 +38,20 @@ export const Home: React.FC<HomeProps> = () => {
     <MazeBackground maskColor={theme.palette.primary.dark}>
       <div className={css.home}>
         <div className={css.introduction}>
-          <div className={css.logo}>
-            <Logo />
-          </div>
-          <div className={css.blurb}>
-            <div className={css.title}>Technobuddha</div>
-            <div className={css.description}>
-              A celebration of mathematics, programming and wasting time. Where sophisticated
-              algorithms, are used for no particular reason.
-            </div>
-            <div className={css.note}>
-              Use the navigation buttons on the left to explore the wonders of the Technobuddha.
-            </div>
-          </div>
+          <Logo className={css.logo} />
+          <Typography variant="h4" color={theme.palette.secondary.light}>
+            {t('Technobuddha')}
+          </Typography>
+          <Typography variant="body1">
+            {t(
+              'A celebration of mathematics, programming and wasting time. Where sophisticated algorithms, are used for no particular reason.',
+            )}
+          </Typography>
+          <Typography variant="body2" className={css.note}>
+            {t(
+              'Use the navigation buttons on the left to explore the wonders of the Technobuddha.',
+            )}
+          </Typography>
         </div>
         <div className={css.wheelOfComponents}>
           <Spinner components={translatedComponents} onClick={handleClick}>

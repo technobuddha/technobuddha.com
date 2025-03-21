@@ -1,6 +1,8 @@
 {
   "(upper-case, lower-case, digit, special)": "(upper-case, lower-case, digit, special)",
   "A": "A",
+  "A celebration of mathematics, programming and wasting time. Where sophisticated                 algorithms, are used for no particular reason.": "A celebration of mathematics, programming and wasting time. Where sophisticated                 algorithms, are used for no particular reason.",
+  "A celebration of mathematics, programming and wasting time. Where sophisticated algorithms, are used for no particular reason.": "A celebration of mathematics, programming and wasting time. Where sophisticated algorithms, are used for no particular reason.",
   "A word by itself is easy to guess": "A word by itself is easy to guess",
   "Add a \"What's new\" section.": "Add a \"What's new\" section.",
   "Add a description to this component": "Add a description to this component",
@@ -147,6 +149,7 @@
   "upper-case": "upper-case",
   "Use a few words, avoid common phrases": "Use a few words, avoid common phrases",
   "Use a longer keyboard pattern with more turns": "Use a longer keyboard pattern with more turns",
+  "Use the navigation buttons on the left to explore the wonders of the Technobuddha.": "Use the navigation buttons on the left to explore the wonders of the Technobuddha.",
   "Verify Password": "Verify Password",
   "very strong": "very strong",
   "very weak": "very weak",

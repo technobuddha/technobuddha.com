@@ -1,6 +1,20 @@
 .spinner {
   --main: calc(var(--size) + var(--border) * 2);
 
+  &:hover {
+    .iconContainer {
+      animation-play-state: paused !important;
+    }
+
+    .icon {
+      animation-play-state: paused !important;
+    }
+
+    .box {
+      animation-play-state: paused !important;
+    }
+  }
+
   height: var(--main);
   display: flex;
   background: mui-theme(palette-common-black);
@@ -85,14 +99,16 @@
 
     .box {
       position: absolute;
-      left: 2rem;
-      max-height: 0;
+      left: mui-spacing(2);
       height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: mui-spacing(1);
       text-align: justify;
       animation-direction: normal;
       animation-fill-mode: forwards;
       animation-iteration-count: infinite;
-      animation-play-state: runing;
+      animation-play-state: running;
       animation-timing-function: linear;
       color: white;
     }

@@ -62,8 +62,8 @@ declare module 'i18next-scanner' {
     input: string[];
     output: string;
     options: I18NextScannerOptions;
-    transform?(file: File, enc: string, done: () => void): void;
-    flush?(done: () => void): void;
+    transform?(this: void, file: File, enc: string, done: () => void): void;
+    flush?(this: void, done: () => void): void;
   };
 
   export class Parser {

@@ -20,7 +20,7 @@ import i18next from '#settings/i18next';
 
 function out(text: string | undefined): void {
   if (text) {
-    process.stdout.write(text);
+    // process.stdout.write(text);
   }
 }
 
@@ -64,15 +64,15 @@ void (async function main() {
       },
       func: {
         list: ['i18next.t', 'i18n.t', 't'],
-        extensions: ['.js', '.jsx'],
+        extensions: ['.ts', '.tsx'],
       },
-      trans: {
-        component: 'Trans',
-        i18nKey: 'i18nKey',
-        defaultsKey: 'defaults',
-        extensions: ['.js', '.jsx'],
-        fallbackKey: (_ns, text) => text,
-      },
+      // trans: {
+      //   component: 'Trans',
+      //   i18nKey: 'i18nKey',
+      //   defaultsKey: 'defaults',
+      //   extensions: ['.tsx'],
+      //   fallbackKey: (_ns, text) => text,
+      // },
 
       lngs: i18next.supportedLngs || undefined,
       ns: i18next.ns,
@@ -135,7 +135,7 @@ void (async function main() {
           }
 
           Promise.all(promises)
-            .then((results) => {
+            .then(async (results) => {
               for (const result of results) {
                 if (result.translation) {
                   newTranslations[result.key] = result.translation;
@@ -145,8 +145,8 @@ void (async function main() {
                 }
               }
 
-              writeTranslations(newTranslations, lng, ns);
-              writeTranslations(archiveTranslations, lng, ns, 'archive');
+              await writeTranslations(newTranslations, lng, ns);
+              await writeTranslations(archiveTranslations, lng, ns, 'archive');
 
               callback();
             })

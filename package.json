@@ -42,10 +42,12 @@
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
     "@types/response-time": "^2.3.8",
+    "@types/vinyl-fs": "3.0.5",
     "@types/zxcvbn": "^4.4.5",
     "@vitejs/plugin-react": "4.3.4",
     "cli-progress": "3.12.0",
     "glob": "11.0.1",
+    "i18next-scanner": "4.6.0",
     "n-readlines": "1.0.1",
     "node-pg-migrate": "7.9.1",
     "nodemon": "3.1.9",
@@ -56,6 +58,7 @@
     "tsx": "4.19.3",
     "type-fest": "4.39.1",
     "typescript": "5.8.3",
+    "vinyl-fs": "4.0.0",
     "vite": "6.2.5",
     "vite-plugin-node": "5.0.0",
     "vite-plugin-svgr": "4.3.0",
@@ -64,7 +67,7 @@
   "technobuddhaProject": {
     "version": "0.0.175",
     "created": "2020-04-01T04:20:42.690Z",
-    "updated": "2025-04-06T10:38:15.759Z"
+    "updated": "2025-04-06T19:53:46.281Z"
   },
   "type": "module",
   "engines": {

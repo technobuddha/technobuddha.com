@@ -11,7 +11,7 @@ import { app } from '@technobuddha/project';
 const config = [
   // scripts/tsconfig.json
   app.lint({
-    files: ['scripts/*.ts'],
+    files: ['scripts/**/*.ts'],
     ignores: [],
     environment: 'node',
     tsConfig: 'scripts/tsconfig.json',
@@ -55,8 +55,6 @@ const config = [
     tsConfig: 'src/settings/tsconfig.json',
     react: true,
   }),
-  // src/util/tsconfig.json
-  app.lint({ files: ['src/util/*.ts'], ignores: [], tsConfig: 'src/util/tsconfig.json' }),
   // tsconfig.json
   app.lint({ files: ['*.config.js'], ignores: [], environment: 'node' }),
   // tsconfig.json

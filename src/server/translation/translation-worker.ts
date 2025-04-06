@@ -4,12 +4,13 @@ import { isNil, keys, omit } from 'lodash-es';
 import { type Logger } from 'winston';
 
 import i18next from '#settings/i18next';
+
 import {
   readTranslations,
   translate,
   type TranslateReturn,
   writeTranslations,
-} from '#util/translation.js';
+} from './translation-utils.ts';
 
 export class TranslationWorker {
   private static readonly interval = 1000;

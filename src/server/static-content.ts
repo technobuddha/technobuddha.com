@@ -27,7 +27,7 @@ export function staticContent(app: Application, logger: Logger): void {
       res.send('Ting Tang Walla Walla Bing Bang\n');
     })
     .use('/.well-known/', express.static(paths.wellKnown), status404)
-    .get('/locales/*', express.static(paths.home), status404)
+    .use('/locales/', express.static(paths.locales), status404)
     .get(
       '/art/:id',
       (req, _res, next) => {

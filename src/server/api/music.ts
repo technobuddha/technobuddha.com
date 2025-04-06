@@ -1,7 +1,7 @@
 import { type Router, Router as router } from 'express';
 import { type Logger } from 'winston';
 
-import { getArtists, getGenres, getNewAlbums, getTracks } from '#server/db/music.js';
+import { getArtists, getGenres, getNewAlbums, getTracks } from '../db/music.ts';
 
 export function music(_logger: Logger): Router {
   return router()
@@ -31,9 +31,4 @@ export function music(_logger: Logger): Router {
     });
 }
 
-export {
-  type GetArtists,
-  type GetGenres,
-  type GetNewAlbums,
-  type GetTracks,
-} from '#server/db/music.js';
+export { type GetArtists, type GetGenres, type GetNewAlbums, type GetTracks } from '../db/music.ts';

@@ -31,19 +31,13 @@ const config = {
     'src/server': {
       environment: 'node',
       tsconfig: {
-        references: ['src/config', 'src/settings', 'src/util'],
+        references: ['src/config', 'src/settings'],
       },
     },
     'src/settings': {
       environment: 'universal',
       tsconfig: {
         references: ['src/client'],
-      },
-    },
-    'src/util': {
-      environment: 'universal',
-      tsconfig: {
-        references: ['src/config', 'src/settings'],
       },
     },
   },
@@ -57,7 +51,7 @@ const config = {
           '#control': ['./src/client/control/index.ts'],
           '#component*': ['./src/client/component*'],
           '#client*': ['./src/client*'],
-          '#server*': ['./src/server*'],
+          '#server/*': ['./src/server/*/index.ts'],
           '#util*': ['./src/util*'],
           '#settings*': ['./src/settings*'],
           '#config*': ['./src/config*'],

@@ -3,6 +3,9 @@ import { isUndefined } from 'lodash-es';
 import { type Logger } from 'winston';
 import zxcvbn from 'zxcvbn';
 
+import { authenticationSettings } from '#settings/authentication.js';
+
+import { cacheControl } from '../cache-control.ts';
 import {
   createAccount,
   createSession,
@@ -12,10 +15,7 @@ import {
   getAccountById,
   getSession,
   verifyPassword,
-} from '#server/db/authentication.js';
-import { authenticationSettings } from '#settings/authentication.js';
-
-import { cacheControl } from '../cache-control.ts';
+} from '../db/authentication.ts';
 
 export function authentication(_logger: Logger): Router {
   return router()

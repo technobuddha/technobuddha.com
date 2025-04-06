@@ -11,7 +11,6 @@
     { "path": "client" },
     { "path": "config" },
     { "path": "server" },
-    { "path": "settings" },
-    { "path": "util" }
+    { "path": "settings" }
   ]
 }

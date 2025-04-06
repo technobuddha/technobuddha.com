@@ -2,8 +2,7 @@ import React from 'react';
 import { DataGrid, type RowRenderer } from '@technobuddha/datagrid';
 import { MdMusicNote } from 'react-icons/md';
 
-import { type APIValue } from '#context/api';
-import { useAPI } from '#context/api';
+import { type Album, useAPI } from '#context/api';
 import { useTranslation } from '#context/i18n';
 import { DelayedLoading } from '#control';
 
@@ -12,13 +11,11 @@ import css from './new-albums.module.css';
 export const NewAlbums: React.FC = () => {
   const { t } = useTranslation();
   const api = useAPI();
-  const [dataset, setDataset] = React.useState<APIValue<
-    Awaited<ReturnType<typeof api.music.newAlbums>>
-  > | null>(null);
+  const [dataset, setDataset] = React.useState<Album[] | null>(null);
 
   React.useEffect(() => {
-    void api.music.newAlbums().then((tracks) => {
-      setDataset(tracks.payload);
+    void api.music.newAlbums().then((albums) => {
+      setDataset(albums);
     });
   }, [api]);
 

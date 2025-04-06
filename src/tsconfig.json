@@ -7,9 +7,9 @@
   "include": [],
   "exclude": [],
   "references": [
+    { "path": "api" },
     { "path": "client" },
     { "path": "config" },
-    { "path": "schema" },
     { "path": "server" },
     { "path": "settings" },
     { "path": "util" }

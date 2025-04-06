@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { type Account } from '#schema';
+import { type Account } from '#context/api';
 
 export type AuthenticationState = {
   error: boolean;

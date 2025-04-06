@@ -1,8 +1,7 @@
 import { type SnakeCase } from 'type-fest';
 
-import { type Track } from '#schema';
-
 import { db } from './driver.ts';
+import { type Track } from './schema/index.ts';
 
 type DBTrack = { [Key in keyof Track as SnakeCase<Key>]: Track[Key] };
 type Scalar<T extends unknown[]> = T[0];

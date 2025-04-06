@@ -1,7 +1,7 @@
-import { type Account, type AccountCreate, type Session } from '#schema';
 import { authenticationSettings } from '#settings/authentication';
 
 import { db } from './driver.ts';
+import { type Account, type AccountCreate, type Session } from './schema/index.ts';
 
 export async function getAccountById(id: number): Promise<Account | null> {
   return db.oneOrNone<Account>(

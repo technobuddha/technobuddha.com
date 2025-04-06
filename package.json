@@ -30,6 +30,7 @@
     "@dotenvx/dotenvx": "1.38.5",
     "@react-router/dev": "7.3.0",
     "@tailwindcss/vite": "4.0.14",
+    "@technobuddha/openapi": "link:../@technobuddha/openapi/",
     "@technobuddha/project": "0.0.175",
     "@types/cli-progress": "^3.11.6",
     "@types/cookie-parser": "^1.4.8",
@@ -49,11 +50,13 @@
     "n-readlines": "1.0.3",
     "node-pg-migrate": "7.9.1",
     "nodemon": "3.1.9",
+    "openapi-types": "12.1.3",
     "postcss": "8.5.3",
     "postcss-mui-theme": "1.3.9",
     "react-router-devtools": "1.1.6",
     "tailwindcss": "4.0.14",
     "tsx": "4.19.3",
+    "type-fest": "4.38.0",
     "typescript": "5.8.2",
     "vite": "6.2.2",
     "vite-plugin-node": "4.0.0",
@@ -63,7 +66,7 @@
   "technobuddhaProject": {
     "version": "0.0.175",
     "created": "2020-04-01T04:20:42.690Z",
-    "updated": "2025-03-20T21:17:20.297Z"
+    "updated": "2025-04-06T10:38:15.759Z"
   },
   "type": "module",
   "engines": {
@@ -83,8 +86,10 @@
     "@technobuddha/react-hooks": "1.6.1",
     "@technobuddha/size": "1.9.8",
     "@types/browserslist-useragent": "3.0.7",
+    "ajv": "8.17.1",
     "browserslist": "4.24.4",
     "browserslist-useragent": "4.0.0",
+    "camelcase-keys": "9.1.3",
     "cheferizeIt": "1.0.4",
     "clsx": "2.1.1",
     "comlink": "4.4.2",

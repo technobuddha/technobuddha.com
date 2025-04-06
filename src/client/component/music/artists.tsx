@@ -1,19 +1,17 @@
 import React from 'react';
 import { DataGrid } from '@technobuddha/datagrid';
 
-import { type APIValue } from '#context/api';
+import { type Artist } from '#context/api';
 import { useAPI } from '#context/api';
 import { DelayedLoading } from '#control';
 
 export const Artists: React.FC = () => {
   const api = useAPI();
-  const [dataset, setDataset] = React.useState<APIValue<
-    Awaited<ReturnType<typeof api.music.artists>>
-  > | null>(null);
+  const [dataset, setDataset] = React.useState<Artist[] | null>(null);
 
   React.useEffect(() => {
-    void api.music.artists().then((tracks) => {
-      setDataset(tracks.payload);
+    void api.music.artists().then((artists) => {
+      setDataset(artists);
     });
   }, [api]);
 

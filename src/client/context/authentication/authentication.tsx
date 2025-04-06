@@ -1,8 +1,7 @@
 import React from 'react';
 import { shallowEquals } from '@technobuddha/library';
 
-import { useAPI } from '#context/api';
-import { type Account } from '#schema';
+import { type Account, useAPI } from '#context/api';
 import { authenticationSettings } from '#settings/authentication';
 
 import { AuthenticationContext } from './context.ts';
@@ -17,11 +16,11 @@ const GENERIC_USER: Account = {
   admin: false,
   disabled: false,
   confirmed: null,
-  failed_logins: 0,
+  failedLogins: 0,
   locked: null,
-  created: new Date(),
+  created: new Date().toISOString(),
   updated: null,
-  policy_accepted: null,
+  policyAccepted: null,
 };
 
 const killTimeout = (): void => {
@@ -46,14 +45,15 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
     if (authenticationSettings.login) {
       return authentication
         .readSession()
-        .then((api) => {
-          if (api.status === 200) {
-            if (!shallowEquals(api.payload, account)) {
-              setAccount(api.payload);
+        .then((session) => {
+          if (session) {
+            if (!shallowEquals(session, account)) {
+              setAccount(session as unknown as Account);
             }
-          } else if (api.status === 401) {
+          } else {
             setAccount(null);
           }
+
           return undefined;
         })
         .catch(() => {
@@ -63,6 +63,7 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
     }
 
     setAccount(GENERIC_USER);
+    return undefined;
   }, [account, authentication]);
 
   const initialCheck = React.useCallback(async (): Promise<void> => {
@@ -99,14 +100,16 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
 
   const login = React.useCallback(
     async (username: string, password: string): Promise<boolean> =>
-      authentication.createSession(username, password).then((result) => {
-        if (result.status === 201) {
-          setAccount(result.payload);
+      authentication.createSession(username, password).then((session) => {
+        if (session) {
+          if (!shallowEquals(session, account)) {
+            setAccount(session as unknown as Account);
+          }
           return true;
         }
         return false;
       }),
-    [authentication],
+    [account, authentication],
   );
 
   const logout = React.useCallback(async (): Promise<void> => {
@@ -116,10 +119,10 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
 
   const createAccount = React.useCallback(
     async (first: string, last: string, email: string, password: string): Promise<Account | null> =>
-      authentication.createAccount(first, last, email, password).then((result) => {
-        if (result.status === 201) {
-          setAccount(result.payload);
-          return result.payload;
+      authentication.createAccount(first, last, email, password).then((session) => {
+        if (session) {
+          setAccount(session as unknown as Account);
+          return session as unknown as Account;
         }
         return null;
       }),

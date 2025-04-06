@@ -2,19 +2,17 @@ import React from 'react';
 import { DataGrid } from '@technobuddha/datagrid';
 import { MdAlbum, MdGroup, MdMusicNote } from 'react-icons/md';
 
-import { type APIValue } from '#context/api';
+import { type Track } from '#context/api';
 import { useAPI } from '#context/api';
 import { DelayedLoading } from '#control';
 
 export const Tracks: React.FC = () => {
   const api = useAPI();
-  const [dataset, setDataset] = React.useState<APIValue<
-    Awaited<ReturnType<typeof api.music.tracks>>
-  > | null>(null);
+  const [dataset, setDataset] = React.useState<Track[] | null>(null);
 
   React.useEffect(() => {
     void api.music.tracks().then((tracks) => {
-      setDataset(tracks.payload);
+      setDataset(tracks);
     });
   }, [api]);
 

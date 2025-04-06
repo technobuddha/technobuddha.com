@@ -1,0 +1,396 @@
+openapi: 3.0.2
+info:
+  title: Technobuddha Authentication API
+  version: 0.1.0
+  description: >-
+    Technobuddha authorization
+paths:
+  /api/authentication/session:
+    description: Login Session
+    parameters:
+      - $ref: '#/components/parameters/accept'
+      - $ref: '#/components/parameters/accept-encoding'
+    get:
+      description: Get login session
+      summary: Get login session
+      deprecated: false
+      operationId: readSession
+      parameters:
+        - $ref: '#/components/parameters/session'
+      responses:
+        '200':
+          $ref: '#/components/responses/Account'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      description: Create login session
+      summary: Create login session
+      deprecated: false
+      operationId: createSession
+      parameters:
+        - $ref: '#/components/parameters/session'
+      requestBody:
+        $ref: '#/components/requestBodies/AccountLogin'
+      responses:
+        '201':
+          $ref: '#/components/responses/Account'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      description: Delete login session
+      summary: Delete login session
+      deprecated: false
+      operationId: deleteSession
+      parameters:
+        - $ref: '#/components/parameters/session'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/authentication/check-password-strength:
+    description: Login Session
+    parameters:
+      - $ref: '#/components/parameters/accept'
+      - $ref: '#/components/parameters/accept-encoding'
+    post:
+      description: Check Password Strength
+      summary: Check Password Strength
+      deprecated: false
+      operationId: checkPasswordStrength
+      requestBody:
+        $ref: '#/components/requestBodies/CheckPasswordStrength'
+      responses:
+        '200':
+          $ref: '#/components/responses/PasswordStrength'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/authentication/account:
+    description: Create an account
+    parameters:
+      - $ref: '#/components/parameters/accept'
+      - $ref: '#/components/parameters/accept-encoding'
+    put:
+      description: Create Account
+      summary: Create Account
+      deprecated: false
+      operationId: createAccount
+      requestBody:
+        $ref: '#/components/requestBodies/AccountCreate'
+      responses:
+        '200':
+          $ref: '#/components/responses/Account'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+servers: [{ 'url': 'http://localhost' }]
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: number
+        email:
+          type: string
+        first:
+          type: string
+        last:
+          type: string
+        admin:
+          type: boolean
+        disabled:
+          type: boolean
+        confirmed:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        failed_logins:
+          type: number
+        locked:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        created:
+          type: string
+          format: date-time
+        updated:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        policy_accepted:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+      required:
+        - id
+        - email
+        - first
+        - last
+        - admin
+        - disabled
+        - confirmed
+        - failed_logins
+        - locked
+        - created
+        - updated
+        - policy_accepted
+      additionalProperties: false
+    AccountCreate:
+      type: object
+      properties:
+        email:
+          type: string
+        first:
+          type: string
+        last:
+          type: string
+        admin:
+          type: boolean
+        disabled:
+          type: boolean
+        confirmed:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        failed_logins:
+          type: number
+        locked:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        created:
+          type: string
+          format: date-time
+        updated:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        policy_accepted:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        password:
+          type: string
+      required:
+        - email
+        - first
+        - last
+        - password
+      additionalProperties: false
+    AccountLogin:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+      additionalProperties: false
+    CheckPasswordStrength:
+      type: object
+      properties:
+        password:
+          type: string
+        userInputs:
+          type: array
+          items:
+            type: string
+      required:
+        - password
+      additionalProperties: false
+    PasswordStrength:
+      type: object
+      properties:
+        score:
+          type: number
+          minimum: 0
+          maximum: 4
+        warning:
+          type: string
+        suggestions:
+          type: array
+          items:
+            type: string
+      required:
+        - score
+        - warning
+        - suggestions
+      additionalProperties: false
+    Exception400:
+      type: object
+      properties:
+        exception:
+          type: string
+          example: BadRequestException
+        message:
+          type: array
+          items:
+            type: string
+            example: 'Error message'
+        statusCode:
+          type: number
+          example: 400
+        timestamp:
+          type: string
+          format: date-time
+          example: '2024-09-16T15:51:29.832Z'
+        method:
+          type: string
+          example: 'POST'
+        path:
+          type: string
+          example: '/households/1234567890'
+    Exception401:
+      type: string
+    Exception500:
+      type: object
+      properties:
+        exception:
+          type: string
+          example: InternalServerError
+        message:
+          type: array
+          items:
+            type: string
+        statusCode:
+          type: number
+          example: 500
+        timestamp:
+          type: string
+          format: date-time
+          example: '2024-09-16T15:51:29.832Z'
+        method:
+          type: string
+          example: 'POST'
+        path:
+          type: string
+          example: '/households/1234567890'
+  parameters:
+    'accept':
+      name: accept
+      in: header
+      required: true
+      description: 'Acceptable content-types'
+      example: application/json
+      schema:
+        type: string
+    'accept-encoding':
+      name: accept-encoding
+      in: header
+      required: false
+      description: 'Acceptable content encodings'
+      example: gzip, deflate
+      schema:
+        type: string
+    'session':
+      name: session
+      in: cookie
+      required: false
+      description: 'Session cookie'
+      schema:
+        type: string
+  headers:
+    'ContentType':
+      description: The MIME type of the body of the response.
+      style: simple
+      explode: false
+      schema:
+        type: string
+    'CacheControl':
+      description: Header used to direct caching done by browsers. Must be set to 'no-store'
+      example: no-store
+      style: simple
+      explode: false
+      schema:
+        type: string
+    'Set-Cookie':
+      description: The Set-Cookie header used to set the session cookie.
+      style: simple
+      explode: false
+      schema:
+        type: string
+  requestBodies:
+    CheckPasswordStrength:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CheckPasswordStrength'
+    AccountCreate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountCreate'
+    AccountLogin:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountLogin'
+  responses:
+    Account:
+      description: Account information
+      headers:
+        content-type:
+          $ref: '#/components/headers/ContentType'
+        cache-control:
+          $ref: '#/components/headers/CacheControl'
+        set-cookie:
+          $ref: '#/components/headers/Set-Cookie'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    PasswordStrength:
+      description: Password strength information
+      headers:
+        content-type:
+          $ref: '#/components/headers/ContentType'
+        cache-control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PasswordStrength'
+    BadRequest:
+      description: BAD REQUEST
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Exception400'
+    Unauthorized:
+      description: UNAUTHORIZED
+      headers:
+        set-cookie:
+          $ref: '#/components/headers/Set-Cookie'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Exception401'
+    NoContent:
+      description: NO CONTENT
+      headers:
+        set-cookie:
+          $ref: '#/components/headers/Set-Cookie'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Exception500'

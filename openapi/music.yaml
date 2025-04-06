@@ -22,9 +22,136 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /api/music/new-albums:
+    description: Collection of of all new albums
+    parameters:
+      - $ref: '#/components/parameters/accept'
+      - $ref: '#/components/parameters/accept-encoding'
+    get:
+      description: Get new albums
+      summary: Get new albums
+      deprecated: false
+      operationId: getNewAlbums
+      responses:
+        '200':
+          $ref: '#/components/responses/Albums'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/music/artists:
+    description: Collection of of all artists
+    parameters:
+      - $ref: '#/components/parameters/accept'
+      - $ref: '#/components/parameters/accept-encoding'
+    get:
+      description: Get artists
+      summary: Get artists
+      deprecated: false
+      operationId: getArtists
+      responses:
+        '200':
+          $ref: '#/components/responses/Artists'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/music/genres:
+    description: Collection of of all genres
+    parameters:
+      - $ref: '#/components/parameters/accept'
+      - $ref: '#/components/parameters/accept-encoding'
+    get:
+      description: Get genres
+      summary: Get genres
+      deprecated: false
+      operationId: getGenres
+      responses:
+        '200':
+          $ref: '#/components/responses/Genres'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 servers: [{ 'url': 'http://localhost' }]
 components:
   schemas:
+    Album:
+      type: object
+      properties:
+        artist:
+          type: array
+          items:
+            type: string
+        album:
+          type: string
+        year:
+          type: number
+        genre:
+          type: array
+          items:
+            type: string
+        subgenre:
+          type: array
+          items:
+            type: string
+        title:
+          type: array
+          items:
+            type: string
+      required:
+        - artist
+        - album
+        - year
+        - genre
+        - subgenre
+        - title
+      additionalProperties: false
+    Artist:
+      type: object
+      properties:
+        artist:
+          type: string
+        album:
+          type: string
+        genre:
+          type: array
+          items:
+            type: string
+        subgenre:
+          type: array
+          items:
+            type: string
+        year:
+          type: number
+      required:
+        - artist
+        - album
+        - genre
+        - subgenre
+        - year
+      additionalProperties: false
+    Genre:
+      type: object
+      properties:
+        genre:
+          type: array
+          items:
+            type: string
+        subgenre:
+          type: array
+          items:
+            type: string
+        album:
+          type: string
+        year:
+          type: number
+      required:
+        - genre
+        - subgenre
+        - album
+        - year
+      additionalProperties: false
     Track:
       type: object
       properties:
@@ -45,15 +172,17 @@ components:
           type: string
         genre:
           type: array
-          items: string
-        required:
-          - artist
-          - album
-          - disc_number
-          - track_number
-          - title
-          - genre
-        additionalProperties: false
+          items:
+            type: string
+      required:
+        - artist
+        - album
+        - disc_number
+        - track_number
+        - title
+        - genre
+      additionalProperties: false
+
     Exception400:
       type: object
       properties:
@@ -88,7 +217,6 @@ components:
           type: array
           items:
             type: string
-            example: 'Error message'
         statusCode:
           type: number
           example: 500
@@ -102,46 +230,6 @@ components:
         path:
           type: string
           example: '/households/1234567890'
-  requestBodies:
-    HouseholdRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/HouseholdRequest'
-      required: true
-    HouseholdNameRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/HouseholdNameRequest'
-      required: true
-    UserRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UserRequest'
-      required: true
-    MobileDeviceRequest:
-      description: Create a new mobile device for user
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MobileDeviceRequest'
-      required: true
-    PushNotificationMobileDeviceRequest:
-      description: Create or replace push notification info
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PushNotificationMobileDeviceRequest'
-      required: true
-    VoiceAssistantRequest:
-      description: Create a new voice assistant for a user
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VoiceAssistantRequest'
-      required: true
   parameters:
     accept:
       name: accept
@@ -159,38 +247,6 @@ components:
       example: gzip, deflate
       schema:
         type: string
-    PageSize:
-      name: pageSize
-      in: query
-      required: false
-      description: 'The number of items in a page for pagination operations.'
-      example: 100
-      schema:
-        type: integer
-    MaxItems:
-      name: maxItems
-      in: query
-      required: false
-      description: 'The maximum number of items to query for.'
-      example: 1000
-      schema:
-        type: integer
-    StartingToken:
-      name: startingToken
-      in: query
-      required: false
-      description: 'The starting token or marker to use for the request.'
-      example: ABC123DEF
-      schema:
-        type: string
-    RequestSignature:
-      name: x-iotn-request-signature
-      in: header
-      required: true
-      description: 'The request signature'
-      example: FADBE2D888...
-      schema:
-        type: string
   headers:
     ContentType:
       description: The MIME type of the body of the response.
@@ -206,8 +262,8 @@ components:
       schema:
         type: string
   responses:
-    Tracks:
-      description: A list of htracks
+    Albums:
+      description: A list of albums
       headers:
         content-type:
           $ref: '#/components/headers/ContentType'
@@ -216,7 +272,48 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Track'
+            type: array
+            items:
+              $ref: '#/components/schemas/Album'
+    Artists:
+      description: A list of artists
+      headers:
+        content-type:
+          $ref: '#/components/headers/ContentType'
+        cache-control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Artist'
+    Genres:
+      description: A list of artists
+      headers:
+        content-type:
+          $ref: '#/components/headers/ContentType'
+        cache-control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Genre'
+    Tracks:
+      description: A list of tracks
+      headers:
+        content-type:
+          $ref: '#/components/headers/ContentType'
+        cache-control:
+          $ref: '#/components/headers/CacheControl'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Track'
     BadRequest:
       description: BAD REQUEST
       content:

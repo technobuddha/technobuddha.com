@@ -318,7 +318,7 @@ export abstract class Maze {
     return this.walls.map((row) => [...structuredClone(row)]);
   }
 
-  protected computeDistances(point: Cell = this.entrance): { maxDistance: number; maxCell: Cell } {
+  public computeDistances(point: Cell = this.entrance): { maxDistance: number; maxCell: Cell } {
     const queue: Cell[] = [];
     queue.unshift(point);
 

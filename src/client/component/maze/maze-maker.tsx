@@ -11,7 +11,7 @@ import { type MazeGenerator, type MazeGeneratorProperties } from './generator/ma
 import { Prims } from './generator/prims.ts';
 import { RecursiveBacktracker } from './generator/recursive-backtracker.ts';
 import { Wilsons } from './generator/wilsons.ts';
-// import { Sample } from './generator/wip/sample.js';
+// import { Sample } from './generator/wip/sample.ts';
 import { donutMask } from './masks/donut.ts';
 import { ellipiseMask } from './masks/ellipse.ts';
 import { triangleMask } from './masks/triangle.ts';
@@ -30,13 +30,14 @@ import { Dijkstras } from './solver/dijkstras.ts';
 import { Filler } from './solver/filler.ts';
 import { type MazeSolver, type MazeSolverProperties } from './solver/maze-solver.ts';
 import { Search } from './solver/search.ts';
+import { Tremaux } from './solver/tremaux.ts';
 import { WallWalking } from './solver/wall-walking.ts';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   // cubic: (props) => new CubicMaze(props),
   pentagon: (props) => new PentagonMaze(props),
   brick: (props) => new BrickMaze(props),
-  square: (props) => new SquareMaze(props),
+  square: (props) => new SquareMaze(props), //({ ...props, entrance: { x: 0, y: 0 }, exit: { x: 12, y: 14 } }),
   triangle: (props) => new TriangleMaze(props),
   hexagon: (props) => new HexagonMaze(props),
   octogon: (props) => new OctogonMaze(props),
@@ -48,7 +49,7 @@ const algorithms: Record<
   string,
   Record<string, (props: MazeGeneratorProperties) => MazeGenerator>
 > = {
-  blob: {
+  division: {
     normal: (props) => new Blob(props),
   },
   huntAndKill: {
@@ -76,19 +77,48 @@ const algorithms: Record<
   },
   recursizeBacktracker: {
     normal: (props) => new RecursiveBacktracker(props),
+    parallel: (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
+    swirl: (props) =>
+      new RecursiveBacktracker({
+        strategy: [
+          'right-turn',
+          'left-turn',
+          'random',
+          'random',
+          'random',
+          'random',
+          'random',
+          'random',
+        ],
+        ...props,
+      }),
+    whirpool: (props) =>
+      new RecursiveBacktracker({
+        strategy: [
+          'right-turn',
+          'left-turn',
+          'right-turn',
+          'left-turn',
+          'right-turn',
+          'left-turn',
+          'right-turn',
+          'left-turn',
+        ],
+        ...props,
+      }),
   },
   wilsons: {
     normal: (props) => new Wilsons(props),
   },
   // sample: {
-  // normal: (props) => new Sample(props),
+  //   normal: (props) => new Sample(props),
   // },
 };
 
 const solvers: Record<string, Record<string, (props: MazeSolverProperties) => MazeSolver>> = {
-  // trémaux: {
-  //   normal: (props) => new Trémaux(props),
-  // },
+  trémaux: {
+    normal: (props) => new Tremaux(props),
+  },
   search: {
     random: (props) => new Search({ method: 'random', ...props }),
     seekExit: (props) => new Search({ method: 'seek', ...props }),
@@ -166,14 +196,16 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       void factory.create(selectedMaze, selectedAlgorithm, mask).then((maze) => {
         maze.draw();
         setTimeout(() => {
-          void selectedSolver({ maze, drawing: drawingSolve })
+          const solver = selectedSolver({ maze, drawing: drawingSolve });
+
+          void solver
             .solve({
               solutionColor: '#00FF00',
             })
             .then(() => {
               setTimeout(() => {
                 setRedraw((x) => x + 1);
-              }, 10000);
+              }, 6000);
             });
         }, 0);
       });

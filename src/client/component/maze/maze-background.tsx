@@ -61,6 +61,35 @@ const algorithms: Record<
   },
   recursizeBacktracker: {
     normal: (props) => new RecursiveBacktracker(props),
+    parallel: (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
+    swirl: (props) =>
+      new RecursiveBacktracker({
+        strategy: [
+          'right-turn',
+          'left-turn',
+          'random',
+          'random',
+          'random',
+          'random',
+          'random',
+          'random',
+        ],
+        ...props,
+      }),
+    whirpool: (props) =>
+      new RecursiveBacktracker({
+        strategy: [
+          'right-turn',
+          'left-turn',
+          'right-turn',
+          'left-turn',
+          'right-turn',
+          'left-turn',
+          'right-turn',
+          'left-turn',
+        ],
+        ...props,
+      }),
   },
   wilsons: {
     normal: (props) => new Wilsons(props),

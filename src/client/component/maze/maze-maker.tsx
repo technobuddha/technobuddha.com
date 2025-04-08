@@ -2,6 +2,7 @@ import React from 'react';
 import { randomPick, toCapitalWordCase, toHumanCase } from '@technobuddha/library';
 import { useMeasure } from 'react-use';
 
+import { animate } from './drawing/animate.ts';
 import { CanvasDrawing } from './drawing/canvas-drawing.ts';
 import { Blob } from './generator/blob.ts';
 import { GrowingTree } from './generator/growing-tree.ts';
@@ -193,21 +194,10 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         setMaskName('');
       }
 
-      void factory.create(selectedMaze, selectedAlgorithm, mask).then((maze) => {
-        maze.draw();
+      void factory.create(selectedMaze, selectedAlgorithm, mask, selectedSolver).then((maze) => {
         setTimeout(() => {
-          const solver = selectedSolver({ maze, drawing: drawingSolve });
-
-          void solver
-            .solve({
-              solutionColor: '#00FF00',
-            })
-            .then(() => {
-              setTimeout(() => {
-                setRedraw((x) => x + 1);
-              }, 6000);
-            });
-        }, 0);
+          setRedraw((x) => x + 1);
+        }, 6000);
       });
     }
   }, [redraw, height, width]);

@@ -1,3 +1,4 @@
+import { animate } from './drawing/animate.ts';
 import { type Drawing } from './drawing/drawing.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from './generator/maze-generator.ts';
 import { type Maze, type MazeProperties } from './maze/maze.ts';
@@ -82,15 +83,17 @@ export class MazeFactory {
     }
 
     if (solver) {
-      const sol = solver({
+      const solution = solver({
         maze,
         drawing: this.drawing!,
         random: this.random,
-      });
-
-      await sol.solve({
+      }).solve({
         solutionColor: '#00FF00',
       });
+
+      while (!(await animate(() => solution.next())).done) {
+        //
+      }
     }
 
     return maze;

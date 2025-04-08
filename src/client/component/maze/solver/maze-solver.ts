@@ -35,5 +35,5 @@ export abstract class MazeSolver {
     return randomShuffle(array, this.random);
   }
 
-  public abstract solve(args: SolveArguments): Promise<void>;
+  public abstract solve(args: SolveArguments): Iterator<void>;
 }

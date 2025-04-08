@@ -1,6 +1,5 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { animate } from '../drawing/animate.ts';
 import { type Cell, type CellDirection, type Direction } from '../maze/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
@@ -29,32 +28,25 @@ export class Tremaux extends MazeSolver {
     }
   }
 
-  private async moveTo(next: CellDirection): Promise<void> {
-    return animate(() => {
-      this.marks[this.curr.x][this.curr.y][next.direction]++;
-      this.marks[next.x][next.y][this.maze.opposite(next.direction)]++;
+  private moveTo(next: CellDirection): void {
+    this.marks[this.curr.x][this.curr.y][next.direction]++;
+    this.marks[next.x][next.y][this.maze.opposite(next.direction)]++;
 
-      this.maze.drawCell(this.curr);
-      for (const direction of Object.keys(this.marks[this.curr.x][this.curr.y])) {
-        this.drawMark({ ...this.curr, direction });
-      }
+    this.maze.drawCell(this.curr);
+    for (const direction of Object.keys(this.marks[this.curr.x][this.curr.y])) {
+      this.drawMark({ ...this.curr, direction });
+    }
 
-      this.maze.drawCell(next, ' #6495ED');
-      for (const direction of Object.keys(this.marks[next.x][next.y])) {
-        this.drawMark({ ...next, direction });
-      }
+    this.maze.drawCell(next, ' #6495ED');
+    for (const direction of Object.keys(this.marks[next.x][next.y])) {
+      this.drawMark({ ...next, direction });
+    }
 
-      this.prev = this.curr;
-      this.curr = next;
-    });
+    this.prev = this.curr;
+    this.curr = next;
   }
 
-  public async solve({
-    // color =' #6495ED',
-    // solutionColor = '#00FF00',
-    entrance = this.maze.entrance,
-    // exit = this.maze.exit,
-  } = {}): Promise<void> {
+  public *solve({ entrance = this.maze.entrance } = {}): Iterator<void> {
     this.curr = entrance;
     this.prev = undefined;
 
@@ -75,7 +67,8 @@ export class Tremaux extends MazeSolver {
         //    of the maze and there are no marked entrances at all.
         const next = this.randomPick(moves)!;
         //           //this.marks[next.x][next.y]++;
-        await this.moveTo(next);
+        this.moveTo(next);
+        yield;
       } else if (
         prevMove &&
         moves.every((m) => marks[m.direction] === 1) &&
@@ -83,14 +76,16 @@ export class Tremaux extends MazeSolver {
       ) {
         // 2. If all entrances are marked, go back through the entrance you just came from,
         //    unless it is marked twice. This rule will apply whenever you reach a dead end.
-        await this.moveTo(prevMove);
+        this.moveTo(prevMove);
+        yield;
       } else {
         // 3. Pick any entrance with the fewest marks (zero if possible, else one).
         const [next] = this.randomShuffle(moves.filter((m) => marks[m.direction] < 2)).sort(
           (a, b) => marks[a.direction] - marks[b.direction],
         );
 
-        await this.moveTo(next);
+        this.moveTo(next);
+        yield;
       }
     }
 
@@ -111,8 +106,6 @@ export class Tremaux extends MazeSolver {
         this.maze.drawPath({ ...this.curr, direction: move.direction });
         this.prev = this.curr;
         this.curr = move;
-      } else {
-        debugger;
       }
     }
   }

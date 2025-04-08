@@ -1,9 +1,8 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { animate } from '../drawing/animate.ts';
 import { type Cell, type CellDirection, type Direction, type XY } from '../maze/maze.ts';
 
-import { type MazeSolverProperties, type SolveArguments } from './maze-solver.ts';
+import { type MazeSolverProperties } from './maze-solver.ts';
 import { MazeSolver } from './maze-solver.ts';
 
 function manhattanDistance(a: XY, b: XY): number {
@@ -54,12 +53,12 @@ export class Search extends MazeSolver {
     }
   }
 
-  public async solve({
+  public *solve({
     color = '#1589FF',
     solutionColor = '#00FF00',
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  }: SolveArguments = {}): Promise<void> {
+  } = {}): Iterator<void> {
     this.maze.prepareDrawing(this.drawing);
 
     type CP = Cell & { parent?: CP; direction: Direction };
@@ -84,10 +83,9 @@ export class Search extends MazeSolver {
           }
 
           if (cell.x === exit.x && cell.y === exit.y) {
-            await animate(() => {
-              this.maze.clear();
-              this.maze.drawDistances();
-            });
+            this.maze.clear();
+            this.maze.drawDistances();
+            yield;
             mode = 'solve';
             queue = [cell];
           } else {
@@ -96,10 +94,9 @@ export class Search extends MazeSolver {
               cell.direction,
             );
             if (moves.length === 0) {
-              await animate(() => {
-                this.maze.drawCell(cell);
-                this.maze.drawX(cell);
-              });
+              this.maze.drawCell(cell);
+              this.maze.drawX(cell);
+              yield;
               if (cell.parent) {
                 mode = 'backward';
                 queue.push(cell.parent);
@@ -110,9 +107,8 @@ export class Search extends MazeSolver {
               const [next, ...others] = moves;
               queue.push(...others.map((o) => ({ ...o, parent: cell })));
 
-              await animate(() => {
-                this.maze.drawPath({ ...cell, direction: next.direction }, color);
-              });
+              this.maze.drawPath({ ...cell, direction: next.direction }, color);
+              yield;
               queue.push({ ...next, parent: cell });
             }
           }
@@ -126,18 +122,16 @@ export class Search extends MazeSolver {
               const { parent, direction } = topOfQueue;
 
               if (parent) {
-                await animate(() => {
-                  this.maze.drawPath({ x: parent.x, y: parent.y, direction }, color);
-                });
+                this.maze.drawPath({ x: parent.x, y: parent.y, direction }, color);
+                yield;
               }
             }
 
             mode = 'forward';
           } else {
-            await animate(() => {
-              this.maze.drawCell(cell);
-              this.maze.drawX(cell);
-            });
+            this.maze.drawCell(cell);
+            this.maze.drawX(cell);
+            yield;
             queue.push(cell.parent!);
           }
 

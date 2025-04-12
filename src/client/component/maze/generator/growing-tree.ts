@@ -59,26 +59,25 @@ export class GrowingTree extends MazeGenerator {
     }
   }
 
-  public override step(): boolean {
-    for (let i = 0; i < 5 && this.list.length > 0; ++i) {
+  public *generate(): Iterator<void> {
+    while (this.list.length > 0) {
       const index = this.selectCell(this.selectMethod());
       this.currentCell = this.list[index];
 
       const unvisitedNeighbors = this.maze
         .neighbors(this.currentCell)
         .filter((cell) => !this.visited[cell.x][cell.y]);
+
       if (unvisitedNeighbors.length > 0) {
         const cell = this.randomPick(unvisitedNeighbors)!;
         this.maze.removeWall(this.currentCell, cell.direction);
+        yield;
         this.visited[cell.x][cell.y] = true;
 
         this.list.push(cell);
       } else {
         this.list.splice(index, 1);
-        i--;
       }
     }
-
-    return this.list.length > 0;
   }
 }

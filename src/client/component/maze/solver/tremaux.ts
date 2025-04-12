@@ -30,7 +30,7 @@ export class Tremaux extends MazeSolver {
 
   private moveTo(next: CellDirection): void {
     this.marks[this.curr.x][this.curr.y][next.direction]++;
-    this.marks[next.x][next.y][this.maze.opposite(next.direction)]++;
+    this.marks[next.x][next.y][this.maze.opposite(next)]++;
 
     this.maze.drawCell(this.curr);
     for (const direction of Object.keys(this.marks[this.curr.x][this.curr.y])) {

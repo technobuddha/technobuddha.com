@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellDirection } from '../maze/maze.ts';
+import { type Cell } from '../maze/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -67,21 +67,20 @@ type BlobProperties = MazeGeneratorProperties & {
 
 export class Blob extends MazeGenerator {
   private readonly threshold: number;
-  private readonly walls: CellDirection[] = [];
 
   public constructor({ threshold = 3, ...props }: BlobProperties) {
     super({ ...props });
 
     this.threshold = threshold;
-    this.walls = [];
+  }
 
+  public *generate(): Iterator<void> {
     this.maze.removeInteriorWalls();
+    this.maze.draw();
 
     const allRegion = new Region({ width: this.maze.width, height: this.maze.height });
-    for (let x = 0; x < this.maze.width; ++x) {
-      for (let y = 0; y < this.maze.height; ++y) {
-        allRegion.addCell({ x, y });
-      }
+    for (const cell of this.maze.all()) {
+      allRegion.addCell(cell);
     }
 
     const stack = [allRegion];
@@ -120,19 +119,11 @@ export class Blob extends MazeGenerator {
       boundary.splice(Math.floor(this.random() * boundary.length), 1);
 
       for (const cd of boundary) {
-        this.walls.push({ ...cd, direction: this.maze.opposite(cd.direction) });
+        this.maze.addWall(cd, this.maze.opposite(cd));
+        yield;
       }
 
       stack.push(...region.split(this.threshold));
     }
-  }
-
-  protected override step(): boolean {
-    const wall = this.walls.shift();
-    if (wall) {
-      this.maze.addWall(wall, wall.direction);
-      return true;
-    }
-    return false;
   }
 }

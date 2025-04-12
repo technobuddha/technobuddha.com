@@ -21,4 +21,14 @@ export abstract class Drawing {
   public abstract text(rect: Rect, text: string, color?: string): void;
 
   public abstract circle(center: XY, radius: number, color?: string): void;
+
+  public abstract arc(
+    cx: number,
+    cy: number,
+    innerRadius: number,
+    outerRadius: number,
+    startAngle: number,
+    endAngle: number,
+    color?: string,
+  ): void;
 }

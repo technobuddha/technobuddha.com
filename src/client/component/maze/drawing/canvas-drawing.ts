@@ -1,3 +1,5 @@
+import { toRadians } from '@technobuddha/library';
+
 import { Drawing, type Rect, type XY } from './drawing.ts';
 
 export class CanvasDrawing extends Drawing {
@@ -24,7 +26,7 @@ export class CanvasDrawing extends Drawing {
       this.canvas.fillRect(0, 0, this.canvas.canvas.width, this.canvas.canvas.height);
     }
 
-    this.canvas.translate(originX, originY);
+    // this.canvas.translate(originX, originY);
   }
 
   public line(start: XY, finish: XY, color: string): void {
@@ -67,6 +69,32 @@ export class CanvasDrawing extends Drawing {
     this.canvas.fillStyle = color;
     this.canvas.beginPath();
     this.canvas.arc(center.x, center.y, radius, 0, 2 * Math.PI);
+    this.canvas.fill();
+  }
+
+  public arc(
+    cx: number,
+    cy: number,
+    innerRadius: number,
+    outerRadius: number,
+    startAngle: number,
+    endAngle: number,
+    color = 'white',
+  ): void {
+    const a0 = toRadians(startAngle, 'degrees');
+    const a1 = toRadians(endAngle, 'degrees');
+
+    const x0 = cx + outerRadius * Math.cos(a1);
+    const y0 = cy + outerRadius * Math.sin(a1);
+    const x1 = cx + innerRadius * Math.cos(a0);
+    const y1 = cy + innerRadius * Math.sin(a0);
+
+    this.canvas.fillStyle = color;
+    this.canvas.beginPath();
+    this.canvas.arc(cx, cy, innerRadius, a0, a1);
+    this.canvas.lineTo(x0, y0);
+    this.canvas.arc(cx, cy, outerRadius, a1, a0, true);
+    this.canvas.lineTo(x1, y1);
     this.canvas.fill();
   }
 }

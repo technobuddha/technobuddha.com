@@ -6,6 +6,7 @@ import { type CellDirection, type Maze } from '../maze/maze.ts';
 export type MazeSolverProperties = {
   maze: Maze;
   drawing: Drawing;
+  speed?: number;
   random?(this: void): number;
 };
 
@@ -17,13 +18,16 @@ export type SolveArguments = {
 };
 
 export abstract class MazeSolver {
+  public readonly speed: number;
+
   protected maze: MazeSolverProperties['maze'];
   protected drawing: MazeSolverProperties['drawing'];
   protected random: () => number;
 
-  public constructor({ maze, drawing, random = Math.random }: MazeSolverProperties) {
+  public constructor({ maze, drawing, speed = 1, random = Math.random }: MazeSolverProperties) {
     this.maze = maze;
     this.drawing = drawing;
+    this.speed = speed;
     this.random = random;
   }
 

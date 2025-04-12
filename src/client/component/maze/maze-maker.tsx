@@ -2,7 +2,6 @@ import React from 'react';
 import { randomPick, toCapitalWordCase, toHumanCase } from '@technobuddha/library';
 import { useMeasure } from 'react-use';
 
-import { animate } from './drawing/animate.ts';
 import { CanvasDrawing } from './drawing/canvas-drawing.ts';
 import { Blob } from './generator/blob.ts';
 import { GrowingTree } from './generator/growing-tree.ts';
@@ -17,7 +16,8 @@ import { donutMask } from './masks/donut.ts';
 import { ellipiseMask } from './masks/ellipse.ts';
 import { triangleMask } from './masks/triangle.ts';
 import { BrickMaze } from './maze/brick-maze.ts';
-// import { CubicMaze } from './maze/cubic-maze.js';
+import { CircularMaze } from './maze/circular-maze.ts';
+import { CubicMaze } from './maze/cubic-maze.ts';
 import { HexagonMaze } from './maze/hexagon-maze.ts';
 import { type Maze, type MazeProperties } from './maze/maze.ts';
 import { OctogonMaze } from './maze/octogon-maze.ts';
@@ -35,15 +35,16 @@ import { Tremaux } from './solver/tremaux.ts';
 import { WallWalking } from './solver/wall-walking.ts';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
+  circle: (props) => new CircularMaze(props),
   // cubic: (props) => new CubicMaze(props),
-  pentagon: (props) => new PentagonMaze(props),
-  brick: (props) => new BrickMaze(props),
-  square: (props) => new SquareMaze(props), //({ ...props, entrance: { x: 0, y: 0 }, exit: { x: 12, y: 14 } }),
-  triangle: (props) => new TriangleMaze(props),
-  hexagon: (props) => new HexagonMaze(props),
-  octogon: (props) => new OctogonMaze(props),
-  zeta: (props) => new ZetaMaze(props),
-  wedge: (props) => new WedgeMaze(props),
+  // pentagon: (props) => new PentagonMaze(props),
+  // brick: (props) => new BrickMaze(props),
+  // square: (props) => new SquareMaze(props),
+  // triangle: (props) => new TriangleMaze(props),
+  // hexagon: (props) => new HexagonMaze(props),
+  // octogon: (props) => new OctogonMaze(props),
+  // zeta: (props) => new ZetaMaze(props),
+  // wedge: (props) => new WedgeMaze(props),
 };
 
 const algorithms: Record<
@@ -53,66 +54,63 @@ const algorithms: Record<
   division: {
     normal: (props) => new Blob(props),
   },
-  huntAndKill: {
-    random: (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
-    topLeft: (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
-    topRight: (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
-    bottomLeft: (props) => new HuntAndKill({ huntMethod: 'bottom-left', ...props }),
-    bottomRight: (props) => new HuntAndKill({ huntMethod: 'bottom-right', ...props }),
-    leftTop: (props) => new HuntAndKill({ huntMethod: 'left-top', ...props }),
-    leftBottom: (props) => new HuntAndKill({ huntMethod: 'left-bottom', ...props }),
-    rightTop: (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
-    rightBottom: (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
-  },
-  growingTree: {
-    newest: (props) => new GrowingTree({ method: 'newest', ...props }),
-    random: (props) => new GrowingTree({ method: 'random', ...props }),
-    // oldest: (props) => new GrowingTree({ method: 'oldest', ...props }),
-    // middle: (props) => new GrowingTree({ method: 'middle', ...props }),
-  },
-  kruskals: {
-    normal: (props) => new Kruskals(props),
-  },
-  prims: {
-    normal: (props) => new Prims(props),
-  },
-  recursizeBacktracker: {
-    normal: (props) => new RecursiveBacktracker(props),
-    parallel: (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
-    swirl: (props) =>
-      new RecursiveBacktracker({
-        strategy: [
-          'right-turn',
-          'left-turn',
-          'random',
-          'random',
-          'random',
-          'random',
-          'random',
-          'random',
-        ],
-        ...props,
-      }),
-    whirpool: (props) =>
-      new RecursiveBacktracker({
-        strategy: [
-          'right-turn',
-          'left-turn',
-          'right-turn',
-          'left-turn',
-          'right-turn',
-          'left-turn',
-          'right-turn',
-          'left-turn',
-        ],
-        ...props,
-      }),
-  },
-  wilsons: {
-    normal: (props) => new Wilsons(props),
-  },
-  // sample: {
-  //   normal: (props) => new Sample(props),
+  // huntAndKill: {
+  //   random: (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
+  //   topLeft: (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
+  //   topRight: (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
+  //   bottomLeft: (props) => new HuntAndKill({ huntMethod: 'bottom-left', ...props }),
+  //   bottomRight: (props) => new HuntAndKill({ huntMethod: 'bottom-right', ...props }),
+  //   leftTop: (props) => new HuntAndKill({ huntMethod: 'left-top', ...props }),
+  //   leftBottom: (props) => new HuntAndKill({ huntMethod: 'left-bottom', ...props }),
+  //   rightTop: (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
+  //   rightBottom: (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
+  // },
+  // growingTree: {
+  //   newest: (props) => new GrowingTree({ method: 'newest', ...props }),
+  //   random: (props) => new GrowingTree({ method: 'random', ...props }),
+  //   // oldest: (props) => new GrowingTree({ method: 'oldest', ...props }),
+  //   // middle: (props) => new GrowingTree({ method: 'middle', ...props }),
+  // },
+  // kruskals: {
+  //   normal: (props) => new Kruskals(props),
+  // },
+  // prims: {
+  //   normal: (props) => new Prims(props),
+  // },
+  // recursizeBacktracker: {
+  //   normal: (props) => new RecursiveBacktracker({ speed: 1, ...props }),
+  //   parallel: (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
+  //   swirl: (props) =>
+  //     new RecursiveBacktracker({
+  //       strategy: [
+  //         'right-turn',
+  //         'left-turn',
+  //         'random',
+  //         'random',
+  //         'random',
+  //         'random',
+  //         'random',
+  //         'random',
+  //       ],
+  //       ...props,
+  //     }),
+  //   whirpool: (props) =>
+  //     new RecursiveBacktracker({
+  //       strategy: [
+  //         'right-turn',
+  //         'left-turn',
+  //         'right-turn',
+  //         'left-turn',
+  //         'right-turn',
+  //         'left-turn',
+  //         'right-turn',
+  //         'left-turn',
+  //       ],
+  //       ...props,
+  //     }),
+  // },
+  // wilsons: {
+  //   normal: (props) => new Wilsons(props),
   // },
 };
 
@@ -194,10 +192,10 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         setMaskName('');
       }
 
-      void factory.create(selectedMaze, selectedAlgorithm, mask, selectedSolver).then((maze) => {
+      void factory.create(selectedMaze, selectedAlgorithm, mask, selectedSolver).then(() => {
         setTimeout(() => {
           setRedraw((x) => x + 1);
-        }, 6000);
+        }, 10000);
       });
     }
   }, [redraw, height, width]);

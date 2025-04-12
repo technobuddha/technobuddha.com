@@ -65,33 +65,49 @@ export class MazeFactory {
       entrance: this.entrance,
       exit: this.exit,
       maskColor: this.maskColor,
-      mask,
+      plugin: mask,
     });
 
     maze.draw();
 
     if (generator) {
-      const gen = generator({
+      const mazeGenerator = generator({
         maze,
         start: this.start,
         random: this.random,
       });
+      const generated = mazeGenerator.generate();
 
-      await gen.generate();
+      while (
+        await animate(() => {
+          for (let i = 0; i < mazeGenerator.speed; ++i) {
+            if (generated.next().done) {
+              return false;
+            }
+          }
+          return true;
+        })
+      ) {
+        //
+      }
       maze.addTermini();
       maze.draw();
     }
 
     if (solver) {
-      const solution = solver({
-        maze,
-        drawing: this.drawing!,
-        random: this.random,
-      }).solve({
-        solutionColor: '#00FF00',
-      });
+      const mazeSolver = solver({ maze, drawing: this.drawing!, random: this.random });
+      const solution = mazeSolver.solve({ solutionColor: '#00FF00' });
 
-      while (!(await animate(() => solution.next())).done) {
+      while (
+        await animate(() => {
+          for (let i = 0; i < mazeSolver.speed; ++i) {
+            if (solution.next().done) {
+              return false;
+            }
+          }
+          return true;
+        })
+      ) {
         //
       }
     }

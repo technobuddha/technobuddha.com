@@ -24,7 +24,14 @@ import {
 import { Maze } from './maze.ts';
 
 export class BrickMaze extends Maze {
-  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({
+    cellSize = 15,
+    wallSize = 1,
+    width,
+    height,
+    plugin,
+    ...props
+  }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -38,12 +45,15 @@ export class BrickMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
+
+    this.initialize({ width, height, plugin });
   }
 
   protected drawingSize(): DrawingSizes {
     return {
       groupWidth: this.cellSize * 2,
-      groupHeight: this.cellSize,
+      groupHeight: this.cellSize * 2,
+      verticalCellsPerGroup: 2,
       rightPadding: this.cellSize,
     };
   }

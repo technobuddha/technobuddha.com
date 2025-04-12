@@ -9,7 +9,7 @@ type WallWalkingProperties = MazeSolverProperties & {
 };
 
 export class WallWalking extends MazeSolver {
-  private readonly turn: (direction: Direction) => Direction[];
+  private readonly turn: (cell: CellDirection) => Direction[];
 
   public constructor(props: WallWalkingProperties) {
     super(props);
@@ -31,11 +31,14 @@ export class WallWalking extends MazeSolver {
     exit = this.maze.exit,
     solutionColor = '#00FF00',
   } = {}): Iterator<void> {
-    this.maze.prepareDrawing(this.drawing);
+    this.maze.attachDrawing(this.drawing);
 
     let cell: CellDirection = {
       ...entrance,
-      direction: this.maze.opposite(this.randomPick(this.maze.validMoves(entrance))!.direction),
+      direction: this.maze.opposite({
+        ...entrance,
+        direction: this.randomPick(this.maze.validMoves(entrance))!.direction,
+      }),
     };
 
     const cells: { visits: number; direction?: Direction }[][] = create2DArray(
@@ -47,12 +50,13 @@ export class WallWalking extends MazeSolver {
     while (cell.x !== exit.x || cell.y !== exit.y) {
       const v = ++cells[cell.x][cell.y].visits;
 
-      const turns = this.turn(cell.direction);
+      const turns = this.turn(cell);
       const moves = this.maze.validMoves(cell);
       const dir = turns.find((d) => moves.find((m) => m.direction === d))!;
       const next = this.maze.move(cell, dir)!;
       this.maze.drawPath({ ...cell, direction: dir }, `rgba(255, 165, 0, ${(v + 1) * 0.25})`);
       yield;
+
       cells[cell.x][cell.y].direction = dir;
       cell = next!;
     }

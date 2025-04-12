@@ -232,7 +232,7 @@ export const components: (t: TFunction) => Component[] = (t) => [
     icon: GiMaze,
     primary: t('Maze'),
     secondary: t('Maze debugger'),
-    location: '/maze/debug',
+    location: '/debug',
     component: MazeDebugger,
     todo: [t('Add a description to this component')],
   },

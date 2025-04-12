@@ -1,8 +1,22 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type AllOrder, type Cell } from '../maze/maze.ts';
+import { type AllOrder } from '../maze/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
+
+function hunt<T, R>(
+  cells: Iterable<T>,
+  callback: (item: T) => R | undefined,
+): { cell: T; hunted: R } | undefined {
+  for (const cell of cells) {
+    const hunted = callback(cell);
+    if (hunted !== undefined) {
+      return { cell, hunted };
+    }
+  }
+
+  return undefined;
+}
 
 type HuntAndKillProperties = MazeGeneratorProperties & {
   huntMethod?: AllOrder;
@@ -23,31 +37,33 @@ export class HuntAndKill extends MazeGenerator {
     };
   }
 
-  public override step(): boolean {
-    // kill
-    this.visited[this.currentCell.x][this.currentCell.y] = true;
+  public *generate(): Iterator<void> {
+    while (true) {
+      // kill
+      this.visited[this.currentCell.x][this.currentCell.y] = true;
 
-    const next = this.randomPick(
-      this.maze.neighbors(this.currentCell).filter((m) => !this.visited[m.x][m.y]),
-    );
-    if (next) {
-      this.maze.removeWall(this.currentCell, next.direction);
-      this.currentCell = next;
-      return true;
-    }
-
-    // hunt
-    for (const target of this.maze.all(this.huntMethod).filter((c) => !this.visited[c.x][c.y])) {
-      const hunted = this.randomPick(
-        this.maze.neighbors(target).filter((n) => this.visited[n.x][n.y]),
+      const next = this.randomPick(
+        this.maze.neighbors(this.currentCell).filter((m) => !this.visited[m.x][m.y]),
       );
-      if (hunted) {
-        this.maze.removeWall(target, hunted.direction);
-        this.currentCell = target;
-        return true;
+      if (next) {
+        this.maze.removeWall(this.currentCell, next.direction);
+        this.currentCell = next;
+        yield;
+      } else {
+        // hunt
+
+        const target = hunt(
+          this.maze.all(this.huntMethod).filter((c) => !this.visited[c.x][c.y]),
+          (c) => this.randomPick(this.maze.neighbors(c).filter((n) => this.visited[n.x][n.y])),
+        );
+        if (target) {
+          this.maze.removeWall(target.cell, target.hunted.direction);
+          this.currentCell = target.cell;
+          yield;
+        } else {
+          return;
+        }
       }
     }
-
-    return false;
   }
 }

@@ -35,9 +35,10 @@ export class RecursiveBacktracker extends MazeGenerator {
 
       this.current.push({
         ...randomCell,
-        direction: this.maze.opposite(
-          this.randomPick(Object.keys(this.maze.walls[randomCell.x][randomCell.y]))!,
-        ),
+        direction: this.maze.opposite({
+          ...randomCell,
+          direction: this.randomPick(Object.keys(this.maze.walls[randomCell.x][randomCell.y]))!,
+        }),
       });
 
       this.strategy.push(strategy?.shift() ?? 'random');
@@ -51,7 +52,7 @@ export class RecursiveBacktracker extends MazeGenerator {
     this.player = 0;
   }
 
-  public override step(): boolean {
+  public *generate(): Iterator<void> {
     while (true) {
       // If all players are at the end of their stack, we need to join the segments
       if (this.current.every((c) => c === undefined)) {
@@ -63,7 +64,8 @@ export class RecursiveBacktracker extends MazeGenerator {
         );
 
         if (borderCell) {
-          this.maze.removeWall(borderCell, this.maze.opposite(borderCell.direction));
+          this.maze.removeWall(borderCell, this.maze.opposite(borderCell));
+          yield;
 
           const zone = this.visited[borderCell.x][borderCell.y];
           if (zone === false) {
@@ -78,59 +80,57 @@ export class RecursiveBacktracker extends MazeGenerator {
               }
             }
           }
-
-          return true;
+        } else {
+          return;
+        }
+      } else {
+        // Find the next player
+        while (this.current[this.player] === undefined) {
+          this.player = (this.player + 1) % this.parallel;
         }
 
-        return false;
-      }
+        const currentCell = this.current[this.player]!;
 
-      // Find the next player
-      while (this.current[this.player] === undefined) {
-        this.player = (this.player + 1) % this.parallel;
-      }
+        let newCell: CellDirection | null | undefined;
+        switch (this.strategy[this.player]) {
+          case 'right-turn': {
+            newCell = this.maze
+              .rightTurn(this.current[this.player]!)
+              .map((d) => this.maze.move(this.current[this.player]!, d))
+              .find((c) => c && this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
+            break;
+          }
 
-      const currentCell = this.current[this.player]!;
-
-      let newCell: CellDirection | null | undefined;
-      switch (this.strategy[this.player]) {
-        case 'right-turn': {
-          newCell = this.maze
-            .rightTurn(this.current[this.player]!.direction)
-            .map((d) => this.maze.move(this.current[this.player]!, d))
-            .find((c) => c && this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
-          break;
+          case 'left-turn': {
+            newCell = this.maze
+              .leftTurn(this.current[this.player]!)
+              .map((d) => this.maze.move(this.current[this.player]!, d))
+              .find((c) => c && this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
+            break;
+          }
+          case 'random':
+          default: {
+            newCell = this.randomPick(
+              this.maze.neighbors(currentCell).filter((c) => this.visited[c.x][c.y] === false),
+            );
+            break;
+          }
         }
 
-        case 'left-turn': {
-          newCell = this.maze
-            .leftTurn(this.current[this.player]!.direction)
-            .map((d) => this.maze.move(this.current[this.player]!, d))
-            .find((c) => c && this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
-          break;
-        }
-        case 'random':
-        default: {
-          newCell = this.randomPick(
-            this.maze.neighbors(currentCell).filter((c) => this.visited[c.x][c.y] === false),
-          );
-          break;
+        if (newCell) {
+          this.maze.drawCell(currentCell);
+          this.maze.removeWall(currentCell, newCell.direction);
+
+          this.stack[this.player].push(currentCell);
+          this.current[this.player] = newCell;
+          this.visited[newCell.x][newCell.y] = this.player;
+
+          this.player = (this.player + 1) % this.parallel;
+          yield;
+        } else {
+          this.current[this.player] = this.stack[this.player].pop();
         }
       }
-
-      if (newCell) {
-        this.maze.drawCell(currentCell);
-        this.maze.removeWall(currentCell, newCell.direction);
-
-        this.stack[this.player].push(currentCell);
-        this.current[this.player] = newCell;
-        this.visited[newCell.x][newCell.y] = this.player;
-
-        this.player = (this.player + 1) % this.parallel;
-        return true;
-      }
-
-      this.current[this.player] = this.stack[this.player].pop();
     }
   }
 }

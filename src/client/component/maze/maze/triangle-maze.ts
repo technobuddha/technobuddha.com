@@ -28,7 +28,14 @@ import {
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class TriangleMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({
+    cellSize = 24,
+    wallSize = 1,
+    width,
+    height,
+    plugin,
+    ...props
+  }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -42,6 +49,8 @@ export class TriangleMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
+
+    this.initialize({ width, height, plugin });
   }
 
   protected drawingSize(): DrawingSizes {

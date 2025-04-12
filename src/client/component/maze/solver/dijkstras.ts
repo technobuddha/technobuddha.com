@@ -47,7 +47,7 @@ export class Dijkstras extends MazeSolver {
     this.maze.draw();
     this.maze.drawDistances();
 
-    let cell = { ...exit, direction: this.maze.opposite(exit.direction) };
+    let cell = { ...exit, direction: this.maze.opposite(exit) };
 
     const dist = distances[cell.x]?.[cell.y];
     if (!dist || dist.dist === Infinity) {
@@ -55,14 +55,14 @@ export class Dijkstras extends MazeSolver {
       console.log('no solution found', dist);
     } else {
       for (;;) {
-        this.maze.drawPath(
-          { ...cell, direction: this.maze.opposite(cell.direction) },
-          solutionColor,
-        );
+        this.maze.drawPath({ ...cell, direction: this.maze.opposite(cell) }, solutionColor);
         if (cell.x === entrance.x && cell.y === entrance.y) {
           break;
         }
-        cell = this.maze.move(cell, this.maze.opposite(distances[cell.x][cell.y].dir!))!;
+        cell = this.maze.move(
+          cell,
+          this.maze.opposite({ ...cell, direction: distances[cell.x][cell.y].dir! }),
+        )!;
       }
     }
 

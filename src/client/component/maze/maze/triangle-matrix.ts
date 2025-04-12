@@ -1,20 +1,30 @@
-import { type Direction, type Kind, type Pillar, type XY } from './maze.ts';
+import {
+  type DirectionMatrix,
+  type EdgesMatrix,
+  type MoveMatrix,
+  type OppositeMatrix,
+  type PathMatrix,
+  type PillarMatrix,
+  type SidesMatrix,
+  type TurnMatrix,
+  type WallMatrix,
+} from './maze.ts';
 
-export const directionMatrix: Direction[] = ['a', 'b', 'c', 'd', 'e', 'f'];
+export const directionMatrix: DirectionMatrix = ['a', 'b', 'c', 'd', 'e', 'f'];
 
-export const pillarMatrix: Pillar[] = ['ac', 'ce', 'ea', 'bd', 'df', 'fb'];
+export const pillarMatrix: PillarMatrix = ['ac', 'ce', 'ea', 'bd', 'df', 'fb'];
 
-export const sidesMatrix: Record<Kind, number> = {
+export const sidesMatrix: SidesMatrix = {
   0: 3,
   1: 3,
 };
 
-export const wallMatrix: Record<Kind, Record<Direction, boolean>> = {
+export const wallMatrix: WallMatrix = {
   0: { b: true, d: true, f: true },
   1: { a: true, c: true, e: true },
 };
 
-export const oppositeMatrix: Record<Direction, Direction> = {
+export const oppositeMatrix: OppositeMatrix = {
   a: 'd',
   b: 'e',
   c: 'f',
@@ -23,7 +33,7 @@ export const oppositeMatrix: Record<Direction, Direction> = {
   f: 'c',
 };
 
-export const rightTurnMatrix: Record<Direction, Direction[]> = {
+export const rightTurnMatrix: TurnMatrix = {
   a: ['b', 'f', 'd'],
   b: ['c', 'a', 'e'],
   c: ['d', 'b', 'f'],
@@ -32,7 +42,7 @@ export const rightTurnMatrix: Record<Direction, Direction[]> = {
   f: ['a', 'e', 'c'],
 };
 
-export const leftTurnMatrix: Record<Direction, Direction[]> = {
+export const leftTurnMatrix: TurnMatrix = {
   a: ['f', 'b', 'd'],
   b: ['a', 'c', 'e'],
   c: ['b', 'd', 'f'],
@@ -41,7 +51,7 @@ export const leftTurnMatrix: Record<Direction, Direction[]> = {
   f: ['e', 'a', 'c'],
 };
 
-export const moveMatrix: Record<Kind, Record<Direction, XY>> = {
+export const moveMatrix: MoveMatrix = {
   0: {
     b: { x: +1, y: +0 },
     d: { x: +0, y: +1 },
@@ -54,12 +64,12 @@ export const moveMatrix: Record<Kind, Record<Direction, XY>> = {
   },
 };
 
-export const edgesMatrix: Record<Kind, Direction[]> = {
+export const edgesMatrix: EdgesMatrix = {
   0: ['b', 'd'],
   1: ['c'],
 };
 
-export const pathMatrix: Record<Direction, number> = {
+export const pathMatrix: PathMatrix = {
   a: 270,
   b: 30,
   c: 150,

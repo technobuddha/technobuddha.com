@@ -16,8 +16,8 @@ export class Prims extends MazeGenerator {
     this.visited[this.start.x][this.start.y] = true;
   }
 
-  public override step(): boolean {
-    for (let i = 0; i < 10 && this.activeCells.length > 0; ++i) {
+  public override *generate(): Iterator<void> {
+    while (this.activeCells.length > 0) {
       const cellIndex = Math.floor(this.random() * this.activeCells.length);
       this.currentCell = this.activeCells[cellIndex];
 
@@ -27,6 +27,7 @@ export class Prims extends MazeGenerator {
       if (unvisitedNeighbors.length > 0) {
         const newCell = this.randomPick(unvisitedNeighbors)!;
         this.maze.removeWall(this.currentCell, newCell.direction);
+        yield;
         this.visited[newCell.x][newCell.y] = true;
 
         this.activeCells.push(newCell);
@@ -34,7 +35,5 @@ export class Prims extends MazeGenerator {
         this.activeCells.splice(cellIndex, 1);
       }
     }
-
-    return this.activeCells.length > 0;
   }
 }

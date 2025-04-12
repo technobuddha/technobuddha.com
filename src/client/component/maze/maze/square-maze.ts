@@ -25,7 +25,14 @@ import {
 } from './square-matrix.ts';
 
 export class SquareMaze extends Maze {
-  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({
+    cellSize = 20,
+    wallSize = 1,
+    width,
+    height,
+    plugin,
+    ...props
+  }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -39,6 +46,8 @@ export class SquareMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
+
+    this.initialize({ width, height, plugin });
   }
 
   protected drawingSize(): DrawingSizes {
@@ -92,7 +101,7 @@ export class SquareMaze extends Maze {
 
       switch (cd.direction) {
         case 'n': {
-          this.drawing.rect({ x: x1, y: y0 }, { x: x2, y: y0 }, color);
+          this.drawing.rect({ x: x1, y: y0 }, { x: x2, y: y1 }, color);
           break;
         }
         case 's': {

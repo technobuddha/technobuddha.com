@@ -2,17 +2,7 @@
 
 import { modulo } from '@technobuddha/library';
 
-import { type Rect } from '../../drawing/drawing.ts';
-
-import {
-  type Cell,
-  type CellDirection,
-  type CellPillar,
-  type DrawingSizes,
-  type Kind,
-  type MazeProperties,
-} from '../maze.ts';
-import { Maze } from '../maze.ts';
+import { type Rect } from '../drawing/drawing.ts';
 
 import {
   directionMatrix,
@@ -26,9 +16,25 @@ import {
   sidesMatrix,
   wallMatrix,
 } from './cubic-matrix.ts';
+import {
+  type Cell,
+  type CellDirection,
+  type CellPillar,
+  type DrawingSizes,
+  type Kind,
+  type MazeProperties,
+} from './maze.ts';
+import { Maze } from './maze.ts';
 
 export class CubicMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({
+    cellSize = 18,
+    wallSize = 1,
+    width,
+    height,
+    plugin,
+    ...props
+  }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -42,13 +48,15 @@ export class CubicMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
+
+    this.initialize({ width, height, plugin });
   }
 
   protected drawingSize(): DrawingSizes {
     return {
       groupWidth: this.cellSize * 4,
       horizontalCellsPerGroup: 9,
-      groupHeight: this.cellSize * 5,
+      groupHeight: this.cellSize * 6,
       verticalCellsPerGroup: 4,
       leftPadding: this.cellSize,
       rightPadding: this.cellSize,
@@ -58,7 +66,7 @@ export class CubicMaze extends Maze {
   }
 
   protected cellKind(cell: Cell): number {
-    return modulo(cell.x, 3);
+    return modulo(cell.x, 9);
   }
 
   private cellOffsets(cell: Cell): Record<string, number> {
@@ -78,21 +86,9 @@ export class CubicMaze extends Maze {
         ][modulo(cell.x, 9)][modulo(cell.y, 8)] *
           this.cellSize);
 
-    // const x =
-    //   this.cellSize *
-    //   (Math.floor(cell.x / 6) * 4 +
-    //     [0.0, 1.0, 1.0, 1.5, 2.5, 3.5][modulo(cell.x, 6)] +
-    //     [
-    //       [+0.0, +0.0, +0.0, +0.0, +0.0, +0.0],
-    //       [+0.0, +0.5, -0.5, -1.0, -0.5, -0.5],
-    //       [+0.5, +0.5, -0.5, -0.5, -0.5, +0.5],
-    //       [-0.5, +0.0, -1.0, -0.5, +0.0, +0.0],
-    //     ][modulo(cell.y, 4)][kind]);
-
-    // const y = (cell.y + [+0.0, +0.5, -0.5, -0.5, +0.0, +0.0][kind]) * this.cellSize;
-
     const y =
-      cell.y * this.cellSize +
+      Math.floor(cell.y / 8) * this.cellSize * 12 +
+      modulo(cell.y, 8) * this.cellSize +
       [
         [+0.5, +1.0, +1.0, +1.5, +2.0, +2.0, +2.5, +3.0],
         [-0.0, +0.5, +0.5, +1.0, +1.5, +1.5, +2.0, +2.5],
@@ -112,7 +108,8 @@ export class CubicMaze extends Maze {
   protected offsets(kind: Kind): Record<string, number> {
     switch (kind) {
       case 0:
-      case 3: {
+      case 3:
+      case 6: {
         const x0 = 0;
         const x1 = x0 + this.wallSize;
         const x3 = x0 + this.cellSize;
@@ -127,7 +124,8 @@ export class CubicMaze extends Maze {
       }
 
       case 1:
-      case 4: {
+      case 4:
+      case 7: {
         const x0 = 0;
         const x1 = x0 + this.wallSize;
         const x2 = x0 + this.wallSize * 2.0;
@@ -150,7 +148,8 @@ export class CubicMaze extends Maze {
       }
 
       case 2:
-      case 5: {
+      case 5:
+      case 8: {
         const x0 = 0;
         const x1 = x0 + this.wallSize;
         const x3 = x0 + this.cellSize * 0.5;
@@ -182,7 +181,8 @@ export class CubicMaze extends Maze {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0:
-        case 3: {
+        case 3:
+        case 6: {
           const { x0, x3, y0, y3 } = this.cellOffsets(cell);
 
           this.drawing.polygon(
@@ -198,7 +198,8 @@ export class CubicMaze extends Maze {
         }
 
         case 1:
-        case 4: {
+        case 4:
+        case 7: {
           const { x0, x4, x7, xb, y0, y3 } = this.cellOffsets(cell);
 
           this.drawing.polygon(
@@ -214,7 +215,8 @@ export class CubicMaze extends Maze {
         }
 
         case 2:
-        case 5: {
+        case 5:
+        case 8: {
           const { x0, x3, y0, y4, y7, yb } = this.cellOffsets(cell);
 
           this.drawing.polygon(
@@ -238,7 +240,8 @@ export class CubicMaze extends Maze {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0:
-        case 3: {
+        case 3:
+        case 6: {
           switch (cell.direction) {
             case 'a': {
               const { x1, x2, y0, y1 } = this.cellOffsets(cell);
@@ -274,7 +277,8 @@ export class CubicMaze extends Maze {
         }
 
         case 1:
-        case 4: {
+        case 4:
+        case 7: {
           switch (cell.direction) {
             case 'e': {
               const { x4, x5, x9, xa, y0, y1 } = this.cellOffsets(cell);
@@ -342,7 +346,8 @@ export class CubicMaze extends Maze {
         }
 
         case 2:
-        case 5: {
+        case 5:
+        case 8: {
           switch (cell.direction) {
             case 'i': {
               const { x1, x2, y1, y2, y3, y4 } = this.cellOffsets(cell);
@@ -375,14 +380,14 @@ export class CubicMaze extends Maze {
             }
 
             case 'k': {
-              const { x2, x3, y1, y2, y6, y7 } = this.cellOffsets(cell);
+              const { x1, x2, y7, y8, y9, ya } = this.cellOffsets(cell);
 
               this.drawing.polygon(
                 [
-                  { x: x2, y: y2 },
-                  { x: x3, y: y1 },
-                  { x: x3, y: y6 },
+                  { x: x1, y: y9 },
                   { x: x2, y: y7 },
+                  { x: x2, y: y8 },
+                  { x: x1, y: ya },
                 ],
                 color,
               );
@@ -390,12 +395,12 @@ export class CubicMaze extends Maze {
             }
 
             case 'l': {
-              const { x0, x1, y3, y4, y9, ya } = this.cellOffsets(cell);
+              const { x0, x1, y4, y5, y9, ya } = this.cellOffsets(cell);
 
               this.drawing.polygon(
                 [
-                  { x: x0, y: y4 },
-                  { x: x1, y: y3 },
+                  { x: x0, y: y5 },
+                  { x: x1, y: y4 },
                   { x: x1, y: y9 },
                   { x: x0, y: ya },
                 ],
@@ -436,7 +441,8 @@ export class CubicMaze extends Maze {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0:
-        case 3: {
+        case 3:
+        case 6: {
           const { x1, x2, y1, y2 } = this.cellOffsets(cell);
 
           this.drawing.line({ x: x1, y: y1 }, { x: x2, y: y2 }, color);
@@ -445,7 +451,8 @@ export class CubicMaze extends Maze {
         }
 
         case 1:
-        case 4: {
+        case 4:
+        case 7: {
           const { x2, x4, x7, x9, y1, y2 } = this.cellOffsets(cell);
 
           this.drawing.line({ x: x2, y: y2 }, { x: x9, y: y1 }, color);
@@ -454,7 +461,8 @@ export class CubicMaze extends Maze {
         }
 
         case 2:
-        case 5: {
+        case 5:
+        case 8: {
           const { x1, x2, y2, y4, y7, y9 } = this.cellOffsets(cell);
 
           this.drawing.line({ x: x1, y: y9 }, { x: x2, y: y2 }, color);
@@ -470,19 +478,22 @@ export class CubicMaze extends Maze {
   public getRect(cell: Cell): Rect {
     switch (this.cellKind(cell)) {
       case 0:
-      case 3: {
+      case 3:
+      case 6: {
         const { x1, x2, y1, y2 } = this.cellOffsets(cell);
         return { x: x1, y: y1, w: x2 - x1, h: y2 - y1 };
       }
 
       case 1:
-      case 4: {
+      case 4:
+      case 7: {
         const { x4, x7, y1, y2 } = this.cellOffsets(cell);
         return { x: x4, y: y1, w: x7 - x4, h: y2 - y1 };
       }
 
       case 2:
-      case 5: {
+      case 5:
+      case 8: {
         const { x1, x2, y4, y7 } = this.cellOffsets(cell);
         return { x: x1, y: y4, w: x2 - x1, h: y7 - y4 };
       }

@@ -29,7 +29,14 @@ import {
 } from './pentagon-matrix.ts';
 
 export class PentagonMaze extends Maze {
-  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({
+    cellSize = 20,
+    wallSize = 1,
+    width,
+    height,
+    plugin,
+    ...props
+  }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -43,6 +50,8 @@ export class PentagonMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
+
+    this.initialize({ width, height, plugin });
   }
 
   protected drawingSize(): DrawingSizes {

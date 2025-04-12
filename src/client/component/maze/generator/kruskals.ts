@@ -81,8 +81,8 @@ export class Kruskals extends MazeGenerator {
     return cell.y * width + cell.x;
   }
 
-  public override step(): boolean {
-    for (let i = 0; i < 10 && this.edges.length > 0; ++i) {
+  public *generate(): Iterator<void> {
+    while (this.edges.length > 0) {
       const edge = this.edges.pop()!;
       const cell1 = { ...edge };
       const cell2 = this.maze.move(cell1, edge.direction)!;
@@ -95,10 +95,9 @@ export class Kruskals extends MazeGenerator {
 
       if (parent1 !== parent2) {
         this.maze.removeWall(cell1, edge.direction);
+        yield;
         this.disjointSubsets.union(idx1, idx2);
       }
     }
-
-    return this.edges.length > 0;
   }
 }

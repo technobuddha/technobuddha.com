@@ -23,7 +23,7 @@ export class Search extends MazeSolver {
     this.method = method;
   }
 
-  protected decide(array: CellDirection[], direction: Direction): CellDirection[] {
+  protected decide(array: CellDirection[], origin: CellDirection): CellDirection[] {
     switch (this.method) {
       case 'random': {
         return this.randomShuffle(array);
@@ -38,12 +38,12 @@ export class Search extends MazeSolver {
       }
 
       case 'left-turn': {
-        const left = this.maze.leftTurn(direction);
+        const left = this.maze.leftTurn(origin);
         return array.sort((a, b) => left.indexOf(a.direction) - left.indexOf(b.direction));
       }
 
       case 'right-turn': {
-        const right = this.maze.rightTurn(direction);
+        const right = this.maze.rightTurn(origin);
         return array.sort((a, b) => right.indexOf(a.direction) - right.indexOf(b.direction));
       }
 
@@ -59,7 +59,7 @@ export class Search extends MazeSolver {
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): Iterator<void> {
-    this.maze.prepareDrawing(this.drawing);
+    this.maze.attachDrawing(this.drawing);
 
     type CP = Cell & { parent?: CP; direction: Direction };
 
@@ -91,7 +91,7 @@ export class Search extends MazeSolver {
           } else {
             const moves = this.decide(
               this.maze.validMoves(cell).filter((n) => !discovered[n.x][n.y]),
-              cell.direction,
+              cell,
             );
             if (moves.length === 0) {
               this.maze.drawCell(cell);

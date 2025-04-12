@@ -4,6 +4,8 @@ import { range } from 'lodash-es';
 
 import { CanvasDrawing } from './drawing/canvas-drawing.ts';
 import { BrickMaze } from './maze/brick-maze.ts';
+import { CircularMaze } from './maze/circular-maze.ts';
+import { CubicMaze } from './maze/cubic-maze.ts';
 import { HexagonMaze } from './maze/hexagon-maze.ts';
 import { type Maze, type MazeProperties } from './maze/maze.ts';
 import { OctogonMaze } from './maze/octogon-maze.ts';
@@ -15,6 +17,8 @@ import { ZetaMaze } from './maze/zeta-maze.ts';
 import { MazeFactory } from './maze-factory.ts';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
+  circular: (props) => new CircularMaze(props),
+  cubic: (props) => new CubicMaze(props),
   pentagon: (props) => new PentagonMaze(props),
   brick: (props) => new BrickMaze(props),
   square: (props) => new SquareMaze(props),
@@ -71,7 +75,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
 
   const boxWidth = 500;
-  const boxHeight = 500;
+  const boxHeight = 800;
 
   React.useEffect(() => {
     if (canvasMaze.current) {
@@ -101,6 +105,16 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
           break;
         }
 
+        case 'coordinates': {
+          for (let i = 0; i < maze.width; ++i) {
+            for (let j = 0; j < maze.height; ++j) {
+              maze.drawText({ x: i, y: j }, `${i},${j}`, 'lime');
+            }
+          }
+          maze.drawX({ x, y }, 'red');
+          break;
+        }
+
         default: {
           maze.drawX({ x, y }, 'red');
           const moves = maze.neighbors({ x, y });
@@ -112,7 +126,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
                   break;
                 }
                 case 'paths': {
-                  maze.drawPath({ ...move, direction: maze.opposite(move.direction) }, 'cyan');
+                  maze.drawPath({ ...move, direction: maze.opposite(move) }, 'cyan');
                   break;
                 }
 
@@ -130,21 +144,24 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
     const err: string[] = [];
 
     if (maze) {
-      for (const direction of maze.directions) {
-        if (maze.opposite(maze.opposite(direction)) !== direction) {
+      for (const direction of Object.keys(maze.walls[0][0])) {
+        if (
+          maze.opposite({ x: 0, y: 0, direction: maze.opposite({ x: 0, y: 0, direction }) }) !==
+          direction
+        ) {
           err.push(`opposite(opposite(${direction})) !== ${direction}`);
         }
 
-        const rt = [...maze.rightTurn(direction)];
-        const lt = [...maze.leftTurn(direction)];
+        const rt = [...maze.rightTurn({ x: 0, y: 0, direction })];
+        const lt = [...maze.leftTurn({ x: 0, y: 0, direction })];
         const rtOpposite = rt.pop();
         const ltOpposite = lt.pop();
 
-        if (rtOpposite !== maze.opposite(direction)) {
+        if (rtOpposite !== maze.opposite({ x: 0, y: 0, direction })) {
           err.push(`last(rightTurn(${direction})) = ${rtOpposite} !== opposite(${direction})`);
         }
 
-        if (ltOpposite !== maze.opposite(direction)) {
+        if (ltOpposite !== maze.opposite({ x: 0, y: 0, direction })) {
           err.push(`last(leftTurn(${direction})) = ${ltOpposite} !== opposite(${direction})`);
         }
 
@@ -155,11 +172,11 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
       for (const cell of maze.all()) {
         for (const move of maze.neighbors(cell)) {
-          const back = maze.move(move, maze.opposite(move.direction));
+          const back = maze.move(move, maze.opposite(move));
           if (back) {
             if (cell.x !== back.x || cell.y !== back.y) {
               err.push(
-                `{ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}} = { x: ${move.x}, y: ${move.y} } back = { x: ${back.x}, y: ${back.y}, ${maze.opposite(move.direction)} }`,
+                `{ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}} = { x: ${move.x}, y: ${move.y} } back = { x: ${back.x}, y: ${back.y}, ${maze.opposite(move)} }`,
               );
             }
           } else {
@@ -205,6 +222,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
             <MenuItem value="moves">Moves</MenuItem>
             <MenuItem value="paths">Paths</MenuItem>
             <MenuItem value="walls">Walls</MenuItem>
+            <MenuItem value="coordinates">Coordinates</MenuItem>
           </Select>
         </FormControl>
         <br />

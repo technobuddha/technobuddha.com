@@ -26,7 +26,14 @@ import {
 } from './wedge-matrix.ts';
 
 export class WedgeMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({
+    cellSize = 18,
+    wallSize = 1,
+    width,
+    height,
+    plugin,
+    ...props
+  }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -40,6 +47,8 @@ export class WedgeMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
+
+    this.initialize({ width, height, plugin });
   }
 
   protected drawingSize(): DrawingSizes {

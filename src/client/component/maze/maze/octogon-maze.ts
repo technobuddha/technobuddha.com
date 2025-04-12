@@ -29,7 +29,14 @@ import {
 const SQ2 = Math.SQRT2;
 
 export class OctogonMaze extends Maze {
-  public constructor({ cellSize = 30, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({
+    cellSize = 30,
+    wallSize = 1,
+    width,
+    height,
+    plugin,
+    ...props
+  }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -43,6 +50,8 @@ export class OctogonMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
+
+    this.initialize({ width, height, plugin });
   }
 
   protected drawingSize(): DrawingSizes {

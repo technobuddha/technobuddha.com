@@ -21,6 +21,7 @@ import { Dijkstras } from './solver/dijkstras.ts';
 import { Filler } from './solver/filler.ts';
 import { type MazeSolver, type MazeSolverProperties } from './solver/maze-solver.ts';
 import { Search } from './solver/search.ts';
+import { Tremaux } from './solver/tremaux.ts';
 import { WallWalking } from './solver/wall-walking.ts';
 
 import css from './maze-background.module.css';
@@ -102,6 +103,9 @@ const solvers: Record<string, Record<string, (props: MazeSolverProperties) => Ma
     seekExit: (props) => new Search({ method: 'seek', ...props }),
     leftTurn: (props) => new Search({ method: 'left-turn', ...props }),
     rightTurn: (props) => new Search({ method: 'right-turn', ...props }),
+  },
+  trémaux: {
+    normal: (props) => new Tremaux(props),
   },
   fill: {
     deadEnd: (props) => new Filler({ ...props, method: 'dead-end' }),

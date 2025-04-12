@@ -16,7 +16,7 @@ export class Filler extends MazeSolver {
 
   public *solve({ solutionColor = '#00FF00' } = {}): Iterator<void> {
     const walls = this.maze.cloneWalls();
-    this.maze.prepareDrawing(this.drawing);
+    this.maze.attachDrawing(this.drawing);
 
     let deadEnds = this.randomShuffle(this.maze.deadEnds({ walls }));
     while (deadEnds.length > 0) {
@@ -48,7 +48,7 @@ export class Filler extends MazeSolver {
 
     let cell = {
       ...this.maze.entrance,
-      direction: this.maze.opposite(this.maze.entrance.direction),
+      direction: this.maze.opposite(this.maze.entrance),
     };
     const path: CellDirection[] = [cell];
     while (cell.x !== this.maze.exit.x || cell.y !== this.maze.exit.y) {

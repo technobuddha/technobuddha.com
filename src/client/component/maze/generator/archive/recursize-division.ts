@@ -37,8 +37,7 @@ export class RecursiveDivision extends MazeGenerator {
             return (
               !this.walls.some((w) => w.x === b.x && w.y === b.y && w.direction === b.direction) &&
               !this.walls.some(
-                (w) =>
-                  w.x === m.x && m.y === w.y && this.maze.opposite(b.direction) === w.direction,
+                (w) => w.x === m.x && m.y === w.y && this.maze.opposite(b) === w.direction,
               )
             );
           })
@@ -78,8 +77,7 @@ export class RecursiveDivision extends MazeGenerator {
             return (
               !this.walls.some((w) => w.x === b.x && w.y === b.y && w.direction === b.direction) &&
               !this.walls.some(
-                (w) =>
-                  w.x === m.x && m.y === w.y && this.maze.opposite(b.direction) === w.direction,
+                (w) => w.x === m.x && m.y === w.y && this.maze.opposite(b) === w.direction,
               )
             );
           })

@@ -31,8 +31,8 @@ export class Wilsons extends MazeGenerator {
     }
   }
 
-  public override step(): boolean {
-    for (let i = 0; i < 10 && this.unvisited.length > 0; ++i) {
+  public *generate(): Iterator<void> {
+    while (this.unvisited.length > 0) {
       this.currentCell = this.unvisited[Math.floor(this.random() * this.unvisited.length)];
       let path: (Cell | CellDirection)[] = [this.currentCell];
 
@@ -59,12 +59,11 @@ export class Wilsons extends MazeGenerator {
 
       for (const cell of path) {
         if ('direction' in cell) {
-          this.maze.removeWall(cell, this.maze.opposite(cell.direction));
+          this.maze.removeWall(cell, this.maze.opposite(cell));
+          yield;
         }
         this.markAsVisited(cell);
       }
     }
-
-    return this.unvisited.length > 0;
   }
 }

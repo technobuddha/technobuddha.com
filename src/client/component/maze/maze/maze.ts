@@ -105,8 +105,8 @@ export type MazeProperties = {
   exitColor?: string;
   random?(this: void): number;
   plugin?(this: void, maze: Maze): void;
-  wrapX?: boolean;
-  wrapY?: boolean;
+  wrapHorizontal?: boolean;
+  wrapVertical?: boolean;
 };
 
 export type DirectionMatrix = Direction[];
@@ -115,7 +115,6 @@ export type WallMatrix = Record<Kind, Record<Direction, boolean>>;
 export type OppositeMatrix = Record<Direction, Direction | Record<Kind, Direction>>;
 export type TurnMatrix = Record<Direction, Direction[] | Record<Kind, Direction[]>>;
 export type MoveMatrix = Record<Kind, Record<Direction, Move | Move[]>>;
-export type SidesMatrix = Record<Kind, number>;
 export type EdgesMatrix = Record<Kind, Direction[]>;
 export type PathMatrix = Record<Direction, number>;
 
@@ -127,8 +126,8 @@ export abstract class Maze {
   public readonly wallSize: NonNullable<MazeProperties['wallSize']>;
   public readonly wallColor: NonNullable<MazeProperties['wallColor']>;
   public readonly maskColor: NonNullable<MazeProperties['maskColor']>;
-  public readonly wrapX: boolean;
-  public readonly wrapY: boolean;
+  public readonly wrapHorizontal: boolean;
+  public readonly wrapVertical: boolean;
   public entrance: Terminus = { x: -1, y: -1, direction: '?' };
   public exit: Terminus = { x: -1, y: -1, direction: '?' };
 
@@ -149,7 +148,6 @@ export abstract class Maze {
   private readonly rightTurnMatrix: TurnMatrix;
   private readonly leftTurnMatrix: TurnMatrix;
   private readonly moveMatrix: MoveMatrix;
-  private readonly sidesMatrix: SidesMatrix;
   private readonly edgesMatrix: EdgesMatrix;
   private readonly pathMatrix: PathMatrix;
 
@@ -168,8 +166,8 @@ export abstract class Maze {
       exit,
       entranceColor = 'green',
       exitColor = 'red',
-      wrapX = false,
-      wrapY = false,
+      wrapHorizontal = false,
+      wrapVertical = false,
       random = Math.random,
     }: MazeProperties,
     directions: DirectionMatrix,
@@ -179,7 +177,6 @@ export abstract class Maze {
     rightTurnMatrix: TurnMatrix,
     leftTurnMatrix: TurnMatrix,
     moveMatrix: MoveMatrix,
-    sidesMatrix: SidesMatrix,
     edgesMatrix: EdgesMatrix,
     pathMatrix: PathMatrix,
   ) {
@@ -188,7 +185,6 @@ export abstract class Maze {
     this.rightTurnMatrix = rightTurnMatrix;
     this.leftTurnMatrix = leftTurnMatrix;
     this.moveMatrix = moveMatrix;
-    this.sidesMatrix = sidesMatrix;
     this.edgesMatrix = edgesMatrix;
     this.pathMatrix = pathMatrix;
 
@@ -202,8 +198,8 @@ export abstract class Maze {
     this.wallColor = wallColor;
     this.maskColor = maskColor;
 
-    this.wrapX = wrapX;
-    this.wrapY = wrapY;
+    this.wrapHorizontal = wrapHorizontal;
+    this.wrapVertical = wrapVertical;
 
     this.random = random;
     this.entranceSpec = entrance;
@@ -224,16 +220,16 @@ export abstract class Maze {
     plugin?.(this);
 
     for (const cell of this.all()) {
-      if (!this.mask[cell.x][cell.y]) {
-        if (this.neighbors(cell).length === 0) {
-          this.mask[cell.x][cell.y] = true;
-        }
+      if (this.neighbors(cell).length === 0) {
+        this.mask[cell.x][cell.y] = true;
       }
     }
 
-    for (const cell of this.all()) {
-      if (this.mask[cell.x][cell.y]) {
-        this.walls[cell.x][cell.y] = {};
+    for (let x = 0; x < this.mask.length; ++x) {
+      for (let y = 0; y < this.mask[x].length; ++y) {
+        if (this.mask[x][y]) {
+          this.walls[x][y] = {};
+        }
       }
     }
   }
@@ -264,7 +260,9 @@ export abstract class Maze {
   public rightTurn(cell: CellDirection): Direction[] {
     const rightTurn = this.rightTurnMatrix[cell.direction];
     if (rightTurn) {
-      return Array.isArray(rightTurn) ? rightTurn : rightTurn[this.cellKind(cell)];
+      return Array.isArray(rightTurn) ? rightTurn : (
+          rightTurn[this.cellKind(cell)].filter((rt) => rt in this.walls[cell.x][cell.y])
+        );
     }
 
     throw new Error(`"${cell.direction}" is not a valid direction`);
@@ -273,7 +271,9 @@ export abstract class Maze {
   public leftTurn(cell: CellDirection): Direction[] {
     const leftTurn = this.leftTurnMatrix[cell.direction];
     if (leftTurn) {
-      return Array.isArray(leftTurn) ? leftTurn : leftTurn[this.cellKind(cell)];
+      return (Array.isArray(leftTurn) ? leftTurn : leftTurn[this.cellKind(cell)]).filter(
+        (lt) => lt in this.walls[cell.x][cell.y],
+      );
     }
 
     throw new Error(`"${cell.direction}" is not a valid direction`);
@@ -501,14 +501,13 @@ export abstract class Maze {
         rightPadding = 0,
       } = this.drawingSize();
 
-      const actualWidth = (this.width / horizontalCellsPerGroup) * groupWidth;
-      const actualHeight = (this.height / verticalCellsPerGroup) * groupHeight;
-      const availableWidth = this.drawing.width - (leftPadding + rightPadding + this.wallSize * 2);
-      const availableHeight =
-        this.drawing.height - (topPadding + bottomPadding + this.wallSize * 2);
+      const actualWidth = (this.width / horizontalCellsPerGroup) * groupWidth + this.wallSize * 2;
+      const actualHeight = (this.height / verticalCellsPerGroup) * groupHeight + this.wallSize * 2;
+      const availableWidth = this.drawing.width - (leftPadding + rightPadding);
+      const availableHeight = this.drawing.height - (topPadding + bottomPadding);
 
-      const leftOffset = leftPadding + this.wallSize + (availableWidth - actualWidth) / 2;
-      const topOffset = topPadding + this.wallSize + (availableHeight - actualHeight) / 2;
+      const leftOffset = leftPadding + (availableWidth - actualWidth) / 2;
+      const topOffset = topPadding + (availableHeight - actualHeight) / 2;
 
       this.drawing.clear(color, leftOffset, topOffset);
     }
@@ -527,20 +526,17 @@ export abstract class Maze {
           this.drawCell(cell);
         }
 
-        // TODO [2025-04-10]: Restore this, it's confusing circular mazes...
-        // for (const outside of this.adjacent(cell).filter((c) => !this.inMaze(c))) {
-        //   const { direction } = outside;
+        for (const outside of this.adjacent(cell).filter((c) => !this.inMaze(c))) {
+          if (this.walls[cell.x][cell.y][outside.direction]) {
+            this.drawWall({ ...outside, direction: this.opposite(outside) });
+          }
 
-        //   if (this.walls[cell.x][cell.y][direction]) {
-        //     this.drawWall({ ...outside, direction: this.opposite(direction) });
-        //   }
-
-        //   for (const pillar of this.pillars) {
-        //     if (pillar.includes(this.opposite(direction))) {
-        //       this.drawPillar({ ...outside, pillar });
-        //     }
-        //   }
-        // }
+          for (const pillar of this.pillars) {
+            if (pillar.includes(this.opposite(outside))) {
+              this.drawPillar({ ...outside, pillar });
+            }
+          }
+        }
       }
 
       this.drawMasks();
@@ -587,25 +583,19 @@ export abstract class Maze {
   protected abstract drawingSize(): DrawingSizes;
   //#endregion
   //#region Cell
-  public sides(cell: Cell): number {
-    return this.sidesMatrix[this.cellKind(cell)];
-  }
-
-  public wallCount(cell: Cell, { walls = this.walls }: Overrides = {}): number {
-    return Object.values(walls[cell.x][cell.y]).reduce((p, v) => p + (v ? 1 : 0), 0);
-  }
-
   public isDeadEnd(cell: Cell, { walls = this.walls }: Overrides = {}): boolean {
+    const wall = walls[cell.x][cell.y];
+    const dirs = Object.keys(wall);
+
     return (
-      this.wallCount(cell, { walls }) === this.sides(cell) - 1 &&
       (cell.x !== this.entrance.x || cell.y !== this.entrance.y) &&
-      (cell.x !== this.exit.x || cell.y !== this.exit.y)
+      (cell.x !== this.exit.x || cell.y !== this.exit.y) &&
+      dirs.reduce((acc, dir) => acc + (wall[dir] ? 1 : 0), 0) === dirs.length - 1
     );
   }
 
   public inMaze(cell: Cell): boolean {
     return (
-      // TODO [2025-04-10]: Wrap arround
       cell.x >= 0 &&
       cell.x < this.width &&
       cell.y >= 0 &&
@@ -692,20 +682,23 @@ export abstract class Maze {
       x += move.x;
       y += move.y;
 
-      // TODO [2025-04-10]: Wrap arround
-      // if (x < 0) {
-      // x += this.width;
-      // }
-      // if (x >= this.width) {
-      // x -= this.width;
-      // }
+      if (this.wrapHorizontal) {
+        if (x < 0) {
+          x += this.width;
+        }
+        if (x >= this.width) {
+          x -= this.width;
+        }
+      }
 
-      // if (y < 0) {
-      //   y += this.height;
-      // }
-      // if (y >= this.height) {
-      //   y -= this.height;
-      // }
+      if (this.wrapVertical) {
+        if (y < 0) {
+          y += this.height;
+        }
+        if (y >= this.height) {
+          y -= this.height;
+        }
+      }
 
       return { x, y, direction };
     }
@@ -713,7 +706,9 @@ export abstract class Maze {
   }
 
   public adjacent(cell: Cell): CellDirection[] {
-    return this.directions.map((direction) => this.move(cell, direction)).filter((c) => c != null);
+    return Object.keys(this.walls[cell.x][cell.y])
+      .map((direction) => this.move(cell, direction))
+      .filter((c) => c != null);
   }
 
   public neighbors(cell: Cell): CellDirection[] {
@@ -747,7 +742,7 @@ export abstract class Maze {
     );
 
     const wall = walls[cell.x][cell.y];
-    for (const direction of this.directions) {
+    for (const direction of Object.keys(wall)) {
       if (wall[direction]) {
         this.drawWall({ ...cell, direction }, wallColor);
       }
@@ -766,17 +761,64 @@ export abstract class Maze {
     }
   }
 
+  protected drawArrow(rect: Rect, angle: number, color: string): void {
+    if (this.drawing) {
+      const coords: XY[] = [
+        { x: 1, y: 0 },
+        { x: -1, y: 2 / 3 },
+        { x: 0, y: 0 },
+        { x: -1, y: -2 / 3 },
+      ];
+
+      // scale
+      for (const c of coords) {
+        c.x = (c.x * rect.w) / 2;
+        c.y = (c.y * rect.h) / 2;
+      }
+
+      // rotate
+      for (const c of coords) {
+        const pc = toPolar(c);
+        pc.angle += (angle / 180) * Math.PI;
+        const { x, y } = toCartesian(pc);
+        c.x = x;
+        c.y = y;
+      }
+
+      this.drawing.polygon(
+        coords.map((c) => ({ x: rect.x + rect.w / 2 + c.x, y: rect.y + rect.h / 2 - c.y })),
+        color,
+      );
+    }
+  }
+
+  protected drawCircle(rect: Rect, color: string): void {
+    if (this.drawing) {
+      this.drawing.circle(
+        { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 },
+        Math.abs(rect.w) / 4,
+        color,
+      );
+    }
+  }
+
+  protected cellRect(cell: Cell): Rect {
+    const rect = this.getRect(cell);
+
+    if (rect.w > rect.h) {
+      rect.x += (rect.w - rect.h) / 2;
+      rect.w = rect.h;
+    } else if (rect.h > rect.w) {
+      rect.y += (rect.h - rect.w) / 2;
+      rect.h = rect.w;
+    }
+
+    return rect;
+  }
+
   public drawPath(cell: CellDirection, color = 'cyan'): void {
     if (this.drawing) {
-      const rect = this.getRect(cell);
-
-      if (rect.w > rect.h) {
-        rect.x += (rect.w - rect.h) / 2;
-        rect.w = rect.h;
-      } else if (rect.h > rect.w) {
-        rect.y += (rect.h - rect.w) / 2;
-        rect.h = rect.w;
-      }
+      const rect = this.cellRect(cell);
 
       if (cell.direction === '?') {
         this.drawing.circle(
@@ -787,61 +829,8 @@ export abstract class Maze {
       } else {
         const angle = this.pathMatrix[cell.direction];
 
-        const coords: XY[] = [
-          { x: 1, y: 0 },
-          { x: -1, y: 2 / 3 },
-          { x: 0, y: 0 },
-          { x: -1, y: -2 / 3 },
-        ];
-
-        if (rect.w > rect.h) {
-          rect.x += (rect.w - rect.h) / 2;
-          rect.w = rect.h;
-        } else if (rect.h > rect.w) {
-          rect.y += (rect.h - rect.w) / 2;
-          rect.h = rect.w;
-        }
-
-        // scale
-        for (const c of coords) {
-          c.x = (c.x * rect.w) / 2;
-          c.y = (c.y * rect.h) / 2;
-        }
-
-        // rotate
-        for (const c of coords) {
-          const pc = toPolar(c);
-          pc.angle += (angle / 180) * Math.PI;
-          const { x, y } = toCartesian(pc);
-          c.x = x;
-          c.y = y;
-        }
-
-        this.drawing.polygon(
-          coords.map((c) => ({ x: rect.x + rect.w / 2 + c.x, y: rect.y + rect.h / 2 - c.y })),
-          color,
-        );
+        this.drawArrow(rect, angle, color);
       }
-    }
-  }
-
-  public drawCircle(cell: Cell, color = 'cyan'): void {
-    if (this.drawing) {
-      const rect = this.getRect(cell);
-
-      if (rect.w > rect.h) {
-        rect.x += (rect.w - rect.h) / 2;
-        rect.w = rect.h;
-      } else if (rect.h > rect.w) {
-        rect.y += (rect.h - rect.w) / 2;
-        rect.h = rect.w;
-      }
-
-      this.drawing.circle(
-        { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 },
-        Math.abs(rect.w) / 4,
-        color,
-      );
     }
   }
 

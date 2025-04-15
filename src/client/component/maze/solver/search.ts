@@ -61,9 +61,9 @@ export class Search extends MazeSolver {
   } = {}): Iterator<void> {
     this.maze.attachDrawing(this.drawing);
 
-    type CP = Cell & { parent?: CP; direction: Direction };
+    type CellParentDirection = Cell & { parent?: CellParentDirection; direction: Direction };
 
-    let queue: CP[] = [];
+    let queue: CellParentDirection[] = [];
     const discovered = create2DArray(this.maze.width, this.maze.height, false);
     const distances = create2DArray(this.maze.width, this.maze.height, 0);
 
@@ -95,8 +95,8 @@ export class Search extends MazeSolver {
             );
             if (moves.length === 0) {
               this.maze.drawCell(cell);
-              this.maze.drawX(cell);
-              yield;
+              // this.maze.drawX(cell);
+              // yield;
               if (cell.parent) {
                 mode = 'backward';
                 queue.push(cell.parent);
@@ -122,7 +122,8 @@ export class Search extends MazeSolver {
               const { parent, direction } = topOfQueue;
 
               if (parent) {
-                this.maze.drawPath({ x: parent.x, y: parent.y, direction }, color);
+                this.maze.drawCell(parent);
+                this.maze.drawPath({ ...parent, direction }, color);
                 yield;
               }
             }
@@ -130,8 +131,8 @@ export class Search extends MazeSolver {
             mode = 'forward';
           } else {
             this.maze.drawCell(cell);
-            this.maze.drawX(cell);
-            yield;
+            // this.maze.drawX(cell);
+            // yield;
             queue.push(cell.parent!);
           }
 
@@ -139,8 +140,8 @@ export class Search extends MazeSolver {
         }
 
         case 'solve': {
-          let next: CP | undefined = cell.parent;
-          let prev: CP = cell;
+          let next: CellParentDirection | undefined = cell.parent;
+          let prev: CellParentDirection = cell;
           while (next) {
             this.maze.drawPath({ ...next, direction: prev.direction }, solutionColor);
             prev = next;

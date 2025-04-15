@@ -61,14 +61,14 @@ class Region {
   }
 }
 
-type BlobProperties = MazeGeneratorProperties & {
+type DivisionProperties = MazeGeneratorProperties & {
   threshold?: number;
 };
 
-export class Blob extends MazeGenerator {
+export class Division extends MazeGenerator {
   private readonly threshold: number;
 
-  public constructor({ threshold = 3, ...props }: BlobProperties) {
+  public constructor({ threshold = 3, ...props }: DivisionProperties) {
     super({ ...props });
 
     this.threshold = threshold;

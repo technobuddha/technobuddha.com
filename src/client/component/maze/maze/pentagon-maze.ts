@@ -24,19 +24,11 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
-  sidesMatrix,
   wallMatrix,
 } from './pentagon-matrix.ts';
 
 export class PentagonMaze extends Maze {
-  public constructor({
-    cellSize = 20,
-    wallSize = 1,
-    width,
-    height,
-    plugin,
-    ...props
-  }: MazeProperties) {
+  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -46,19 +38,19 @@ export class PentagonMaze extends Maze {
       rightTurnMatrix,
       leftTurnMatrix,
       moveMatrix,
-      sidesMatrix,
       edgesMatrix,
       pathMatrix,
     );
 
-    this.initialize({ width, height, plugin });
+    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {
     return {
       groupWidth: this.cellSize * 5,
       horizontalCellsPerGroup: 4,
-      groupHeight: this.cellSize,
+      groupHeight: this.cellSize * 5,
+      verticalCellsPerGroup: 5,
       topPadding: this.cellSize * 0.5,
       bottomPadding: this.cellSize * 0.5,
       leftPadding: this.cellSize * 0.5,

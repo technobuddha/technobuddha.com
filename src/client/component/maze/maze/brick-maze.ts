@@ -10,7 +10,6 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
-  sidesMatrix,
   wallMatrix,
 } from './brick-matrix.ts';
 import {
@@ -24,14 +23,7 @@ import {
 import { Maze } from './maze.ts';
 
 export class BrickMaze extends Maze {
-  public constructor({
-    cellSize = 15,
-    wallSize = 1,
-    width,
-    height,
-    plugin,
-    ...props
-  }: MazeProperties) {
+  public constructor({ cellSize = 15, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -41,12 +33,11 @@ export class BrickMaze extends Maze {
       rightTurnMatrix,
       leftTurnMatrix,
       moveMatrix,
-      sidesMatrix,
       edgesMatrix,
       pathMatrix,
     );
 
-    this.initialize({ width, height, plugin });
+    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {

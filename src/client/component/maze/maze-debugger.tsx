@@ -144,29 +144,53 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
     const err: string[] = [];
 
     if (maze) {
-      for (const direction of Object.keys(maze.walls[0][0])) {
-        if (
-          maze.opposite({ x: 0, y: 0, direction: maze.opposite({ x: 0, y: 0, direction }) }) !==
-          direction
-        ) {
-          err.push(`opposite(opposite(${direction})) !== ${direction}`);
-        }
+      for (const cell of maze.all()) {
+        for (const direction of Object.keys(maze.walls[cell.x][cell.y])) {
+          const move = maze.move(cell, direction);
+          if (move) {
+            if (maze.inMaze(move)) {
+              const back = maze.move(move, maze.opposite(move));
+              if (back) {
+                if (cell.x !== back.x || cell.y !== back.y) {
+                  err.push(
+                    `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move)} }; back = { x: ${back.x}, y: ${back.y}}`,
+                  );
+                }
+              } else {
+                err.push(
+                  `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move)} }; back = NULL`,
+                );
+              }
 
-        const rt = [...maze.rightTurn({ x: 0, y: 0, direction })];
-        const lt = [...maze.leftTurn({ x: 0, y: 0, direction })];
-        const rtOpposite = rt.pop();
-        const ltOpposite = lt.pop();
+              const rt = maze.rightTurn(move);
+              const lt = maze.leftTurn(move);
 
-        if (rtOpposite !== maze.opposite({ x: 0, y: 0, direction })) {
-          err.push(`last(rightTurn(${direction})) = ${rtOpposite} !== opposite(${direction})`);
-        }
+              const ltr = [...lt.slice(0, -1).reverse(), lt.at(-1)];
 
-        if (ltOpposite !== maze.opposite({ x: 0, y: 0, direction })) {
-          err.push(`last(leftTurn(${direction})) = ${ltOpposite} !== opposite(${direction})`);
-        }
+              if (rt.some((t, i) => t !== ltr.at(i))) {
+                err.push(
+                  `{ x: ${move.x}, y: ${move.y}, direction: ${move.direction}}: rt[${rt.join(',')}] != lt[${lt.join(';')} --- ${ltr.join(',')}]`,
+                );
+              }
+            }
+          }
 
-        if (!rt.reverse().every((t, i) => t === lt[i])) {
-          err.push(`reverse(rightTurn.reverse(${direction}) !== leftTurn`);
+          // const rt = [...maze.rightTurn({ x: cell.x, y: cell.y, direction })];
+          // const lt = [...maze.leftTurn({ x: 0, y: 0, direction })];
+          // const rtOpposite = rt.pop();
+          // const ltOpposite = lt.pop();
+
+          // if (rtOpposite !== maze.opposite({ x: 0, y: 0, direction })) {
+          //   err.push(`last(rightTurn(${direction})) = ${rtOpposite} !== opposite(${direction})`);
+          // }
+
+          // if (ltOpposite !== maze.opposite({ x: 0, y: 0, direction })) {
+          //   err.push(`last(leftTurn(${direction})) = ${ltOpposite} !== opposite(${direction})`);
+          // }
+
+          // if (!rt.reverse().every((t, i) => t === lt[i])) {
+          //   err.push(`reverse(rightTurn.reverse(${direction}) !== leftTurn`);
+          // }
         }
       }
 
@@ -191,8 +215,15 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'row' }}>
-      <div style={{ backgroundColor: 'lightBlue' }}>
-        <div style={{ position: 'relative', width: boxWidth, height: boxHeight }}>
+      <div style={{ backgroundColor: 'white' }}>
+        <div
+          style={{
+            position: 'relative',
+            width: boxWidth,
+            height: boxHeight,
+            backgroundColor: 'lightBlue',
+          }}
+        >
           {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
           <canvas
             ref={canvasMaze}

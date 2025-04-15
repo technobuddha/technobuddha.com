@@ -26,7 +26,7 @@ export class CanvasDrawing extends Drawing {
       this.canvas.fillRect(0, 0, this.canvas.canvas.width, this.canvas.canvas.height);
     }
 
-    // this.canvas.translate(originX, originY);
+    this.canvas.translate(originX, originY);
   }
 
   public line(start: XY, finish: XY, color: string): void {

@@ -31,10 +31,7 @@ export class HuntAndKill extends MazeGenerator {
 
     this.huntMethod = huntMethod;
     this.visited = create2DArray(this.maze.width, this.maze.height, false);
-    this.currentCell = {
-      x: Math.floor(this.random() * this.maze.width),
-      y: Math.floor(this.random() * this.maze.height),
-    };
+    this.currentCell = this.randomPick(this.maze.all())!;
   }
 
   public *generate(): Iterator<void> {

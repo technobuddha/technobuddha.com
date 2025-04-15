@@ -1,7 +1,7 @@
-import { animate } from './drawing/animate.ts';
 import { type Drawing } from './drawing/drawing.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from './generator/maze-generator.ts';
 import { type Maze, type MazeProperties } from './maze/maze.ts';
+import { MazeRunner } from './maze-runner.ts';
 import { type MazeSolver, type MazeSolverProperties } from './solver/maze-solver.ts';
 
 export type MazeSettings = Partial<MazeProperties> & Partial<MazeGeneratorProperties>;
@@ -48,12 +48,12 @@ export class MazeFactory {
     this.maskColor = maskColor;
   }
 
-  public async create(
+  public create(
     mazeMaker: (props: MazeSettings) => Maze,
-    generator?: (props: MazeGeneratorProperties) => MazeGenerator,
-    mask?: (maze: Maze) => void,
-    solver?: (props: MazeSolverProperties) => MazeSolver,
-  ): Promise<Maze> {
+    generatorMaker?: (props: MazeGeneratorProperties) => MazeGenerator,
+    plugin?: (maze: Maze) => void,
+    solverMaker?: (props: MazeSolverProperties) => MazeSolver,
+  ): MazeRunner {
     const maze = mazeMaker({
       drawing: this.drawing,
       width: this.width,
@@ -65,53 +65,12 @@ export class MazeFactory {
       entrance: this.entrance,
       exit: this.exit,
       maskColor: this.maskColor,
-      plugin: mask,
+      plugin,
     });
 
-    maze.draw();
+    const generator = generatorMaker?.({ maze, start: this.start, random: this.random });
+    const solver = solverMaker?.({ maze, drawing: this.drawing!, random: this.random });
 
-    if (generator) {
-      const mazeGenerator = generator({
-        maze,
-        start: this.start,
-        random: this.random,
-      });
-      const generated = mazeGenerator.generate();
-
-      while (
-        await animate(() => {
-          for (let i = 0; i < mazeGenerator.speed; ++i) {
-            if (generated.next().done) {
-              return false;
-            }
-          }
-          return true;
-        })
-      ) {
-        //
-      }
-      maze.addTermini();
-      maze.draw();
-    }
-
-    if (solver) {
-      const mazeSolver = solver({ maze, drawing: this.drawing!, random: this.random });
-      const solution = mazeSolver.solve({ solutionColor: '#00FF00' });
-
-      while (
-        await animate(() => {
-          for (let i = 0; i < mazeSolver.speed; ++i) {
-            if (solution.next().done) {
-              return false;
-            }
-          }
-          return true;
-        })
-      ) {
-        //
-      }
-    }
-
-    return maze;
+    return new MazeRunner(maze, generator, solver);
   }
 }

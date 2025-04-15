@@ -5,16 +5,17 @@ import {
   type OppositeMatrix,
   type PathMatrix,
   type PillarMatrix,
-  type SidesMatrix,
   type TurnMatrix,
   type WallMatrix,
 } from './maze.ts';
 
 export const directionMatrix: DirectionMatrix = [
   'a',
+  'b',
   'c',
   'd',
   'e',
+  'f',
   'g',
   'h',
   'i',
@@ -61,13 +62,6 @@ export const kindMatrix: number[][] = [
   [1, 2, 3, 0],
   [2, 3, 0, 1],
 ];
-
-export const sidesMatrix: SidesMatrix = {
-  0: 5,
-  1: 5,
-  2: 5,
-  3: 5,
-};
 
 export const wallMatrix: WallMatrix = [
   { a: true, b: true, c: true, d: true, e: true },

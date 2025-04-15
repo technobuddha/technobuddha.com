@@ -46,7 +46,7 @@ export class Tremaux extends MazeSolver {
     this.curr = next;
   }
 
-  public *solve({ entrance = this.maze.entrance } = {}): Iterator<void> {
+  public *solve({ solutionColor = '#00FF00', entrance = this.maze.entrance } = {}): Iterator<void> {
     this.curr = entrance;
     this.prev = undefined;
 
@@ -108,5 +108,8 @@ export class Tremaux extends MazeSolver {
         this.curr = move;
       }
     }
+
+    this.maze.drawCell(this.maze.exit);
+    this.maze.drawPath(this.maze.exit, solutionColor);
   }
 }

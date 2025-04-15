@@ -5,7 +5,6 @@ import {
   type OppositeMatrix,
   type PathMatrix,
   type PillarMatrix,
-  type SidesMatrix,
   type TurnMatrix,
   type WallMatrix,
 } from './maze.ts';
@@ -24,18 +23,9 @@ export const pillarMatrix: PillarMatrix = [
   'hd',
 ];
 
-export const sidesMatrix: SidesMatrix = {
-  0: 4,
-  1: 5,
-  2: 4,
-  3: 4,
-};
-
 export const wallMatrix: WallMatrix = {
   0: { a: true, b: true, c: true, d: true },
   1: { e: true, f: true, b: true, c: true, d: true },
-  2: { a: true, b: true, g: true, d: true },
-  3: { a: true, b: true, h: true, d: true },
 };
 
 export const oppositeMatrix: OppositeMatrix = {
@@ -51,73 +41,67 @@ export const oppositeMatrix: OppositeMatrix = {
 
 export const rightTurnMatrix: TurnMatrix = {
   a: {
-    0: ['b', 'a', 'd', 'c'],
-    1: ['b', 'f', 'e', 'd', 'c'],
+    0: ['b', 'a', 'd', 'c', 'g', 'h'],
+    1: ['b', 'f', 'e', 'd', 'c', 'g', 'h'],
   },
   b: {
-    0: ['c', 'b', 'a', 'd'],
-    1: ['c', 'b', 'f', 'e', 'd'],
-    2: ['g', 'b', 'a', 'd'],
-    3: ['h', 'b', 'a', 'd'],
+    0: ['c', 'g', 'h', 'b', 'a', 'd'],
+    1: ['c', 'g', 'h', 'b', 'f', 'e', 'd'],
   },
   c: {
-    0: ['d', 'c', 'b', 'a'],
-    2: ['d', 'g', 'b', 'a'],
-    3: ['d', 'h', 'b', 'a'],
+    0: ['d', 'c', 'g', 'h', 'b', 'a'],
+    1: ['d', 'c', 'g', 'h', 'b', 'f', 'e'],
   },
   d: {
-    0: ['a', 'd', 'c', 'b'],
-    1: ['f', 'e', 'd', 'c', 'b'],
-    2: ['a', 'd', 'g', 'b'],
-    3: ['a', 'd', 'h', 'b'],
+    0: ['a', 'd', 'c', 'g', 'h', 'b'],
+    1: ['f', 'e', 'd', 'c', 'g', 'h', 'b'],
   },
   e: {
-    2: ['b', 'a', 'd', 'g'],
+    0: ['b', 'a', 'd', 'c', 'g'],
+    1: ['b', 'f', 'e', 'd', 'c', 'g'],
   },
   f: {
-    3: ['b', 'a', 'd', 'h'],
+    0: ['b', 'a', 'd', 'c', 'h'],
+    1: ['b', 'f', 'e', 'd', 'c', 'h'],
   },
   g: {
-    1: ['d', 'c', 'b', 'f', 'e'],
+    1: ['d', 'c', 'g', 'h', 'b', 'f', 'e'],
   },
   h: {
-    1: ['e', 'd', 'c', 'b', 'f'],
+    1: ['e', 'd', 'c', 'g', 'h', 'b', 'f'],
   },
 };
 
 export const leftTurnMatrix: TurnMatrix = {
   a: {
-    0: ['d', 'a', 'b', 'c'],
-    1: ['d', 'e', 'f', 'b', 'c'],
+    0: ['d', 'a', 'b', 'h', 'g', 'c'],
+    1: ['d', 'e', 'f', 'b', 'h', 'g', 'c'],
   },
   b: {
-    0: ['a', 'b', 'c', 'd'],
-    1: ['e', 'f', 'b', 'c', 'd'],
-    2: ['a', 'b', 'g', 'd'],
-    3: ['a', 'b', 'h', 'd'],
+    0: ['a', 'b', 'h', 'c', 'g', 'd'],
+    1: ['e', 'f', 'b', 'h', 'g', 'c', 'd'],
   },
   c: {
-    0: ['b', 'c', 'd', 'a'],
-    2: ['b', 'g', 'd', 'a'],
-    3: ['b', 'h', 'd', 'a'],
+    0: ['b', 'h', 'c', 'g', 'd', 'a'],
+    1: ['b', 'h', 'c', 'g', 'd', 'e', 'f'],
   },
   d: {
-    0: ['c', 'd', 'a', 'b'],
-    1: ['c', 'd', 'e', 'f', 'b'],
-    2: ['g', 'd', 'a', 'b'],
-    3: ['h', 'd', 'a', 'b'],
+    0: ['h', 'g', 'c', 'd', 'a', 'b'],
+    1: ['h', 'g', 'c', 'd', 'e', 'f', 'b'],
   },
   e: {
-    2: ['d', 'a', 'b', 'g'],
+    0: ['d', 'a', 'b', 'h', 'g', 'c'],
+    1: ['d', 'e', 'f', 'b', 'h', 'g', 'c'],
   },
   f: {
-    3: ['d', 'a', 'b', 'h'],
+    0: ['d', 'a', 'b', 'h', 'g', 'c'],
+    1: ['d', 'e', 'f', 'b', 'h', 'g', 'c'],
   },
   g: {
-    1: ['f', 'b', 'c', 'd', 'e'],
+    1: ['f', 'b', 'h', 'g', 'c', 'd', 'e'],
   },
   h: {
-    1: ['b', 'c', 'd', 'e', 'f'],
+    1: ['b', 'h', 'g', 'c', 'd', 'e', 'f'],
   },
 };
 
@@ -126,6 +110,8 @@ export const moveMatrix: MoveMatrix = {
     a: { x: +0, y: +1 },
     b: { x: +1, y: +0 },
     c: { x: +0, y: -1 },
+    g: { x: +0, y: -1, zone: 'down' },
+    h: { x: +0, y: -1, zone: 'down' },
     d: { x: -1, y: +0 },
   },
   1: {
@@ -133,19 +119,9 @@ export const moveMatrix: MoveMatrix = {
     f: { x: +1, y: +1, zone: 'up' },
     b: { x: +1, y: +0 },
     c: { x: +0, y: -1 },
-    d: { x: -1, y: +0 },
-  },
-  2: {
-    a: { x: +0, y: +1 },
-    b: { x: +1, y: +0 },
-    d: { x: -1, y: +0 },
     g: { x: +0, y: -1, zone: 'down' },
-  },
-  3: {
-    a: { x: +0, y: +1 },
-    b: { x: +1, y: +0 },
-    d: { x: -1, y: +0 },
     h: { x: +0, y: -1, zone: 'down' },
+    d: { x: -1, y: +0 },
   },
 };
 
@@ -163,8 +139,6 @@ export const pathMatrix: PathMatrix = {
   d: 90,
   e: 45,
   f: 315,
-  g: 270,
-  h: 90,
-  i: 180,
-  j: 180,
+  g: 180,
+  h: 180,
 };

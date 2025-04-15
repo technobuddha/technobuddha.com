@@ -22,21 +22,13 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
-  sidesMatrix,
   wallMatrix,
 } from './octogon-matrix.ts';
 
 const SQ2 = Math.SQRT2;
 
 export class OctogonMaze extends Maze {
-  public constructor({
-    cellSize = 30,
-    wallSize = 1,
-    width,
-    height,
-    plugin,
-    ...props
-  }: MazeProperties) {
+  public constructor({ cellSize = 30, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -46,12 +38,11 @@ export class OctogonMaze extends Maze {
       rightTurnMatrix,
       leftTurnMatrix,
       moveMatrix,
-      sidesMatrix,
       edgesMatrix,
       pathMatrix,
     );
 
-    this.initialize({ width, height, plugin });
+    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -59,10 +50,8 @@ export class OctogonMaze extends Maze {
       groupWidth: this.cellSize,
       horizontalCellsPerGroup: 2,
       groupHeight: this.cellSize,
-      leftPadding: this.cellSize * 0.25,
-      rightPadding: this.cellSize * 0.5,
-      topPadding: this.cellSize * 0.25,
-      bottomPadding: this.cellSize * 0.5,
+      rightPadding: this.cellSize * 0.25,
+      bottomPadding: this.cellSize * 0.25,
     };
   }
 

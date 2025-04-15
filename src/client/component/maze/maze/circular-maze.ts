@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/class-methods-use-this */
-
 import { type Direction } from '@mui/material';
-import { toCartesian, toPolar, toRadians } from '@technobuddha/library';
+import { toCartesian, toRadians } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
 
@@ -14,7 +12,6 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
-  sidesMatrix,
   wallMatrix,
 } from './circular-matrix.ts';
 import {
@@ -24,27 +21,9 @@ import {
   type DrawingSizes,
   type Kind,
   type MazeProperties,
-  type XY,
+  type Wall,
 } from './maze.ts';
 import { Maze } from './maze.ts';
-
-const ROWS_PER_ZONE = 10;
-const COLS = 48;
-
-function circularPlugin(plugin?: MazeProperties['plugin']): MazeProperties['plugin'] {
-  return (maze: Maze): void => {
-    for (let y = 0; y < maze.height; ++y) {
-      const cols = COLS * 2 ** Math.floor(y / ROWS_PER_ZONE);
-      for (let x = cols; x < maze.width; ++x) {
-        maze.mask[x][y] = true;
-      }
-    }
-
-    if (plugin) {
-      plugin(maze);
-    }
-  };
-}
 
 type CircularMazeProperties = MazeProperties & {
   centerRadius?: number;
@@ -52,18 +31,24 @@ type CircularMazeProperties = MazeProperties & {
 
 export class CircularMaze extends Maze {
   public readonly centerRadius: number;
+  public readonly zones: number[] = [];
 
   public constructor({
-    cellSize = 14,
+    cellSize = 12,
     wallSize = 1,
-    centerRadius = 120,
-    width,
-    height,
+    centerRadius = 12,
     plugin,
     ...props
   }: CircularMazeProperties) {
     super(
-      { cellSize, wallSize, ...props },
+      {
+        cellSize,
+        wallSize,
+        ...props,
+        // exit: { x: 0, y: 0 },
+        wrapHorizontal: false,
+        wrapVertical: false,
+      },
       directionMatrix,
       pillarMatrix,
       wallMatrix,
@@ -71,13 +56,27 @@ export class CircularMaze extends Maze {
       rightTurnMatrix,
       leftTurnMatrix,
       moveMatrix,
-      sidesMatrix,
       edgesMatrix,
       pathMatrix,
     );
 
     this.centerRadius = centerRadius;
-    this.initialize({ width, height, plugin: circularPlugin(plugin) });
+    this.initialize({ ...props, plugin: this.circularPlugin(plugin) });
+  }
+
+  private circularPlugin(plugin?: MazeProperties['plugin']): MazeProperties['plugin'] {
+    return (maze: Maze): void => {
+      for (let y = 0; y < maze.height; ++y) {
+        const cols = this.zones[y];
+        for (let x = cols; x < maze.width; ++x) {
+          maze.mask[x][y] = true;
+        }
+      }
+
+      if (plugin) {
+        plugin(maze);
+      }
+    };
   }
 
   protected drawingSize(): DrawingSizes {
@@ -89,37 +88,95 @@ export class CircularMaze extends Maze {
       bottomPadding: this.centerRadius / 2,
       rightPadding: this.centerRadius / 2,
       custom: ({ width, height }) => {
-        const zones = Math.ceil(this.height / ROWS_PER_ZONE);
+        const size = Math.min(width, height);
 
-        return { width: COLS * 2 ** zones, height: Math.min(width, height) };
+        let cols = 1;
+        for (let y = 0; y < size; ++y) {
+          this.zones.push(cols);
+          const diameter = (this.centerRadius + y * this.cellSize + this.cellSize) * 2;
+          const circumference = diameter * Math.PI;
+          const cellWidth = circumference / cols;
+
+          if (cellWidth > this.cellSize * 1.67) {
+            cols *= 2;
+          }
+        }
+
+        return { width: cols, height: size };
       },
     };
   }
 
+  public override clear(color?: string): void {
+    if (this.drawing) {
+      const {
+        topPadding = 0,
+        leftPadding = 0,
+        bottomPadding = 0,
+        rightPadding = 0,
+      } = this.drawingSize();
+
+      const actualWidth = this.cellSize * this.height * 2;
+      const actualHeight = actualWidth;
+      const availableWidth = this.drawing.width - (leftPadding + rightPadding);
+      const availableHeight = this.drawing.height - (topPadding + bottomPadding);
+
+      const leftOffset = this.wallSize + (availableWidth - actualWidth) / 2;
+      const topOffset = this.wallSize + (availableHeight - actualHeight) / 2;
+
+      this.drawing.clear(color, leftOffset, topOffset);
+    }
+  }
+
+  public override initialWalls(cell: Cell): Wall {
+    const wall = super.initialWalls(cell);
+
+    const z0 = this.zones[cell.y];
+    const zp = cell.y === 0 ? z0 : this.zones[cell.y - 1];
+
+    if (z0 !== zp) {
+      delete wall.c;
+      wall[cell.x % 2 === 0 ? 'g' : 'h'] = true;
+    }
+
+    if (z0 === 1) {
+      delete wall.b;
+      delete wall.d;
+      delete wall.c;
+    }
+
+    return wall;
+  }
+
   protected cellKind(cell: Cell): number {
+    const z0 = this.zones[cell.y];
+    const zn = cell.y === this.height - 1 ? z0 : this.zones[cell.y + 1];
     /*
      * Kind 0: Normal
      * Kind 1: End of Zone
-     * Kind 2: Start of Zone (right)
-     * Kind 2: Start of Zone (left)
      */
 
-    if (cell.y % ROWS_PER_ZONE === ROWS_PER_ZONE - 1) {
-      return 1;
-    }
-    if (cell.y % ROWS_PER_ZONE === 0 && cell.y !== 0 && cell.x % 2 === 0) {
-      return 2;
-    }
-    if (cell.y % ROWS_PER_ZONE === 0 && cell.y !== 0 && cell.x % 2 === 1) {
-      return 3;
+    return z0 === zn ? 0 : 1;
+  }
+
+  public override move(cell: Cell, direction: Direction): CellDirection | null {
+    const next = super.move(cell, direction);
+
+    if (next) {
+      const cols = this.zones[next.y];
+      if (next.x >= cols) {
+        next.x -= cols;
+      }
+      if (next.x < 0) {
+        next.x += cols;
+      }
     }
 
-    return 0;
+    return next;
   }
 
   private cellOffsets(cell: Cell): Record<string, number> {
-    const zone = Math.floor(cell.y / ROWS_PER_ZONE);
-    const width = COLS * 2 ** zone;
+    const cols = this.zones[cell.y];
 
     const { cx, cy } = this.offsets(this.cellKind(cell));
 
@@ -131,89 +188,31 @@ export class CircularMaze extends Maze {
     const ap1 = 360 / (Math.PI * 2 * r1);
     const ap2 = 360 / (Math.PI * 2 * r2);
 
-    const a0 = (360 / width) * cell.x;
+    const a0 = (360 / cols) * cell.x;
     const a1 = a0 + ap1;
     const a2 = a0 + ap2;
-    const a6 = (360 / width) * (cell.x + 1);
+    const a6 = (360 / cols) * (cell.x + 1);
     const a5 = a6 - ap1;
     const a4 = a6 - ap2;
     const a3 = (a0 + a6) / 2;
 
-    // a0, a1,  a2,  a3, a4,  a5,  a6
-    // a0, a01, a02, a1, a22, a21, a2
-
-    const x0 = cx + Math.cos(toRadians(a0)) * r1;
-    const y0 = cy + Math.sin(toRadians(a0)) * r1;
-    const x1 = cx + Math.cos(toRadians(a1)) * r1;
-    const y1 = cy + Math.sin(toRadians(a1)) * r1;
-    const x2 = cx + Math.cos(toRadians(a0)) * r2;
-    const y2 = cy + Math.sin(toRadians(a0)) * r2;
-    const x3 = cx + Math.cos(toRadians(a2)) * r2;
-    const y3 = cy + Math.sin(toRadians(a2)) * r2;
-
-    const x4 = cx + Math.cos(toRadians(a5)) * r1;
-    const y4 = cy + Math.sin(toRadians(a5)) * r1;
-    const x5 = cx + Math.cos(toRadians(a6)) * r1;
-    const y5 = cy + Math.sin(toRadians(a6)) * r1;
-    const x6 = cx + Math.cos(toRadians(a4)) * r2;
-    const y6 = cy + Math.sin(toRadians(a4)) * r2;
-    const x7 = cx + Math.cos(toRadians(a6)) * r2;
-    const y7 = cy + Math.sin(toRadians(a6)) * r2;
-
-    return {
-      cx,
-      cy,
-      r0,
-      r1,
-      r2,
-      r3,
-      a0,
-      a1,
-      a2,
-      a3,
-      a4,
-      a5,
-      a6,
-      x0,
-      x1,
-      x2,
-      x3,
-      x4,
-      x5,
-      x6,
-      x7,
-      y0,
-      y1,
-      y2,
-      y3,
-      y4,
-      y5,
-      y6,
-      y7,
-    };
+    return { cx, cy, r0, r1, r2, r3, a0, a1, a2, a3, a4, a5, a6 };
   }
 
   protected offsets(_kind: Kind): Record<string, number> {
-    const { width, height } = this.drawing ?? { width: 1, height: 1 };
-
-    return { cx: width / 2, cy: height / 2 };
-  }
-
-  public override drawCell(cell: Cell, color = this.cellColor): void {
-    if (this.drawing) {
-      const zone = Math.floor(cell.y / ROWS_PER_ZONE);
-      const cols = COLS * 2 ** zone;
-      if (cell.x < cols) {
-        super.drawCell(cell, color);
-      }
-    }
+    return {
+      cx: this.cellSize * this.height + this.centerRadius / 2,
+      cy: this.cellSize * this.height + this.centerRadius / 2,
+    };
   }
 
   public drawFloor(cell: Cell, color = this.cellColor): void {
     if (this.drawing) {
-      const zone = Math.floor(cell.y / ROWS_PER_ZONE);
-      const cols = COLS * 2 ** zone;
-      if (cell.x < cols) {
+      const cols = this.zones[cell.y];
+      if (cols === 1) {
+        const { cx, cy } = this.cellOffsets(cell);
+        this.drawing.circle({ x: cx, y: cy }, this.cellSize / 2 + this.centerRadius, color);
+      } else {
         const { cx, cy, r0, r3, a0, a6 } = this.cellOffsets(cell);
 
         this.drawing.arc(cx, cy, r0, r3, a0, a6, color);
@@ -223,46 +222,70 @@ export class CircularMaze extends Maze {
 
   public drawWall(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
-      const zone = Math.floor(cell.y / ROWS_PER_ZONE);
-      const cols = COLS * 2 ** zone;
-      if (cell.x < cols) {
-        switch (cell.direction) {
-          case 'a': {
-            const { cx, cy, r2, r3, a0, a6 } = this.cellOffsets(cell);
-            this.drawing.arc(cx, cy, r2, r3, a0, a6, color);
-            break;
-          }
-          case 'c':
-          case 'g':
-          case 'h': {
-            const { cx, cy, r0, r1, a0, a6 } = this.cellOffsets(cell);
-            this.drawing.arc(cx, cy, r0, r1, a0, a6, color);
-            break;
-          }
-          case 'd': {
-            const { cx, cy, r1, r2, a0, a1 } = this.cellOffsets(cell);
-            this.drawing.arc(cx, cy, r1, r2, a0, a1, color);
-            break;
-          }
-          case 'b': {
-            const { cx, cy, r1, r2, a5, a6 } = this.cellOffsets(cell);
-            this.drawing.arc(cx, cy, r1, r2, a5, a6, color);
-            break;
-          }
-          case 'e': {
-            const { cx, cy, r2, r3, a0, a3 } = this.cellOffsets(cell);
-            this.drawing.arc(cx, cy, r2, r3, a0, a3, color);
-            break;
-          }
-
-          case 'f': {
-            const { cx, cy, r2, r3, a3, a6 } = this.cellOffsets(cell);
-            this.drawing.arc(cx, cy, r2, r3, a3, a6, color);
-            break;
-          }
-
-          // no default
+      switch (cell.direction) {
+        case 'a': {
+          const { cx, cy, r2, r3, a0, a6 } = this.cellOffsets(cell);
+          this.drawing.arc(cx, cy, r2, r3, a0, a6, color);
+          break;
         }
+        case 'c':
+        case 'g':
+        case 'h': {
+          const { cx, cy, r0, r1, a0, a6 } = this.cellOffsets(cell);
+          this.drawing.arc(cx, cy, r0, r1, a0, a6, color);
+          break;
+        }
+        case 'd': {
+          const { cx, cy, r1, r2, a0, a1 } = this.cellOffsets(cell);
+
+          const { x: x0, y: y0 } = toCartesian({ radius: r1, angle: toRadians(a0) });
+          const { x: x1, y: y1 } = toCartesian({ radius: r1, angle: toRadians(a1) });
+          const { x: x2, y: y2 } = toCartesian({ radius: r2, angle: toRadians(a1) });
+          const { x: x3, y: y3 } = toCartesian({ radius: r2, angle: toRadians(a0) });
+
+          this.drawing.polygon(
+            [
+              { x: cx + x0, y: cy + y0 },
+              { x: cx + x1, y: cy + y1 },
+              { x: cx + x2, y: cy + y2 },
+              { x: cx + x3, y: cy + y3 },
+            ],
+            color,
+          );
+          break;
+        }
+        case 'b': {
+          const { cx, cy, r1, r2, a5, a6 } = this.cellOffsets(cell);
+
+          const { x: x0, y: y0 } = toCartesian({ radius: r1, angle: toRadians(a5) });
+          const { x: x1, y: y1 } = toCartesian({ radius: r1, angle: toRadians(a6) });
+          const { x: x2, y: y2 } = toCartesian({ radius: r2, angle: toRadians(a6) });
+          const { x: x3, y: y3 } = toCartesian({ radius: r2, angle: toRadians(a5) });
+
+          this.drawing.polygon(
+            [
+              { x: cx + x0, y: cy + y0 },
+              { x: cx + x1, y: cy + y1 },
+              { x: cx + x2, y: cy + y2 },
+              { x: cx + x3, y: cy + y3 },
+            ],
+            color,
+          );
+          break;
+        }
+        case 'e': {
+          const { cx, cy, r2, r3, a0, a3 } = this.cellOffsets(cell);
+          this.drawing.arc(cx, cy, r2, r3, a0, a3, color);
+          break;
+        }
+
+        case 'f': {
+          const { cx, cy, r2, r3, a3, a6 } = this.cellOffsets(cell);
+          this.drawing.arc(cx, cy, r2, r3, a3, a6, color);
+          break;
+        }
+
+        // no default
       }
     }
   }
@@ -307,79 +330,101 @@ export class CircularMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
-      const zone = Math.floor(cell.y / ROWS_PER_ZONE) + 1;
-      const cols = COLS * 2 ** zone;
-      if (cell.x < cols) {
-        const { x1, x3, x4, x6, y1, y3, y4, y6 } = this.cellOffsets(cell);
-        this.drawing.line({ x: x1, y: y1 }, { x: x6, y: y6 }, color);
-        this.drawing.line({ x: x3, y: y3 }, { x: x4, y: y4 }, color);
+      if (this.zones[cell.y] === 1) {
+        const { cx, cy } = this.cellOffsets(cell);
+
+        this.drawing.line(
+          { x: cx, y: cy - (this.cellSize - this.wallSize) },
+          { x: cx, y: cy + (this.cellSize - this.wallSize) },
+          color,
+        );
+        this.drawing.line(
+          { x: cx - (this.cellSize - this.wallSize), y: cy },
+          { x: cx + (this.cellSize - this.wallSize), y: cy },
+          color,
+        );
+      } else {
+        const { cx, cy, a1, a2, a4, a5, r1, r2 } = this.cellOffsets(cell);
+
+        const { x: xc, y: yc } = toCartesian({
+          radius: (r1 + r2) / 2,
+          angle: toRadians((a2 + a4) / 2),
+        });
+        const { x: x0, y: y0 } = toCartesian({ radius: r1, angle: toRadians(a1) });
+        const { x: x1, y: y1 } = toCartesian({ radius: r1, angle: toRadians(a4) });
+        const { x: x2, y: y2 } = toCartesian({ radius: r2, angle: toRadians(a2) });
+        const { x: x3, y: y3 } = toCartesian({ radius: r2, angle: toRadians(a5) });
+
+        this.drawing.line({ x: cx + x0, y: cy + y0 }, { x: cx + xc, y: cy + yc }, color);
+        this.drawing.line({ x: cx + x1, y: cy + y1 }, { x: cx + xc, y: cy + yc }, color);
+        this.drawing.line({ x: cx + x2, y: cy + y2 }, { x: cx + xc, y: cy + yc }, color);
+        this.drawing.line({ x: cx + x3, y: cy + y3 }, { x: cx + xc, y: cy + yc }, color);
       }
     }
   }
 
   public getRect(cell: Cell): Rect {
-    let { x1, x3, x4, x6, y1, y3, y4, y6 } = this.cellOffsets(cell);
+    const { cx, cy, a0, a6, r0, r3 } = this.cellOffsets(cell);
 
-    if (x3 < x1) {
-      [x1, x3] = [x3, x1];
-    }
-    if (x6 < x4) {
-      [x4, x6] = [x6, x4];
-    }
+    const { x, y } = toCartesian({ angle: toRadians((a0 + a6) / 2), radius: (r0 + r3) / 2 });
 
-    if (y3 < y1) {
-      [y1, y3] = [y3, y1];
-    }
-    if (y6 < y4) {
-      [y4, y6] = [y6, y4];
-    }
-
-    return { x: x1, y: y1, w: x4 - x1, h: y4 - y1 };
+    return {
+      x: cx + x - this.cellSize / 2,
+      y: cy + y - this.cellSize / 2,
+      w: this.cellSize,
+      h: this.cellSize,
+    };
   }
 
   public override drawPath(cell: CellDirection, color = 'cyan'): void {
     if (this.drawing) {
-      const zone = Math.floor(cell.y / ROWS_PER_ZONE);
-      const cols = COLS * 2 ** zone;
-      if (cell.x < cols) {
-        const { x1, y1, x6, y6 } = this.cellOffsets(cell);
+      const cols = this.zones[cell.y];
 
-        const mx = (x1 + x6) / 2;
-        const my = (y1 + y6) / 2;
-
-        if (cell.direction === '?') {
-          this.drawing.circle({ x: mx, y: my }, this.cellSize / 4, color);
-        } else {
-          const angle = pathMatrix[cell.direction] - (cell.x * (360 / cols) + 360 / cols / 2);
-
-          const coords: XY[] = [
-            { x: 1, y: 0 },
-            { x: -1, y: 2 / 3 },
-            { x: 0, y: 0 },
-            { x: -1, y: -2 / 3 },
-          ];
-
-          // scale
-          for (const c of coords) {
-            c.x = (c.x * this.cellSize) / 2;
-            c.y = (c.y * this.cellSize) / 2;
+      switch (cols) {
+        case 1: {
+          const { cx, cy } = this.cellOffsets(cell);
+          const rect = {
+            x: cx - this.cellSize / 2,
+            y: cy - this.cellSize / 2,
+            w: this.cellSize,
+            h: this.cellSize,
+          };
+          if (cell.direction === '?') {
+            this.drawCircle(rect, color);
+          } else {
+            const angle = cell.direction === 'e' ? 270 : 90;
+            this.drawArrow(rect, angle, color);
           }
+          break;
+        }
 
-          // rotate
-          for (const c of coords) {
-            const pc = toPolar(c);
-            pc.angle += (angle / 180) * Math.PI;
-            const { x, y } = toCartesian(pc);
-            c.x = x;
-            c.y = y;
+        case 2: {
+          const rect = this.cellRect(cell);
+          if (cell.direction === '?') {
+            this.drawCircle(rect, color);
+          } else {
+            const angle = pathMatrix[cell.direction] + (cell.x === 0 ? -90 : 90);
+            this.drawArrow(rect, angle, color);
           }
+          break;
+        }
 
-          this.drawing.polygon(
-            coords.map((c) => ({ x: mx + c.x, y: my - c.y })),
-            color,
-          );
+        default: {
+          const rect = this.cellRect(cell);
+          if (cell.direction === '?') {
+            this.drawCircle(rect, color);
+          } else {
+            const angle = pathMatrix[cell.direction] - (cell.x * (360 / cols) + 360 / cols / 2);
+            this.drawArrow(rect, angle, color);
+          }
+          break;
         }
       }
     }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  public override drawMasks(): void {
+    // Masks aren't disaplyed in the circular maze
   }
 }

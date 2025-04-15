@@ -6,7 +6,7 @@ import { Size } from '@technobuddha/size';
 import { useUserInterface } from '#context/user-interface';
 
 import { CanvasDrawing } from './drawing/canvas-drawing.ts';
-import { Blob } from './generator/blob.ts';
+import { Division } from './generator/division.ts';
 import { GrowingTree } from './generator/growing-tree.ts';
 import { HuntAndKill } from './generator/hunt-and-kill.ts';
 import { Kruskals } from './generator/kruskals.ts';
@@ -35,7 +35,7 @@ const algorithms: Record<
   Record<string, (props: MazeGeneratorProperties) => MazeGenerator>
 > = {
   division: {
-    normal: (props) => new Blob(props),
+    normal: (props) => new Division(props),
   },
   huntAndKill: {
     random: (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
@@ -204,7 +204,9 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         </div>,
       );
 
-      void factory.create(selectedMaze, selectedAlgorithm, mask, selectedSolver).then(() => {
+      const runner = factory.create(selectedMaze, selectedAlgorithm, mask, selectedSolver);
+
+      void runner.run().then(() => {
         setTimeout(() => {
           setRedraw((x) => x + 1);
         }, 10000);

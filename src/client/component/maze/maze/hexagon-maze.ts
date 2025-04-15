@@ -12,7 +12,6 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
-  sidesMatrix,
   wallMatrix,
 } from './hexagon-matrix.ts';
 import {
@@ -30,14 +29,7 @@ const TAN30 = Math.tan(Math.PI / 6);
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class HexagonMaze extends Maze {
-  public constructor({
-    cellSize = 25,
-    wallSize = 1,
-    width,
-    height,
-    plugin,
-    ...props
-  }: MazeProperties) {
+  public constructor({ cellSize = 25, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -47,21 +39,21 @@ export class HexagonMaze extends Maze {
       rightTurnMatrix,
       leftTurnMatrix,
       moveMatrix,
-      sidesMatrix,
       edgesMatrix,
       pathMatrix,
     );
 
-    this.initialize({ width, height, plugin });
+    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {
     return {
-      groupWidth: this.cellSize * 0.75,
+      groupWidth: this.cellSize * 1.5,
+      horizontalCellsPerGroup: 2,
       groupHeight: this.cellSize * SIN60,
-      leftPadding: this.cellSize * 0.25,
+      // leftPadding: this.cellSize * 0.25,
       rightPadding: this.cellSize * 0.25,
-      topPadding: (this.cellSize * SIN60) / 2,
+      // topPadding: (this.cellSize * SIN60) / 2,
       bottomPadding: (this.cellSize * SIN60) / 2,
     };
   }

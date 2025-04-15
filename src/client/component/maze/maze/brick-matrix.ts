@@ -5,7 +5,6 @@ import {
   type OppositeMatrix,
   type PathMatrix,
   type PillarMatrix,
-  type SidesMatrix,
   type TurnMatrix,
   type WallMatrix,
 } from './maze.ts';
@@ -25,11 +24,6 @@ export const oppositeMatrix: OppositeMatrix = {
   d: 'a',
   e: 'b',
   f: 'c',
-};
-
-export const sidesMatrix: SidesMatrix = {
-  0: 6,
-  1: 6,
 };
 
 export const rightTurnMatrix: TurnMatrix = {

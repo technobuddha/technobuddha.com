@@ -20,19 +20,11 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
-  sidesMatrix,
   wallMatrix,
 } from './square-matrix.ts';
 
 export class SquareMaze extends Maze {
-  public constructor({
-    cellSize = 20,
-    wallSize = 1,
-    width,
-    height,
-    plugin,
-    ...props
-  }: MazeProperties) {
+  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -42,12 +34,11 @@ export class SquareMaze extends Maze {
       rightTurnMatrix,
       leftTurnMatrix,
       moveMatrix,
-      sidesMatrix,
       edgesMatrix,
       pathMatrix,
     );
 
-    this.initialize({ width, height, plugin });
+    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {

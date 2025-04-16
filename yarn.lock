@@ -7140,7 +7140,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-proxy-middleware@npm:*, http-proxy-middleware@npm:3.0.3":
+"http-proxy-middleware@npm:*":
   version: 3.0.3
   resolution: "http-proxy-middleware@npm:3.0.3"
   dependencies:
@@ -7151,6 +7151,20 @@ __metadata:
     is-plain-object: "npm:^5.0.0"
     micromatch: "npm:^4.0.8"
   checksum: 10c0/c4d68a10d8d42f02e59f7dc8249c98d1ac03aecee177b42c2d8b6a0cb6b71c6688e759e5387f4cdb570150070ca1c6808b38010cbdf67f4500a2e75671a36e05
+  languageName: node
+  linkType: hard
+
+"http-proxy-middleware@npm:3.0.5":
+  version: 3.0.5
+  resolution: "http-proxy-middleware@npm:3.0.5"
+  dependencies:
+    "@types/http-proxy": "npm:^1.17.15"
+    debug: "npm:^4.3.6"
+    http-proxy: "npm:^1.18.1"
+    is-glob: "npm:^4.0.3"
+    is-plain-object: "npm:^5.0.0"
+    micromatch: "npm:^4.0.8"
+  checksum: 10c0/89ff3c8fe65b22b8042a6173ae1b8f77c5171f7eecf3c8b5d6dcffe3c9d688acae7bcf498cc08d1525f566dc0781efaec4e2ddc49224b1f16f020de7987a446b
   languageName: node
   linkType: hard
 
@@ -11354,7 +11368,7 @@ __metadata:
     express: "npm:4.21.2"
     glob: "npm:11.0.1"
     history: "npm:5.3.0"
-    http-proxy-middleware: "npm:3.0.3"
+    http-proxy-middleware: "npm:3.0.5"
     i18next: "npm:24.2.3"
     i18next-browser-languagedetector: "npm:8.0.4"
     i18next-http-backend: "npm:3.0.2"

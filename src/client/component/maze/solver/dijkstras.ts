@@ -2,19 +2,30 @@ import { create2DArray } from '@technobuddha/library';
 
 import { type Cell, type Direction } from '../maze/maze.ts';
 
-import { MazeSolver } from './maze-solver.ts';
+import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 type DD = {
   dir?: Direction;
   dist: number;
 };
 
+type DijkstrasProperties = MazeSolverProperties & {
+  scannedColor?: string;
+};
+
 export class Dijkstras extends MazeSolver {
+  public scannedColor: string;
+
+  public constructor({ scannedColor = '#A4036F', ...props }: DijkstrasProperties) {
+    super(props);
+    this.scannedColor = scannedColor;
+  }
+
   public *solve({
-    color = 'gold',
-    solutionColor = '#00FF00',
+    color = '#A4036F', //'#F6DB7E',
     entrance = this.maze.entrance,
     exit = this.maze.exit,
+    solutionColor = this.solutionColor,
   } = {}): Iterator<void> {
     const queue: Cell[] = [];
     const distances = create2DArray<DD>(this.maze.width, this.maze.height, () => ({
@@ -51,8 +62,7 @@ export class Dijkstras extends MazeSolver {
 
     const dist = distances[cell.x]?.[cell.y];
     if (!dist || dist.dist === Infinity) {
-      // eslint-disable-next-line no-console
-      console.log('no solution found', dist);
+      throw new Error('No solution found');
     } else {
       for (;;) {
         this.maze.drawPath({ ...cell, direction: this.maze.opposite(cell) }, solutionColor);

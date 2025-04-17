@@ -79,7 +79,7 @@ export class Division extends MazeGenerator {
     this.maze.draw();
 
     const allRegion = new Region({ width: this.maze.width, height: this.maze.height });
-    for (const cell of this.maze.all()) {
+    for (const cell of this.maze.cellsInMaze()) {
       allRegion.addCell(cell);
     }
 

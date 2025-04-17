@@ -39,6 +39,17 @@ export const oppositeMatrix: OppositeMatrix = {
   h: 'f',
 };
 
+export const straightMatrix: TurnMatrix = {
+  a: ['a', 'fe', 'bd', 'gh', 'c'],
+  b: ['b', 'fh', 'ca', 'ge', 'd'],
+  c: ['c', 'gh', 'db', 'ef', 'a'],
+  d: ['d', 'eg', 'ac', 'fh', 'b'],
+  e: ['e', 'a', 'f', 'd', 'b', 'h', 'c', 'g'],
+  f: ['f', 'a', 'e', 'b', 'd', 'g', 'c', 'h'],
+  g: ['g', 'c', 'h', 'd', 'b', 'f', 'a', 'e'],
+  h: ['h', 'c', 'g', 'b', 'd', 'e', 'a', 'f'],
+};
+
 export const rightTurnMatrix: TurnMatrix = {
   a: {
     0: ['b', 'a', 'd', 'c', 'g', 'h'],

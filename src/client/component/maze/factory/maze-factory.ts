@@ -1,10 +1,12 @@
-import { type Drawing } from './drawing/drawing.ts';
-import { type MazeGenerator, type MazeGeneratorProperties } from './generator/maze-generator.ts';
-import { type Maze, type MazeProperties } from './maze/maze.ts';
-import { MazeRunner } from './maze-runner.ts';
-import { type MazeSolver, type MazeSolverProperties } from './solver/maze-solver.ts';
+import { type Drawing } from '../drawing/drawing.ts';
+import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/maze-generator.ts';
+import { type Maze, type MazeProperties } from '../maze/maze.ts';
+import { MazeRunner } from '../runner/maze-runner.ts';
+import { type MazeSolver, type MazeSolverProperties } from '../solver/maze-solver.ts';
 
-export type MazeSettings = Partial<MazeProperties> & Partial<MazeGeneratorProperties>;
+export type MazeSettings = Partial<MazeProperties> &
+  Partial<MazeGeneratorProperties> &
+  Partial<MazeSolverProperties>;
 
 export class MazeFactory {
   public drawing: Drawing | undefined;
@@ -19,6 +21,7 @@ export class MazeFactory {
   public start: MazeSettings['start'];
   public random: MazeSettings['random'];
   public maskColor: MazeSettings['maskColor'];
+  public solutionColor: MazeSettings['solutionColor'];
 
   public constructor({
     drawing,
@@ -33,6 +36,7 @@ export class MazeFactory {
     exit,
     start, // = 'random',
     maskColor,
+    solutionColor,
   }: MazeSettings = {}) {
     this.drawing = drawing;
     this.random = random;
@@ -46,6 +50,7 @@ export class MazeFactory {
     this.exit = exit;
     this.start = start;
     this.maskColor = maskColor;
+    this.solutionColor = solutionColor;
   }
 
   public create(
@@ -69,7 +74,12 @@ export class MazeFactory {
     });
 
     const generator = generatorMaker?.({ maze, start: this.start, random: this.random });
-    const solver = solverMaker?.({ maze, drawing: this.drawing!, random: this.random });
+    const solver = solverMaker?.({
+      maze,
+      solutionColor: this.solutionColor,
+      drawing: this.drawing!,
+      random: this.random,
+    });
 
     return new MazeRunner(maze, generator, solver);
   }

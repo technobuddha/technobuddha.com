@@ -1,0 +1,48 @@
+.maze-maker {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+
+  .maze {
+    flex-basis: 80%;
+    position: relative;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+
+    .title {
+      position: absolute;
+      z-index: 4;
+      top: 0;
+      left: 0;
+    }
+
+    .canvas {
+      position: absolute;
+      top: 1.5rem;
+      left: 0.5rem;
+      z-index: 1;
+    }
+  }
+
+  .panel {
+    flex-basis: 20%;
+    background: '#888888';
+    padding: 1rem;
+
+    :global(.MuiFormControl-root) {
+      margin-top: 1.6rem;
+    }
+
+    :global(.MuiFormLabel-root) {
+      top: -0.75rem;
+      left: -1rem;
+      font-size: 1.5rem;
+    }
+
+    :global(.MuiInputBase-root) {
+      min-width: 10rem;
+    }
+  }
+}

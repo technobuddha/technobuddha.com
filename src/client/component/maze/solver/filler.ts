@@ -3,18 +3,29 @@ import { type CellDirection } from '../maze/maze.ts';
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 type DeadEndProperties = MazeSolverProperties & {
+  markedColor?: string;
   method?: 'cul-de-sac' | 'dead-end';
 };
 
 export class Filler extends MazeSolver {
+  public markedColor: string;
   protected method: DeadEndProperties['method'];
 
-  public constructor({ method = 'cul-de-sac', ...props }: DeadEndProperties) {
+  public constructor({
+    markedColor = '#C74133',
+    method = 'cul-de-sac',
+    ...props
+  }: DeadEndProperties) {
     super(props);
+    this.markedColor = markedColor;
     this.method = method;
   }
 
-  public *solve({ solutionColor = '#00FF00' } = {}): Iterator<void> {
+  public *solve({
+    markedColor = this.markedColor,
+    solutionColor = this.solutionColor,
+    exit = this.maze.exit,
+  } = {}): Iterator<void> {
     const walls = this.maze.cloneWalls();
     this.maze.attachDrawing(this.drawing);
 
@@ -25,7 +36,7 @@ export class Filler extends MazeSolver {
           for (let cell = deadEnd; this.maze.isDeadEnd(cell, { walls }); ) {
             const [move] = this.maze.validMoves(cell, { walls });
             this.maze.addWall(cell, move.direction, { walls }, false);
-            this.maze.drawX(cell);
+            this.maze.drawX(cell, markedColor);
             yield;
             cell = { x: move.x, y: move.y };
           }
@@ -36,7 +47,7 @@ export class Filler extends MazeSolver {
             this.maze.addWall(deadEnd, move.direction, { walls }, false);
           }
 
-          this.maze.drawX(deadEnd);
+          this.maze.drawX(deadEnd, markedColor);
           yield;
         }
       }
@@ -51,16 +62,22 @@ export class Filler extends MazeSolver {
       direction: this.maze.opposite(this.maze.entrance),
     };
     const path: CellDirection[] = [cell];
-    while (cell.x !== this.maze.exit.x || cell.y !== this.maze.exit.y) {
-      const [move] = this.maze
+    while (!this.maze.isSame(cell, exit)) {
+      const moves = this.maze
         .validMoves(cell, { walls })
-        .filter((m) => !path.some((p) => p.x === m.x && p.y === m.y));
-      this.maze.drawPath({ ...cell, direction: move.direction });
+        .filter((m) => !path.some((p) => this.maze.isSame(p, m)));
+
+      if (moves.length > 1) {
+        throw new Error('Multiple paths found');
+      }
+
+      const [move] = moves;
+      this.maze.drawPath({ ...cell, direction: move.direction }, solutionColor);
       path.push(cell);
       cell = move;
     }
 
-    this.maze.drawCell(this.maze.exit);
-    this.maze.drawPath(this.maze.exit, solutionColor);
+    this.maze.drawCell(exit);
+    this.maze.drawPath(exit, solutionColor);
   }
 }

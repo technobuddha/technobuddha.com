@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/class-methods-use-this */
+import { modulo } from '@technobuddha/library';
+
 import { type Rect } from '../drawing/drawing.ts';
 
 import {
@@ -10,6 +12,7 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
+  straightMatrix,
   wallMatrix,
 } from './brick-matrix.ts';
 import {
@@ -23,7 +26,7 @@ import {
 import { Maze } from './maze.ts';
 
 export class BrickMaze extends Maze {
-  public constructor({ cellSize = 15, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 16, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -32,6 +35,7 @@ export class BrickMaze extends Maze {
       oppositeMatrix,
       rightTurnMatrix,
       leftTurnMatrix,
+      straightMatrix,
       moveMatrix,
       edgesMatrix,
       pathMatrix,
@@ -50,7 +54,7 @@ export class BrickMaze extends Maze {
   }
 
   protected cellKind(cell: Cell): Kind {
-    return cell.y % 2;
+    return modulo(cell.y, 2);
   }
 
   protected cellOffsets(cell: Cell): Record<string, number> {
@@ -81,15 +85,7 @@ export class BrickMaze extends Maze {
     if (this.drawing) {
       const { x0, x5, y0, y3 } = this.cellOffsets(cell);
 
-      this.drawing.polygon(
-        [
-          { x: x0, y: y0 },
-          { x: x5, y: y0 },
-          { x: x5, y: y3 },
-          { x: x0, y: y3 },
-        ],
-        color,
-      );
+      this.drawing.rect({ x: x0, y: y0 }, { x: x5, y: y3 }, color);
     }
   }
 

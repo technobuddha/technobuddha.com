@@ -31,7 +31,7 @@ export class HuntAndKill extends MazeGenerator {
 
     this.huntMethod = huntMethod;
     this.visited = create2DArray(this.maze.width, this.maze.height, false);
-    this.currentCell = this.randomPick(this.maze.all())!;
+    this.currentCell = this.randomPick(this.maze.cellsInMaze())!;
   }
 
   public *generate(): Iterator<void> {
@@ -50,7 +50,7 @@ export class HuntAndKill extends MazeGenerator {
         // hunt
 
         const target = hunt(
-          this.maze.all(this.huntMethod).filter((c) => !this.visited[c.x][c.y]),
+          this.maze.cellsInMaze(this.huntMethod).filter((c) => !this.visited[c.x][c.y]),
           (c) => this.randomPick(this.maze.neighbors(c).filter((n) => this.visited[n.x][n.y])),
         );
         if (target) {

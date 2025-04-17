@@ -28,7 +28,7 @@ export class RecursiveBacktracker extends MazeGenerator {
     this.current = [];
     this.strategy = [];
 
-    const all = this.maze.all();
+    const all = this.maze.cellsInMaze();
     for (let i = 0; i < this.parallel; ++i) {
       const index = Math.floor(this.random() * all.length);
       const randomCell = all[index];
@@ -58,7 +58,7 @@ export class RecursiveBacktracker extends MazeGenerator {
       if (this.current.every((c) => c === undefined)) {
         const borderCell = this.randomPick(
           this.maze
-            .all()
+            .cellsInMaze()
             .filter((c) => this.visited[c.x][c.y] === 0)
             .flatMap((c) => this.maze.neighbors(c).filter((n) => this.visited[n.x][n.y] !== 0)),
         );

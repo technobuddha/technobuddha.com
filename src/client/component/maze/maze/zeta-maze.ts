@@ -14,7 +14,7 @@ const SQ2 = Math.SQRT2;
 
 export class ZetaMaze extends OctogonMaze {
   public constructor({ ...props }: MazeProperties) {
-    super({ ...props, cellSize: 30, cellColor: '#B6B6B4', wallColor: 'black' });
+    super({ ...props, cellSize: 32, cellColor: '#9e9e9e', wallColor: 'black' });
   }
 
   protected override offsets(kind: Kind): Record<string, number> {

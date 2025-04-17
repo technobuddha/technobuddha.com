@@ -91,6 +91,21 @@ export const leftTurnMatrix: TurnMatrix = {
   l: ['h', 'i', 'g'],
 };
 
+export const straightMatrix: TurnMatrix = {
+  a: ['gi', 'h'],
+  b: ['ef', 'd'],
+  c: ['jl', 'k'],
+  d: ['ca', 'b'],
+  e: ['hg', 'i'],
+  f: ['kl', 'j'],
+  g: ['jk', 'l'],
+  h: ['bc', 'a'],
+  i: ['fd', 'e'],
+  j: ['de', 'f'],
+  k: ['ab', 'c'],
+  l: ['ih', 'g'],
+};
+
 export const moveMatrix: MoveMatrix = {
   0: {
     a: { x: +0, y: -1 },

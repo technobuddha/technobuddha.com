@@ -13,6 +13,7 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
+  straightMatrix,
   wallMatrix,
 } from './cubic-matrix.ts';
 import {
@@ -26,7 +27,7 @@ import {
 import { Maze } from './maze.ts';
 
 export class CubicMaze extends Maze {
-  public constructor({ cellSize = 18, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 16, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -35,6 +36,7 @@ export class CubicMaze extends Maze {
       oppositeMatrix,
       rightTurnMatrix,
       leftTurnMatrix,
+      straightMatrix,
       moveMatrix,
       edgesMatrix,
       pathMatrix,
@@ -176,15 +178,7 @@ export class CubicMaze extends Maze {
         case 6: {
           const { x0, x3, y0, y3 } = this.cellOffsets(cell);
 
-          this.drawing.polygon(
-            [
-              { x: x0, y: y0 },
-              { x: x3, y: y0 },
-              { x: x3, y: y3 },
-              { x: x0, y: y3 },
-            ],
-            color,
-          );
+          this.drawing.rect({ x: x0, y: y0 }, { x: x3, y: y3 }, color);
           break;
         }
 
@@ -411,6 +405,7 @@ export class CubicMaze extends Maze {
   }
 
   public drawPillar(_cell: CellPillar, _color = this.wallColor): void {
+    // TODO [2025-04-20]: Implement this method
     // if (this.drawing) {
     //   const { x0, x1, x2, x3, y0, y1, y2, y3 } = this.cellOffsets({ x, y });
     //   if (pillar === 'nw') {
@@ -493,26 +488,5 @@ export class CubicMaze extends Maze {
         throw new Error(`Unknown kind: ${this.cellKind(cell)}`);
       }
     }
-  }
-
-  public override toString(): string {
-    let str = '';
-
-    for (let y = 0; y < this.height; ++y) {
-      for (let x = 0; x < this.width; ++x) {
-        str += this.walls[x][y].n ? '+==' : '+  ';
-      }
-      str += '+\n';
-      for (let x = 0; x < this.width; ++x) {
-        str += this.walls[x][y].w ? '|  ' : '   ';
-      }
-      str += this.walls[this.width - 1][y].e ? '|\n' : ' \n';
-    }
-    for (let x = 0; x < this.width; ++x) {
-      str += this.walls[x][this.height - 1].s ? '+==' : '+  ';
-    }
-    str += '+\n';
-
-    return str;
   }
 }

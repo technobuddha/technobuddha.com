@@ -1,11 +1,11 @@
 import { type Maze } from '../maze/maze.ts';
 
-export function triangleMask(maze: Maze): void {
+export function triabglePlugin(maze: Maze): void {
   const a = { x: 0, y: maze.height - 1 };
   const b = { x: maze.width - 1, y: maze.height - 1 };
   const c = { x: Math.floor(maze.width / 2), y: 0 };
 
-  for (const cell of maze.all()) {
+  for (const cell of maze.cellsInMaze()) {
     const asx = cell.x - a.x;
     const asy = cell.y - a.y;
     const sab = (b.x - a.x) * asy - (b.y - a.y) * asx > 0;

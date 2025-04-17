@@ -61,10 +61,12 @@ export class Kruskals extends MazeGenerator {
     this.disjointSubsets = new DisjointSet(this.maze.width * this.maze.height);
 
     this.edges = this.randomShuffle(
-      this.maze.all().flatMap((c) => this.maze.edges(c).map((direction) => ({ ...c, direction }))),
+      this.maze
+        .cellsInMaze()
+        .flatMap((c) => this.maze.edges(c).map((direction) => ({ ...c, direction }))),
     );
 
-    this.currentCell = this.maze.all().at(0)!;
+    this.currentCell = this.maze.cellsInMaze().at(0)!;
   }
 
   private getCellIndex(cell: Cell): number {

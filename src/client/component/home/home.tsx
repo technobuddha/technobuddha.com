@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 
-import { MazeBackground } from '#component/maze/maze-background.jsx';
+import { MazeBackground } from '#component/maze';
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';

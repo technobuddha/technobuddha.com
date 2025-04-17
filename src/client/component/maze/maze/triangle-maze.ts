@@ -21,13 +21,14 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
+  straightMatrix,
   wallMatrix,
 } from './triangle-matrix.ts';
 
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class TriangleMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 16, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -36,6 +37,7 @@ export class TriangleMaze extends Maze {
       oppositeMatrix,
       rightTurnMatrix,
       leftTurnMatrix,
+      straightMatrix,
       moveMatrix,
       edgesMatrix,
       pathMatrix,

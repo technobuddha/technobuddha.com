@@ -12,6 +12,7 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
+  straightMatrix,
   wallMatrix,
 } from './circular-matrix.ts';
 import {
@@ -27,16 +28,19 @@ import { Maze } from './maze.ts';
 
 type CircularMazeProperties = MazeProperties & {
   centerRadius?: number;
+  centerSegments?: number;
 };
 
 export class CircularMaze extends Maze {
   public readonly centerRadius: number;
+  public readonly centerSegments: number;
   public readonly zones: number[] = [];
 
   public constructor({
-    cellSize = 12,
+    cellSize = 16,
     wallSize = 1,
-    centerRadius = 12,
+    centerRadius = 16,
+    centerSegments = 1,
     plugin,
     ...props
   }: CircularMazeProperties) {
@@ -45,7 +49,7 @@ export class CircularMaze extends Maze {
         cellSize,
         wallSize,
         ...props,
-        // exit: { x: 0, y: 0 },
+        entrance: { x: 0, y: 0 },
         wrapHorizontal: false,
         wrapVertical: false,
       },
@@ -55,12 +59,14 @@ export class CircularMaze extends Maze {
       oppositeMatrix,
       rightTurnMatrix,
       leftTurnMatrix,
+      straightMatrix,
       moveMatrix,
       edgesMatrix,
       pathMatrix,
     );
 
     this.centerRadius = centerRadius;
+    this.centerSegments = centerSegments;
     this.initialize({ ...props, plugin: this.circularPlugin(plugin) });
   }
 
@@ -81,51 +87,39 @@ export class CircularMaze extends Maze {
 
   protected drawingSize(): DrawingSizes {
     return {
-      groupWidth: this.cellSize * 2,
-      groupHeight: this.cellSize * 2,
+      groupWidth: this.cellSize,
+      groupHeight: this.cellSize,
       topPadding: this.centerRadius / 2,
       leftPadding: this.centerRadius / 2,
       bottomPadding: this.centerRadius / 2,
       rightPadding: this.centerRadius / 2,
-      custom: ({ width, height }) => {
-        const size = Math.min(width, height);
+      custom: (params: {
+        width: number;
+        height: number;
+        actualWidth: number;
+        actualHeight: number;
+      }) => {
+        let { width, height, actualWidth, actualHeight } = params;
 
-        let cols = 1;
-        for (let y = 0; y < size; ++y) {
-          this.zones.push(cols);
+        height = Math.floor(Math.min(width / 2, height / 2));
+        width = this.centerSegments;
+        for (let y = 0; y < height; ++y) {
+          this.zones.push(width);
           const diameter = (this.centerRadius + y * this.cellSize + this.cellSize) * 2;
           const circumference = diameter * Math.PI;
-          const cellWidth = circumference / cols;
+          const cellWidth = circumference / width;
 
           if (cellWidth > this.cellSize * 1.67) {
-            cols *= 2;
+            width *= 2;
           }
         }
 
-        return { width: cols, height: size };
+        actualHeight = this.centerRadius + height * this.cellSize * 2 + this.wallSize * 2;
+        actualWidth = actualHeight;
+
+        return { width, height, actualWidth, actualHeight };
       },
     };
-  }
-
-  public override clear(color?: string): void {
-    if (this.drawing) {
-      const {
-        topPadding = 0,
-        leftPadding = 0,
-        bottomPadding = 0,
-        rightPadding = 0,
-      } = this.drawingSize();
-
-      const actualWidth = this.cellSize * this.height * 2;
-      const actualHeight = actualWidth;
-      const availableWidth = this.drawing.width - (leftPadding + rightPadding);
-      const availableHeight = this.drawing.height - (topPadding + bottomPadding);
-
-      const leftOffset = this.wallSize + (availableWidth - actualWidth) / 2;
-      const topOffset = this.wallSize + (availableHeight - actualHeight) / 2;
-
-      this.drawing.clear(color, leftOffset, topOffset);
-    }
   }
 
   public override initialWalls(cell: Cell): Wall {
@@ -135,8 +129,8 @@ export class CircularMaze extends Maze {
     const zp = cell.y === 0 ? z0 : this.zones[cell.y - 1];
 
     if (z0 !== zp) {
-      delete wall.c;
       wall[cell.x % 2 === 0 ? 'g' : 'h'] = true;
+      delete wall.c;
     }
 
     if (z0 === 1) {
@@ -176,42 +170,47 @@ export class CircularMaze extends Maze {
   }
 
   private cellOffsets(cell: Cell): Record<string, number> {
+    let { cx, cy, r0, r1, r2, r3 } = this.offsets(this.cellKind(cell));
+
     const cols = this.zones[cell.y];
 
-    const { cx, cy } = this.offsets(this.cellKind(cell));
+    r0 += this.cellSize * cell.y;
+    r1 += this.cellSize * cell.y;
+    r2 += this.cellSize * cell.y;
+    r3 += this.cellSize * cell.y;
 
-    const r0 = this.centerRadius / 2 + this.cellSize * cell.y;
-    const r1 = r0 + this.wallSize;
-    const r3 = r0 + this.cellSize;
-    const r2 = r3 - this.wallSize;
-
-    const ap1 = 360 / (Math.PI * 2 * r1);
-    const ap2 = 360 / (Math.PI * 2 * r2);
+    const p1 = (this.wallSize * 360) / (Math.PI * 2 * r1);
+    const p2 = (this.wallSize * 360) / (Math.PI * 2 * r2);
 
     const a0 = (360 / cols) * cell.x;
-    const a1 = a0 + ap1;
-    const a2 = a0 + ap2;
-    const a6 = (360 / cols) * (cell.x + 1);
-    const a5 = a6 - ap1;
-    const a4 = a6 - ap2;
+    const a1 = a0 + p1;
+    const a2 = a0 + p2;
+    const a6 = a0 + 360 / cols;
+    const a5 = a6 - p1;
+    const a4 = a6 - p2;
     const a3 = (a0 + a6) / 2;
 
     return { cx, cy, r0, r1, r2, r3, a0, a1, a2, a3, a4, a5, a6 };
   }
 
   protected offsets(_kind: Kind): Record<string, number> {
-    return {
-      cx: this.cellSize * this.height + this.centerRadius / 2,
-      cy: this.cellSize * this.height + this.centerRadius / 2,
-    };
+    const cx = this.cellSize * this.height + this.centerRadius / 2;
+    const cy = this.cellSize * this.height + this.centerRadius / 2;
+
+    const r0 = this.centerRadius / 2;
+    const r1 = r0 + this.wallSize;
+    const r3 = r0 + this.cellSize;
+    const r2 = r3 - this.wallSize;
+
+    return { cx, cy, r0, r1, r2, r3 };
   }
 
   public drawFloor(cell: Cell, color = this.cellColor): void {
     if (this.drawing) {
       const cols = this.zones[cell.y];
       if (cols === 1) {
-        const { cx, cy } = this.cellOffsets(cell);
-        this.drawing.circle({ x: cx, y: cy }, this.cellSize / 2 + this.centerRadius, color);
+        const { cx, cy, r3 } = this.cellOffsets(cell);
+        this.drawing.circle({ x: cx, y: cy }, r3, color);
       } else {
         const { cx, cy, r0, r3, a0, a6 } = this.cellOffsets(cell);
 

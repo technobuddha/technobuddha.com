@@ -12,6 +12,7 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
+  straightMatrix,
   wallMatrix,
 } from './hexagon-matrix.ts';
 import {
@@ -29,7 +30,7 @@ const TAN30 = Math.tan(Math.PI / 6);
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class HexagonMaze extends Maze {
-  public constructor({ cellSize = 25, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -38,6 +39,7 @@ export class HexagonMaze extends Maze {
       oppositeMatrix,
       rightTurnMatrix,
       leftTurnMatrix,
+      straightMatrix,
       moveMatrix,
       edgesMatrix,
       pathMatrix,
@@ -51,9 +53,7 @@ export class HexagonMaze extends Maze {
       groupWidth: this.cellSize * 1.5,
       horizontalCellsPerGroup: 2,
       groupHeight: this.cellSize * SIN60,
-      // leftPadding: this.cellSize * 0.25,
       rightPadding: this.cellSize * 0.25,
-      // topPadding: (this.cellSize * SIN60) / 2,
       bottomPadding: (this.cellSize * SIN60) / 2,
     };
   }
@@ -118,14 +118,11 @@ export class HexagonMaze extends Maze {
 
   public drawWall(cd: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
-      const ctx = this.drawing;
-
-      const { x1, x2, x3, x5, x6, x8, x9, xa, y0, y1, y2, y3, y4, y5, y6, y7, y8 } =
-        this.cellOffsets(cd);
-
       switch (cd.direction) {
         case 'a': {
-          ctx.polygon(
+          const { x5, x6, y0, y2 } = this.cellOffsets(cd);
+
+          this.drawing.polygon(
             [
               { x: x5, y: y0 },
               { x: x6, y: y0 },
@@ -137,7 +134,9 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'b': {
-          ctx.polygon(
+          const { x6, x8, x9, xa, y1, y2, y3, y4 } = this.cellOffsets(cd);
+
+          this.drawing.polygon(
             [
               { x: x6, y: y2 },
               { x: x8, y: y1 },
@@ -149,7 +148,9 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'c': {
-          ctx.polygon(
+          const { x6, x8, x9, xa, y4, y5, y6, y7 } = this.cellOffsets(cd);
+
+          this.drawing.polygon(
             [
               { x: x9, y: y4 },
               { x: xa, y: y5 },
@@ -161,7 +162,9 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'd': {
-          ctx.polygon(
+          const { x5, x6, y6, y8 } = this.cellOffsets(cd);
+
+          this.drawing.polygon(
             [
               { x: x5, y: y6 },
               { x: x6, y: y6 },
@@ -173,7 +176,9 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'e': {
-          ctx.polygon(
+          const { x1, x2, x3, x5, y4, y5, y6, y7 } = this.cellOffsets(cd);
+
+          this.drawing.polygon(
             [
               { x: x2, y: y4 },
               { x: x1, y: y5 },
@@ -185,7 +190,9 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'f': {
-          ctx.polygon(
+          const { x1, x2, x3, x5, y1, y2, y3, y4 } = this.cellOffsets(cd);
+
+          this.drawing.polygon(
             [
               { x: x2, y: y4 },
               { x: x1, y: y3 },
@@ -204,13 +211,11 @@ export class HexagonMaze extends Maze {
 
   public drawPillar(cell: CellPillar, color = this.wallColor): void {
     if (this.drawing) {
-      const ctx = this.drawing;
-      const { x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xa, xb, y0, y1, y2, y3, y4, y5, y6, y7, y8 } =
-        this.cellOffsets(cell);
-
       switch (cell.pillar) {
         case 'ab': {
-          ctx.polygon(
+          const { x6, x7, x8, y0, y1, y2 } = this.cellOffsets(cell);
+
+          this.drawing.polygon(
             [
               { x: x6, y: y2 },
               { x: x8, y: y1 },
@@ -222,7 +227,9 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'bc': {
-          ctx.polygon(
+          const { x9, xa, xb, y3, y4, y5 } = this.cellOffsets(cell);
+
+          this.drawing.polygon(
             [
               { x: x9, y: y4 },
               { x: xa, y: y3 },
@@ -234,7 +241,9 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'cd': {
-          ctx.polygon(
+          const { x6, x7, x8, y6, y7, y8 } = this.cellOffsets(cell);
+
+          this.drawing.polygon(
             [
               { x: x6, y: y6 },
               { x: x7, y: y8 },
@@ -246,7 +255,9 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'de': {
-          ctx.polygon(
+          const { x3, x4, x5, y6, y7, y8 } = this.cellOffsets(cell);
+
+          this.drawing.polygon(
             [
               { x: x5, y: y6 },
               { x: x4, y: y8 },
@@ -257,7 +268,8 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'ef': {
-          ctx.polygon(
+          const { x0, x1, x2, y3, y4, y5 } = this.cellOffsets(cell);
+          this.drawing.polygon(
             [
               { x: x2, y: y4 },
               { x: x1, y: y3 },
@@ -269,7 +281,9 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'fa': {
-          ctx.polygon(
+          const { x3, x4, x5, y0, y1, y2 } = this.cellOffsets(cell);
+
+          this.drawing.polygon(
             [
               { x: x5, y: y2 },
               { x: x5, y: y0 },

@@ -22,13 +22,12 @@ import {
   pathMatrix,
   pillarMatrix,
   rightTurnMatrix,
+  straightMatrix,
   wallMatrix,
 } from './octogon-matrix.ts';
 
-const SQ2 = Math.SQRT2;
-
 export class OctogonMaze extends Maze {
-  public constructor({ cellSize = 30, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -37,6 +36,7 @@ export class OctogonMaze extends Maze {
       oppositeMatrix,
       rightTurnMatrix,
       leftTurnMatrix,
+      straightMatrix,
       moveMatrix,
       edgesMatrix,
       pathMatrix,
@@ -66,7 +66,7 @@ export class OctogonMaze extends Maze {
       }
 
       default: {
-        const ao = this.cellSize / Math.sqrt(4 + SQ2 * 2);
+        const ao = this.cellSize / Math.sqrt(4 + Math.SQRT2 * 2);
 
         return this.translateOffsets(
           cell,
@@ -78,42 +78,42 @@ export class OctogonMaze extends Maze {
   }
 
   protected offsets(kind: Kind): Record<string, number> {
-    const ao = this.cellSize / Math.sqrt(4 + SQ2 * 2);
-    const ai = (this.cellSize - this.wallSize * 2) / Math.sqrt(4 + SQ2 * 2);
+    const ao = this.cellSize / Math.sqrt(4 + Math.SQRT2 * 2);
+    const ai = (this.cellSize - this.wallSize * 2) / Math.sqrt(4 + Math.SQRT2 * 2);
 
     if (kind === 0) {
       const x0 = 0;
-      const x1 = x0 + (SQ2 * this.wallSize) / 2;
+      const x1 = x0 + (Math.SQRT2 * this.wallSize) / 2;
       const x2 = x0 + this.wallSize;
-      const x3 = x0 + SQ2 * this.wallSize;
+      const x3 = x0 + Math.SQRT2 * this.wallSize;
       const x5 = x0 + Math.sqrt((ao * ao) / 2);
       const x6 = x5 + (ao - ai) / 2;
-      const x4 = x6 - (this.wallSize * SQ2) / 2;
+      const x4 = x6 - (this.wallSize * Math.SQRT2) / 2;
       const x7 = x6 + this.wallSize;
       const xf = x0 + this.cellSize;
-      const xe = xf - (SQ2 * this.wallSize) / 2;
+      const xe = xf - (Math.SQRT2 * this.wallSize) / 2;
       const xd = xf - this.wallSize;
-      const xc = xf - SQ2 * this.wallSize;
+      const xc = xf - Math.SQRT2 * this.wallSize;
       const xa = xf - Math.sqrt((ao * ao) / 2);
       const x9 = xa - (ao - ai) / 2;
-      const xb = x9 + (this.wallSize * SQ2) / 2;
+      const xb = x9 + (this.wallSize * Math.SQRT2) / 2;
       const x8 = x9 - this.wallSize;
 
       const y0 = 0;
-      const y1 = y0 + (SQ2 * this.wallSize) / 2;
+      const y1 = y0 + (Math.SQRT2 * this.wallSize) / 2;
       const y2 = y0 + this.wallSize;
-      const y3 = y0 + SQ2 * this.wallSize;
+      const y3 = y0 + Math.SQRT2 * this.wallSize;
       const y5 = y0 + Math.sqrt((ao * ao) / 2);
       const y6 = y5 + (ao - ai) / 2;
-      const y4 = y6 - (this.wallSize * SQ2) / 2;
+      const y4 = y6 - (this.wallSize * Math.SQRT2) / 2;
       const y7 = y6 + this.wallSize;
       const yf = y0 + this.cellSize;
-      const ye = yf - (SQ2 * this.wallSize) / 2;
+      const ye = yf - (Math.SQRT2 * this.wallSize) / 2;
       const yd = yf - this.wallSize;
-      const yc = yf - SQ2 * this.wallSize;
+      const yc = yf - Math.SQRT2 * this.wallSize;
       const ya = yf - Math.sqrt((ao * ao) / 2);
       const y9 = ya - (ao - ai) / 2;
-      const yb = y9 + (this.wallSize * SQ2) / 2;
+      const yb = y9 + (this.wallSize * Math.SQRT2) / 2;
       const y8 = y9 - this.wallSize;
 
       return {

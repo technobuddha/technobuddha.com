@@ -45,6 +45,15 @@ export const leftTurnMatrix: TurnMatrix = {
   f: ['e', 'a', 'c'],
 };
 
+export const straightMatrix: TurnMatrix = {
+  a: ['bf', 'd'],
+  b: ['ac', 'e'],
+  c: ['bd', 'f'],
+  d: ['ce', 'a'],
+  e: ['df', 'b'],
+  f: ['ea', 'c'],
+};
+
 export const moveMatrix: MoveMatrix = {
   0: {
     b: { x: +1, y: +0 },

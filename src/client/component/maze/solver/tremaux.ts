@@ -4,53 +4,84 @@ import { type Cell, type CellDirection, type Direction } from '../maze/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
-type TremauxProperties = MazeSolverProperties;
+type TremauxProperties = MazeSolverProperties & {
+  avatarColor?: string;
+  markedColor?: string;
+  blockedColor?: string;
+};
 
 export class Tremaux extends MazeSolver {
+  public avatarColor: string;
+  public markedColor: string;
+  public blockedColor: string;
   private curr: Cell;
   private prev: Cell | undefined = undefined;
+
   private readonly marks: Record<Direction, number>[][];
 
-  public constructor(props: TremauxProperties) {
+  public constructor({
+    avatarColor = '#6495ED',
+    markedColor = '#F6DB7E',
+    blockedColor = '#C74133',
+    ...props
+  }: TremauxProperties) {
     super(props);
+    this.avatarColor = avatarColor;
+    this.markedColor = markedColor;
+    this.blockedColor = blockedColor;
+
     this.marks = create2DArray(this.maze.width, this.maze.height, (x, y) =>
       Object.fromEntries(Object.entries(this.maze.walls[x][y]).map(([k]) => [k, 0])),
     );
     this.curr = this.maze.entrance;
   }
 
-  private drawMark(cd: CellDirection): void {
+  private drawMark(cd: CellDirection, markedColor: string, blockedColor: string): void {
     const m = this.marks[cd.x][cd.y][cd.direction];
     if (m === 1) {
-      this.maze.drawWall(cd, 'lime'); //' #87CEFA');
+      this.maze.drawWall(cd, markedColor);
     } else if (m >= 2) {
-      this.maze.drawWall(cd, '#FF0000');
+      this.maze.drawWall(cd, blockedColor);
     }
   }
 
-  private moveTo(next: CellDirection): void {
+  private moveTo(
+    next: CellDirection,
+    avatarColor: string,
+    markedColor: string,
+    blockedColor: string,
+  ): void {
     this.marks[this.curr.x][this.curr.y][next.direction]++;
     this.marks[next.x][next.y][this.maze.opposite(next)]++;
 
     this.maze.drawCell(this.curr);
     for (const direction of Object.keys(this.marks[this.curr.x][this.curr.y])) {
-      this.drawMark({ ...this.curr, direction });
+      this.drawMark({ ...this.curr, direction }, markedColor, blockedColor);
     }
 
-    this.maze.drawCell(next, ' #6495ED');
+    this.maze.drawCell(next);
+    this.maze.drawAvatar(next, avatarColor);
+
     for (const direction of Object.keys(this.marks[next.x][next.y])) {
-      this.drawMark({ ...next, direction });
+      this.drawMark({ ...next, direction }, markedColor, blockedColor);
     }
 
     this.prev = this.curr;
     this.curr = next;
   }
 
-  public *solve({ solutionColor = '#00FF00', entrance = this.maze.entrance } = {}): Iterator<void> {
+  public *solve({
+    markedColor = this.markedColor,
+    blockedColor = this.blockedColor,
+    avatarColor = this.avatarColor,
+    solutionColor = this.solutionColor,
+    entrance = this.maze.entrance,
+    exit = this.maze.exit,
+  } = {}): Iterator<void> {
     this.curr = entrance;
     this.prev = undefined;
 
-    while (this.curr.x !== this.maze.exit.x || this.curr.y !== this.maze.exit.y) {
+    while (!this.maze.isSame(this.curr, exit)) {
       const moves = this.maze.validMoves(this.curr);
       const pmi = moves.findIndex((c) => c.x === this.prev?.x && c.y === this.prev?.y);
       const prevMove = pmi >= 0 ? moves[pmi] : undefined;
@@ -67,7 +98,7 @@ export class Tremaux extends MazeSolver {
         //    of the maze and there are no marked entrances at all.
         const next = this.randomPick(moves)!;
         //           //this.marks[next.x][next.y]++;
-        this.moveTo(next);
+        this.moveTo(next, avatarColor, markedColor, blockedColor);
         yield;
       } else if (
         prevMove &&
@@ -76,7 +107,7 @@ export class Tremaux extends MazeSolver {
       ) {
         // 2. If all entrances are marked, go back through the entrance you just came from,
         //    unless it is marked twice. This rule will apply whenever you reach a dead end.
-        this.moveTo(prevMove);
+        this.moveTo(prevMove, avatarColor, markedColor, blockedColor);
         yield;
       } else {
         // 3. Pick any entrance with the fewest marks (zero if possible, else one).
@@ -84,16 +115,17 @@ export class Tremaux extends MazeSolver {
           (a, b) => marks[a.direction] - marks[b.direction],
         );
 
-        this.moveTo(next);
+        this.moveTo(next, avatarColor, markedColor, blockedColor);
         yield;
       }
     }
 
     this.maze.clear();
     this.maze.drawDistances();
-    this.curr = this.maze.entrance;
 
-    while (this.curr.x !== this.maze.exit.x || this.curr.y !== this.maze.exit.y) {
+    this.curr = entrance;
+
+    while (!this.maze.isSame(this.curr, exit)) {
       const [move] = this.maze
         .validMoves(this.curr)
         .filter(
@@ -103,7 +135,7 @@ export class Tremaux extends MazeSolver {
         );
 
       if (move) {
-        this.maze.drawPath({ ...this.curr, direction: move.direction });
+        this.maze.drawPath({ ...this.curr, direction: move.direction }, solutionColor);
         this.prev = this.curr;
         this.curr = move;
       }

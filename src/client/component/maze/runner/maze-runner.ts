@@ -1,7 +1,7 @@
-import { animate } from './drawing/animate.ts';
-import { type MazeGenerator } from './generator/maze-generator.ts';
-import { type Maze } from './maze/maze.ts';
-import { type MazeSolver } from './solver/maze-solver.ts';
+import { animate } from '../drawing/animate.ts';
+import { type MazeGenerator } from '../generator/maze-generator.ts';
+import { type Maze } from '../maze/maze.ts';
+import { type MazeSolver } from '../solver/maze-solver.ts';
 
 export class MazeRunner {
   private controller: AbortController | undefined = undefined;
@@ -16,7 +16,7 @@ export class MazeRunner {
     this.solver = solver;
   }
 
-  public async run(): Promise<void> {
+  public async run(): Promise<Maze> {
     this.aborted = false;
     this.controller = new AbortController();
     this.controller.signal.addEventListener('abort', () => {
@@ -49,7 +49,7 @@ export class MazeRunner {
     }
 
     if (!this.aborted && this.solver) {
-      const step = this.solver.solve({ solutionColor: '#00FF00' });
+      const step = this.solver.solve();
 
       while (
         await animate(() => {
@@ -71,6 +71,8 @@ export class MazeRunner {
       this.maze.clear();
       throw new Error('Aborted');
     }
+
+    return this.maze;
   }
 
   public abort(): void {

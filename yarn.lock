@@ -1475,7 +1475,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/private-theming@npm:^6.4.6, @mui/private-theming@npm:^6.4.8, @mui/private-theming@npm:^6.4.9":
+"@mui/private-theming@npm:^6.4.6, @mui/private-theming@npm:^6.4.9":
   version: 6.4.9
   resolution: "@mui/private-theming@npm:6.4.9"
   dependencies:
@@ -1515,6 +1515,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/styles@npm:6.4.10":
+  version: 6.4.10
+  resolution: "@mui/styles@npm:6.4.10"
+  dependencies:
+    "@babel/runtime": "npm:^7.26.0"
+    "@emotion/hash": "npm:^0.9.2"
+    "@mui/private-theming": "npm:^6.4.9"
+    "@mui/types": "npm:~7.2.24"
+    "@mui/utils": "npm:^6.4.9"
+    clsx: "npm:^2.1.1"
+    csstype: "npm:^3.1.3"
+    hoist-non-react-statics: "npm:^3.3.2"
+    jss: "npm:^10.10.0"
+    jss-plugin-camel-case: "npm:^10.10.0"
+    jss-plugin-default-unit: "npm:^10.10.0"
+    jss-plugin-global: "npm:^10.10.0"
+    jss-plugin-nested: "npm:^10.10.0"
+    jss-plugin-props-sort: "npm:^10.10.0"
+    jss-plugin-rule-value-function: "npm:^10.10.0"
+    jss-plugin-vendor-prefixer: "npm:^10.10.0"
+    prop-types: "npm:^15.8.1"
+  peerDependencies:
+    "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
+    react: ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/89a0afc7265cc4a2707cad474c54250c5465e29cb91ff94d05c5ab416e459de1af13704cfbc600ed36aa8acfa46c997975a48f9da5245192443786932133a2ff
+  languageName: node
+  linkType: hard
+
 "@mui/styles@npm:6.4.7":
   version: 6.4.7
   resolution: "@mui/styles@npm:6.4.7"
@@ -1543,37 +1574,6 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/1f506ddae8df2ea554a41b222789740b0f5f8bd49750342feffb017bb2c5f6a7bd62ebfefe4f39ea1d3499ad33b1bf6364e23844546180d7c01c48dbf904c375
-  languageName: node
-  linkType: hard
-
-"@mui/styles@npm:6.4.8":
-  version: 6.4.8
-  resolution: "@mui/styles@npm:6.4.8"
-  dependencies:
-    "@babel/runtime": "npm:^7.26.0"
-    "@emotion/hash": "npm:^0.9.2"
-    "@mui/private-theming": "npm:^6.4.8"
-    "@mui/types": "npm:~7.2.24"
-    "@mui/utils": "npm:^6.4.8"
-    clsx: "npm:^2.1.1"
-    csstype: "npm:^3.1.3"
-    hoist-non-react-statics: "npm:^3.3.2"
-    jss: "npm:^10.10.0"
-    jss-plugin-camel-case: "npm:^10.10.0"
-    jss-plugin-default-unit: "npm:^10.10.0"
-    jss-plugin-global: "npm:^10.10.0"
-    jss-plugin-nested: "npm:^10.10.0"
-    jss-plugin-props-sort: "npm:^10.10.0"
-    jss-plugin-rule-value-function: "npm:^10.10.0"
-    jss-plugin-vendor-prefixer: "npm:^10.10.0"
-    prop-types: "npm:^15.8.1"
-  peerDependencies:
-    "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
-    react: ^17.0.0 || ^18.0.0 || ^19.0.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10c0/dcc9a0c5a3f9da9d100c9ee28a194fe4f65837192bbfd01a9a75f911c07a50f23770e8b642cfc819526e3fc94e6c1a7b0d128dba616321b93f890e157331f737
   languageName: node
   linkType: hard
 
@@ -1631,7 +1631,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^6.4.6, @mui/utils@npm:^6.4.8, @mui/utils@npm:^6.4.9":
+"@mui/utils@npm:^6.4.6, @mui/utils@npm:^6.4.9":
   version: 6.4.9
   resolution: "@mui/utils@npm:6.4.9"
   dependencies:
@@ -8993,10 +8993,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"n-readlines@npm:1.0.1":
-  version: 1.0.1
-  resolution: "n-readlines@npm:1.0.1"
-  checksum: 10c0/a2ba1c74e365ac5b8b2dde03301ddcb193c81edb0d3691dd71b3d9a1c71b3dde30b86c32483578efbc3161d295b272123668de11533b02a99bd93704d637f83e
+"n-readlines@npm:1.0.3":
+  version: 1.0.3
+  resolution: "n-readlines@npm:1.0.3"
+  checksum: 10c0/436c27ac071409314093da35dc3a4c5198c94fb10ad12b1c4d2b3e44bdb634da0a7a8ab0c107c1f4815788cbf5e0c7c180e3037ba3d974f34637cab363a95a74
   languageName: node
   linkType: hard
 
@@ -11653,7 +11653,7 @@ __metadata:
     "@emotion/styled": "npm:11.14.0"
     "@google-cloud/translate": "npm:9.0.1"
     "@mui/material": "npm:6.4.10"
-    "@mui/styles": "npm:6.4.8"
+    "@mui/styles": "npm:6.4.10"
     "@react-router/dev": "npm:7.5.0"
     "@react-router/node": "npm:7.5.0"
     "@react-router/serve": "npm:7.5.0"
@@ -11702,7 +11702,7 @@ __metadata:
     mime: "npm:4.0.7"
     mustache: "npm:4.2.0"
     mustache-express: "npm:1.3.2"
-    n-readlines: "npm:1.0.1"
+    n-readlines: "npm:1.0.3"
     node-pg-migrate: "npm:7.9.1"
     nodemon: "npm:3.1.9"
     notistack: "npm:3.0.2"

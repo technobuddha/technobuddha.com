@@ -49,7 +49,7 @@ const config = {
           '#api/*': ['./src/api/*/index.ts'],
           '#context/*': ['./src/client/context/*/index.ts'],
           '#control': ['./src/client/control/index.ts'],
-          '#component*': ['./src/client/component*'],
+          '#component*': ['./src/client/component/*/index.ts'],
           '#client*': ['./src/client*'],
           '#server/*': ['./src/server/*/index.ts'],
           '#util*': ['./src/util*'],

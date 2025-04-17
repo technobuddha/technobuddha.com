@@ -2,19 +2,19 @@ import React from 'react';
 import { FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent } from '@mui/material';
 import { range } from 'lodash-es';
 
-import { CanvasDrawing } from './drawing/canvas-drawing.ts';
-import { BrickMaze } from './maze/brick-maze.ts';
-import { CircularMaze } from './maze/circular-maze.ts';
-import { CubicMaze } from './maze/cubic-maze.ts';
-import { HexagonMaze } from './maze/hexagon-maze.ts';
-import { type Maze, type MazeProperties } from './maze/maze.ts';
-import { OctogonMaze } from './maze/octogon-maze.ts';
-import { PentagonMaze } from './maze/pentagon-maze.ts';
-import { SquareMaze } from './maze/square-maze.ts';
-import { TriangleMaze } from './maze/triangle-maze.ts';
-import { WedgeMaze } from './maze/wedge-maze.ts';
-import { ZetaMaze } from './maze/zeta-maze.ts';
-import { MazeFactory } from './maze-factory.ts';
+import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
+import { MazeFactory } from '../factory/maze-factory.ts';
+import { BrickMaze } from '../maze/brick-maze.ts';
+import { CircularMaze } from '../maze/circular-maze.ts';
+import { CubicMaze } from '../maze/cubic-maze.ts';
+import { HexagonMaze } from '../maze/hexagon-maze.ts';
+import { type Maze, type MazeProperties } from '../maze/maze.ts';
+import { OctogonMaze } from '../maze/octogon-maze.ts';
+import { PentagonMaze } from '../maze/pentagon-maze.ts';
+import { SquareMaze } from '../maze/square-maze.ts';
+import { TriangleMaze } from '../maze/triangle-maze.ts';
+import { WedgeMaze } from '../maze/wedge-maze.ts';
+import { ZetaMaze } from '../maze/zeta-maze.ts';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   circular: (props) => new CircularMaze(props),
@@ -83,7 +83,9 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
       const factory = new MazeFactory({ drawing: contextMaze });
 
-      void factory.create(mazes[selectedMaze]).then((m) => {
+      const runner = factory.create(mazes[selectedMaze]);
+
+      void runner.run().then((m) => {
         setMaze(m);
       });
     }
@@ -144,7 +146,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
     const err: string[] = [];
 
     if (maze) {
-      for (const cell of maze.all()) {
+      for (const cell of maze.cellsInMaze()) {
         for (const direction of Object.keys(maze.walls[cell.x][cell.y])) {
           const move = maze.move(cell, direction);
           if (move) {
@@ -194,7 +196,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         }
       }
 
-      for (const cell of maze.all()) {
+      for (const cell of maze.cellsInMaze()) {
         for (const move of maze.neighbors(cell)) {
           const back = maze.move(move, maze.opposite(move));
           if (back) {

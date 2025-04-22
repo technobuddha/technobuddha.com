@@ -1,6 +1,6 @@
 import { type Maze } from '../maze/maze.ts';
 
-export function triabglePlugin(maze: Maze): void {
+export function trianglePlugin(maze: Maze): void {
   const a = { x: 0, y: maze.height - 1 };
   const b = { x: maze.width - 1, y: maze.height - 1 };
   const c = { x: Math.floor(maze.width / 2), y: 0 };

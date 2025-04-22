@@ -140,8 +140,8 @@ export class HexagonMaze extends Maze {
             [
               { x: x6, y: y2 },
               { x: x8, y: y1 },
-              { x: x9, y: y4 },
               { x: xa, y: y3 },
+              { x: x9, y: y4 },
             ],
             color,
           );
@@ -302,6 +302,8 @@ export class HexagonMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
+      this.drawCell(cell);
+
       const { x2, x5, x6, x9, y2, y4, y6 } = this.cellOffsets(cell);
 
       this.drawing.line({ x: x2, y: y4 }, { x: x9, y: y4 }, color);

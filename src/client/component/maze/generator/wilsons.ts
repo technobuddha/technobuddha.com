@@ -14,9 +14,7 @@ export class Wilsons extends MazeGenerator {
     const { width, height } = this.maze;
 
     this.visited = create2DArray(width, height, false);
-    this.unvisited = create2DArray(width, height, (x, y) => ({ x, y }))
-      .flat()
-      .filter((cell) => this.maze.inMaze(cell));
+    this.unvisited = this.maze.cellsInMaze();
 
     this.currentCell = this.start;
     this.markAsVisited(this.currentCell);
@@ -33,7 +31,7 @@ export class Wilsons extends MazeGenerator {
 
   public *generate(): Iterator<void> {
     while (this.unvisited.length > 0) {
-      this.currentCell = this.unvisited[Math.floor(this.random() * this.unvisited.length)];
+      this.currentCell = this.randomPick(this.unvisited)!;
       let path: (Cell | CellDirection)[] = [this.currentCell];
 
       while (!this.visited[this.currentCell.x][this.currentCell.y]) {
@@ -42,7 +40,7 @@ export class Wilsons extends MazeGenerator {
         let cellVisited = false;
         let cellPreviousIndex = -1;
         for (const [index, pathCell] of path.entries()) {
-          if (pathCell.x === cell.x && pathCell.y === cell.y) {
+          if (this.maze.isSame(pathCell, cell)) {
             cellVisited = true;
             cellPreviousIndex = index;
           }

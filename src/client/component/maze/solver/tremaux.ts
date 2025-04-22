@@ -14,7 +14,7 @@ export class Tremaux extends MazeSolver {
   public avatarColor: string;
   public markedColor: string;
   public blockedColor: string;
-  private curr: Cell;
+  private curr: CellDirection;
   private prev: Cell | undefined = undefined;
 
   private readonly marks: Record<Direction, number>[][];
@@ -59,7 +59,6 @@ export class Tremaux extends MazeSolver {
       this.drawMark({ ...this.curr, direction }, markedColor, blockedColor);
     }
 
-    this.maze.drawCell(next);
     this.maze.drawAvatar(next, avatarColor);
 
     for (const direction of Object.keys(this.marks[next.x][next.y])) {
@@ -74,7 +73,6 @@ export class Tremaux extends MazeSolver {
     markedColor = this.markedColor,
     blockedColor = this.blockedColor,
     avatarColor = this.avatarColor,
-    solutionColor = this.solutionColor,
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): Iterator<void> {
@@ -111,7 +109,10 @@ export class Tremaux extends MazeSolver {
         yield;
       } else {
         // 3. Pick any entrance with the fewest marks (zero if possible, else one).
-        const [next] = this.randomShuffle(moves.filter((m) => marks[m.direction] < 2)).sort(
+        if (moves.length === 0) {
+          throw new Error('No moves available');
+        }
+        const [next] = this.randomShuffle(moves).sort(
           (a, b) => marks[a.direction] - marks[b.direction],
         );
 
@@ -119,9 +120,6 @@ export class Tremaux extends MazeSolver {
         yield;
       }
     }
-
-    this.maze.clear();
-    this.maze.drawDistances();
 
     this.curr = entrance;
 
@@ -135,13 +133,10 @@ export class Tremaux extends MazeSolver {
         );
 
       if (move) {
-        this.maze.drawPath({ ...this.curr, direction: move.direction }, solutionColor);
+        this.maze.solution.push({ ...this.curr, direction: move.direction });
         this.prev = this.curr;
         this.curr = move;
       }
     }
-
-    this.maze.drawCell(this.maze.exit);
-    this.maze.drawPath(this.maze.exit, solutionColor);
   }
 }

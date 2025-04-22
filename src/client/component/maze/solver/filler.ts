@@ -21,13 +21,8 @@ export class Filler extends MazeSolver {
     this.method = method;
   }
 
-  public *solve({
-    markedColor = this.markedColor,
-    solutionColor = this.solutionColor,
-    exit = this.maze.exit,
-  } = {}): Iterator<void> {
+  public *solve({ markedColor = this.markedColor, exit = this.maze.exit } = {}): Iterator<void> {
     const walls = this.maze.cloneWalls();
-    this.maze.attachDrawing(this.drawing);
 
     let deadEnds = this.randomShuffle(this.maze.deadEnds({ walls }));
     while (deadEnds.length > 0) {
@@ -36,8 +31,7 @@ export class Filler extends MazeSolver {
           for (let cell = deadEnd; this.maze.isDeadEnd(cell, { walls }); ) {
             const [move] = this.maze.validMoves(cell, { walls });
             this.maze.addWall(cell, move.direction, { walls }, false);
-            this.maze.drawX(cell, markedColor);
-            yield;
+            yield this.maze.drawX(cell, markedColor);
             cell = { x: move.x, y: move.y };
           }
         } else {
@@ -54,9 +48,6 @@ export class Filler extends MazeSolver {
       deadEnds = this.randomShuffle(this.maze.deadEnds({ walls }));
     }
 
-    this.maze.clear();
-    this.maze.drawDistances();
-
     let cell = {
       ...this.maze.entrance,
       direction: this.maze.opposite(this.maze.entrance),
@@ -72,12 +63,9 @@ export class Filler extends MazeSolver {
       }
 
       const [move] = moves;
-      this.maze.drawPath({ ...cell, direction: move.direction }, solutionColor);
+      this.maze.solution.push({ ...cell, direction: move.direction });
       path.push(cell);
       cell = move;
     }
-
-    this.maze.drawCell(exit);
-    this.maze.drawPath(exit, solutionColor);
   }
 }

@@ -1,18 +1,12 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  type SelectChangeEvent,
-  Typography,
-} from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { create2DArray, nbsp, numberToLetter } from '@technobuddha/library';
 import { useDerivedState } from '@technobuddha/react-hooks';
 import clsx from 'clsx';
 import { range } from 'lodash-es';
+
+import { MenuItem, Select } from '#control';
 
 import css from './knight.module.css';
 
@@ -78,14 +72,13 @@ export const Knight: React.FC = () => {
   const [solution, setSolution] = React.useState<null | number>(null);
 
   const handleWidthChange = React.useCallback(
-    (event: SelectChangeEvent<number>): void => {
-      const newValue = Number.parseInt(event.target.value as string);
-      setWidth(newValue);
-      if (startX >= newValue) {
-        setStartX(newValue - 1);
+    (value: number): void => {
+      setWidth(value);
+      if (startX >= value) {
+        setStartX(value - 1);
       }
-      if (finishX >= newValue) {
-        setFinishX(newValue - 1);
+      if (finishX >= value) {
+        setFinishX(value - 1);
       }
       setSolution(null);
     },
@@ -93,41 +86,36 @@ export const Knight: React.FC = () => {
   );
 
   const handleHeightChange = React.useCallback(
-    (event: SelectChangeEvent<number>): void => {
-      const newValue = Number.parseInt(event.target.value as string);
-      setHeight(newValue);
-      if (startY >= newValue) {
-        setStartY(newValue - 1);
+    (value: number): void => {
+      setHeight(value);
+      if (startY >= value) {
+        setStartY(value - 1);
       }
-      if (finishY >= newValue) {
-        setFinishY(newValue - 1);
+      if (finishY >= value) {
+        setFinishY(value - 1);
       }
       setSolution(null);
     },
     [startY, finishY],
   );
 
-  const handleStartXChange = React.useCallback((event: SelectChangeEvent<number>): void => {
-    const newValue = Number.parseInt(event.target.value as string);
-    setStartX(newValue);
+  const handleStartXChange = React.useCallback((value: number): void => {
+    setStartX(value);
     setSolution(null);
   }, []);
 
-  const handleFinishXChange = React.useCallback((event: SelectChangeEvent<number>): void => {
-    const newValue = Number.parseInt(event.target.value as string);
-    setFinishX(newValue);
+  const handleFinishXChange = React.useCallback((value: number): void => {
+    setFinishX(value);
     setSolution(null);
   }, []);
 
-  const handleStartYChange = React.useCallback((event: SelectChangeEvent<number>): void => {
-    const newValue = Number.parseInt(event.target.value as string);
-    setStartY(newValue);
+  const handleStartYChange = React.useCallback((value: number): void => {
+    setStartY(value);
     setSolution(null);
   }, []);
 
-  const handleFinishYChange = React.useCallback((event: SelectChangeEvent<number>): void => {
-    const newValue = Number.parseInt(event.target.value as string);
-    setFinishY(newValue);
+  const handleFinishYChange = React.useCallback((value: number): void => {
+    setFinishY(value);
     setSolution(null);
   }, []);
 
@@ -139,112 +127,52 @@ export const Knight: React.FC = () => {
     <Box display="flex" flexDirection="row">
       <Box display="flex" flexDirection="column" marginRight={4}>
         <Box display="flex" flexDirection="row" marginBottom={1}>
-          <FormControl>
-            <InputLabel htmlFor="width">Width</InputLabel>
-            <Select<number>
-              value={width}
-              onChange={handleWidthChange}
-              inputProps={{
-                name: 'width',
-                id: 'width',
-              }}
-            >
-              {range(1, 26).map((i) => (
-                <MenuItem key={i} value={i}>
-                  {i.toString()}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl>
-            <InputLabel htmlFor="height">Height</InputLabel>
-            <Select<number>
-              value={height}
-              onChange={handleHeightChange}
-              inputProps={{
-                name: 'height',
-                id: 'height',
-              }}
-            >
-              {range(1, 26).map((i) => (
-                <MenuItem key={i} value={i}>
-                  {i.toString()}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Select<number> value={width} label="Width" onChange={handleWidthChange}>
+            {range(1, 26).map((i) => (
+              <MenuItem key={i} value={i}>
+                {i.toString()}
+              </MenuItem>
+            ))}
+          </Select>
+          <Select<number> value={height} label="Height" onChange={handleHeightChange}>
+            {range(1, 26).map((i) => (
+              <MenuItem key={i} value={i}>
+                {i.toString()}
+              </MenuItem>
+            ))}
+          </Select>
         </Box>
         <Box display="flex" flexDirection="row" marginBottom={1}>
-          <FormControl>
-            <InputLabel htmlFor="startX">Start Column</InputLabel>
-            <Select
-              value={startX}
-              onChange={handleStartXChange}
-              inputProps={{
-                name: 'startX',
-                id: 'startX',
-              }}
-            >
-              {range(0, width).map((i) => (
-                <MenuItem key={i} value={i}>
-                  {numberToLetter(i + 1)}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl>
-            <InputLabel htmlFor="startX">Start Row</InputLabel>
-            <Select
-              value={startY}
-              onChange={handleStartYChange}
-              inputProps={{
-                name: 'startY',
-                id: 'startY',
-              }}
-            >
-              {range(0, height).map((i) => (
-                <MenuItem key={i} value={i}>
-                  {(i + 1).toString()}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Select value={startX} label="Start Column" onChange={handleStartXChange}>
+            {range(0, width).map((i) => (
+              <MenuItem key={i} value={i}>
+                {numberToLetter(i + 1)}
+              </MenuItem>
+            ))}
+          </Select>
+          <Select value={startY} label="Start Row" onChange={handleStartYChange}>
+            {range(0, height).map((i) => (
+              <MenuItem key={i} value={i}>
+                {(i + 1).toString()}
+              </MenuItem>
+            ))}
+          </Select>
         </Box>
         <Box display="flex" flexDirection="row" marginBottom={1}>
-          <FormControl>
-            <InputLabel htmlFor="finishX">finish Column</InputLabel>
-            <Select
-              value={finishX}
-              onChange={handleFinishXChange}
-              inputProps={{
-                name: 'finishX',
-                id: 'finishX',
-              }}
-            >
-              {range(0, width).map((i) => (
-                <MenuItem key={i} value={i}>
-                  {numberToLetter(i + 1)}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl>
-            <InputLabel htmlFor="finishY">Finish Row</InputLabel>
-            <Select
-              value={finishY}
-              onChange={handleFinishYChange}
-              inputProps={{
-                name: 'finishY',
-                id: 'finishY',
-              }}
-            >
-              {range(0, height).map((i) => (
-                <MenuItem key={i} value={i}>
-                  {(i + 1).toString()}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Select value={finishX} label="Finish Column" onChange={handleFinishXChange}>
+            {range(0, width).map((i) => (
+              <MenuItem key={i} value={i}>
+                {numberToLetter(i + 1)}
+              </MenuItem>
+            ))}
+          </Select>
+          <Select value={finishY} label="Finish Row" onChange={handleFinishYChange}>
+            {range(0, height).map((i) => (
+              <MenuItem key={i} value={i}>
+                {(i + 1).toString()}
+              </MenuItem>
+            ))}
+          </Select>
         </Box>
         <Box>
           <div>Number of Moves</div>

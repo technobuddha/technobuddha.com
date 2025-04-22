@@ -25,13 +25,8 @@ export class WallWalking extends MazeSolver {
     }
   }
 
-  public *solve({
-    entrance = this.maze.entrance,
-    exit = this.maze.exit,
-    solutionColor = this.solutionColor,
-  } = {}): Iterator<void> {
+  public *solve({ entrance = this.maze.entrance, exit = this.maze.exit } = {}): Iterator<void> {
     let seekingWall = true;
-    this.maze.attachDrawing(this.drawing);
 
     let cell: CellDirection = {
       ...entrance,
@@ -49,6 +44,9 @@ export class WallWalking extends MazeSolver {
 
     while (!this.maze.isSame(cell, exit)) {
       const v = ++cells[cell.x][cell.y].visits;
+      if (v >= Object.keys(this.maze.walls[cell.x][cell.y]).length) {
+        throw new Error('Infinite loop detected');
+      }
       const wall = this.maze.walls[cell.x][cell.y];
 
       let dir: Direction | undefined;
@@ -68,15 +66,14 @@ export class WallWalking extends MazeSolver {
       }
 
       const next = this.maze.move(cell, dir)!;
-      this.maze.drawPath({ ...cell, direction: dir }, `rgba(255, 165, 0, ${(v + 1) * 0.25})`);
+      //this.maze.drawPath({ ...cell, direction: dir }, `rgba(255, 165, 0, ${/*(v + 1) * 0.25*/ 1})`);
+      this.maze.drawText(cell, v.toString(), 'cyan');
+      this.maze.drawAvatar(next);
       yield;
 
       cells[cell.x][cell.y].direction = dir;
       cell = next!;
     }
-
-    this.maze.clear();
-    this.maze.drawDistances();
 
     cell = {
       x: entrance.x,
@@ -84,18 +81,10 @@ export class WallWalking extends MazeSolver {
       direction: cells[entrance.x][entrance.y].direction!,
     };
 
-    for (;;) {
-      if (this.maze.isSame(cell, entrance)) {
-        this.maze.drawCell(cell);
-      } else if (this.maze.isSame(cell, exit)) {
-        this.maze.drawCell(exit);
-        this.maze.drawPath(exit, solutionColor);
-        return;
-      }
-
-      this.maze.drawPath(cell, solutionColor);
+    do {
+      this.maze.solution.push(cell);
       const next = this.maze.move(cell, cell.direction)!;
       cell = { ...next, direction: cells[next.x][next.y].direction! };
-    }
+    } while (!this.maze.isSame(cell, this.maze.exit));
   }
 }

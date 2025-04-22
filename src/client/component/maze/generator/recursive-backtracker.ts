@@ -118,15 +118,13 @@ export class RecursiveBacktracker extends MazeGenerator {
         }
 
         if (newCell) {
-          this.maze.drawCell(currentCell);
-          this.maze.removeWall(currentCell, newCell.direction);
+          yield this.maze.removeWall(currentCell, newCell.direction);
 
           this.stack[this.player].push(currentCell);
           this.current[this.player] = newCell;
           this.visited[newCell.x][newCell.y] = this.player;
 
           this.player = (this.player + 1) % this.parallel;
-          yield;
         } else {
           this.current[this.player] = this.stack[this.player].pop();
         }

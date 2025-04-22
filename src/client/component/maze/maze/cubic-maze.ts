@@ -404,8 +404,148 @@ export class CubicMaze extends Maze {
     }
   }
 
-  public drawPillar(_cell: CellPillar, _color = this.wallColor): void {
-    // TODO [2025-04-20]: Implement this method
+  public drawPillar(cell: CellPillar, color = this.wallColor): void {
+    if (this.drawing) {
+      switch (cell.pillar) {
+        case 'ab': {
+          const { x2, x3, y0, y1 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x2, y: y0 }, { x: x3, y: y1 }, color);
+          break;
+        }
+
+        case 'bc': {
+          const { x2, x3, y2, y3 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x2, y: y2 }, { x: x3, y: y3 }, color);
+          break;
+        }
+
+        case 'cd': {
+          const { x0, x1, y2, y3 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, color);
+          break;
+        }
+
+        case 'da': {
+          const { x0, x1, y0, y1 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x0, y: y0 }, { x: x1, y: y1 }, color);
+          break;
+        }
+
+        case 'ef': {
+          const { x9, xa, xb, y0, y1 } = this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: x9, y: y1 },
+              { x: xa, y: y1 },
+              { x: xb, y: y0 },
+              { x: xa, y: y0 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'fg': {
+          const { x6, x7, x8, y2, y3 } = this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: x6, y: y3 },
+              { x: x7, y: y2 },
+              { x: x8, y: y2 },
+              { x: x7, y: y3 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'gh': {
+          const { x0, x1, x2, y2, y3 } = this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: x0, y: y3 },
+              { x: x1, y: y2 },
+              { x: x2, y: y2 },
+              { x: x1, y: y3 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'he': {
+          const { x3, x4, x5, y0, y1 } = this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: x3, y: y1 },
+              { x: x4, y: y1 },
+              { x: x5, y: y0 },
+              { x: x4, y: y0 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'ij': {
+          const { x2, x3, y0, y1, y2 } = this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: x2, y: y2 },
+              { x: x3, y: y1 },
+              { x: x3, y: y0 },
+              { x: x2, y: y1 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'jk': {
+          const { x2, x3, y6, y7, y8 } = this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: x2, y: y8 },
+              { x: x3, y: y7 },
+              { x: x3, y: y6 },
+              { x: x2, y: y7 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'kl': {
+          const { x0, x1, y9, ya, yb } = this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: x0, y: yb },
+              { x: x1, y: ya },
+              { x: x1, y: y9 },
+              { x: x0, y: ya },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'li': {
+          const { x0, x1, y3, y4, y5 } = this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: x0, y: y5 },
+              { x: x1, y: y4 },
+              { x: x1, y: y3 },
+              { x: x0, y: y4 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        // no default
+      }
+    }
     // if (this.drawing) {
     //   const { x0, x1, x2, x3, y0, y1, y2, y3 } = this.cellOffsets({ x, y });
     //   if (pillar === 'nw') {
@@ -425,6 +565,8 @@ export class CubicMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
+      this.drawCell(cell);
+
       switch (this.cellKind(cell)) {
         case 0:
         case 3:

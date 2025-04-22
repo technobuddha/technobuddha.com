@@ -1,4 +1,5 @@
 import {
+  type AngleMatrix,
   type DirectionMatrix,
   type EdgesMatrix,
   type MoveMatrix,
@@ -42,6 +43,13 @@ export const straightMatrix: TurnMatrix = {
   e: ['e', 'ns', 'w'],
   w: ['w', 'ns', 'e'],
   s: ['s', 'ew', 'n'],
+};
+
+export const angleMatrix: AngleMatrix = {
+  n: 90,
+  e: 0,
+  w: 180,
+  s: 270,
 };
 
 export const moveMatrix: MoveMatrix = {

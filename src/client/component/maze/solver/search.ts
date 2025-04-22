@@ -34,10 +34,10 @@ export class Search extends MazeSolver {
     this.method = method;
   }
 
-  protected decide(array: CellDirection[], origin: CellDirection): CellDirection[] {
+  protected decide(array: CellDirection[], origin: CellDirection): CellDirection {
     switch (this.method) {
       case 'random': {
-        return this.randomShuffle(array);
+        return this.randomPick(array)!;
       }
 
       case 'seek': {
@@ -45,21 +45,21 @@ export class Search extends MazeSolver {
           (a, b) =>
             manhattanDistance({ x: a.x, y: a.y }, this.maze.exit) -
             manhattanDistance({ x: b.x, y: b.y }, this.maze.exit),
-        );
+        )[0];
       }
 
       case 'left-turn': {
         const left = this.maze.leftTurn(origin);
-        return array.sort((a, b) => left.indexOf(a.direction) - left.indexOf(b.direction));
+        return array.sort((a, b) => left.indexOf(a.direction) - left.indexOf(b.direction))[0];
       }
 
       case 'right-turn': {
         const right = this.maze.rightTurn(origin);
-        return array.sort((a, b) => right.indexOf(a.direction) - right.indexOf(b.direction));
+        return array.sort((a, b) => right.indexOf(a.direction) - right.indexOf(b.direction))[0];
       }
 
       default: {
-        return array;
+        return array[0];
       }
     }
   }
@@ -67,17 +67,13 @@ export class Search extends MazeSolver {
   public *solve({
     pathColor = this.pathColor,
     avatarColor = this.avatarColor,
-    solutionColor = this.solutionColor,
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): Iterator<void> {
-    this.maze.attachDrawing(this.drawing);
-
     type CellParentDirection = Cell & { parent?: CellParentDirection; direction: Direction };
 
     let queue: CellParentDirection[] = [];
     const discovered = create2DArray(this.maze.width, this.maze.height, false);
-    const distances = create2DArray(this.maze.width, this.maze.height, 0);
 
     discovered[entrance.x][entrance.y] = true;
     queue.unshift({
@@ -96,42 +92,33 @@ export class Search extends MazeSolver {
       switch (mode) {
         case 'forward': {
           discovered[cell.x][cell.y] = true;
-          if (cell.parent) {
-            distances[cell.x][cell.y] = distances[cell.parent.x][cell.parent.y] + 1;
-          }
 
           if (this.maze.isSame(cell, exit)) {
-            this.maze.clear();
-            this.maze.drawDistances();
-            yield;
             mode = 'solve';
             queue = [cell];
           } else {
-            const moves = this.decide(
+            const next = this.decide(
               this.maze.validMoves(cell).filter((n) => !discovered[n.x][n.y]),
               cell,
             );
-            if (moves.length === 0) {
-              this.maze.drawCell(cell);
-              // this.maze.drawX(cell);
-              // yield;
+            if (next) {
+              this.maze.drawPath({ ...cell, direction: next.direction }, pathColor);
+              this.maze.drawAvatar(next, avatarColor);
+              yield;
+              queue.push({ ...next, parent: cell });
+            } else {
+              this.maze.drawX(cell);
+              if (cell.parent) {
+                this.maze.drawAvatar(cell.parent, avatarColor);
+              }
+              yield;
+
               if (cell.parent) {
                 mode = 'backward';
                 queue.push(cell.parent);
               } else {
                 mode = 'solve';
               }
-            } else {
-              const [next, ...others] = moves;
-              queue.push(...others.map((o) => ({ ...o, parent: cell })));
-
-              this.maze.drawCell(cell);
-              this.maze.drawPath({ ...cell, direction: next.direction }, pathColor);
-
-              this.maze.drawCell(next);
-              this.maze.drawAvatar(next, avatarColor);
-              yield;
-              queue.push({ ...next, parent: cell });
             }
           }
           break;
@@ -139,29 +126,23 @@ export class Search extends MazeSolver {
 
         case 'backward': {
           if (this.maze.validMoves(cell).some((n) => !discovered[n.x][n.y])) {
-            const topOfQueue = queue.at(-1);
+            const topOfQueue = queue.pop();
             if (topOfQueue) {
               const { parent, direction } = topOfQueue;
 
-              this.maze.drawCell(topOfQueue);
               this.maze.drawAvatar(topOfQueue, avatarColor);
 
               if (parent) {
-                this.maze.drawCell(parent);
                 this.maze.drawPath({ ...parent, direction }, pathColor);
-                yield;
               }
+              yield;
             }
 
             mode = 'forward';
+            queue.push(cell);
           } else {
-            this.maze.drawCell(cell);
-
-            this.maze.drawCell(cell.parent!);
-            this.maze.drawAvatar(cell.parent!, avatarColor);
-
-            // this.maze.drawX(cell);
-            // yield;
+            this.maze.drawX(cell);
+            yield this.maze.drawAvatar(cell.parent!, avatarColor);
             queue.push(cell.parent!);
           }
 
@@ -172,7 +153,7 @@ export class Search extends MazeSolver {
           let next: CellParentDirection | undefined = cell.parent;
           let prev: CellParentDirection = cell;
           while (next) {
-            this.maze.drawPath({ ...next, direction: prev.direction }, solutionColor);
+            this.maze.solution.unshift({ ...next, direction: prev.direction });
             prev = next;
             next = next.parent;
           }
@@ -182,8 +163,5 @@ export class Search extends MazeSolver {
         // no default
       }
     }
-
-    this.maze.drawCell(exit);
-    this.maze.drawPath(exit, solutionColor);
   }
 }

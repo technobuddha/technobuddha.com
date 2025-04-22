@@ -593,365 +593,271 @@ export class PentagonMaze extends Maze {
 
   public drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
     if (this.drawing) {
-      switch (this.cellKind({ x, y })) {
-        case 0: {
-          switch (pillar) {
-            case 'ab': {
-              const { x6, x8, y0, y1 } = this.cellOffsets({ x, y });
+      switch (pillar) {
+        case 'ab': {
+          const { x6, x8, y0, y1 } = this.cellOffsets({ x, y });
 
-              this.drawing.polygon(
-                [
-                  { x: x6, y: y0 },
-                  { x: x8, y: y0 },
-                  { x: x8, y: y1 },
-                  { x: x6, y: y1 },
-                ],
-                color,
-              );
-
-              break;
-            }
-
-            case 'bc': {
-              const { x6, x7, x8, y2, y3, y4, y5 } = this.cellOffsets({ x, y });
-
-              this.drawing.polygon(
-                [
-                  { x: x6, y: y2 },
-                  { x: x8, y: y2 },
-                  { x: x8, y: y4 },
-                  { x: x7, y: y5 },
-                  { x: x6, y: y3 },
-                ],
-                color,
-              );
-              break;
-            }
-
-            case 'cd': {
-              const { x3, x4, x5, y6, y7, y8 } = this.cellOffsets({ x, y });
-
-              this.drawing.polygon(
-                [
-                  { x: x3, y: y7 },
-                  { x: x4, y: y6 },
-                  { x: x5, y: y7 },
-                  { x: x4, y: y8 },
-                ],
-                color,
-              );
-              break;
-            }
-
-            case 'de': {
-              const { x0, x1, x2, y2, y3, y4, y5 } = this.cellOffsets({ x, y });
-
-              this.drawing.polygon(
-                [
-                  { x: x0, y: y2 },
-                  { x: x2, y: y2 },
-                  { x: x2, y: y4 },
-                  { x: x1, y: y5 },
-                  { x: x0, y: y3 },
-                ],
-                color,
-              );
-              break;
-            }
-
-            case 'ea': {
-              const { x0, x2, y0, y1 } = this.cellOffsets({ x, y });
-
-              this.drawing.polygon(
-                [
-                  { x: x0, y: y0 },
-                  { x: x2, y: y0 },
-                  { x: x2, y: y1 },
-                  { x: x0, y: y1 },
-                ],
-                color,
-              );
-
-              break;
-            }
-
-            // no default
-          }
+          this.drawing.rect({ x: x6, y: y0 }, { x: x8, y: y1 }, color);
 
           break;
         }
 
-        case 1: {
-          switch (pillar) {
-            case 'fg': {
-              const { x2, x3, x4, x5, y0, y1, y2 } = this.cellOffsets({ x, y });
+        case 'bc': {
+          const { x6, x7, x8, y2, y3, y4, y5 } = this.cellOffsets({ x, y });
 
-              this.drawing.polygon(
-                [
-                  { x: x2, y: y0 },
-                  { x: x4, y: y0 },
-                  { x: x5, y: y1 },
-                  { x: x3, y: y2 },
-                  { x: x2, y: y2 },
-                ],
-                color,
-              );
-              break;
-            }
+          this.drawing.polygon(
+            [
+              { x: x6, y: y2 },
+              { x: x8, y: y2 },
+              { x: x8, y: y4 },
+              { x: x7, y: y5 },
+              { x: x6, y: y3 },
+            ],
+            color,
+          );
+          break;
+        }
 
-            case 'gh': {
-              const { x6, x7, x8, y3, y4, y5 } = this.cellOffsets({ x, y });
+        case 'cd': {
+          const { x3, x4, x5, y6, y7, y8 } = this.cellOffsets({ x, y });
 
-              this.drawing.polygon(
-                [
-                  { x: x7, y: y3 },
-                  { x: x8, y: y4 },
-                  { x: x7, y: y5 },
-                  { x: x6, y: y4 },
-                ],
-                color,
-              );
+          this.drawing.polygon(
+            [
+              { x: x3, y: y7 },
+              { x: x4, y: y6 },
+              { x: x5, y: y7 },
+              { x: x4, y: y8 },
+            ],
+            color,
+          );
+          break;
+        }
 
-              break;
-            }
+        case 'de': {
+          const { x0, x1, x2, y2, y3, y4, y5 } = this.cellOffsets({ x, y });
 
-            case 'hi': {
-              const { x2, x3, x4, x5, y6, y7, y8 } = this.cellOffsets({ x, y });
+          this.drawing.polygon(
+            [
+              { x: x0, y: y2 },
+              { x: x2, y: y2 },
+              { x: x2, y: y4 },
+              { x: x1, y: y5 },
+              { x: x0, y: y3 },
+            ],
+            color,
+          );
+          break;
+        }
 
-              this.drawing.polygon(
-                [
-                  { x: x2, y: y6 },
-                  { x: x4, y: y6 },
-                  { x: x5, y: y7 },
-                  { x: x3, y: y8 },
-                  { x: x2, y: y8 },
-                ],
-                color,
-              );
-              break;
-            }
+        case 'ea': {
+          const { x0, x2, y0, y1 } = this.cellOffsets({ x, y });
 
-            case 'ij': {
-              const { x0, x1, y6, y8 } = this.cellOffsets({ x, y });
-
-              this.drawing.polygon(
-                [
-                  { x: x0, y: y6 },
-                  { x: x1, y: y6 },
-                  { x: x1, y: y8 },
-                  { x: x0, y: y8 },
-                ],
-                color,
-              );
-
-              break;
-            }
-
-            case 'jf': {
-              const { x0, x1, y0, y2 } = this.cellOffsets({ x, y });
-
-              this.drawing.polygon(
-                [
-                  { x: x0, y: y0 },
-                  { x: x1, y: y0 },
-                  { x: x1, y: y2 },
-                  { x: x0, y: y2 },
-                ],
-                color,
-              );
-
-              break;
-            }
-
-            // no default
-          }
+          this.drawing.rect({ x: x0, y: y0 }, { x: x2, y: y1 }, color);
 
           break;
         }
 
-        case 2: {
-          switch (pillar) {
-            case 'kl': {
-              const { x7, x8, y0, y2 } = this.cellOffsets({ x, y });
+        case 'fg': {
+          const { x2, x3, x4, x5, y0, y1, y2 } = this.cellOffsets({ x, y });
 
-              this.drawing.polygon(
-                [
-                  { x: x7, y: y0 },
-                  { x: x8, y: y0 },
-                  { x: x8, y: y2 },
-                  { x: x7, y: y2 },
-                ],
-                color,
-              );
-
-              break;
-            }
-
-            case 'lm': {
-              const { x7, x8, y6, y8 } = this.cellOffsets({ x, y });
-
-              this.drawing.polygon(
-                [
-                  { x: x7, y: y6 },
-                  { x: x8, y: y6 },
-                  { x: x8, y: y8 },
-                  { x: x7, y: y8 },
-                ],
-                color,
-              );
-
-              break;
-            }
-
-            case 'mn': {
-              const { x3, x4, x5, x6, y6, y7, y8 } = this.cellOffsets({ x, y });
-
-              this.drawing.polygon(
-                [
-                  { x: x5, y: y6 },
-                  { x: x6, y: y6 },
-                  { x: x6, y: y8 },
-                  { x: x4, y: y8 },
-                  { x: x3, y: y7 },
-                ],
-                color,
-              );
-              break;
-            }
-
-            case 'no': {
-              const { x0, x1, x2, y3, y4, y5 } = this.cellOffsets({ x, y });
-
-              this.drawing.polygon(
-                [
-                  { x: x1, y: y3 },
-                  { x: x2, y: y4 },
-                  { x: x1, y: y5 },
-                  { x: x0, y: y4 },
-                ],
-                color,
-              );
-
-              break;
-            }
-
-            case 'ok': {
-              const { x3, x4, x5, x6, y0, y1, y2 } = this.cellOffsets({ x, y });
-
-              this.drawing.polygon(
-                [
-                  { x: x5, y: y0 },
-                  { x: x6, y: y0 },
-                  { x: x6, y: y2 },
-                  { x: x4, y: y2 },
-                  { x: x3, y: y1 },
-                ],
-                color,
-              );
-              break;
-            }
-
-            // no default
-          }
+          this.drawing.polygon(
+            [
+              { x: x2, y: y0 },
+              { x: x4, y: y0 },
+              { x: x5, y: y1 },
+              { x: x3, y: y2 },
+              { x: x2, y: y2 },
+            ],
+            color,
+          );
           break;
         }
 
-        case 3: {
-          switch (pillar) {
-            case 'pq': {
-              const { x3, x4, x5, y0, y1, y2 } = this.cellOffsets({ x, y });
+        case 'gh': {
+          const { x6, x7, x8, y3, y4, y5 } = this.cellOffsets({ x, y });
 
-              this.drawing.polygon(
-                [
-                  { x: x4, y: y0 },
-                  { x: x5, y: y1 },
-                  { x: x4, y: y2 },
-                  { x: x3, y: y1 },
-                ],
-                color,
-              );
+          this.drawing.polygon(
+            [
+              { x: x7, y: y3 },
+              { x: x8, y: y4 },
+              { x: x7, y: y5 },
+              { x: x6, y: y4 },
+            ],
+            color,
+          );
 
-              break;
-            }
+          break;
+        }
 
-            case 'qr': {
-              const { x6, x7, x8, y3, y4, y5, y6 } = this.cellOffsets({ x, y });
+        case 'hi': {
+          const { x2, x3, x4, x5, y6, y7, y8 } = this.cellOffsets({ x, y });
 
-              this.drawing.polygon(
-                [
-                  { x: x7, y: y3 },
-                  { x: x8, y: y4 },
-                  { x: x8, y: y6 },
-                  { x: x6, y: y6 },
-                  { x: x6, y: y5 },
-                ],
-                color,
-              );
-              break;
-            }
+          this.drawing.polygon(
+            [
+              { x: x2, y: y6 },
+              { x: x4, y: y6 },
+              { x: x5, y: y7 },
+              { x: x3, y: y8 },
+              { x: x2, y: y8 },
+            ],
+            color,
+          );
+          break;
+        }
 
-            case 'rs': {
-              const { x6, x8, y7, y8 } = this.cellOffsets({ x, y });
+        case 'ij': {
+          const { x0, x1, y6, y8 } = this.cellOffsets({ x, y });
 
-              this.drawing.polygon(
-                [
-                  { x: x6, y: y7 },
-                  { x: x8, y: y7 },
-                  { x: x8, y: y8 },
-                  { x: x6, y: y8 },
-                ],
-                color,
-              );
+          this.drawing.rect({ x: x0, y: y6 }, { x: x1, y: y8 }, color);
 
-              break;
-            }
+          break;
+        }
 
-            case 'st': {
-              const { x0, x2, y7, y8 } = this.cellOffsets({ x, y });
+        case 'jf': {
+          const { x0, x1, y0, y2 } = this.cellOffsets({ x, y });
 
-              this.drawing.polygon(
-                [
-                  { x: x0, y: y7 },
-                  { x: x2, y: y7 },
-                  { x: x2, y: y8 },
-                  { x: x0, y: y8 },
-                ],
-                color,
-              );
+          this.drawing.rect({ x: x0, y: y0 }, { x: x1, y: y2 }, color);
 
-              break;
-            }
+          break;
+        }
 
-            case 'tp': {
-              const { x0, x1, x2, y3, y4, y5, y6 } = this.cellOffsets({ x, y });
+        case 'kl': {
+          const { x7, x8, y0, y2 } = this.cellOffsets({ x, y });
 
-              this.drawing.polygon(
-                [
-                  { x: x1, y: y3 },
-                  { x: x2, y: y4 },
-                  { x: x2, y: y6 },
-                  { x: x0, y: y6 },
-                  { x: x0, y: y5 },
-                ],
-                color,
-              );
-              break;
-            }
+          this.drawing.rect({ x: x7, y: y0 }, { x: x8, y: y2 }, color);
 
-            // no default
-          }
+          break;
+        }
 
+        case 'lm': {
+          const { x7, x8, y6, y8 } = this.cellOffsets({ x, y });
+
+          this.drawing.rect({ x: x7, y: y6 }, { x: x8, y: y8 }, color);
+
+          break;
+        }
+
+        case 'mn': {
+          const { x3, x4, x5, x6, y6, y7, y8 } = this.cellOffsets({ x, y });
+
+          this.drawing.polygon(
+            [
+              { x: x5, y: y6 },
+              { x: x6, y: y6 },
+              { x: x6, y: y8 },
+              { x: x4, y: y8 },
+              { x: x3, y: y7 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'no': {
+          const { x0, x1, x2, y3, y4, y5 } = this.cellOffsets({ x, y });
+
+          this.drawing.polygon(
+            [
+              { x: x1, y: y3 },
+              { x: x2, y: y4 },
+              { x: x1, y: y5 },
+              { x: x0, y: y4 },
+            ],
+            color,
+          );
+
+          break;
+        }
+
+        case 'ok': {
+          const { x3, x4, x5, x6, y0, y1, y2 } = this.cellOffsets({ x, y });
+
+          this.drawing.polygon(
+            [
+              { x: x5, y: y0 },
+              { x: x6, y: y0 },
+              { x: x6, y: y2 },
+              { x: x4, y: y2 },
+              { x: x3, y: y1 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'pq': {
+          const { x3, x4, x5, y0, y1, y2 } = this.cellOffsets({ x, y });
+
+          this.drawing.polygon(
+            [
+              { x: x4, y: y0 },
+              { x: x5, y: y1 },
+              { x: x4, y: y2 },
+              { x: x3, y: y1 },
+            ],
+            color,
+          );
+
+          break;
+        }
+
+        case 'qr': {
+          const { x6, x7, x8, y3, y4, y5, y6 } = this.cellOffsets({ x, y });
+
+          this.drawing.polygon(
+            [
+              { x: x7, y: y3 },
+              { x: x8, y: y4 },
+              { x: x8, y: y6 },
+              { x: x6, y: y6 },
+              { x: x6, y: y5 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'rs': {
+          const { x6, x8, y7, y8 } = this.cellOffsets({ x, y });
+
+          this.drawing.rect({ x: x6, y: y7 }, { x: x8, y: y8 }, color);
+
+          break;
+        }
+
+        case 'st': {
+          const { x0, x2, y7, y8 } = this.cellOffsets({ x, y });
+
+          this.drawing.rect({ x: x0, y: y7 }, { x: x2, y: y8 }, color);
+
+          break;
+        }
+
+        case 'tp': {
+          const { x0, x1, x2, y3, y4, y5, y6 } = this.cellOffsets({ x, y });
+
+          this.drawing.polygon(
+            [
+              { x: x1, y: y3 },
+              { x: x2, y: y4 },
+              { x: x2, y: y6 },
+              { x: x0, y: y6 },
+              { x: x0, y: y5 },
+            ],
+            color,
+          );
           break;
         }
 
         // no default
       }
-      //
     }
   }
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
+      this.drawCell(cell);
+
       switch (this.cellKind(cell)) {
         case 0: {
           const { x0, x2, x4, x6, x8, y0, y1, y4, y6, y8 } = this.cellOffsets(cell);

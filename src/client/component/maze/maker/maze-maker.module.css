@@ -30,19 +30,5 @@
     flex-basis: 20%;
     background: '#888888';
     padding: 1rem;
-
-    :global(.MuiFormControl-root) {
-      margin-top: 1.6rem;
-    }
-
-    :global(.MuiFormLabel-root) {
-      top: -0.75rem;
-      left: -1rem;
-      font-size: 1.5rem;
-    }
-
-    :global(.MuiInputBase-root) {
-      min-width: 10rem;
-    }
   }
 }

@@ -41,6 +41,7 @@ export class CanvasDrawing extends Drawing {
     this.canvas.fillStyle = color;
     this.canvas.fillStyle = color;
 
+    this.canvas.beginPath();
     this.canvas.fillRect(start.x, start.y, finish.x - start.x, finish.y - start.y);
   }
 
@@ -56,6 +57,7 @@ export class CanvasDrawing extends Drawing {
 
   public override text(rect: Rect, text: string, color: string): void {
     this.canvas.fillStyle = color;
+    this.canvas.font = '8px sans-serif';
 
     const metrics = this.canvas.measureText(text);
 

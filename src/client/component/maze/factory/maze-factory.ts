@@ -70,14 +70,13 @@ export class MazeFactory {
       entrance: this.entrance,
       exit: this.exit,
       maskColor: this.maskColor,
+      solutionColor: this.solutionColor,
       plugin,
     });
 
     const generator = generatorMaker?.({ maze, start: this.start, random: this.random });
     const solver = solverMaker?.({
       maze,
-      solutionColor: this.solutionColor,
-      drawing: this.drawing!,
       random: this.random,
     });
 

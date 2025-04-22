@@ -21,16 +21,15 @@ export class Prims extends MazeGenerator {
       const cellIndex = Math.floor(this.random() * this.activeCells.length);
       this.currentCell = this.activeCells[cellIndex];
 
-      const unvisitedNeighbors = this.maze
-        .neighbors(this.currentCell)
-        .filter((cell) => !this.visited[cell.x][cell.y]);
-      if (unvisitedNeighbors.length > 0) {
-        const newCell = this.randomPick(unvisitedNeighbors)!;
-        this.maze.removeWall(this.currentCell, newCell.direction);
+      const cell = this.randomPick(
+        this.maze.neighbors(this.currentCell).filter((c) => !this.visited[c.x][c.y]),
+      );
+      if (cell) {
+        this.maze.removeWall(this.currentCell, cell.direction);
         yield;
-        this.visited[newCell.x][newCell.y] = true;
+        this.visited[cell.x][cell.y] = true;
 
-        this.activeCells.push(newCell);
+        this.activeCells.push(cell);
       } else {
         this.activeCells.splice(cellIndex, 1);
       }

@@ -64,14 +64,12 @@ export class GrowingTree extends MazeGenerator {
       const index = this.selectCell(this.selectMethod());
       this.currentCell = this.list[index];
 
-      const unvisitedNeighbors = this.maze
-        .neighbors(this.currentCell)
-        .filter((cell) => !this.visited[cell.x][cell.y]);
+      const cell = this.randomPick(
+        this.maze.neighbors(this.currentCell).filter((c) => !this.visited[c.x][c.y]),
+      );
 
-      if (unvisitedNeighbors.length > 0) {
-        const cell = this.randomPick(unvisitedNeighbors)!;
-        this.maze.removeWall(this.currentCell, cell.direction);
-        yield;
+      if (cell) {
+        yield this.maze.removeWall(this.currentCell, cell.direction);
         this.visited[cell.x][cell.y] = true;
 
         this.list.push(cell);

@@ -1,6 +1,6 @@
 import React from 'react';
-import { FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent } from '@mui/material';
-import { range } from 'lodash-es';
+
+import { MenuItem, NumberField, Select } from '#control';
 
 import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
 import { MazeFactory } from '../factory/maze-factory.ts';
@@ -14,7 +14,6 @@ import { PentagonMaze } from '../maze/pentagon-maze.ts';
 import { SquareMaze } from '../maze/square-maze.ts';
 import { TriangleMaze } from '../maze/triangle-maze.ts';
 import { WedgeMaze } from '../maze/wedge-maze.ts';
-import { ZetaMaze } from '../maze/zeta-maze.ts';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   circular: (props) => new CircularMaze(props),
@@ -25,7 +24,6 @@ const mazes: Record<string, (props: MazeProperties) => Maze> = {
   triangle: (props) => new TriangleMaze(props),
   hexagon: (props) => new HexagonMaze(props),
   octogon: (props) => new OctogonMaze(props),
-  zeta: (props) => new ZetaMaze(props),
   wedge: (props) => new WedgeMaze(props),
 };
 
@@ -41,35 +39,59 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
   const [x, setX] = React.useState(0);
   const [y, setY] = React.useState(0);
   const [wall, setWall] = React.useState('a');
+  const [pillar, setPillar] = React.useState('ab');
   const [maze, setMaze] = React.useState<Maze>();
   const [errors, setErrors] = React.useState<string[]>([]);
+  const [cellSize, setCellSize] = React.useState<number>();
+  const [wallSize, setWallSize] = React.useState<number>();
 
-  const handleMazeChange = React.useCallback((event: SelectChangeEvent): void => {
-    setSelectedMaze(event.target.value);
+  const handleMazeChange = React.useCallback((value: string): void => {
+    setWallSize(undefined);
+    setCellSize(undefined);
+    setX(0);
+    setY(0);
+    setSelectedMaze(value);
   }, []);
 
-  const handleShowChange = React.useCallback((event: SelectChangeEvent): void => {
-    setShow(event.target.value);
+  const handleShowChange = React.useCallback((value: string): void => {
+    setShow(value);
   }, []);
 
-  const handleXChange = React.useCallback((event: SelectChangeEvent<number>): void => {
-    setX(
-      typeof event.target.value === 'string' ?
-        Number.parseInt(event.target.value)
-      : event.target.value,
-    );
+  const handleXChange = React.useCallback((value: number): void => {
+    setX(value);
   }, []);
 
-  const handleYChange = React.useCallback((event: SelectChangeEvent<number>): void => {
-    setY(
-      typeof event.target.value === 'string' ?
-        Number.parseInt(event.target.value)
-      : event.target.value,
-    );
+  const handleYChange = React.useCallback((value: number): void => {
+    setY(value);
   }, []);
 
-  const handleWallChange = React.useCallback((event: SelectChangeEvent): void => {
-    setWall(event.target.value);
+  const handleWallChange = React.useCallback((value: string): void => {
+    setWall(value);
+  }, []);
+
+  const handlePillarChange = React.useCallback((value: string): void => {
+    setPillar(value);
+  }, []);
+
+  const handleRemoveWalls = React.useCallback(() => {
+    if (maze) {
+      maze.removeInteriorWalls();
+    }
+  }, [maze]);
+
+  const handleCreateWalls = React.useCallback(() => {
+    if (maze) {
+      maze.createWalls();
+      maze.draw();
+    }
+  }, [maze]);
+
+  const handleCellSizeChange = React.useCallback((value: number): void => {
+    setCellSize(value === 0 ? undefined : value);
+  }, []);
+
+  const handleWallSizeChange = React.useCallback((value: number): void => {
+    setWallSize(value === 0 ? undefined : value);
   }, []);
 
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
@@ -81,7 +103,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
     if (canvasMaze.current) {
       const contextMaze = new CanvasDrawing(canvasMaze.current);
 
-      const factory = new MazeFactory({ drawing: contextMaze });
+      const factory = new MazeFactory({ drawing: contextMaze, cellSize, wallSize });
 
       const runner = factory.create(mazes[selectedMaze]);
 
@@ -89,7 +111,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         setMaze(m);
       });
     }
-  }, [selectedMaze]);
+  }, [selectedMaze, cellSize, wallSize]);
 
   React.useEffect(() => {
     if (maze) {
@@ -100,6 +122,20 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
             for (let j = 0; j < maze.height; ++j) {
               if (maze.walls[i][j][wall]) {
                 maze.drawWall({ x: i, y: j, direction: wall }, 'magenta');
+              }
+            }
+          }
+
+          break;
+        }
+
+        case 'pillars': {
+          for (let i = 0; i < maze.width; ++i) {
+            for (let j = 0; j < maze.height; ++j) {
+              const w = maze.walls[i][j];
+
+              if (pillar[0] in w && pillar[1] in w) {
+                maze.drawPillar({ x: i, y: j, pillar }, 'magenta');
               }
             }
           }
@@ -140,7 +176,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         }
       }
     }
-  }, [maze, selectedMaze, show, x, y, wall]);
+  }, [maze, selectedMaze, show, x, y, wall, pillar]);
 
   React.useEffect(() => {
     const err: string[] = [];
@@ -176,23 +212,6 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
               }
             }
           }
-
-          // const rt = [...maze.rightTurn({ x: cell.x, y: cell.y, direction })];
-          // const lt = [...maze.leftTurn({ x: 0, y: 0, direction })];
-          // const rtOpposite = rt.pop();
-          // const ltOpposite = lt.pop();
-
-          // if (rtOpposite !== maze.opposite({ x: 0, y: 0, direction })) {
-          //   err.push(`last(rightTurn(${direction})) = ${rtOpposite} !== opposite(${direction})`);
-          // }
-
-          // if (ltOpposite !== maze.opposite({ x: 0, y: 0, direction })) {
-          //   err.push(`last(leftTurn(${direction})) = ${ltOpposite} !== opposite(${direction})`);
-          // }
-
-          // if (!rt.reverse().every((t, i) => t === lt[i])) {
-          //   err.push(`reverse(rightTurn.reverse(${direction}) !== leftTurn`);
-          // }
         }
       }
 
@@ -236,63 +255,78 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         </div>
       </div>
       <div style={{ flexGrow: 1 }}>
+        <Select value={selectedMaze} label="Maze" onChange={handleMazeChange}>
+          {Object.keys(mazes).map((m) => (
+            <MenuItem key={m} value={m}>
+              {m}
+            </MenuItem>
+          ))}
+        </Select>
         <br />
-        <FormControl>
-          <InputLabel htmlFor="startX">Maze</InputLabel>
-          <Select<MazeType> value={selectedMaze} onChange={handleMazeChange}>
-            {Object.keys(mazes).map((m) => (
-              <MenuItem key={m} value={m}>
-                {m}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <NumberField
+          value={cellSize ?? 0}
+          label="Cell Size"
+          onChange={handleCellSizeChange}
+          min={0}
+          max={100}
+        />
+        <NumberField
+          value={wallSize ?? 0}
+          label="Wall Size"
+          onChange={handleWallSizeChange}
+          min={0}
+          max={100}
+        />
+        <br />
+        <Select value={show} label="Show" onChange={handleShowChange}>
+          <MenuItem value="moves">Moves</MenuItem>
+          <MenuItem value="paths">Paths</MenuItem>
+          <MenuItem value="walls">Walls</MenuItem>
+          <MenuItem value="coordinates">Coordinates</MenuItem>
+          <MenuItem value="pillars">Pillars</MenuItem>
+        </Select>
         <br />
         <br />
-        <FormControl>
-          <InputLabel htmlFor="show">Show</InputLabel>
-          <Select<MazeType> value={show} onChange={handleShowChange}>
-            <MenuItem value="moves">Moves</MenuItem>
-            <MenuItem value="paths">Paths</MenuItem>
-            <MenuItem value="walls">Walls</MenuItem>
-            <MenuItem value="coordinates">Coordinates</MenuItem>
-          </Select>
-        </FormControl>
-        <br />
-        <br />
-        <FormControl>
-          <InputLabel htmlFor="x">X</InputLabel>
-          <Select<number> value={x} onChange={handleXChange}>
-            {range(0, 100).map((m) => (
-              <MenuItem key={m} value={m}>
-                {m}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl>
-          <InputLabel htmlFor="y">Y</InputLabel>
-          <Select<number> value={y} onChange={handleYChange}>
-            {range(0, 100).map((m) => (
-              <MenuItem key={m} value={m}>
-                {m}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <NumberField
+          value={x}
+          label="X"
+          onChange={handleXChange}
+          min={0}
+          max={(maze?.width ?? 0) - 1}
+        />
+        <NumberField
+          value={y}
+          label="Y"
+          onChange={handleYChange}
+          min={0}
+          max={(maze?.height ?? 0) - 1}
+        />
         <br />
         {show === 'walls' && (
-          <FormControl>
-            <InputLabel htmlFor="wall">Wall</InputLabel>
-            <Select<string> value={wall} onChange={handleWallChange}>
-              {maze?.directions.map((m) => (
-                <MenuItem key={m} value={m}>
-                  {m}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Select value={wall} label="Wall" onChange={handleWallChange}>
+            {maze?.directions.map((m) => (
+              <MenuItem key={m} value={m}>
+                {m}
+              </MenuItem>
+            ))}
+          </Select>
         )}
+        {show === 'pillars' && (
+          <Select value={pillar} label="Pillar" onChange={handlePillarChange}>
+            {maze?.pillars.map((m) => (
+              <MenuItem key={m} value={m}>
+                {m}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+        <br />
+        <button type="button" onClick={handleRemoveWalls}>
+          Remove walls
+        </button>
+        <button type="button" onClick={handleCreateWalls}>
+          Create walls
+        </button>
       </div>
       <div style={{ flexGrow: 1 }}>
         <div style={{ height: '100%', overflowY: 'auto' }}>

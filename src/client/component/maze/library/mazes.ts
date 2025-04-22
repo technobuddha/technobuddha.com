@@ -1,60 +1,65 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Division } from '../generator/division.ts';
-import { GrowingTree } from '../generator/growing-tree.ts';
-import { HuntAndKill } from '../generator/hunt-and-kill.ts';
-import { Kruskals } from '../generator/kruskals.ts';
-import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/maze-generator.ts';
-import { Prims } from '../generator/prims.ts';
-import { RecursiveBacktracker } from '../generator/recursive-backtracker.ts';
-import { Wilsons } from '../generator/wilsons.ts';
-import { BrickMaze } from '../maze/brick-maze.ts';
-import { CircularMaze } from '../maze/circular-maze.ts';
-import { CubicMaze } from '../maze/cubic-maze.ts';
-import { HexagonMaze } from '../maze/hexagon-maze.ts';
-import { type Maze, type MazeProperties } from '../maze/maze.ts';
-import { OctogonMaze } from '../maze/octogon-maze.ts';
-import { PentagonMaze } from '../maze/pentagon-maze.ts';
-import { SquareMaze } from '../maze/square-maze.ts';
-import { TriangleMaze } from '../maze/triangle-maze.ts';
-import { WedgeMaze } from '../maze/wedge-maze.ts';
-import { ZetaMaze } from '../maze/zeta-maze.ts';
-import { donutPlugin } from '../plugins/donut.ts';
-import { ellipisePlugin } from '../plugins/ellipse.ts';
-import { triabglePlugin } from '../plugins/triangle.ts';
-import { Dijkstras } from '../solver/dijkstras.ts';
-import { Filler } from '../solver/filler.ts';
-import { type MazeSolver, type MazeSolverProperties } from '../solver/maze-solver.ts';
-import { Search } from '../solver/search.ts';
-import { Tremaux } from '../solver/tremaux.ts';
-import { WallWalking } from '../solver/wall-walking.ts';
+import {
+  Division,
+  GrowingTree,
+  HuntAndKill,
+  Kruskals,
+  type MazeGenerator,
+  type MazeGeneratorProperties,
+  Prims,
+  RecursiveBacktracker,
+  Wilsons,
+} from '../generator/index.ts';
+import {
+  BrickMaze,
+  CircularMaze,
+  CubicMaze,
+  HexagonMaze,
+  type Maze,
+  type MazeProperties,
+  OctogonMaze,
+  PentagonMaze,
+  SquareMaze,
+  TriangleMaze,
+  WedgeMaze,
+} from '../maze/index.ts';
+import { donutPlugin, ellipisePlugin, trianglePlugin } from '../plugins/index.ts';
+import {
+  Dijkstras,
+  Filler,
+  type MazeSolver,
+  type MazeSolverProperties,
+  Search,
+  Tremaux,
+  WallWalking,
+} from '../solver/index.ts';
 
 import { type Choice } from './chooser.ts';
 
 export const squareMazes: Choice<MazeProperties, Maze> = {
   '1': (props) => new SquareMaze(props),
-  '1:inverted': (props) =>
-    new SquareMaze({
-      ...props,
-      cellColor: ' #9e9e9e',
-      wallColor: 'black',
-      wallSize: 5,
-      cellSize: 20,
-    }),
 };
 
 export const mazes: Choice<MazeProperties, Maze> = {
-  '1:circle': (props) => new CircularMaze(props),
-  '1:cubic': (props) => new CubicMaze(props),
-  '1:pentagon': (props) => new PentagonMaze(props),
-  '1:brick': (props) => new BrickMaze(props),
-  '1:square': squareMazes,
-  '1:triangle': (props) => new TriangleMaze(props),
-  '1:hexagon': (props) => new HexagonMaze(props),
-  '1:octogon': {
-    '1': (props) => new OctogonMaze(props),
-    '1:zeta': (props) => new ZetaMaze(props),
+  '10:circle': (props) => new CircularMaze(props),
+  '3:cubic': {
+    '10': (props) => new CubicMaze(props),
   },
-  '1:wedge': (props) => new WedgeMaze(props),
+  '10:pentagon': {
+    '10': (props) => new PentagonMaze(props),
+  },
+  '10:brick': (props) => new BrickMaze(props),
+  '10:square': squareMazes,
+  '10:triangle': {
+    '10': (props) => new TriangleMaze(props),
+  },
+  '10:hexagon': {
+    '10': (props) => new HexagonMaze(props),
+  },
+  '10:octogon': {
+    '10': (props) => new OctogonMaze(props),
+  },
+  '10:wedge': (props) => new WedgeMaze(props),
 };
 
 export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
@@ -150,5 +155,5 @@ export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
 export const plugins: Choice<Maze, void> = {
   '0:ellipse': ellipisePlugin,
   '0:donut': donutPlugin,
-  '0:triangle': triabglePlugin,
+  '0:triangle': trianglePlugin,
 };

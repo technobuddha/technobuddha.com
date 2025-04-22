@@ -112,6 +112,7 @@ export type MazeProperties = {
   wrapHorizontal?: boolean;
   wrapVertical?: boolean;
   showDistances?: ShowDistances;
+  solutionColor?: string;
 };
 
 export type DirectionMatrix = Direction[];
@@ -119,6 +120,7 @@ export type PillarMatrix = Pillar[];
 export type WallMatrix = Record<Kind, Record<Direction, boolean>>;
 export type OppositeMatrix = Record<Direction, Direction | Record<Kind, Direction>>;
 export type TurnMatrix = Record<Direction, Direction[] | Record<Kind, Direction[]>>;
+export type AngleMatrix = Record<Direction, number>;
 export type MoveMatrix = Record<Kind, Record<Direction, Move | Move[]>>;
 export type EdgesMatrix = Record<Kind, Direction[]>;
 export type PathMatrix = Record<Direction, number>;
@@ -136,6 +138,8 @@ export abstract class Maze {
   public readonly showDistances: ShowDistances;
   public entrance: Terminus = { x: -1, y: -1, direction: '?' };
   public exit: Terminus = { x: -1, y: -1, direction: '?' };
+  public solution: CellDirection[] = [];
+  public solutionColor: string;
 
   public readonly directions: DirectionMatrix;
   public readonly pillars: PillarMatrix;
@@ -160,6 +164,7 @@ export abstract class Maze {
   private readonly moveMatrix: MoveMatrix;
   private readonly edgesMatrix: EdgesMatrix;
   private readonly pathMatrix: PathMatrix;
+  private readonly angleMatrix: AngleMatrix;
 
   private readonly entranceSpec: MazeProperties['entrance'];
   private readonly exitSpec: MazeProperties['exit'];
@@ -179,7 +184,8 @@ export abstract class Maze {
       wrapHorizontal = false,
       wrapVertical = false,
       random = Math.random,
-      showDistances = 'greyscale',
+      showDistances = 'primary',
+      solutionColor = '#23CE6B',
     }: MazeProperties,
     directions: DirectionMatrix,
     pillars: PillarMatrix,
@@ -191,6 +197,7 @@ export abstract class Maze {
     moveMatrix: MoveMatrix,
     edgesMatrix: EdgesMatrix,
     pathMatrix: PathMatrix,
+    angleMatrix: AngleMatrix,
   ) {
     this.wallMatrix = wallMatrix;
     this.oppositeMatrix = oppositeMatrix;
@@ -200,6 +207,7 @@ export abstract class Maze {
     this.moveMatrix = moveMatrix;
     this.edgesMatrix = edgesMatrix;
     this.pathMatrix = pathMatrix;
+    this.angleMatrix = angleMatrix;
 
     this.cellSize = cellSize;
     this.wallSize = wallSize;
@@ -220,6 +228,7 @@ export abstract class Maze {
     this.exitSpec = exit;
     this.entranceColor = entranceColor;
     this.exitColor = exitColor;
+    this.solutionColor = solutionColor;
   }
 
   protected initialize({
@@ -278,7 +287,8 @@ export abstract class Maze {
     this.leftOffset = leftOffset ?? 0;
     this.topOffset = topOffset ?? 0;
 
-    this.walls = create2DArray(this.width, this.height, (x, y) => this.initialWalls({ x, y }));
+    this.createWalls();
+
     this.distances = create2DArray(this.width, this.height, Infinity);
 
     this.mask = create2DArray(this.width, this.height, false);
@@ -297,6 +307,10 @@ export abstract class Maze {
         }
       }
     }
+  }
+
+  public createWalls(): void {
+    this.walls = create2DArray(this.width, this.height, (x, y) => this.initialWalls({ x, y }));
   }
 
   //#region utility functions
@@ -356,6 +370,10 @@ export abstract class Maze {
     }
 
     throw new Error(`"${cell.direction}" is not a valid direction`);
+  }
+
+  public angle(direction: Direction): number {
+    return this.angleMatrix[direction];
   }
   //#endregion
   //#region Maze
@@ -459,12 +477,23 @@ export abstract class Maze {
   }
 
   public braid(): void {
-    for (let cell: Cell | undefined; (cell = this.randomPick(this.deadEnds())); ) {
+    const deadEnds = this.deadEnds();
+
+    while (deadEnds.length > 0) {
+      const index = Math.floor(this.random() * deadEnds.length);
+      const cell = deadEnds[index];
+
+      deadEnds.splice(index, 1);
+
       const neighbor = this.randomPick(
         this.neighbors(cell).filter((c) => this.walls[cell.x][cell.y][c.direction]),
       );
       if (neighbor) {
         this.removeWall(cell, neighbor.direction);
+        const nindex = deadEnds.findIndex((c) => this.isSame(c, neighbor));
+        if (nindex >= 0) {
+          deadEnds.splice(nindex, 1);
+        }
       }
     }
   }
@@ -503,13 +532,15 @@ export abstract class Maze {
   }
   //#endregion
   //#region Maze Drawing
-  public attachDrawing(drawing?: Drawing): void {
-    const replaced = this.drawing !== drawing;
+  public attachDrawing(drawing?: Drawing): Drawing | undefined {
+    const current = this.drawing;
+    const replaced = current !== drawing;
 
     this.drawing = drawing;
     if (replaced) {
       this.clear();
     }
+    return current;
   }
 
   protected abstract drawingSize(): DrawingSizes;
@@ -580,22 +611,24 @@ export abstract class Maze {
               }
 
               case 'greyscale': {
-                color = `rgba(255, 255, 255, ${(1 - distance / maxDistance) * 0.35 + 0.15})`;
+                const grey = (1 - distance / maxDistance) * 0.35 + 0.15;
+
+                color = `rgba(${255 * grey}, ${255 * grey}, ${255 * grey})`;
                 break;
               }
 
               case 'primary': {
-                color = `hsla(212, 72.3%, ${3 + 35 * (1 - this.distances[cell.x][cell.y] / maxDistance)}%)`;
+                color = `hsl(212, 72.3%, ${3 + 35 * (1 - this.distances[cell.x][cell.y] / maxDistance)}%)`;
                 break;
               }
 
               case 'color': {
-                color = `hsla(270, 100%, ${15 + 35 * (1 - this.distances[cell.x][cell.y] / maxDistance)}%)`;
+                color = `hsl(270, 100%, ${15 + 35 * (1 - this.distances[cell.x][cell.y] / maxDistance)}%)`;
                 break;
               }
 
               case 'spectrum': {
-                color = `hsla(${(this.distances[cell.x][cell.y] * 360) / maxDistance}, 100%, 50%, 0.25)`;
+                color = `hsl(${(this.distances[cell.x][cell.y] * 360) / maxDistance}, 25%, 50%)`;
                 break;
               }
               // no default
@@ -603,12 +636,27 @@ export abstract class Maze {
           }
 
           if (color) {
+            this.drawFloor(cell);
             this.drawCell(cell, color);
           }
         }
       }
 
       this.drawMasks();
+    }
+  }
+
+  public drawSolution(color = this.solutionColor): void {
+    if (this.drawing) {
+      this.drawDistances();
+
+      for (const cell of this.solution) {
+        const rect = this.cellRect(cell);
+        const angle = this.pathMatrix[cell.direction];
+        this.renderArrow(rect, angle, color);
+      }
+
+      this.drawPath(this.exit, color);
     }
   }
   //#endregion
@@ -792,11 +840,12 @@ export abstract class Maze {
 
   public drawText(cell: Cell, text: string, color = 'black'): void {
     if (this.drawing) {
+      this.drawCell(cell);
       this.drawing.text(this.getRect(cell), text, color);
     }
   }
 
-  protected drawArrow(rect: Rect, angle: number, color: string): void {
+  protected renderArrow(rect: Rect, angle: number, color: string): void {
     if (this.drawing) {
       const coords: XY[] = [
         { x: 1, y: 0 },
@@ -827,7 +876,7 @@ export abstract class Maze {
     }
   }
 
-  protected drawCircle(rect: Rect, color: string): void {
+  protected renderCircle(rect: Rect, color: string): void {
     if (this.drawing) {
       this.drawing.circle(
         { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 },
@@ -853,6 +902,7 @@ export abstract class Maze {
 
   public drawAvatar(cell: Cell, color = 'cyan'): void {
     if (this.drawing) {
+      this.drawCell(cell);
       const rect = this.cellRect(cell);
 
       this.drawing.circle(
@@ -865,13 +915,15 @@ export abstract class Maze {
 
   public drawPath(cell: CellDirection, color = 'cyan'): void {
     if (this.drawing) {
+      this.drawCell(cell);
+
+      const rect = this.cellRect(cell);
       if (cell.direction === '?') {
-        this.drawAvatar(cell, color);
+        this.renderCircle(rect, color);
       } else {
-        const rect = this.cellRect(cell);
         const angle = this.pathMatrix[cell.direction];
 
-        this.drawArrow(rect, angle, color);
+        this.renderArrow(rect, angle, color);
       }
     }
   }

@@ -40,7 +40,7 @@ export class HuntAndKill extends MazeGenerator {
       this.visited[this.currentCell.x][this.currentCell.y] = true;
 
       const next = this.randomPick(
-        this.maze.neighbors(this.currentCell).filter((m) => !this.visited[m.x][m.y]),
+        this.maze.neighbors(this.currentCell).filter((c) => !this.visited[c.x][c.y]),
       );
       if (next) {
         this.maze.removeWall(this.currentCell, next.direction);
@@ -54,9 +54,8 @@ export class HuntAndKill extends MazeGenerator {
           (c) => this.randomPick(this.maze.neighbors(c).filter((n) => this.visited[n.x][n.y])),
         );
         if (target) {
-          this.maze.removeWall(target.cell, target.hunted.direction);
+          yield this.maze.removeWall(target.cell, target.hunted.direction);
           this.currentCell = target.cell;
-          yield;
         } else {
           return;
         }

@@ -135,29 +135,22 @@ export class ZetaMaze extends OctogonMaze {
   public override drawWall(cd: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
       if (this.cellKind(cd) === 0) {
-        const { x0, x1, x2, x3, x5, x6, x8, x9, xa, xb, y0, y1, y2, y3, y5, y6, y8, y9, ya, yb } =
-          this.cellOffsets(cd);
+        this.cellOffsets(cd);
         switch (cd.direction) {
           case 'a': {
-            this.drawing.polygon(
-              [
-                { x: x5, y: y0 },
-                { x: x6, y: y0 },
-                { x: x6, y: y3 },
-                { x: x5, y: y3 },
-              ],
-              color,
-            );
+            const { x5, x6, y0, y3 } = this.cellOffsets(cd);
+            this.drawing.rect({ x: x5, y: y0 }, { x: x6, y: y3 }, color);
             break;
           }
 
           case 'b': {
+            const { x6, x8, x9, xa, y1, y2, y3, y5 } = this.cellOffsets(cd);
             this.drawing.polygon(
               [
+                { x: x6, y: y3 },
                 { x: x9, y: y1 },
                 { x: xa, y: y2 },
-                { x: x9, y: y5 },
-                { x: x6, y: y3 },
+                { x: x8, y: y5 },
               ],
               color,
             );
@@ -165,25 +158,19 @@ export class ZetaMaze extends OctogonMaze {
           }
 
           case 'c': {
-            this.drawing.polygon(
-              [
-                { x: x8, y: y5 },
-                { x: xb, y: y5 },
-                { x: xb, y: y6 },
-                { x: x8, y: y6 },
-              ],
-              color,
-            );
+            const { x8, xb, y5, y6 } = this.cellOffsets(cd);
+            this.drawing.rect({ x: x8, y: y5 }, { x: xb, y: y6 }, color);
             break;
           }
 
           case 'd': {
+            const { x6, x9, xa, y6, y8, y9, ya } = this.cellOffsets(cd);
             this.drawing.polygon(
               [
-                { x: x8, y: y6 },
+                { x: x6, y: y8 },
+                { x: x9, y: y6 },
                 { x: xa, y: y9 },
                 { x: x9, y: ya },
-                { x: x6, y: y8 },
               ],
               color,
             );
@@ -191,25 +178,19 @@ export class ZetaMaze extends OctogonMaze {
           }
 
           case 'e': {
-            this.drawing.polygon(
-              [
-                { x: x5, y: y8 },
-                { x: x6, y: y8 },
-                { x: x6, y: yb },
-                { x: x5, y: yb },
-              ],
-              color,
-            );
+            const { x5, x6, y8, yb } = this.cellOffsets(cd);
+            this.drawing.rect({ x: x5, y: y8 }, { x: x6, y: yb }, color);
             break;
           }
 
           case 'f': {
+            const { x1, x2, x3, x5, y6, y8, y9, ya } = this.cellOffsets(cd);
             this.drawing.polygon(
               [
+                { x: x1, y: y9 },
                 { x: x3, y: y6 },
                 { x: x5, y: y8 },
                 { x: x2, y: ya },
-                { x: x1, y: y9 },
               ],
               color,
             );
@@ -217,25 +198,19 @@ export class ZetaMaze extends OctogonMaze {
           }
 
           case 'g': {
-            this.drawing.polygon(
-              [
-                { x: x0, y: y5 },
-                { x: x3, y: y5 },
-                { x: x3, y: y6 },
-                { x: x0, y: y6 },
-              ],
-              color,
-            );
+            const { x0, x3, y5, y6 } = this.cellOffsets(cd);
+            this.drawing.rect({ x: x0, y: y5 }, { x: x3, y: y6 }, color);
             break;
           }
 
           case 'h': {
+            const { x1, x2, x3, x5, y1, y2, y3, y5 } = this.cellOffsets(cd);
             this.drawing.polygon(
               [
+                { x: x1, y: y2 },
                 { x: x2, y: y1 },
                 { x: x5, y: y3 },
                 { x: x3, y: y5 },
-                { x: x1, y: y3 },
               ],
               color,
             );
@@ -369,6 +344,8 @@ export class ZetaMaze extends OctogonMaze {
 
   public override drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
+      this.drawCell(cell);
+
       if (this.cellKind(cell) === 0) {
         const { x3, x5, x6, x8, y3, y5, y6, y8 } = this.cellOffsets(cell);
 

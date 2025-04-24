@@ -6,14 +6,25 @@ import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 type WallWalkingProperties = MazeSolverProperties & {
   turn?: 'right' | 'left';
+  avatarColor?: string;
+  pathColor?: string;
 };
 
 export class WallWalking extends MazeSolver {
+  private readonly avatarColor: string;
+  private readonly pathColor: string;
   private readonly forward: (cell: CellDirection) => Direction[];
   private readonly backward: (cell: CellDirection) => Direction[];
 
-  public constructor(props: WallWalkingProperties) {
+  public constructor({
+    avatarColor = '#08A4BD',
+    pathColor = '#DC0073',
+    ...props
+  }: WallWalkingProperties) {
     super(props);
+
+    this.avatarColor = avatarColor;
+    this.pathColor = pathColor;
 
     const turn = props.turn ?? (this.random() < 0.5 ? 'left' : 'right');
     if (turn === 'right') {
@@ -25,7 +36,12 @@ export class WallWalking extends MazeSolver {
     }
   }
 
-  public *solve({ entrance = this.maze.entrance, exit = this.maze.exit } = {}): Iterator<void> {
+  public *solve({
+    entrance = this.maze.entrance,
+    exit = this.maze.exit,
+    avatarColor = this.avatarColor,
+    pathColor = this.pathColor,
+  } = {}): Iterator<void> {
     let seekingWall = true;
 
     let cell: CellDirection = {
@@ -44,9 +60,10 @@ export class WallWalking extends MazeSolver {
 
     while (!this.maze.isSame(cell, exit)) {
       const v = ++cells[cell.x][cell.y].visits;
-      if (v >= Object.keys(this.maze.walls[cell.x][cell.y]).length) {
-        throw new Error('Infinite loop detected');
+      if (v > Object.keys(this.maze.walls[cell.x][cell.y]).length) {
+        throw new Error('Loop detected');
       }
+
       const wall = this.maze.walls[cell.x][cell.y];
 
       let dir: Direction | undefined;
@@ -66,9 +83,9 @@ export class WallWalking extends MazeSolver {
       }
 
       const next = this.maze.move(cell, dir)!;
-      //this.maze.drawPath({ ...cell, direction: dir }, `rgba(255, 165, 0, ${/*(v + 1) * 0.25*/ 1})`);
-      this.maze.drawText(cell, v.toString(), 'cyan');
-      this.maze.drawAvatar(next);
+      //      this.maze.drawPath({ ...cell, direction: dir }, `rgba(255, 165, 0, ${/*(v + 1) * 0.25*/ 1})`);
+      this.maze.drawPath(this.maze.drawCell({ ...cell, direction: dir }), pathColor);
+      this.maze.drawAvatar(this.maze.drawCell(next), avatarColor);
       yield;
 
       cells[cell.x][cell.y].direction = dir;

@@ -1,16 +1,20 @@
+/* eslint-disable @typescript-eslint/no-loop-func */
 import React from 'react';
 import { toCapitalWordCase, toHumanCase } from '@technobuddha/library';
 import {
-  FaBackward,
-  FaBackwardFast,
-  FaBackwardStep,
-  FaForward,
-  FaForwardFast,
-  FaForwardStep,
-  FaPause,
-  FaPlay,
-  FaStop,
-} from 'react-icons/fa6';
+  IoFootsteps,
+  IoPause,
+  IoPlay,
+  IoPlayCircle,
+  IoPlayCircleOutline,
+  IoPlayForward,
+  IoPlayForwardOutline,
+  IoPlayOutline,
+  IoPlaySkipForward,
+  IoPlaySkipForwardCircle,
+  IoRefresh,
+  IoStop,
+} from 'react-icons/io5';
 import { useMeasure } from 'react-use';
 
 import { MenuItem, Select } from '#control';
@@ -25,29 +29,40 @@ import { type MazeSolver, type MazeSolverProperties } from '../solver/maze-solve
 
 import css from './maze-maker.module.css';
 
+const mazeChoices = Array.from(allChoices(mazes));
+const generatorChoices = Array.from(allChoices(generators));
+const solverChoices = Array.from(allChoices(solvers));
+
+type Phase = 'maze' | 'generate' | 'braid' | 'solve' | 'done';
+
 type MazeMakerProps = {
   children?: never;
 };
 
 export const MazeMaker: React.FC<MazeMakerProps> = () => {
-  const [div, { width, height }] = useMeasure<HTMLDivElement>();
+  const [top, { width, height }] = useMeasure<HTMLDivElement>();
+  const frame = React.useRef<HTMLDivElement>(null);
+
+  const processes = React.useRef<(() => void)[]>([]);
 
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
-  const stop = React.useRef<boolean>(false);
-  const [redraw, setRedraw] = React.useState(0);
+  const [mazeNumber, setMazeNumber] = React.useState(0);
   const [step, setStep] = React.useState(0);
 
   const [mazeName, setMazeName] = React.useState('');
   const [generatorName, setGeneratorName] = React.useState('');
   const [solverName, setSolverName] = React.useState('');
-  const [playMode, setPlayMode] = React.useState<'play' | 'step' | 'fast' | 'instant'>('fast');
   const [pluginName, setPluginName] = React.useState('');
+
+  const [playMode, setPlayMode] = React.useState<'play' | 'step' | 'fast' | 'instant'>('fast');
 
   const [maze, setMaze] = React.useState<Maze>();
   const [generator, setGenerator] = React.useState<MazeGenerator>();
   const [solver, setSolver] = React.useState<MazeSolver>();
   const [generatorStep, setGeneratorStep] = React.useState<Iterator<void>>();
   const [solverStep, setSolverStep] = React.useState<Iterator<void>>();
+  const [generatorSpeed, setGeneratorSpeed] = React.useState(1);
+  const [solverSpeed, setSolverSpeed] = React.useState(1);
 
   const [drawing, setDrawing] = React.useState<CanvasDrawing>();
 
@@ -55,22 +70,31 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const [selectedGenerator, setSelectedGenerator] = React.useState<string>();
   const [selectedSolver, setSelectedSolver] = React.useState<string>();
 
-  const [phase, setPhase] = React.useState<'maze' | 'generate' | 'solve' | 'done'>();
+  const [phase, setPhase] = React.useState<Phase>('maze');
 
   React.useEffect(() => {
     if (width > 0 && height > 0) {
       if (canvasMaze.current) {
-        const drawingMaze = new CanvasDrawing(canvasMaze.current);
+        canvasMaze.current.remove();
+        canvasMaze.current = null;
+      }
+
+      if (frame.current) {
+        const canvas = document.createElement('canvas');
+        canvas.width = width - 12;
+        canvas.height = height - 20;
+        canvas.className = css.canvas;
+        canvas.setAttribute('aria-label', 'A Maze being created and solved');
+
+        frame.current.insertBefore(canvas, null);
+        canvasMaze.current = canvas;
+        const drawingMaze = new CanvasDrawing(canvas);
         drawingMaze.clear();
 
         setDrawing(drawingMaze);
       }
     }
-  }, [width, height]);
-
-  const mazeChoices = React.useMemo(() => Array.from(allChoices(mazes)), []);
-  const generatorChoices = React.useMemo(() => Array.from(allChoices(generators)), []);
-  const solverChoices = React.useMemo(() => Array.from(allChoices(solvers)), []);
+  }, [width, height, mazeNumber]);
 
   React.useEffect(() => {
     if (drawing) {
@@ -108,28 +132,29 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       setPluginName(pName);
 
       const m = mazeMaker({ plugin, drawing });
+      m.reset();
       const g = generatorMaker({ maze: m });
       const s = solverMaker({ maze: m });
 
       setMaze(m);
       setGenerator(g);
+      setGeneratorSpeed(g.speed);
       setSolver(s);
+      setSolverSpeed(s.speed);
 
-      stop.current = true;
+      //getReady to start the maze
+
       setTimeout(() => {
         setPhase('maze');
       });
     }
-  }, [
-    mazeChoices,
-    generatorChoices,
-    solverChoices,
-    selectedMaze,
-    selectedGenerator,
-    selectedSolver,
-    drawing,
-    redraw,
-  ]);
+  }, [selectedMaze, selectedGenerator, selectedSolver, drawing, mazeNumber]);
+
+  const kill = React.useCallback(() => {
+    for (const p of processes.current) {
+      p();
+    }
+  }, []);
 
   const runner = React.useCallback(
     async (
@@ -137,31 +162,43 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       iterator: Iterator<void>,
       speed: number,
     ): Promise<boolean> => {
-      stop.current = false;
+      kill();
 
       let run: () => Promise<boolean>;
 
       switch (play) {
         case 'fast': {
+          let stop = false;
+          const killer = (): void => {
+            stop = true;
+          };
+          processes.current.push(killer);
+
           run = async (): Promise<boolean> => {
             while (
               await animate(() => {
                 for (let i = 0; i < speed; ++i) {
-                  if (stop.current) {
+                  if (stop) {
                     return false;
                   }
                   if (iterator.next().done) {
                     return false;
                   }
                 }
-                return !stop.current;
+                return !stop;
               })
             ) {
-              if (stop.current) {
-                return false;
+              if (stop) {
+                break;
               }
             }
-            return !stop.current;
+
+            // eslint-disable-next-line unicorn/prefer-array-index-of
+            const index = processes.current.findIndex((p) => p === killer);
+            if (index >= 0) {
+              processes.current.splice(index, 1);
+            }
+            return !stop;
           };
           break;
         }
@@ -182,9 +219,8 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           // eslint-disable-next-line @typescript-eslint/require-await
           run = async (): Promise<boolean> => {
             const d = maze!.attachDrawing();
-
-            while (!stop.current && !iterator.next().done) {
-              //
+            while (!iterator.next().done) {
+              //     //
             }
 
             maze!.attachDrawing(d);
@@ -196,67 +232,65 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         // no default
       }
 
-      return run().finally(() => {
-        stop.current = false;
-      });
+      return run();
     },
-    [maze],
+    [kill, maze],
   );
 
   React.useEffect(() => {
-    if (phase) {
+    if (maze && generator && solver) {
       switch (phase) {
         case 'maze': {
-          if (maze) {
-            maze.draw();
-
-            setGeneratorStep(generator!.generate());
-            setPlayMode('fast'); // TODO
-            setPhase('generate');
-          }
+          maze.draw();
+          setPhase('generate');
+          setPlayMode('fast'); // TODO
+          setGeneratorStep(generator.generate());
           break;
         }
 
         case 'generate': {
-          if (maze && generator && generatorStep) {
-            void runner(playMode, generatorStep, generator.speed).then((finished) => {
-              if (finished) {
-                maze.addTermini();
-                // maze.braid(); // TODO
-                maze.draw();
+          void runner(playMode, generatorStep!, generatorSpeed).then((finished) => {
+            if (finished) {
+              maze.addTermini();
+              maze.draw();
 
-                setSolverStep(solver!.solve());
-                setPlayMode('step'); // TODO
-                setPhase('solve');
-              } else if (playMode === 'play') {
-                setStep((s) => s + 1);
-              }
-            });
-          }
+              setPhase('braid');
+            } else if (playMode === 'play') {
+              setTimeout(() => setStep((s) => s + 1), 50);
+            }
+          });
+
+          break;
+        }
+
+        case 'braid': {
+          // maze.braid();
+          setPhase('solve');
+          setPlayMode('fast'); // TODO
+          setSolverStep(solver.solve());
           break;
         }
 
         case 'solve': {
-          if (maze && solver && solverStep) {
-            void runner(playMode, solverStep, solver.speed).then((finished) => {
-              if (finished) {
-                setPlayMode('fast'); // TODO
-                setPhase('done');
-              } else if (playMode === 'play') {
-                setTimeout(() => {
-                  setStep((s) => s + 1);
-                }, 50);
-              }
-            });
-          }
+          void runner(playMode, solverStep!, solverSpeed).then((finished) => {
+            if (finished) {
+              setPhase('done');
+            } else if (playMode === 'play') {
+              setTimeout(() => {
+                setStep((s) => s + 1);
+              }, 50);
+            }
+          });
           break;
         }
 
         case 'done': {
-          maze.drawSolution();
+          if (maze.solution.length > 0) {
+            maze.drawSolution();
+          }
 
           setTimeout(() => {
-            setRedraw((n) => n + 1);
+            setMazeNumber((n) => n + 1);
           }, 10000);
           break;
         }
@@ -264,7 +298,19 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         // no default
       }
     }
-  }, [playMode, phase, step, maze, generator, solver, generatorStep, solverStep, runner]);
+  }, [
+    playMode,
+    phase,
+    step,
+    maze,
+    generator,
+    generatorStep,
+    generatorSpeed,
+    solver,
+    solverStep,
+    solverSpeed,
+    runner,
+  ]);
 
   const handleMazeChange = React.useCallback((value: string) => {
     setSelectedMaze(value === '(undefined)' ? undefined : value);
@@ -278,62 +324,67 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     setSelectedSolver(value === '(undefined)' ? undefined : value);
   }, []);
 
+  const handlePause = React.useCallback(() => {
+    kill();
+    setTimeout(() => {
+      setPlayMode('step');
+    });
+  }, [kill]);
+
   const handleStep = React.useCallback(() => {
-    stop.current = true;
+    kill();
     setTimeout(() => {
       setPlayMode('step');
       setStep((s) => s + 1);
     });
-  }, []);
+  }, [kill]);
 
   const handlePlay = React.useCallback(() => {
-    stop.current = true;
+    kill();
     setTimeout(() => {
       setPlayMode('play');
       setStep((s) => s + 1);
     });
-  }, []);
+  }, [kill]);
 
   const handleFast = React.useCallback(() => {
-    stop.current = true;
+    kill();
     setTimeout(() => {
       setPlayMode('fast');
       setStep((s) => s + 1);
     });
-  }, []);
+  }, [kill]);
 
   const handleInstant = React.useCallback(() => {
-    stop.current = true;
+    kill();
     setTimeout(() => {
       setPlayMode('instant');
       setStep((s) => s + 1);
     });
-  }, []);
+  }, [kill]);
+
+  const handleRefresh = React.useCallback(() => {
+    kill();
+    setTimeout(() => {
+      setMazeNumber((n) => n + 1);
+    });
+  }, [kill]);
 
   return (
     <div className={css.mazeMaker}>
-      <div ref={div} className={css.maze}>
+      <div ref={top} className={css.maze}>
         {width > 0 && height > 0 && (
-          <>
-            <div className={css.title}>
-              Maze Shape:&nbsp;
-              {toCapitalWordCase(toHumanCase(mazeName))}
-              &nbsp;|&nbsp;Generator:&nbsp;
-              {toCapitalWordCase(toHumanCase(generatorName))}
-              &nbsp;|&nbsp; Solver:&nbsp;
-              {toCapitalWordCase(toHumanCase(solverName))}
-              {pluginName !== '' && (
-                <span>&nbsp;|&nbsp; Mask:&nbsp;{toCapitalWordCase(toHumanCase(pluginName))}</span>
-              )}
-            </div>
-            <canvas
-              ref={canvasMaze}
-              width={width - 12}
-              height={height - 20}
-              className={css.canvas}
-              aria-label="A Maze being created and solved"
-            />
-          </>
+          <div ref={frame} className={css.title}>
+            Maze Shape:&nbsp;
+            {toCapitalWordCase(toHumanCase(mazeName))}
+            &nbsp;|&nbsp;Generator:&nbsp;
+            {toCapitalWordCase(toHumanCase(generatorName))}
+            &nbsp;|&nbsp; Solver:&nbsp;
+            {toCapitalWordCase(toHumanCase(solverName))}
+            {pluginName !== '' && (
+              <span>&nbsp;|&nbsp; Mask:&nbsp;{toCapitalWordCase(toHumanCase(pluginName))}</span>
+            )}
+          </div>
         )}
       </div>
       <div className={css.panel}>
@@ -379,33 +430,44 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
             </MenuItem>
           ))}
         </Select>
+        <br />
+        <button type="button" onClick={handlePause}>
+          <IoPause />
+        </button>
         <button type="button" onClick={handleStep}>
-          <FaForwardStep />
+          <IoFootsteps />
         </button>
         <button type="button" onClick={handlePlay}>
-          <FaPlay />
+          <IoPlay />
         </button>
         <button type="button" onClick={handleFast}>
-          <FaForward />
+          <IoPlayForward />
         </button>
         <button type="button" onClick={handleInstant}>
-          <FaForwardFast />
+          <IoPlaySkipForward />
+        </button>
+        <button type="button" onClick={handleRefresh}>
+          <IoRefresh />
         </button>
         <br />
+        <br />
         <button type="button" disabled>
-          <FaBackward />
+          <IoPlayCircle />
         </button>
         <button type="button" disabled>
-          <FaBackwardFast />
+          <IoPlayCircleOutline />
         </button>
         <button type="button" disabled>
-          <FaBackwardStep />
+          <IoPlayOutline />
         </button>
         <button type="button" disabled>
-          <FaPause />
+          <IoPlayForwardOutline />
         </button>
         <button type="button" disabled>
-          <FaStop />
+          <IoPlaySkipForwardCircle />
+        </button>
+        <button type="button" disabled>
+          <IoStop />
         </button>
       </div>
     </div>

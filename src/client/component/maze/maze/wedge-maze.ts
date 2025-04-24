@@ -40,8 +40,6 @@ export class WedgeMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
-
-    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -616,8 +614,6 @@ export class WedgeMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
-      this.drawCell(cell);
-
       switch (this.cellKind(cell)) {
         case 0: {
           const { x1, x3, y1, y3 } = this.cellOffsets(cell);

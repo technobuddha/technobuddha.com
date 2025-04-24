@@ -23,6 +23,7 @@ export class MazeRunner {
       this.aborted = true;
     });
 
+    this.maze.reset();
     this.maze.draw();
 
     if (!this.aborted && this.generator) {
@@ -65,6 +66,8 @@ export class MazeRunner {
           break;
         }
       }
+
+      this.maze.drawSolution();
     }
 
     if (this.aborted) {

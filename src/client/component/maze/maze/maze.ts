@@ -36,24 +36,6 @@ export type CellPillar = Cell & {
   pillar: Pillar;
 };
 
-type Location =
-  | 'top left'
-  // | 'top middle'
-  | 'top right'
-  | 'bottom left'
-  // | 'bottom middle'
-  | 'bottom right'
-  // | 'middle left'
-  // | 'middle'
-  // | 'middle right'
-  | 'left top'
-  // | 'left middle'
-  | 'left bottom'
-  | 'right top'
-  // | 'right middle'
-  | 'right bottom'
-  | 'random';
-
 export type Overrides = { walls?: Wall[][] };
 
 export type AllOrder =
@@ -66,6 +48,9 @@ export type AllOrder =
   | 'bottom-right'
   | 'right-bottom'
   | 'random';
+
+type Zone = 'edge' | 'interior';
+type Location = `${AllOrder} ${Zone}`;
 
 export type Wall = Record<Direction, boolean | undefined>;
 
@@ -84,12 +69,6 @@ export type DrawingSizes = {
     this: void,
     args: { width: number; height: number; actualWidth: number; actualHeight: number },
   ): { width: number; height: number; actualWidth: number; actualHeight: number };
-};
-
-type InitializeParams = {
-  width?: MazeProperties['width'];
-  height?: MazeProperties['height'];
-  plugin?: MazeProperties['plugin'];
 };
 
 type ShowDistances = 'none' | 'greyscale' | 'primary' | 'color' | 'spectrum';
@@ -164,10 +143,12 @@ export abstract class Maze {
   private readonly moveMatrix: MoveMatrix;
   private readonly edgesMatrix: EdgesMatrix;
   private readonly pathMatrix: PathMatrix;
-  private readonly angleMatrix: AngleMatrix;
 
   private readonly entranceSpec: MazeProperties['entrance'];
   private readonly exitSpec: MazeProperties['exit'];
+  protected plugin: MazeProperties['plugin'];
+  protected readonly requestedWidth: MazeProperties['width'];
+  protected readonly requestedHeight: MazeProperties['height'];
 
   public constructor(
     {
@@ -185,7 +166,10 @@ export abstract class Maze {
       wrapVertical = false,
       random = Math.random,
       showDistances = 'primary',
-      solutionColor = '#23CE6B',
+      solutionColor = '#08A4BD',
+      width: requestedWidth,
+      height: requestedHeight,
+      plugin,
     }: MazeProperties,
     directions: DirectionMatrix,
     pillars: PillarMatrix,
@@ -197,7 +181,6 @@ export abstract class Maze {
     moveMatrix: MoveMatrix,
     edgesMatrix: EdgesMatrix,
     pathMatrix: PathMatrix,
-    angleMatrix: AngleMatrix,
   ) {
     this.wallMatrix = wallMatrix;
     this.oppositeMatrix = oppositeMatrix;
@@ -207,7 +190,6 @@ export abstract class Maze {
     this.moveMatrix = moveMatrix;
     this.edgesMatrix = edgesMatrix;
     this.pathMatrix = pathMatrix;
-    this.angleMatrix = angleMatrix;
 
     this.cellSize = cellSize;
     this.wallSize = wallSize;
@@ -229,15 +211,17 @@ export abstract class Maze {
     this.entranceColor = entranceColor;
     this.exitColor = exitColor;
     this.solutionColor = solutionColor;
+
+    this.requestedWidth = requestedWidth;
+    this.requestedHeight = requestedHeight;
+    this.plugin = plugin;
+
+    this.reset();
   }
 
-  protected initialize({
-    width: requestedWidth,
-    height: requestedHeight,
-    plugin,
-  }: InitializeParams): void {
-    let width = requestedWidth;
-    let height = requestedHeight;
+  public reset(): void {
+    let width = this.requestedWidth;
+    let height = this.requestedHeight;
     let leftOffset: number | undefined = undefined;
     let topOffset: number | undefined = undefined;
 
@@ -292,7 +276,7 @@ export abstract class Maze {
     this.distances = create2DArray(this.width, this.height, Infinity);
 
     this.mask = create2DArray(this.width, this.height, false);
-    plugin?.(this);
+    this.plugin?.(this);
 
     for (const cell of this.cellsInMaze()) {
       if (this.neighbors(cell).length === 0) {
@@ -371,10 +355,6 @@ export abstract class Maze {
 
     throw new Error(`"${cell.direction}" is not a valid direction`);
   }
-
-  public angle(direction: Direction): number {
-    return this.angleMatrix[direction];
-  }
   //#endregion
   //#region Maze
   public allCells(order: AllOrder = 'top-left'): Cell[] {
@@ -434,10 +414,14 @@ export abstract class Maze {
       for (const direction of Object.keys(wall).filter((d) => wall[d])) {
         const move = this.move(cell, direction);
         if (move && this.inMaze(move)) {
-          this.removeWall(cell, direction);
+          wall[direction] = false;
         }
       }
     }
+  }
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  public freezeWalls(): void {
+    // This is a no-op for most kinds of mazes
   }
 
   public cloneWalls(): Wall[][] {
@@ -499,15 +483,22 @@ export abstract class Maze {
   }
 
   public addTermini(): this {
-    const entrance: Cell =
-      this.entranceSpec ?
-        this.parseSpecification(this.entranceSpec)
-      : this.computeDistances(this.randomCell()).maxCell;
+    let entrance: Cell;
+    let exit: Cell;
 
-    const exit: Cell =
-      this.exitSpec ?
-        this.parseSpecification(this.exitSpec)
-      : this.computeDistances(entrance).maxCell;
+    if (this.entranceSpec && this.exitSpec) {
+      entrance = this.parseSpecification(this.entranceSpec);
+      exit = this.parseSpecification(this.exitSpec);
+    } else if (this.entranceSpec) {
+      entrance = this.parseSpecification(this.entranceSpec);
+      exit = this.computeDistances(entrance).maxCell;
+    } else if (this.exitSpec) {
+      exit = this.parseSpecification(this.exitSpec);
+      entrance = this.computeDistances(exit).maxCell;
+    } else {
+      entrance = this.computeDistances(this.randomCell()).maxCell;
+      exit = this.computeDistances(entrance).maxCell;
+    }
 
     const outsideEntrance = this.randomPick(this.adjacent(entrance).filter((c) => !this.inMaze(c)));
     if (outsideEntrance) {
@@ -651,12 +642,10 @@ export abstract class Maze {
       this.drawDistances();
 
       for (const cell of this.solution) {
-        const rect = this.cellRect(cell);
-        const angle = this.pathMatrix[cell.direction];
-        this.renderArrow(rect, angle, color);
+        this.drawPath(cell, color);
       }
 
-      this.drawPath(this.exit, color);
+      this.drawPath(this.drawCell(this.exit), color);
     }
   }
   //#endregion
@@ -811,12 +800,12 @@ export abstract class Maze {
   protected abstract cellKind(cell: Cell): Kind;
   //#endregion
   //#region Cell Drawing
-  public drawCell(
-    cell: Cell,
+  public drawCell<T extends Cell>(
+    cell: T,
     cellColor = this.cellColor,
     wallColor = this.wallColor,
     { walls = this.walls }: Overrides = {},
-  ): void {
+  ): T {
     this.drawFloor(
       cell,
       this.isSame(cell, this.entrance) ? this.entranceColor
@@ -836,11 +825,12 @@ export abstract class Maze {
         this.drawPillar({ ...cell, pillar }, this.wallColor);
       }
     }
+
+    return cell;
   }
 
   public drawText(cell: Cell, text: string, color = 'black'): void {
     if (this.drawing) {
-      this.drawCell(cell);
       this.drawing.text(this.getRect(cell), text, color);
     }
   }
@@ -915,8 +905,6 @@ export abstract class Maze {
 
   public drawPath(cell: CellDirection, color = 'cyan'): void {
     if (this.drawing) {
-      this.drawCell(cell);
-
       const rect = this.cellRect(cell);
       if (cell.direction === '?') {
         this.renderCircle(rect, color);
@@ -951,56 +939,21 @@ export abstract class Maze {
   //#endregion
   //#region Location
   private parseLocation(p: Location): Cell {
-    let cell: Cell | undefined;
+    const [allOrder, zone] = p.split(' ') as [AllOrder, Zone];
 
-    switch (p) {
-      case 'top left': {
-        cell = this.cellsInMaze('top-left').at(0);
-        break;
-      }
-      case 'top right': {
-        cell = this.cellsInMaze('top-right').at(0);
-        break;
-      }
-      case 'bottom right': {
-        cell = this.cellsInMaze('bottom-right').at(0);
-        break;
-      }
-      case 'bottom left': {
-        cell = this.cellsInMaze('bottom-left').at(0);
-        break;
+    const cells = this.cellsInMaze(allOrder);
+
+    switch (zone) {
+      case 'edge': {
+        return cells.find((cell) => this.adjacent(cell).some((c) => !this.inMaze(c)))!;
       }
 
-      case 'right top': {
-        cell = this.cellsInMaze('right-top').at(0);
-        break;
+      case 'interior': {
+        return cells.find((cell) => this.adjacent(cell).every((c) => this.inMaze(c)))!;
       }
 
-      case 'right bottom': {
-        cell = this.cellsInMaze('right-bottom').at(0);
-        break;
-      }
-
-      case 'left top': {
-        cell = this.cellsInMaze('left-top').at(0);
-        break;
-      }
-
-      case 'left bottom': {
-        cell = this.cellsInMaze('left-bottom').at(0);
-        break;
-      }
-
-      case 'random':
-      default: {
-        cell = this.randomCell();
-      }
+      // no default
     }
-
-    if (cell) {
-      return cell;
-    }
-    throw new Error(`No cell found for location "${p}"`);
   }
 
   private parseSpecification(pd: Cell | Location): Cell {

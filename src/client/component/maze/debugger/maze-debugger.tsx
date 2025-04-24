@@ -4,16 +4,20 @@ import { MenuItem, NumberField, Select } from '#control';
 
 import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
 import { MazeFactory } from '../factory/maze-factory.ts';
-import { BrickMaze } from '../maze/brick-maze.ts';
-import { CircularMaze } from '../maze/circular-maze.ts';
-import { CubicMaze } from '../maze/cubic-maze.ts';
-import { HexagonMaze } from '../maze/hexagon-maze.ts';
-import { type Maze, type MazeProperties } from '../maze/maze.ts';
-import { OctogonMaze } from '../maze/octogon-maze.ts';
-import { PentagonMaze } from '../maze/pentagon-maze.ts';
-import { SquareMaze } from '../maze/square-maze.ts';
-import { TriangleMaze } from '../maze/triangle-maze.ts';
-import { WedgeMaze } from '../maze/wedge-maze.ts';
+import {
+  BrickMaze,
+  CircularMaze,
+  CubicMaze,
+  HexagonMaze,
+  type Maze,
+  type MazeProperties,
+  OctogonMaze,
+  PentagonMaze,
+  SquareMaze,
+  TriangleMaze,
+  WedgeMaze,
+  ZetaMaze,
+} from '../maze/index.ts';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   circular: (props) => new CircularMaze(props),
@@ -25,6 +29,7 @@ const mazes: Record<string, (props: MazeProperties) => Maze> = {
   hexagon: (props) => new HexagonMaze(props),
   octogon: (props) => new OctogonMaze(props),
   wedge: (props) => new WedgeMaze(props),
+  zeta: (props) => new ZetaMaze(props),
 };
 
 type MazeDebuggerProps = {
@@ -76,6 +81,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
   const handleRemoveWalls = React.useCallback(() => {
     if (maze) {
       maze.removeInteriorWalls();
+      maze.draw();
     }
   }, [maze]);
 
@@ -146,25 +152,25 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         case 'coordinates': {
           for (let i = 0; i < maze.width; ++i) {
             for (let j = 0; j < maze.height; ++j) {
-              maze.drawText({ x: i, y: j }, `${i},${j}`, 'lime');
+              maze.drawText(maze.drawCell({ x: i, y: j }), `${i},${j}`, 'lime');
             }
           }
-          maze.drawX({ x, y }, 'red');
+          maze.drawX(maze.drawCell({ x, y }), 'red');
           break;
         }
 
         default: {
-          maze.drawX({ x, y }, 'red');
+          maze.drawX(maze.drawCell({ x, y }), 'red');
           const moves = maze.neighbors({ x, y });
           for (const move of moves) {
             if (maze.inMaze(move)) {
               switch (show) {
                 case 'moves': {
-                  maze.drawText(move, move.direction, 'cyan');
+                  maze.drawText(maze.drawCell(move), move.direction, 'cyan');
                   break;
                 }
                 case 'paths': {
-                  maze.drawPath({ ...move, direction: maze.opposite(move) }, 'cyan');
+                  maze.drawPath(maze.drawCell({ ...move, direction: maze.opposite(move) }), 'cyan');
                   break;
                 }
 

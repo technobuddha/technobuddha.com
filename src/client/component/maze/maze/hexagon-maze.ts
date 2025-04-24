@@ -44,8 +44,6 @@ export class HexagonMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
-
-    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -302,8 +300,6 @@ export class HexagonMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
-      this.drawCell(cell);
-
       const { x2, x5, x6, x9, y2, y4, y6 } = this.cellOffsets(cell);
 
       this.drawing.line({ x: x2, y: y4 }, { x: x9, y: y4 }, color);

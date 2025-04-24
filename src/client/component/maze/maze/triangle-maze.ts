@@ -42,8 +42,6 @@ export class TriangleMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
-
-    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -243,8 +241,6 @@ export class TriangleMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
-      this.drawCell(cell);
-
       const { x2, x4, x6, y2, y4 } = this.cellOffsets(cell);
       const yc = (y2 + y4) / 2;
 

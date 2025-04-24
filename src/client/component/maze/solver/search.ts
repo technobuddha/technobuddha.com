@@ -23,8 +23,8 @@ export class Search extends MazeSolver {
   protected readonly method: Method;
 
   public constructor({
-    avatarColor = '#6495ED',
-    pathColor = '#B6358B',
+    avatarColor = '#08A4BD',
+    pathColor = '#F5B700',
     method = 'random',
     ...props
   }: SearchProperties) {
@@ -102,14 +102,17 @@ export class Search extends MazeSolver {
               cell,
             );
             if (next) {
-              this.maze.drawPath({ ...cell, direction: next.direction }, pathColor);
-              this.maze.drawAvatar(next, avatarColor);
+              this.maze.drawPath(
+                this.maze.drawCell({ ...cell, direction: next.direction }),
+                pathColor,
+              );
+              this.maze.drawAvatar(this.maze.drawCell(next), avatarColor);
               yield;
               queue.push({ ...next, parent: cell });
             } else {
-              this.maze.drawX(cell);
+              this.maze.drawX(this.maze.drawCell(cell));
               if (cell.parent) {
-                this.maze.drawAvatar(cell.parent, avatarColor);
+                this.maze.drawAvatar(this.maze.drawCell(cell.parent), avatarColor);
               }
               yield;
 
@@ -133,7 +136,7 @@ export class Search extends MazeSolver {
               this.maze.drawAvatar(topOfQueue, avatarColor);
 
               if (parent) {
-                this.maze.drawPath({ ...parent, direction }, pathColor);
+                this.maze.drawPath(this.maze.drawCell({ ...parent, direction }), pathColor);
               }
               yield;
             }
@@ -141,8 +144,8 @@ export class Search extends MazeSolver {
             mode = 'forward';
             queue.push(cell);
           } else {
-            this.maze.drawX(cell);
-            yield this.maze.drawAvatar(cell.parent!, avatarColor);
+            this.maze.drawX(this.maze.drawCell(cell));
+            yield this.maze.drawAvatar(this.maze.drawCell(cell.parent!), avatarColor);
             queue.push(cell.parent!);
           }
 

@@ -8,3 +8,4 @@ export { PentagonMaze } from './pentagon-maze.ts';
 export { SquareMaze } from './square-maze.ts';
 export { TriangleMaze } from './triangle-maze.ts';
 export { WedgeMaze } from './wedge-maze.ts';
+export { ZetaMaze } from './zeta-maze.ts';

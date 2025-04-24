@@ -20,9 +20,9 @@ export class Tremaux extends MazeSolver {
   private readonly marks: Record<Direction, number>[][];
 
   public constructor({
-    avatarColor = '#6495ED',
-    markedColor = '#F6DB7E',
-    blockedColor = '#C74133',
+    avatarColor = '#08A4BD',
+    markedColor = '#F5B700',
+    blockedColor = '#EF3E36',
     ...props
   }: TremauxProperties) {
     super(props);
@@ -59,7 +59,7 @@ export class Tremaux extends MazeSolver {
       this.drawMark({ ...this.curr, direction }, markedColor, blockedColor);
     }
 
-    this.maze.drawAvatar(next, avatarColor);
+    this.maze.drawAvatar(this.maze.drawCell(next), avatarColor);
 
     for (const direction of Object.keys(this.marks[next.x][next.y])) {
       this.drawMark({ ...next, direction }, markedColor, blockedColor);
@@ -80,7 +80,18 @@ export class Tremaux extends MazeSolver {
     this.prev = undefined;
 
     while (!this.maze.isSame(this.curr, exit)) {
+      // if (Object.values(this.maze.walls[this.curr.x][this.curr.y]).every((w) => !w)) {
+      //   const next = this.maze.move(this.curr, this.curr.direction);
+      //   if (!next) {
+      //     throw new Error('can not get out of passage');
+      //   }
+      //   this.moveTo(next, avatarColor, markedColor, blockedColor);
+      //   yield;
+      //   continue;
+      // }
+
       const moves = this.maze.validMoves(this.curr);
+
       const pmi = moves.findIndex((c) => c.x === this.prev?.x && c.y === this.prev?.y);
       const prevMove = pmi >= 0 ? moves[pmi] : undefined;
 
@@ -110,7 +121,7 @@ export class Tremaux extends MazeSolver {
       } else {
         // 3. Pick any entrance with the fewest marks (zero if possible, else one).
         if (moves.length === 0) {
-          throw new Error('No moves available');
+          throw new Error('No moves found for tremaux');
         }
         const [next] = this.randomShuffle(moves).sort(
           (a, b) => marks[a.direction] - marks[b.direction],
@@ -136,6 +147,8 @@ export class Tremaux extends MazeSolver {
         this.maze.solution.push({ ...this.curr, direction: move.direction });
         this.prev = this.curr;
         this.curr = move;
+      } else {
+        throw new Error('No solution found for tremaux');
       }
     }
   }

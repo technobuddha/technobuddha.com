@@ -73,6 +73,7 @@ export class MazeFactory {
       solutionColor: this.solutionColor,
       plugin,
     });
+    maze.reset(); // TODO [2025-04-30]: Reset should not be needed here, but generator is accessing uninitialized things
 
     const generator = generatorMaker?.({ maze, start: this.start, random: this.random });
     const solver = solverMaker?.({

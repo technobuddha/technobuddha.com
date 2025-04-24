@@ -12,7 +12,7 @@ export class Filler extends MazeSolver {
   protected method: DeadEndProperties['method'];
 
   public constructor({
-    markedColor = '#C74133',
+    markedColor = '#EF3E36',
     method = 'cul-de-sac',
     ...props
   }: DeadEndProperties) {
@@ -31,7 +31,8 @@ export class Filler extends MazeSolver {
           for (let cell = deadEnd; this.maze.isDeadEnd(cell, { walls }); ) {
             const [move] = this.maze.validMoves(cell, { walls });
             this.maze.addWall(cell, move.direction, { walls }, false);
-            yield this.maze.drawX(cell, markedColor);
+            this.maze.drawX(this.maze.drawCell(cell), markedColor);
+            yield;
             cell = { x: move.x, y: move.y };
           }
         } else {
@@ -41,7 +42,7 @@ export class Filler extends MazeSolver {
             this.maze.addWall(deadEnd, move.direction, { walls }, false);
           }
 
-          this.maze.drawX(deadEnd, markedColor);
+          this.maze.drawX(this.maze.drawCell(deadEnd), markedColor);
           yield;
         }
       }

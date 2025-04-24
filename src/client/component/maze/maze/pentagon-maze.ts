@@ -43,8 +43,6 @@ export class PentagonMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
-
-    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -856,8 +854,6 @@ export class PentagonMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
-      this.drawCell(cell);
-
       switch (this.cellKind(cell)) {
         case 0: {
           const { x0, x2, x4, x6, x8, y0, y1, y4, y6, y8 } = this.cellOffsets(cell);

@@ -26,7 +26,7 @@ import {
 import { Maze } from './maze.ts';
 
 export class BrickMaze extends Maze {
-  public constructor({ cellSize = 16, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 14, wallSize = 2, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -40,8 +40,6 @@ export class BrickMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
-
-    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -172,7 +170,6 @@ export class BrickMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
-      this.drawCell(cell);
       const { x1, x4, y1, y2 } = this.cellOffsets(cell);
 
       this.drawing.line({ x: x1, y: y1 }, { x: x4, y: y2 }, color);

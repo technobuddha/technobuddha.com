@@ -37,9 +37,9 @@ export class CircularMaze extends Maze {
   public readonly zones: number[] = [];
 
   public constructor({
-    cellSize = 16,
+    cellSize = 12,
     wallSize = 1,
-    centerRadius = 16,
+    centerRadius = 18,
     centerSegments = 1,
     plugin,
     ...props
@@ -49,7 +49,6 @@ export class CircularMaze extends Maze {
         cellSize,
         wallSize,
         ...props,
-        entrance: { x: 0, y: 0 },
         wrapHorizontal: false,
         wrapVertical: false,
       },
@@ -67,7 +66,7 @@ export class CircularMaze extends Maze {
 
     this.centerRadius = centerRadius;
     this.centerSegments = centerSegments;
-    this.initialize({ ...props, plugin: this.circularPlugin(plugin) });
+    this.plugin = this.circularPlugin(this.plugin);
   }
 
   private circularPlugin(plugin?: MazeProperties['plugin']): MazeProperties['plugin'] {
@@ -329,8 +328,6 @@ export class CircularMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
-      this.drawCell(cell);
-
       if (this.zones[cell.y] === 1) {
         const { cx, cy } = this.cellOffsets(cell);
 
@@ -379,8 +376,6 @@ export class CircularMaze extends Maze {
 
   public override drawPath(cell: CellDirection, color = 'cyan'): void {
     if (this.drawing) {
-      this.drawCell(cell);
-
       const cols = this.zones[cell.y];
 
       switch (cols) {

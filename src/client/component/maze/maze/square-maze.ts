@@ -12,7 +12,6 @@ import {
 } from './maze.ts';
 import { Maze } from './maze.ts';
 import {
-  angleMatrix,
   directionMatrix,
   edgesMatrix,
   leftTurnMatrix,
@@ -39,10 +38,7 @@ export class SquareMaze extends Maze {
       moveMatrix,
       edgesMatrix,
       pathMatrix,
-      angleMatrix,
     );
-
-    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -138,8 +134,6 @@ export class SquareMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
-      this.drawCell(cell);
-
       const { x1, x2, y1, y2 } = this.cellOffsets(cell);
 
       this.drawing.line({ x: x1, y: y1 }, { x: x2, y: y2 }, color);

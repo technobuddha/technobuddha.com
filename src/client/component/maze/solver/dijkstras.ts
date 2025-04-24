@@ -11,18 +11,26 @@ type DirectionDistance = {
 
 type DijkstrasProperties = MazeSolverProperties & {
   scannedColor?: string;
+  avatarColor?: string;
 };
 
 export class Dijkstras extends MazeSolver {
   public scannedColor: string;
+  public avatarColor: string;
 
-  public constructor({ scannedColor = '#A4036F', ...props }: DijkstrasProperties) {
-    super(props);
+  public constructor({
+    scannedColor = '#DC0073',
+    avatarColor = '#08A4BD',
+    ...props
+  }: DijkstrasProperties) {
+    super({ speed: 3, ...props });
     this.scannedColor = scannedColor;
+    this.avatarColor = avatarColor;
   }
 
   public *solve({
-    color = '#A4036F', //'#F6DB7E',
+    avatarColor = this.avatarColor,
+    scannedColor = this.scannedColor,
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): Iterator<void> {
@@ -33,7 +41,7 @@ export class Dijkstras extends MazeSolver {
     distances[entrance.x][entrance.y].dist = 0;
 
     queue.unshift(entrance);
-    this.maze.drawAvatar(entrance);
+    this.maze.drawAvatar(this.maze.drawCell(entrance), avatarColor);
 
     while (queue.length > 0) {
       const cell = queue.pop()!;
@@ -49,13 +57,14 @@ export class Dijkstras extends MazeSolver {
         if (neighbors.length > 0) {
           for (const neighbor of neighbors) {
             distances[neighbor.x][neighbor.y] = { dir: neighbor.direction, dist: distance };
-            this.maze.drawCell(cell, color);
-            this.maze.drawAvatar(neighbor);
+            this.maze.drawCell(cell, scannedColor);
+            this.maze.drawAvatar(this.maze.drawCell(neighbor), avatarColor);
             yield;
             queue.unshift(neighbor);
           }
         } else {
-          yield this.maze.drawCell(cell, color);
+          this.maze.drawCell(cell, scannedColor);
+          yield;
         }
       }
     }

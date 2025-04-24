@@ -26,7 +26,7 @@ import {
 } from './octogon-matrix.ts';
 
 export class OctogonMaze extends Maze {
-  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 1, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -40,8 +40,6 @@ export class OctogonMaze extends Maze {
       edgesMatrix,
       pathMatrix,
     );
-
-    this.initialize(props);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -564,8 +562,6 @@ export class OctogonMaze extends Maze {
 
   public drawX(cell: Cell, color = 'red'): void {
     if (this.drawing) {
-      this.drawCell(cell);
-
       if (this.cellKind(cell) === 0) {
         const { x2, x6, x9, xd, y2, y6, y9, yd } = this.cellOffsets(cell);
 

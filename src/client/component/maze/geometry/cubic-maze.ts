@@ -6,12 +6,12 @@ import { type Rect } from '../drawing/drawing.ts';
 
 import {
   directionMatrix,
-  edgesMatrix,
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
   pathMatrix,
   pillarMatrix,
+  preferredMatrix,
   rightTurnMatrix,
   straightMatrix,
   wallMatrix,
@@ -38,7 +38,7 @@ export class CubicMaze extends Maze {
       leftTurnMatrix,
       straightMatrix,
       moveMatrix,
-      edgesMatrix,
+      preferredMatrix,
       pathMatrix,
     );
   }

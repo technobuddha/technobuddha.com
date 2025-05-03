@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type CellDirection } from '../maze/maze.ts';
+import { type CellDirection } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -37,7 +37,7 @@ export class RecursiveBacktracker extends MazeGenerator {
         ...randomCell,
         direction: this.maze.opposite({
           ...randomCell,
-          direction: this.randomPick(Object.keys(this.maze.walls[randomCell.x][randomCell.y]))!,
+          direction: this.randomPick(Object.keys(this.maze.nexus(randomCell).walls))!,
         }),
       });
 
@@ -52,7 +52,7 @@ export class RecursiveBacktracker extends MazeGenerator {
     this.player = 0;
   }
 
-  public *generate(): Iterator<void> {
+  public *generate(): Generator<void> {
     while (true) {
       // If all players are at the end of their stack, we need to join the segments
       if (this.current.every((c) => c === undefined)) {
@@ -118,7 +118,8 @@ export class RecursiveBacktracker extends MazeGenerator {
         }
 
         if (newCell) {
-          yield this.maze.removeWall(currentCell, newCell.direction);
+          this.maze.removeWall(currentCell, newCell.direction);
+          yield;
 
           this.stack[this.player].push(currentCell);
           this.current[this.player] = newCell;
@@ -130,5 +131,21 @@ export class RecursiveBacktracker extends MazeGenerator {
         }
       }
     }
+  }
+
+  private bridge = 1;
+
+  public override addBridge(bridge: CellDirection[]): void {
+    const enter = bridge.at(0)!;
+    const exit = bridge.at(-1)!;
+
+    const exitCell = this.maze.move(exit, exit.direction)!;
+    const enterCell = this.maze.move(enter, this.maze.opposite(enter))!;
+
+    this.maze.removeWall(enterCell, enter.direction);
+
+    const player = this.parallel + ++this.bridge;
+    this.visited[enterCell.x][enterCell.y] = player;
+    this.visited[exitCell.x][exitCell.y] = player;
   }
 }

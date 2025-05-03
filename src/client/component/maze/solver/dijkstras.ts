@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type Direction } from '../maze/maze.ts';
+import { type Cell, type Direction } from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -80,10 +80,16 @@ export class Dijkstras extends MazeSolver {
         if (this.maze.isSame(cell, entrance)) {
           break;
         }
-        cell = this.maze.move(
+        const next = this.maze.move(
           cell,
           this.maze.opposite({ ...cell, direction: distances[cell.x][cell.y].dir! }),
-        )!;
+        );
+
+        if (next) {
+          cell = next;
+        } else {
+          throw new Error('No solution found');
+        }
       }
     }
   }

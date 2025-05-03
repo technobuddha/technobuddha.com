@@ -1,16 +1,15 @@
-import { type Direction } from '@mui/material';
 import { toCartesian, toRadians } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
 
 import {
   directionMatrix,
-  edgesMatrix,
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
   pathMatrix,
   pillarMatrix,
+  preferredMatrix,
   rightTurnMatrix,
   straightMatrix,
   wallMatrix,
@@ -22,6 +21,7 @@ import {
   type DrawingSizes,
   type Kind,
   type MazeProperties,
+  type Move,
   type Wall,
 } from './maze.ts';
 import { Maze } from './maze.ts';
@@ -38,7 +38,7 @@ export class CircularMaze extends Maze {
 
   public constructor({
     cellSize = 12,
-    wallSize = 1,
+    wallSize = 2,
     centerRadius = 18,
     centerSegments = 1,
     plugin,
@@ -60,13 +60,13 @@ export class CircularMaze extends Maze {
       leftTurnMatrix,
       straightMatrix,
       moveMatrix,
-      edgesMatrix,
+      preferredMatrix,
       pathMatrix,
     );
 
     this.centerRadius = centerRadius;
     this.centerSegments = centerSegments;
-    this.plugin = this.circularPlugin(this.plugin);
+    this.plugin = this.circularPlugin(plugin);
   }
 
   private circularPlugin(plugin?: MazeProperties['plugin']): MazeProperties['plugin'] {
@@ -74,7 +74,7 @@ export class CircularMaze extends Maze {
       for (let y = 0; y < maze.height; ++y) {
         const cols = this.zones[y];
         for (let x = cols; x < maze.width; ++x) {
-          maze.mask[x][y] = true;
+          maze.nexus({ x, y }).mask = true;
         }
       }
 
@@ -152,20 +152,33 @@ export class CircularMaze extends Maze {
     return z0 === zn ? 0 : 1;
   }
 
-  public override move(cell: Cell, direction: Direction): CellDirection | null {
-    const next = super.move(cell, direction);
+  public override resolveMove(cell: Cell, move: Move): Cell {
+    let { x, y } = cell;
 
-    if (next) {
-      const cols = this.zones[next.y];
-      if (next.x >= cols) {
-        next.x -= cols;
-      }
-      if (next.x < 0) {
-        next.x += cols;
+    if (move.zone) {
+      switch (move.zone) {
+        case 'up': {
+          x *= 2;
+          break;
+        }
+
+        case 'down': {
+          x = Math.floor(x / 2);
+          break;
+        }
+
+        // no default
       }
     }
 
-    return next;
+    const cols = this.zones[y];
+    if (x >= cols) {
+      x -= cols;
+    }
+    if (x < 0) {
+      x += cols;
+    }
+    return { x, y };
   }
 
   private cellOffsets(cell: Cell): Record<string, number> {

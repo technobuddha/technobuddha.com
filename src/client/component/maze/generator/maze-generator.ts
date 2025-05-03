@@ -1,6 +1,6 @@
 import { randomPick, randomShuffle } from '@technobuddha/library';
 
-import { type Cell, type Maze } from '../maze/maze.ts';
+import { type Cell, type CellDirection, type Maze } from '../geometry/maze.ts';
 
 export type MazeGeneratorProperties = {
   maze: Maze;
@@ -32,5 +32,16 @@ export abstract class MazeGenerator {
     return randomShuffle(array, this.random);
   }
 
-  public abstract generate(): Iterator<void>;
+  public *run(): Generator<void> {
+    this.maze.hookPreGeneration?.(this);
+    yield* this.generate();
+    this.maze.hookPostGeneration?.(this);
+  }
+
+  public abstract generate(): Generator<void>;
+
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  public addBridge(_bridge: CellDirection[]): void {
+    // no-op by default
+  }
 }

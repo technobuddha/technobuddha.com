@@ -14,7 +14,6 @@ import {
 import { Maze } from './maze.ts';
 import {
   directionMatrix,
-  edgesMatrix,
   kindMatrix,
   leftTurnMatrix,
   moveMatrix,
@@ -23,6 +22,7 @@ import {
   oppositeMatrix,
   pathMatrix,
   pillarMatrix,
+  preferredMatrix,
   rightTurnMatrix,
   straightMatrix,
   wallMatrix,
@@ -40,7 +40,7 @@ export class PentagonMaze extends Maze {
       leftTurnMatrix,
       straightMatrix,
       moveMatrix,
-      edgesMatrix,
+      preferredMatrix,
       pathMatrix,
     );
   }

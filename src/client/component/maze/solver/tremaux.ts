@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellDirection, type Direction } from '../maze/maze.ts';
+import { type Cell, type CellDirection, type Direction } from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -31,7 +31,9 @@ export class Tremaux extends MazeSolver {
     this.blockedColor = blockedColor;
 
     this.marks = create2DArray(this.maze.width, this.maze.height, (x, y) =>
-      Object.fromEntries(Object.entries(this.maze.walls[x][y]).map(([k]) => [k, 0])),
+      Object.fromEntries(
+        Object.entries(this.maze.nexus({ x: x, y: y }).walls).map(([k]) => [k, 0]),
+      ),
     );
     this.curr = this.maze.entrance;
   }
@@ -80,7 +82,7 @@ export class Tremaux extends MazeSolver {
     this.prev = undefined;
 
     while (!this.maze.isSame(this.curr, exit)) {
-      // if (Object.values(this.maze.walls[this.curr.x][this.curr.y]).every((w) => !w)) {
+      // if (Object.values(this.maze.nexus({x: this.curr.x, y: this.curr.y}).walls).every((w) => !w)) {
       //   const next = this.maze.move(this.curr, this.curr.direction);
       //   if (!next) {
       //     throw new Error('can not get out of passage');

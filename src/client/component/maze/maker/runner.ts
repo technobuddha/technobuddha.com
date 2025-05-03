@@ -1,6 +1,6 @@
 import { animate } from '../drawing/animate.ts';
 import { type MazeGenerator } from '../generator/index.ts';
-import { type Maze } from '../maze/index.ts';
+import { type Maze } from '../geometry/index.ts';
 import { type MazeSolver } from '../solver/index.ts';
 
 type Phase = 'maze' | 'generate' | 'braid' | 'solve' | 'done';
@@ -29,7 +29,7 @@ export class Runner {
             this.maze.draw();
             this.phase = 'generate';
             // setPlayMode('fast'); // TODO
-            this.stepper = this.generator.generate();
+            this.stepper = this.generator.run();
             this.speed = this.generator.speed;
             break;
           }

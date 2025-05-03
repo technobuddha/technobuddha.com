@@ -14,6 +14,7 @@ import {
   BrickMaze,
   CircularMaze,
   CubicMaze,
+  DotMaze,
   HexagonMaze,
   type Maze,
   type MazeProperties,
@@ -23,8 +24,11 @@ import {
   TriangleMaze,
   WedgeMaze,
   ZetaMaze,
-} from '../maze/index.ts';
+} from '../geometry/index.ts';
+import { WeaveMaze } from '../geometry/weave-maze.ts';
+import { experimentalPlugin } from '../plugins/experiment.ts';
 import { donutPlugin, ellipisePlugin, trianglePlugin } from '../plugins/index.ts';
+import { FibonaccisRabbits } from '../solver/fibonaccis-rabbits.ts';
 import {
   Dijkstras,
   Filler,
@@ -34,6 +38,7 @@ import {
   Tremaux,
   WallWalking,
 } from '../solver/index.ts';
+import { RandomMouse } from '../solver/random-mouse.ts';
 
 import { type Choice } from './chooser.ts';
 
@@ -42,6 +47,11 @@ export const squareMazes: Choice<MazeProperties, Maze> = {
 };
 
 export const mazes: Choice<MazeProperties, Maze> = {
+  '10:weave': (props) => new WeaveMaze({ ...props }),
+  '10:dot': {
+    '10': (props) => new DotMaze(props),
+    '10:zeta': (props) => new ZetaMaze(props),
+  },
   '10:circle': {
     '10': (props) => new CircularMaze(props),
     '0:Find Center': (props) =>
@@ -50,7 +60,7 @@ export const mazes: Choice<MazeProperties, Maze> = {
       new CircularMaze({ entrance: { x: 0, y: 0 }, exit: 'random edge', ...props }),
     '0:Void': (props) => new CircularMaze({ centerRadius: 128, centerSegments: 16, ...props }),
   },
-  '3:cubic': {
+  '1:cubic': {
     '10': (props) => new CubicMaze(props),
   },
   '10:pentagon': {
@@ -68,7 +78,6 @@ export const mazes: Choice<MazeProperties, Maze> = {
     '10': (props) => new OctogonMaze(props),
   },
   '10:wedge': (props) => new WedgeMaze(props),
-  '10:zeta': (props) => new ZetaMaze(props),
 };
 
 export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
@@ -139,10 +148,10 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
 };
 
 export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
-  '10:trémaux': {
+  '0:trémaux': {
     '10': (props) => new Tremaux(props),
   },
-  '10:search': {
+  '0:search': {
     '10:random': (props) => new Search({ method: 'random', ...props }),
     '10:seekExit': (props) => new Search({ method: 'seek', ...props }),
     '10:leftTurn': (props) => new Search({ method: 'left-turn', ...props }),
@@ -152,16 +161,19 @@ export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
     '10:deadEnd': (props) => new Filler({ ...props, method: 'dead-end' }),
     '10:culDeSac': (props) => new Filler({ ...props, method: 'cul-de-sac' }),
   },
-  '10:followWall': {
+  '0:followWall': {
     '10:right': (props) => new WallWalking({ ...props, turn: 'right' }),
     '10:left': (props) => new WallWalking({ ...props, turn: 'left' }),
   },
-  '10:dijkstras': {
+  '0:dijkstras': {
     '10': (props) => new Dijkstras(props),
   },
+  '0:randomMouse': (props) => new RandomMouse(props),
+  "0:Fibonacci's rabbits": (props) => new FibonaccisRabbits(props),
 };
 
 export const plugins: Choice<Maze, void> = {
+  '0:experimental bridges': experimentalPlugin,
   '0:ellipse': ellipisePlugin,
   '0:donut': donutPlugin,
   '0:triangle': trianglePlugin,

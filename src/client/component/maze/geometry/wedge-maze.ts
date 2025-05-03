@@ -14,12 +14,12 @@ import {
 import { Maze } from './maze.ts';
 import {
   directionMatrix,
-  edgesMatrix,
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
   pathMatrix,
   pillarMatrix,
+  preferredMatrix,
   rightTurnMatrix,
   straightMatrix,
   wallMatrix,
@@ -37,7 +37,7 @@ export class WedgeMaze extends Maze {
       leftTurnMatrix,
       straightMatrix,
       moveMatrix,
-      edgesMatrix,
+      preferredMatrix,
       pathMatrix,
     );
   }

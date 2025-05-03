@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell } from '../../maze/maze.js';
+import { type Cell } from '../../geometry/maze.js';
 
 import { type MazeGeneratorProperties } from '../maze-generator.js';
 import { MazeGenerator } from '../maze-generator.js';

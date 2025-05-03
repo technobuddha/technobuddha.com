@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellDirection, type Direction, type XY } from '../maze/maze.ts';
+import { type Cell, type CellDirection, type Direction, type XY } from '../geometry/maze.ts';
 
 import { type MazeSolverProperties } from './maze-solver.ts';
 import { MazeSolver } from './maze-solver.ts';
@@ -80,7 +80,7 @@ export class Search extends MazeSolver {
       ...entrance,
       direction: this.maze.opposite({
         ...entrance,
-        direction: this.randomPick(Object.keys(this.maze.walls[entrance.x][entrance.y]))!,
+        direction: this.randomPick(Object.keys(this.maze.nexus(entrance).walls))!,
       }),
     });
 

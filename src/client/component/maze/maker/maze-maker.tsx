@@ -5,15 +5,9 @@ import {
   IoFootsteps,
   IoPause,
   IoPlay,
-  IoPlayCircle,
-  IoPlayCircleOutline,
   IoPlayForward,
-  IoPlayForwardOutline,
-  IoPlayOutline,
   IoPlaySkipForward,
-  IoPlaySkipForwardCircle,
   IoRefresh,
-  IoStop,
 } from 'react-icons/io5';
 import { useMeasure } from 'react-use';
 
@@ -22,9 +16,9 @@ import { MenuItem, Select } from '#control';
 import { animate } from '../drawing/animate.ts';
 import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/maze-generator.ts';
+import { type Maze, type MazeProperties } from '../geometry/maze.ts';
 import { allChoices, chooser } from '../library/chooser.ts';
 import { generators, mazes, plugins, solvers } from '../library/mazes.ts';
-import { type Maze, type MazeProperties } from '../maze/maze.ts';
 import { type MazeSolver, type MazeSolverProperties } from '../solver/maze-solver.ts';
 
 import css from './maze-maker.module.css';
@@ -34,6 +28,7 @@ const generatorChoices = Array.from(allChoices(generators));
 const solverChoices = Array.from(allChoices(solvers));
 
 type Phase = 'maze' | 'generate' | 'braid' | 'solve' | 'done';
+type PlayMode = 'pause' | 'step' | 'play' | 'fast' | 'instant';
 
 type MazeMakerProps = {
   children?: never;
@@ -54,7 +49,9 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const [solverName, setSolverName] = React.useState('');
   const [pluginName, setPluginName] = React.useState('');
 
-  const [playMode, setPlayMode] = React.useState<'play' | 'step' | 'fast' | 'instant'>('fast');
+  const [playMode, setPlayMode] = React.useState<PlayMode>('fast');
+  const [playGenerator, setPlayGenerator] = React.useState<PlayMode>('fast');
+  const [playSolver, setPlaySolver] = React.useState<PlayMode>('fast');
 
   const [maze, setMaze] = React.useState<Maze>();
   const [generator, setGenerator] = React.useState<MazeGenerator>();
@@ -157,11 +154,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   }, []);
 
   const runner = React.useCallback(
-    async (
-      play: 'fast' | 'play' | 'step' | 'instant',
-      iterator: Iterator<void>,
-      speed: number,
-    ): Promise<boolean> => {
+    async (play: PlayMode, iterator: Iterator<void>, speed: number): Promise<boolean> => {
       kill();
 
       let run: () => Promise<boolean>;
@@ -203,6 +196,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           break;
         }
 
+        case 'pause':
         case 'play':
         case 'step': {
           run = async (): Promise<boolean> =>
@@ -243,8 +237,8 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         case 'maze': {
           maze.draw();
           setPhase('generate');
-          setPlayMode('fast'); // TODO
-          setGeneratorStep(generator.generate());
+          setPlayMode(playGenerator);
+          setGeneratorStep(generator.run());
           break;
         }
 
@@ -266,7 +260,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         case 'braid': {
           // maze.braid();
           setPhase('solve');
-          setPlayMode('fast'); // TODO
+          setPlayMode(playSolver);
           setSolverStep(solver.solve());
           break;
         }
@@ -291,7 +285,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
 
           setTimeout(() => {
             setMazeNumber((n) => n + 1);
-          }, 10000);
+          }, 20000);
           break;
         }
 
@@ -310,6 +304,8 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     solverStep,
     solverSpeed,
     runner,
+    playGenerator,
+    playSolver,
   ]);
 
   const handleMazeChange = React.useCallback((value: string) => {
@@ -327,7 +323,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const handlePause = React.useCallback(() => {
     kill();
     setTimeout(() => {
-      setPlayMode('step');
+      setPlayMode('pause');
     });
   }, [kill]);
 
@@ -370,6 +366,14 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     });
   }, [kill]);
 
+  const handlePlayGeneratorChange = React.useCallback((value: PlayMode) => {
+    setPlayGenerator(value);
+  }, []);
+
+  const handlePlaySolverChange = React.useCallback((value: PlayMode) => {
+    setPlaySolver(value);
+  }, []);
+
   return (
     <div className={css.mazeMaker}>
       <div ref={top} className={css.maze}>
@@ -388,87 +392,115 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         )}
       </div>
       <div className={css.panel}>
-        <Select
-          label="Maze Geometry"
-          value={selectedMaze ?? '(undefined)'}
-          onChange={handleMazeChange}
-        >
-          <MenuItem key="(undefined)" value="(undefined)">
-            (random)
-          </MenuItem>
-          {mazeChoices.map((m) => (
-            <MenuItem key={m.name} value={m.name}>
-              {m.name}
+        <fieldset>
+          <legend>Maze Geometry</legend>
+          <Select
+            label="Algorthim"
+            value={selectedMaze ?? '(undefined)'}
+            onChange={handleMazeChange}
+          >
+            <MenuItem key="(undefined)" value="(undefined)">
+              (random)
             </MenuItem>
-          ))}
-        </Select>
-        <Select
-          label="Maze Generator"
-          value={selectedGenerator ?? '(undefined)'}
-          onChange={handleGeneratorChange}
-        >
-          <MenuItem key="(undefined)" value="(undefined)">
-            (random)
-          </MenuItem>
-          {generatorChoices.map((m) => (
-            <MenuItem key={m.name} value={m.name}>
-              {m.name}
+            {mazeChoices.map((m) => (
+              <MenuItem key={m.name} value={m.name}>
+                {m.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </fieldset>
+        <fieldset>
+          <legend>Maze Generator</legend>
+          <Select
+            label="Algorthim"
+            value={selectedGenerator ?? '(undefined)'}
+            onChange={handleGeneratorChange}
+          >
+            <MenuItem key="(undefined)" value="(undefined)">
+              (random)
             </MenuItem>
-          ))}
-        </Select>
-        <Select
-          label="Maze Solver"
-          value={selectedSolver ?? '(undefined)'}
-          onChange={handleSolverChange}
-        >
-          <MenuItem key="(undefined)" value="(undefined)">
-            (random)
-          </MenuItem>
-          {solverChoices.map((m) => (
-            <MenuItem key={m.name} value={m.name}>
-              {m.name}
+            {generatorChoices.map((m) => (
+              <MenuItem key={m.name} value={m.name}>
+                {m.name}
+              </MenuItem>
+            ))}
+          </Select>
+          <Select<PlayMode>
+            label="Maze Generator Initial Speed"
+            value={playGenerator}
+            onChange={handlePlayGeneratorChange}
+          >
+            <MenuItem key="pause" value="pause">
+              <IoPause />
             </MenuItem>
-          ))}
-        </Select>
-        <br />
-        <button type="button" onClick={handlePause}>
-          <IoPause />
-        </button>
-        <button type="button" onClick={handleStep}>
-          <IoFootsteps />
-        </button>
-        <button type="button" onClick={handlePlay}>
-          <IoPlay />
-        </button>
-        <button type="button" onClick={handleFast}>
-          <IoPlayForward />
-        </button>
-        <button type="button" onClick={handleInstant}>
-          <IoPlaySkipForward />
-        </button>
-        <button type="button" onClick={handleRefresh}>
-          <IoRefresh />
-        </button>
-        <br />
-        <br />
-        <button type="button" disabled>
-          <IoPlayCircle />
-        </button>
-        <button type="button" disabled>
-          <IoPlayCircleOutline />
-        </button>
-        <button type="button" disabled>
-          <IoPlayOutline />
-        </button>
-        <button type="button" disabled>
-          <IoPlayForwardOutline />
-        </button>
-        <button type="button" disabled>
-          <IoPlaySkipForwardCircle />
-        </button>
-        <button type="button" disabled>
-          <IoStop />
-        </button>
+            <MenuItem key="play" value="play">
+              <IoPlay />
+            </MenuItem>
+            <MenuItem key="fast" value="fast">
+              <IoPlayForward />
+            </MenuItem>
+            <MenuItem key="instant" value="instant">
+              <IoPlaySkipForward />
+            </MenuItem>
+          </Select>
+        </fieldset>
+        <fieldset>
+          <legend>Maze Solver</legend>
+
+          <Select
+            label="Algorthim"
+            value={selectedSolver ?? '(undefined)'}
+            onChange={handleSolverChange}
+          >
+            <MenuItem key="(undefined)" value="(undefined)">
+              (random)
+            </MenuItem>
+            {solverChoices.map((m) => (
+              <MenuItem key={m.name} value={m.name}>
+                {m.name}
+              </MenuItem>
+            ))}
+          </Select>
+          <Select
+            label="Maze Solver Initial Speed"
+            value={playSolver}
+            onChange={handlePlaySolverChange}
+          >
+            <MenuItem key="pause" value="pause">
+              <IoPause />
+            </MenuItem>
+            <MenuItem key="play" value="play">
+              <IoPlay />
+            </MenuItem>
+            <MenuItem key="fast" value="fast">
+              <IoPlayForward />
+            </MenuItem>
+            <MenuItem key="instant" value="instant">
+              <IoPlaySkipForward />
+            </MenuItem>
+          </Select>
+        </fieldset>
+        <div className={css.gap} />
+        <div>
+          <button type="button" onClick={handlePause}>
+            <IoPause />
+          </button>
+          <button type="button" onClick={handleStep}>
+            <IoFootsteps />
+          </button>
+          <button type="button" onClick={handlePlay}>
+            <IoPlay />
+          </button>
+          <button type="button" onClick={handleFast}>
+            <IoPlayForward />
+          </button>
+          <button type="button" onClick={handleInstant}>
+            <IoPlaySkipForward />
+          </button>
+          <button type="button" onClick={handleRefresh}>
+            <IoRefresh />
+          </button>
+        </div>
       </div>
     </div>
   );

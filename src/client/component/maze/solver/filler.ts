@@ -1,4 +1,4 @@
-import { type CellDirection } from '../maze/maze.ts';
+import { type CellDirection } from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -22,31 +22,32 @@ export class Filler extends MazeSolver {
   }
 
   public *solve({ markedColor = this.markedColor, exit = this.maze.exit } = {}): Iterator<void> {
-    const walls = this.maze.cloneWalls();
+    const walls = this.maze.backup();
 
-    let deadEnds = this.randomShuffle(this.maze.deadEnds({ walls }));
-    while (deadEnds.length > 0) {
-      for (const deadEnd of deadEnds) {
-        if (this.method === 'cul-de-sac') {
-          for (let cell = deadEnd; this.maze.isDeadEnd(cell, { walls }); ) {
-            const [move] = this.maze.validMoves(cell, { walls });
-            this.maze.addWall(cell, move.direction, { walls }, false);
-            this.maze.drawX(this.maze.drawCell(cell), markedColor);
+    while (true) {
+      const deadEnds = this.randomShuffle(this.maze.deadEnds());
+      if (deadEnds.length === 0) {
+        break;
+      }
+
+      if (this.method === 'cul-de-sac') {
+        for (const deadEnd of deadEnds) {
+          for (let culdesac = deadEnd; this.maze.isDeadEnd(culdesac); ) {
+            const [move] = this.maze.validMoves(culdesac);
+            this.maze.addWall(culdesac, move.direction, false);
+            this.maze.drawX(this.maze.drawCell(culdesac), markedColor);
             yield;
-            cell = { x: move.x, y: move.y };
+            culdesac = { x: move.x, y: move.y };
           }
-        } else {
-          const moves = this.maze.validMoves(deadEnd, { walls });
-
-          for (const move of moves) {
-            this.maze.addWall(deadEnd, move.direction, { walls }, false);
-          }
-
+        }
+      } else {
+        for (const deadEnd of deadEnds) {
+          const [move] = this.maze.validMoves(deadEnd);
+          this.maze.addWall(deadEnd, move.direction, false);
           this.maze.drawX(this.maze.drawCell(deadEnd), markedColor);
           yield;
         }
       }
-      deadEnds = this.randomShuffle(this.maze.deadEnds({ walls }));
     }
 
     let cell = {
@@ -56,7 +57,7 @@ export class Filler extends MazeSolver {
     const path: CellDirection[] = [cell];
     while (!this.maze.isSame(cell, exit)) {
       const moves = this.maze
-        .validMoves(cell, { walls })
+        .validMoves(cell)
         .filter((m) => !path.some((p) => this.maze.isSame(p, m)));
 
       if (moves.length > 1) {
@@ -68,5 +69,7 @@ export class Filler extends MazeSolver {
       path.push(cell);
       cell = move;
     }
+
+    this.maze.restore(walls);
   }
 }

@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type CellDirection, type Direction } from '../maze/maze.ts';
+import { type CellDirection, type Direction } from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -48,7 +48,7 @@ export class WallWalking extends MazeSolver {
       ...entrance,
       direction: this.maze.opposite({
         ...entrance,
-        direction: this.randomPick(Object.keys(this.maze.walls[entrance.x][entrance.y]))!,
+        direction: this.randomPick(Object.keys(this.maze.nexus(entrance).walls))!,
       }),
     };
 
@@ -60,11 +60,11 @@ export class WallWalking extends MazeSolver {
 
     while (!this.maze.isSame(cell, exit)) {
       const v = ++cells[cell.x][cell.y].visits;
-      if (v > Object.keys(this.maze.walls[cell.x][cell.y]).length) {
+      if (v > Object.keys(this.maze.nexus(cell).walls).length) {
         throw new Error('Loop detected');
       }
 
-      const wall = this.maze.walls[cell.x][cell.y];
+      const wall = this.maze.nexus(cell).walls;
 
       let dir: Direction | undefined;
       const moves = this.maze.validMoves(cell);

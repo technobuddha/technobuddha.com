@@ -1,4 +1,4 @@
-import { type Maze } from '../maze/maze.ts';
+import { type Maze } from '../geometry/maze.ts';
 
 export function donutPlugin(maze: Maze): void {
   const rx = Math.floor(maze.width / 2) + 1;
@@ -13,7 +13,7 @@ export function donutPlugin(maze: Maze): void {
       (cell.x - x0) ** 2 / rx ** 2 + (cell.y - y0) ** 2 / ry ** 2 >= 1 ||
       (cell.x - x0) ** 2 / rx2 ** 2 + (cell.y - y0) ** 2 / ry2 ** 2 <= 1
     ) {
-      maze.mask[cell.x][cell.y] = true;
+      maze.nexus(cell).mask = true;
     }
   }
 }

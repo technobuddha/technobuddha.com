@@ -7,12 +7,12 @@ export class BinaryTree extends MazeGenerator {
     this.currentCell = { x: 0, y: 0 };
   }
 
-  public *generate(): Iterator<void> {
+  public *generate(): Generator<void> {
     do {
-      const edges = this.maze.edges(this.currentCell);
+      const preferreds = this.maze.preferreds(this.currentCell);
 
       const cell = this.randomPick(
-        this.maze.neighbors(this.currentCell).filter((c) => edges.includes(c.direction)),
+        this.maze.neighbors(this.currentCell).filter((c) => preferreds.includes(c.direction)),
       );
       if (cell) {
         yield this.maze.removeWall(this.currentCell, cell.direction);

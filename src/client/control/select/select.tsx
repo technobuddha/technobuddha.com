@@ -37,7 +37,7 @@ export function Select<T = string>({
   );
 
   return (
-    <FormControl margin="normal" size="small" classes={{ root: css.formControl }}>
+    <FormControl margin="normal" size="small" fullWidth classes={{ root: css.formControl }}>
       <InputLabel id={labelId}>{label}</InputLabel>
       <MuiSelect<T>
         id={selectId}

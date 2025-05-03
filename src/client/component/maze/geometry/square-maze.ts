@@ -13,12 +13,12 @@ import {
 import { Maze } from './maze.ts';
 import {
   directionMatrix,
-  edgesMatrix,
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
   pathMatrix,
   pillarMatrix,
+  preferredMatrix,
   rightTurnMatrix,
   straightMatrix,
   wallMatrix,
@@ -36,7 +36,7 @@ export class SquareMaze extends Maze {
       leftTurnMatrix,
       straightMatrix,
       moveMatrix,
-      edgesMatrix,
+      preferredMatrix,
       pathMatrix,
     );
   }
@@ -52,7 +52,7 @@ export class SquareMaze extends Maze {
     return 0;
   }
 
-  private cellOffsets(cell: Cell): Record<string, number> {
+  protected cellOffsets(cell: Cell): Record<string, number> {
     return this.translateOffsets(cell, cell.x * this.cellSize, cell.y * this.cellSize);
   }
 
@@ -152,16 +152,16 @@ export class SquareMaze extends Maze {
 
     for (let y = 0; y < this.height; ++y) {
       for (let x = 0; x < this.width; ++x) {
-        str += this.walls[x][y].n ? '+==' : '+  ';
+        str += this.nexus({ x: x, y: y }).walls.n ? '+==' : '+  ';
       }
       str += '+\n';
       for (let x = 0; x < this.width; ++x) {
-        str += this.walls[x][y].w ? '|  ' : '   ';
+        str += this.nexus({ x: x, y: y }).walls.w ? '|  ' : '   ';
       }
-      str += this.walls[this.width - 1][y].e ? '|\n' : ' \n';
+      str += this.nexus({ x: this.width - 1, y: y }).walls.e ? '|\n' : ' \n';
     }
     for (let x = 0; x < this.width; ++x) {
-      str += this.walls[x][this.height - 1].s ? '+==' : '+  ';
+      str += this.nexus({ x: x, y: this.height - 1 }).walls.s ? '+==' : '+  ';
     }
     str += '+\n';
 

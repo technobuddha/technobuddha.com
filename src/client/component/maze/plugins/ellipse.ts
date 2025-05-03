@@ -1,4 +1,4 @@
-import { type Maze } from '../maze/maze.ts';
+import { type Maze } from '../geometry/maze.ts';
 
 export function ellipisePlugin(maze: Maze): void {
   const rx = Math.floor(maze.width / 2) + 1;
@@ -8,7 +8,7 @@ export function ellipisePlugin(maze: Maze): void {
 
   for (const cell of maze.cellsInMaze()) {
     if ((cell.x - x0) ** 2 / rx ** 2 + (cell.y - y0) ** 2 / ry ** 2 >= 1) {
-      maze.mask[cell.x][cell.y] = true;
+      maze.nexus(cell).mask = true;
     }
   }
 }

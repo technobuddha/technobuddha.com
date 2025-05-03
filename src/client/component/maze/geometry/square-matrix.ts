@@ -1,11 +1,11 @@
 import {
   type AngleMatrix,
   type DirectionMatrix,
-  type EdgesMatrix,
   type MoveMatrix,
   type OppositeMatrix,
   type PathMatrix,
   type PillarMatrix,
+  type PreferredMatrix,
   type TurnMatrix,
   type WallMatrix,
 } from './maze.ts';
@@ -61,7 +61,7 @@ export const moveMatrix: MoveMatrix = {
   },
 };
 
-export const edgesMatrix: EdgesMatrix = {
+export const preferredMatrix: PreferredMatrix = {
   0: ['s', 'w'],
 };
 

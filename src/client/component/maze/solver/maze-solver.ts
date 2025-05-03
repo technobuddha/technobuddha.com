@@ -1,6 +1,6 @@
 import { randomPick, randomShuffle } from '@technobuddha/library';
 
-import { type CellDirection, type Maze } from '../maze/maze.ts';
+import { type CellDirection, type Maze } from '../geometry/maze.ts';
 
 export type MazeSolverProperties = {
   maze: Maze;

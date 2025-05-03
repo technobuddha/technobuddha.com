@@ -1,23 +1,20 @@
 import { create2DArray } from '@technobuddha/library';
 import { range } from 'lodash-es';
 
-import { type Cell } from '../../maze/maze.ts';
+import { type Cell } from '../../geometry/maze.ts';
 
 import { type MazeGeneratorProperties } from '../maze-generator.ts';
 import { MazeGenerator } from '../maze-generator.ts';
 
 export class Ellers extends MazeGenerator {
-  private group = 0;
+  private setNumber = 0;
   private readonly set: (number | null)[][];
 
   public constructor(props: MazeGeneratorProperties) {
     super(props);
 
     this.currentCell = { x: 0, y: 0 };
-
     this.set = create2DArray<number | null>(this.maze.width, this.maze.height, null);
-
-    this.currentCell = { x: 0, y: 0 };
   }
 
   private merge(main: number | null, x: number, y: number): void {
@@ -44,7 +41,7 @@ export class Ellers extends MazeGenerator {
     }
   }
 
-  public *generate(): Iterator<void> {
+  public *generate(): Generator<void> {
     this.currentCell = { x: 0, y: 0 };
 
     for (this.currentCell.y = 0; this.currentCell.y < this.maze.height; this.currentCell.y++) {
@@ -52,7 +49,7 @@ export class Ellers extends MazeGenerator {
 
       for (this.currentCell.x = 0; this.currentCell.x < this.maze.width; this.currentCell.x++) {
         if (this.set[this.currentCell.x][this.currentCell.y] === null) {
-          const mySet = this.group++;
+          const mySet = this.setNumber++;
 
           this.set[this.currentCell.x][this.currentCell.y] = mySet;
           // this.maze.drawText(this.currentCell, mySet.toString(), 'magenta');
@@ -96,7 +93,12 @@ export class Ellers extends MazeGenerator {
             const cell = members[index];
 
             const next = this.randomPick(
-              this.maze.neighbors(cell).filter(({ x, y }) => y > cell.y && this.set[x][y] === null),
+              this.maze
+                .neighbors(cell)
+                .filter(
+                  ({ x, y, direction }) =>
+                    direction === 'e' && y === cell.y + 1 && this.set[x][y] === null,
+                ),
             );
             if (next) {
               this.maze.removeWall(cell, next.direction);

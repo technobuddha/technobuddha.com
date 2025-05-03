@@ -7,10 +7,10 @@ import { useUserInterface } from '#context/user-interface';
 
 import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
 import { MazeFactory } from '../factory/maze-factory.ts';
+import { type Maze, type MazeProperties } from '../geometry/maze.ts';
+import { SquareMaze } from '../geometry/square-maze.ts';
 import { chooser } from '../library/chooser.ts';
 import { generators, solvers } from '../library/mazes.ts';
-import { type Maze, type MazeProperties } from '../maze/maze.ts';
-import { SquareMaze } from '../maze/square-maze.ts';
 
 import css from './maze-background.module.css';
 
@@ -75,7 +75,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
 
           for (const cell of maze.cellsInMaze()) {
             if (cell.x >= left && cell.x <= right && cell.y >= top && cell.y <= bottom) {
-              maze.mask[cell.x][cell.y] = true;
+              maze.nexus(cell).mask = true;
             }
           }
         }

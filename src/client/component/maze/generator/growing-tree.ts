@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell } from '../maze/maze.ts';
+import { type Cell } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -59,7 +59,7 @@ export class GrowingTree extends MazeGenerator {
     }
   }
 
-  public *generate(): Iterator<void> {
+  public *generate(): Generator<void> {
     while (this.list.length > 0) {
       const index = this.selectCell(this.selectMethod());
       this.currentCell = this.list[index];

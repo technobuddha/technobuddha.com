@@ -1,6 +1,7 @@
 export { BrickMaze } from './brick-maze.ts';
 export { CircularMaze } from './circular-maze.ts';
 export { CubicMaze } from './cubic-maze.ts';
+export { DotMaze } from './dot-maze.ts';
 export { HexagonMaze } from './hexagon-maze.ts';
 export { type Maze, type MazeProperties } from './maze.ts';
 export { OctogonMaze } from './octogon-maze.ts';

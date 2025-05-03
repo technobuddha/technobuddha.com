@@ -4,27 +4,25 @@ import {
   type Cell,
   type CellDirection,
   type CellPillar,
-  type Direction,
   type DrawingSizes,
   type Kind,
   Maze,
   type MazeProperties,
-  type Overrides,
 } from './maze.ts';
 import {
   directionMatrix,
-  edgesMatrix,
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
   pathMatrix,
   pillarMatrix,
+  preferredMatrix,
   rightTurnMatrix,
   straightMatrix,
   wallMatrix,
 } from './zeta-matrix.ts';
 
-export class ZetaMaze extends Maze {
+export class DotMaze extends Maze {
   public constructor({ cellSize = 24, wallSize = 6, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
@@ -36,7 +34,7 @@ export class ZetaMaze extends Maze {
       leftTurnMatrix,
       straightMatrix,
       moveMatrix,
-      edgesMatrix,
+      preferredMatrix,
       pathMatrix,
     );
   }
@@ -109,78 +107,6 @@ export class ZetaMaze extends Maze {
     };
   }
 
-  public override removeWall(
-    cell: Cell,
-    direction: Direction,
-    { walls = this.walls }: Overrides = {},
-  ): void {
-    super.removeWall(cell, direction, { walls });
-
-    switch (direction) {
-      case 'b': {
-        const c1 = this.move(cell, 'a');
-        const c2 = this.move(cell, 'c');
-
-        if (c1) {
-          delete walls[c1.x][c1.y].d;
-          this.drawCell(c1);
-        }
-        if (c2) {
-          delete walls[c2.x][c2.y].h;
-          this.drawCell(c2);
-        }
-        break;
-      }
-
-      case 'd': {
-        const c1 = this.move(cell, 'c');
-        const c2 = this.move(cell, 'e');
-
-        if (c1) {
-          delete walls[c1.x][c1.y].f;
-          this.drawCell(c1);
-        }
-        if (c2) {
-          delete walls[c2.x][c2.y].b;
-          this.drawCell(c2);
-        }
-        break;
-      }
-
-      case 'f': {
-        const c1 = this.move(cell, 'e');
-        const c2 = this.move(cell, 'g');
-
-        if (c1) {
-          delete walls[c1.x][c1.y].h;
-          this.drawCell(c1);
-        }
-        if (c2) {
-          delete walls[c2.x][c2.y].d;
-          this.drawCell(c2);
-        }
-        break;
-      }
-
-      case 'h': {
-        const c1 = this.move(cell, 'a');
-        const c2 = this.move(cell, 'g');
-
-        if (c1) {
-          delete walls[c1.x][c1.y].f;
-          this.drawCell(c1);
-        }
-        if (c2) {
-          delete walls[c2.x][c2.y].b;
-          this.drawCell(c2);
-        }
-        break;
-      }
-
-      // no default
-    }
-  }
-
   public drawFloor(cell: Cell, color = this.cellColor): void {
     if (this.drawing) {
       const { x1, x2, x7, x8, y1, y2, y7, y8 } = this.cellOffsets(cell);
@@ -198,7 +124,6 @@ export class ZetaMaze extends Maze {
         ],
         color,
       );
-      // this.drawing.rect({ x: x1, y: y1 }, { x: x8, y: y8 }, color);
     }
   }
 
@@ -206,7 +131,6 @@ export class ZetaMaze extends Maze {
     cell: T,
     cellColor = this.cellColor,
     wallColor = this.wallColor,
-    { walls = this.walls }: Overrides = {},
   ): T {
     this.drawFloor(
       cell,
@@ -215,21 +139,36 @@ export class ZetaMaze extends Maze {
       : cellColor,
     );
 
-    const wall = walls[cell.x][cell.y];
+    const wall = this.nexus(cell).walls;
     for (const direction of directionMatrix) {
-      switch (wall[direction]) {
+      const crossed =
+        (direction === 'b' &&
+          this.inMaze({ x: cell.x, y: cell.y - 1 }) &&
+          !this.nexus({ x: cell.x, y: cell.y - 1 }).walls.d) ||
+        (direction === 'd' &&
+          this.inMaze({ x: cell.x + 1, y: cell.y }) &&
+          !this.nexus({ x: cell.x + 1, y: cell.y }).walls.f) ||
+        (direction === 'f' &&
+          this.inMaze({ x: cell.x, y: cell.y + 1 }) &&
+          !this.nexus({ x: cell.x, y: cell.y + 1 }).walls.h) ||
+        (direction === 'h' &&
+          this.inMaze({ x: cell.x - 1, y: cell.y }) &&
+          !this.nexus({ x: cell.x - 1, y: cell.y }).walls.b);
+
+      switch (wall[direction]!) {
         case true: {
           this.drawWall({ ...cell, direction }, wallColor);
+
+          this.drawIntersection({ ...cell, direction }, crossed ? cellColor : wallColor);
           break;
         }
 
         case false: {
-          this.drawBridge({ ...cell, direction }, cellColor);
+          this.drawIntersection({ ...cell, direction }, cellColor);
+          if (crossed) {
+            this.drawBridge({ ...cell, direction }, wallColor);
+          }
           break;
-        }
-
-        case undefined: {
-          this.drawShortWall({ ...cell, direction }, wallColor);
         }
 
         // no default
@@ -237,15 +176,13 @@ export class ZetaMaze extends Maze {
     }
 
     for (const pillar of this.pillars) {
-      // if (pillar[0] in wall && pillar[1] in wall) {
       this.drawPillar({ ...cell, pillar }, wallColor);
-      // }
     }
 
     return cell;
   }
 
-  public drawWall(cd: CellDirection, color = this.wallColor): void {
+  public drawLongWall(cd: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
       this.cellOffsets(cd);
       switch (cd.direction) {
@@ -334,7 +271,7 @@ export class ZetaMaze extends Maze {
     }
   }
 
-  public drawShortWall(cd: CellDirection, color = this.wallColor): void {
+  public drawWall(cd: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
       this.cellOffsets(cd);
       switch (cd.direction) {
@@ -342,7 +279,7 @@ export class ZetaMaze extends Maze {
         case 'c':
         case 'e':
         case 'g': {
-          this.drawWall(cd, color);
+          this.drawLongWall(cd, color);
           break;
         }
 
@@ -408,7 +345,7 @@ export class ZetaMaze extends Maze {
     }
   }
 
-  public drawBridge(cd: CellDirection, color = this.cellColor): void {
+  public drawIntersection(cd: CellDirection, color = this.cellColor): void {
     if (this.drawing) {
       this.cellOffsets(cd);
       switch (cd.direction) {
@@ -465,6 +402,64 @@ export class ZetaMaze extends Maze {
             ],
             color,
           );
+          break;
+        }
+
+        // no default
+      }
+    }
+  }
+
+  public drawBridge(cd: CellDirection, color = this.wallColor): void {
+    if (this.drawing) {
+      this.cellOffsets(cd);
+      switch (cd.direction) {
+        case 'b': {
+          const { x7, x8, x9, y0, y1, y2 } = this.cellOffsets(cd);
+
+          if ((cd.x + cd.y) % 2 === 0) {
+            this.drawing.line({ x: x7, y: y1 }, { x: x8, y: y0 }, color);
+            this.drawing.line({ x: x8, y: y2 }, { x: x9, y: y1 }, color);
+          } else {
+            this.drawing.line({ x: x7, y: y1 }, { x: x8, y: y2 }, color);
+            this.drawing.line({ x: x9, y: y1 }, { x: x8, y: y0 }, color);
+          }
+          break;
+        }
+
+        case 'd': {
+          const { x7, x8, x9, y7, y8, y9 } = this.cellOffsets(cd);
+          if ((cd.x + cd.y) % 2 === 0) {
+            this.drawing.line({ x: x7, y: y8 }, { x: x8, y: y9 }, color);
+            this.drawing.line({ x: x8, y: y7 }, { x: x9, y: y8 }, color);
+          } else {
+            this.drawing.line({ x: x7, y: y8 }, { x: x8, y: y7 }, color);
+            this.drawing.line({ x: x8, y: y9 }, { x: x9, y: y8 }, color);
+          }
+          break;
+        }
+
+        case 'f': {
+          const { x0, x1, x2, y7, y8, y9 } = this.cellOffsets(cd);
+          if ((cd.x + cd.y) % 2 === 0) {
+            this.drawing.line({ x: x1, y: y7 }, { x: x0, y: y8 }, color);
+            this.drawing.line({ x: x2, y: y8 }, { x: x1, y: y9 }, color);
+          } else {
+            this.drawing.line({ x: x1, y: y7 }, { x: x2, y: y8 }, color);
+            this.drawing.line({ x: x0, y: y8 }, { x: x1, y: y9 }, color);
+          }
+          break;
+        }
+
+        case 'h': {
+          const { x0, x1, x2, y0, y1, y2 } = this.cellOffsets(cd);
+          if ((cd.x + cd.y) % 2 === 0) {
+            this.drawing.line({ x: x1, y: y2 }, { x: x0, y: y1 }, color);
+            this.drawing.line({ x: x2, y: y1 }, { x: x1, y: y0 }, color);
+          } else {
+            this.drawing.line({ x: x1, y: y2 }, { x: x2, y: y1 }, color);
+            this.drawing.line({ x: x1, y: y0 }, { x: x0, y: y1 }, color);
+          }
           break;
         }
 
@@ -600,26 +595,5 @@ export class ZetaMaze extends Maze {
     const { x3, x6, y3, y6 } = this.cellOffsets(cell);
 
     return { x: x3, y: y3, w: x6 - x3, h: y6 - y3 };
-  }
-
-  public override removeInteriorWalls(): void {
-    super.removeInteriorWalls();
-    this.freezeWalls();
-  }
-
-  public override freezeWalls(): void {
-    for (let x = 1; x < this.width; ++x) {
-      for (let y = 1; y < this.height; ++y) {
-        if (this.random() < 0.5) {
-          // remove walls on the \ diagonal
-          delete this.walls[x][y].h;
-          delete this.walls[x - 1][y - 1].d;
-        } else {
-          // remove walls on the / diagonal
-          delete this.walls[x - 1][y].b;
-          delete this.walls[x][y - 1].f;
-        }
-      }
-    }
   }
 }

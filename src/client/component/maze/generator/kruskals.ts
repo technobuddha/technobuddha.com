@@ -1,4 +1,4 @@
-import { type Cell, type CellDirection } from '../maze/maze.ts';
+import { type Cell, type CellDirection } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -53,7 +53,7 @@ class DisjointSet {
 
 export class Kruskals extends MazeGenerator {
   private readonly disjointSubsets: DisjointSet;
-  private readonly edges: CellDirection[];
+  private readonly preferreds: CellDirection[];
 
   public constructor(props: MazeGeneratorProperties) {
     super(props);
@@ -62,8 +62,8 @@ export class Kruskals extends MazeGenerator {
 
     const allCells = this.maze.cellsInMaze();
 
-    this.edges = this.randomShuffle(
-      allCells.flatMap((c) => this.maze.edges(c).map((direction) => ({ ...c, direction }))),
+    this.preferreds = this.randomShuffle(
+      allCells.flatMap((c) => this.maze.preferreds(c).map((direction) => ({ ...c, direction }))),
     );
 
     this.currentCell = allCells.at(0)!;
@@ -73,11 +73,11 @@ export class Kruskals extends MazeGenerator {
     return cell.y * this.maze.width + cell.x;
   }
 
-  public *generate(): Iterator<void> {
-    while (this.edges.length > 0) {
-      const edge = this.edges.pop()!;
-      const cell1 = { ...edge };
-      const cell2 = this.maze.move(cell1, edge.direction)!;
+  public *generate(): Generator<void> {
+    while (this.preferreds.length > 0) {
+      const preferred = this.preferreds.pop()!;
+      const cell1 = { ...preferred };
+      const cell2 = this.maze.move(cell1, preferred.direction)!;
 
       const idx1 = this.getCellIndex(cell1);
       const idx2 = this.getCellIndex(cell2);
@@ -86,7 +86,7 @@ export class Kruskals extends MazeGenerator {
       const parent2 = this.disjointSubsets.findParent(idx2);
 
       if (parent1 !== parent2) {
-        this.maze.removeWall(cell1, edge.direction);
+        this.maze.removeWall(cell1, preferred.direction);
         yield;
         this.disjointSubsets.union(idx1, idx2);
       }

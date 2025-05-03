@@ -1,4 +1,4 @@
-import { type Cell, type CellDirection } from '../../maze/maze.js';
+import { type Cell, type CellDirection } from '../../geometry/maze.js';
 
 import { type MazeGeneratorProperties } from '../maze-generator.js';
 import { MazeGenerator } from '../maze-generator.js';

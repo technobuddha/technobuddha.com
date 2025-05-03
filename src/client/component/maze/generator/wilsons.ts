@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellDirection } from '../maze/maze.ts';
+import { type Cell, type CellDirection } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -29,7 +29,7 @@ export class Wilsons extends MazeGenerator {
     }
   }
 
-  public *generate(): Iterator<void> {
+  public *generate(): Generator<void> {
     this.maze.freezeWalls();
 
     while (this.unvisited.length > 0) {

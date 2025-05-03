@@ -1,6 +1,6 @@
 import { animate } from '../drawing/animate.ts';
 import { type MazeGenerator } from '../generator/maze-generator.ts';
-import { type Maze } from '../maze/maze.ts';
+import { type Maze } from '../geometry/maze.ts';
 import { type MazeSolver } from '../solver/maze-solver.ts';
 
 export class MazeRunner {
@@ -27,7 +27,7 @@ export class MazeRunner {
     this.maze.draw();
 
     if (!this.aborted && this.generator) {
-      const step = this.generator.generate();
+      const step = this.generator.run();
 
       while (
         await animate(() => {

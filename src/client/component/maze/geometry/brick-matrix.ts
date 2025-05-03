@@ -1,16 +1,16 @@
 import {
   type DirectionMatrix,
-  type EdgesMatrix,
   type MoveMatrix,
   type OppositeMatrix,
   type PathMatrix,
   type PillarMatrix,
+  type PreferredMatrix,
   type TurnMatrix,
   type WallMatrix,
 } from './maze.ts';
 
 export const directionMatrix: DirectionMatrix = ['a', 'b', 'c', 'd', 'e', 'f'];
-export const pillarMatrix: PillarMatrix = ['ab', 'bc', 'cd', 'de', 'ef', 'fa'];
+export const pillarMatrix: PillarMatrix = ['fa', 'ab', 'bc', 'cd', 'de', 'ef'];
 
 export const wallMatrix: WallMatrix = {
   0: { a: true, b: true, c: true, d: true, e: true, f: true },
@@ -45,43 +45,43 @@ export const leftTurnMatrix: TurnMatrix = {
 };
 
 export const straightMatrix: TurnMatrix = {
-  a: ['a', 'bf', 'ce', 'd'],
-  b: ['b', 'ac', 'df', 'e'],
-  c: ['c', 'bd', 'ae', 'f'],
-  d: ['d', 'ce', 'bf', 'a'],
-  e: ['e', 'df', 'ac', 'b'],
-  f: ['f', 'ae', 'bd', 'c'],
+  a: ['a', 'b', 'f', 'c', 'd', 'e'],
+  b: ['b', 'a', 'c', 'f', 'e', 'd'],
+  c: ['c', 'b', 'd', 'e', 'a', 'f'],
+  d: ['d', 'e', 'c', 'f', 'a', 'b'],
+  e: ['e', 'd', 'f', 'c', 'd', 'a'],
+  f: ['f', 'a', 'e', 'd', 'b', 'c'],
 };
 
 export const moveMatrix: MoveMatrix = {
   0: {
-    a: { x: +0, y: -1 },
-    b: { x: +1, y: -1 },
+    a: { x: -1, y: -1 },
+    b: { x: +0, y: -1 },
     c: { x: +1, y: +0 },
-    d: { x: +0, y: +1 },
-    e: { x: -1, y: +0 },
-    f: { x: -1, y: -1 },
-  },
-  1: {
-    a: { x: +0, y: -1 },
-    b: { x: +1, y: +0 },
-    c: { x: +1, y: +1 },
     d: { x: +0, y: +1 },
     e: { x: -1, y: +1 },
     f: { x: -1, y: +0 },
   },
+  1: {
+    a: { x: +0, y: -1 },
+    b: { x: +1, y: -1 },
+    c: { x: +1, y: +0 },
+    d: { x: +1, y: +1 },
+    e: { x: +0, y: +1 },
+    f: { x: -1, y: +0 },
+  },
 };
 
-export const edgesMatrix: EdgesMatrix = {
-  0: ['b', 'c', 'd'],
-  1: ['b', 'c', 'd'],
+export const preferredMatrix: PreferredMatrix = {
+  0: ['e', 'd', 'c'],
+  1: ['e', 'd', 'c'],
 };
 
 export const pathMatrix: PathMatrix = {
-  a: 90,
-  b: 30,
-  c: 330,
-  d: 270,
-  e: 210,
-  f: 150,
+  a: 135,
+  b: 45,
+  c: 0,
+  d: 315,
+  e: 225,
+  f: 180,
 };

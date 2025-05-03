@@ -1,4 +1,4 @@
-import { type Maze } from '../maze/maze.ts';
+import { type Maze } from '../geometry/maze.ts';
 
 export function trianglePlugin(maze: Maze): void {
   const a = { x: 0, y: maze.height - 1 };
@@ -14,7 +14,7 @@ export function trianglePlugin(maze: Maze): void {
       (c.x - a.x) * asy - (c.y - a.y) * asx > 0 === sab ||
       (c.x - b.x) * (cell.y - b.y) - (c.y - b.y) * (cell.x - b.x) > 0 !== sab
     ) {
-      maze.mask[cell.x][cell.y] = true;
+      maze.nexus(cell).mask = true;
     }
   }
 }

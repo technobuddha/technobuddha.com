@@ -17,9 +17,11 @@ import {
   TriangleMaze,
   WedgeMaze,
   ZetaMaze,
-} from '../maze/index.ts';
+} from '../geometry/index.ts';
+import { WeaveMaze } from '../geometry/weave-maze.ts';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
+  weave: (props) => new WeaveMaze(props),
   circular: (props) => new CircularMaze(props),
   cubic: (props) => new CubicMaze(props),
   pentagon: (props) => new PentagonMaze(props),
@@ -85,9 +87,9 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
     }
   }, [maze]);
 
-  const handleCreateWalls = React.useCallback(() => {
+  const handleCreateCells = React.useCallback(() => {
     if (maze) {
-      maze.createWalls();
+      maze.createCells();
       maze.draw();
     }
   }, [maze]);
@@ -126,7 +128,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         case 'walls': {
           for (let i = 0; i < maze.width; ++i) {
             for (let j = 0; j < maze.height; ++j) {
-              if (maze.walls[i][j][wall]) {
+              if (maze.nexus({ x: i, y: j }).walls[wall]) {
                 maze.drawWall({ x: i, y: j, direction: wall }, 'magenta');
               }
             }
@@ -138,7 +140,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         case 'pillars': {
           for (let i = 0; i < maze.width; ++i) {
             for (let j = 0; j < maze.height; ++j) {
-              const w = maze.walls[i][j];
+              const w = maze.nexus({ x: i, y: j }).walls;
 
               if (pillar[0] in w && pillar[1] in w) {
                 maze.drawPillar({ x: i, y: j, pillar }, 'magenta');
@@ -189,7 +191,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
     if (maze) {
       for (const cell of maze.cellsInMaze()) {
-        for (const direction of Object.keys(maze.walls[cell.x][cell.y])) {
+        for (const direction of Object.keys(maze.nexus(cell).walls)) {
           const move = maze.move(cell, direction);
           if (move) {
             if (maze.inMaze(move)) {
@@ -330,7 +332,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         <button type="button" onClick={handleRemoveWalls}>
           Remove walls
         </button>
-        <button type="button" onClick={handleCreateWalls}>
+        <button type="button" onClick={handleCreateCells}>
           Create walls
         </button>
       </div>

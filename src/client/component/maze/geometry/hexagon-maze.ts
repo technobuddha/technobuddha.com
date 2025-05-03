@@ -5,12 +5,12 @@ import { type Rect } from '../drawing/drawing.ts';
 
 import {
   directionMatrix,
-  edgesMatrix,
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
   pathMatrix,
   pillarMatrix,
+  preferredMatrix,
   rightTurnMatrix,
   straightMatrix,
   wallMatrix,
@@ -30,7 +30,8 @@ const TAN30 = Math.tan(Math.PI / 6);
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class HexagonMaze extends Maze {
-  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
+  // 20 x 1
+  public constructor({ cellSize = 30, wallSize = 3, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -41,7 +42,7 @@ export class HexagonMaze extends Maze {
       leftTurnMatrix,
       straightMatrix,
       moveMatrix,
-      edgesMatrix,
+      preferredMatrix,
       pathMatrix,
     );
   }

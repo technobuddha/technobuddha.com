@@ -1,6 +1,6 @@
 import { type Drawing } from '../drawing/drawing.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/maze-generator.ts';
-import { type Maze, type MazeProperties } from '../maze/maze.ts';
+import { type Maze, type MazeProperties } from '../geometry/maze.ts';
 import { MazeRunner } from '../runner/maze-runner.ts';
 import { type MazeSolver, type MazeSolverProperties } from '../solver/maze-solver.ts';
 
@@ -73,7 +73,7 @@ export class MazeFactory {
       solutionColor: this.solutionColor,
       plugin,
     });
-    maze.reset(); // TODO [2025-04-30]: Reset should not be needed here, but generator is accessing uninitialized things
+    maze.reset(); // TODO [2025-05-15]: Reset should not be needed here, but generator is accessing uninitialized things
 
     const generator = generatorMaker?.({ maze, start: this.start, random: this.random });
     const solver = solverMaker?.({

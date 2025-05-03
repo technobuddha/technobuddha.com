@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type AllOrder } from '../maze/maze.ts';
+import { type AllOrder, type CellDirection } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -34,7 +34,7 @@ export class HuntAndKill extends MazeGenerator {
     this.currentCell = this.randomPick(this.maze.cellsInMaze())!;
   }
 
-  public *generate(): Iterator<void> {
+  public *generate(): Generator<void> {
     while (true) {
       // kill
       this.visited[this.currentCell.x][this.currentCell.y] = true;
@@ -60,6 +60,12 @@ export class HuntAndKill extends MazeGenerator {
           return;
         }
       }
+    }
+  }
+
+  public override addBridge(bridge: CellDirection[]): void {
+    for (const span of bridge) {
+      this.visited[span.x][span.y] = true;
     }
   }
 }

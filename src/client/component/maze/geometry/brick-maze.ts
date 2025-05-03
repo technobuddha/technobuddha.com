@@ -5,12 +5,12 @@ import { type Rect } from '../drawing/drawing.ts';
 
 import {
   directionMatrix,
-  edgesMatrix,
   leftTurnMatrix,
   moveMatrix,
   oppositeMatrix,
   pathMatrix,
   pillarMatrix,
+  preferredMatrix,
   rightTurnMatrix,
   straightMatrix,
   wallMatrix,
@@ -26,7 +26,7 @@ import {
 import { Maze } from './maze.ts';
 
 export class BrickMaze extends Maze {
-  public constructor({ cellSize = 14, wallSize = 2, ...props }: MazeProperties) {
+  public constructor({ cellSize = 16, wallSize = 2, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,
@@ -37,7 +37,7 @@ export class BrickMaze extends Maze {
       leftTurnMatrix,
       straightMatrix,
       moveMatrix,
-      edgesMatrix,
+      preferredMatrix,
       pathMatrix,
     );
   }
@@ -175,26 +175,5 @@ export class BrickMaze extends Maze {
       this.drawing.line({ x: x1, y: y1 }, { x: x4, y: y2 }, color);
       this.drawing.line({ x: x1, y: y2 }, { x: x4, y: y1 }, color);
     }
-  }
-
-  public override toString(): string {
-    let str = '';
-
-    for (let y = 0; y < this.height; ++y) {
-      for (let x = 0; x < this.width; ++x) {
-        str += this.walls[x][y].N ? '+==' : '+  ';
-      }
-      str += '+\n';
-      for (let x = 0; x < this.width; ++x) {
-        str += this.walls[x][y].W ? '|  ' : '   ';
-      }
-      str += this.walls[this.width - 1][y].E ? '|\n' : ' \n';
-    }
-    for (let x = 0; x < this.width; ++x) {
-      str += this.walls[x][this.height - 1].S ? '+==' : '+  ';
-    }
-    str += '+\n';
-
-    return str;
   }
 }

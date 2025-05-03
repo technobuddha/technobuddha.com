@@ -18,6 +18,8 @@ export class CanvasDrawing extends Drawing {
 
   public clear(color = 'transparent', originX = 0, originY = 0): void {
     this.canvas.setTransform(1, 0, 0, 1, 0, 0);
+    this.canvas.imageSmoothingEnabled = false;
+    this.canvas.imageSmoothingQuality = 'high';
 
     if (color === 'transparent') {
       this.canvas.clearRect(0, 0, this.canvas.canvas.width, this.canvas.canvas.height);

@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import cliProgress from 'cli-progress';
 import nReadLines from 'n-readlines';
 
-import { db } from '#server/db/driver';
+import { db } from '#server/db';
 
 const partOfSet = /^([0-9]+)(\/[0-9]+)?(\s*.*)$/u;
 function parsePartOfSet(text: string | null | undefined): {

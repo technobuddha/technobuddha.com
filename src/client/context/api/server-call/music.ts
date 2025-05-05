@@ -1,25 +1,68 @@
-import { type GetArtists, type GetGenres, type GetNewAlbums, type GetTracks } from '#server/api';
+import camelcaseKeys from 'camelcase-keys';
+import { type CamelCasedPropertiesDeep } from 'type-fest';
 
-import { type FetchAPI } from '../api-context.tsx';
+import { MusicAPI } from '#api/music';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const music = (fetchAPI: FetchAPI) => ({
-  async tracks() {
-    return fetchAPI<GetTracks[]>('/api/music/tracks', { method: 'GET', validStatuses: [200] });
-  },
+import { FetchStatusError } from '../fetch-status-error.tsx';
+import { type Album, type Artist, type Genre, type Track } from '../schema.ts';
 
-  async newAlbums() {
-    return fetchAPI<GetNewAlbums[]>('/api/music/newAlbums', {
-      method: 'GET',
-      validStatuses: [200],
-    });
-  },
+const api = new MusicAPI({ host: 'http://localhost:3000' });
 
-  async artists() {
-    return fetchAPI<GetArtists[]>('/api/music/artists', { method: 'GET', validStatuses: [200] });
-  },
+// eslint-disable-next-line @typescript-eslint/require-await
+export async function tracks(): Promise<Track[]> {
+  return api.getTracks().then((response) => {
+    switch (response.status) {
+      case 200: {
+        return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Track[]>;
+      }
 
-  async genres() {
-    return fetchAPI<GetGenres[]>('/api/music/genres', { method: 'GET', validStatuses: [200] });
-  },
-});
+      default: {
+        throw new FetchStatusError(response);
+      }
+    }
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/require-await
+export async function newAlbums(): Promise<Album[]> {
+  return api.getNewAlbums().then((response) => {
+    switch (response.status) {
+      case 200: {
+        return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Album[]>;
+      }
+
+      default: {
+        throw new FetchStatusError(response);
+      }
+    }
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/require-await
+export async function artists(): Promise<Artist[]> {
+  return api.getArtists().then((response) => {
+    switch (response.status) {
+      case 200: {
+        return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Artist[]>;
+      }
+
+      default: {
+        throw new FetchStatusError(response);
+      }
+    }
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/require-await
+export async function genres(): Promise<Genre[]> {
+  return api.getGenres().then((response) => {
+    switch (response.status) {
+      case 200: {
+        return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Genre[]>;
+      }
+      default: {
+        throw new FetchStatusError(response);
+      }
+    }
+  });
+}

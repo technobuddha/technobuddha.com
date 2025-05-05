@@ -9,14 +9,18 @@ import typescriptTransform from 'i18next-scanner-typescript';
 import { isNil, isString } from 'lodash-es';
 import vfs from 'vinyl-fs';
 
-import paths from '#config/paths';
+import { paths } from '#config/paths';
+import {
+  readTranslations,
+  translate,
+  type TranslateReturn,
+  writeTranslations,
+} from '#server/translation';
 import i18next from '#settings/i18next';
-import { type TranslateReturn } from '#util/translation';
-import { readTranslations, translate, writeTranslations } from '#util/translation';
 
-function out(text: string | undefined) {
+function out(text: string | undefined): void {
   if (text) {
-    process.stdout.write(text);
+    // process.stdout.write(text);
   }
 }
 
@@ -24,14 +28,15 @@ void (async function main() {
   const foreign = i18next.supportedLngs ? i18next.supportedLngs.filter((lng) => lng !== 'en') : [];
 
   for (const ns of isString(i18next.ns) ? [i18next.ns] : (i18next.ns ?? ['translation'])) {
-    const en = readTranslations('en', ns, 'external');
+    const en = await readTranslations('en', ns, 'external');
 
     for (const lng of foreign) {
-      const t = readTranslations(lng, ns, 'external');
+      const t = await readTranslations(lng, ns, 'external');
 
       await Promise.all(
         Object.keys(en)
           .filter((key) => isNil(t[key]))
+          // eslint-disable-next-line @typescript-eslint/require-await
           .map(async (key) => translate(key, lng)),
       ).then((results) => {
         for (const result of results) {
@@ -59,15 +64,15 @@ void (async function main() {
       },
       func: {
         list: ['i18next.t', 'i18n.t', 't'],
-        extensions: ['.js', '.jsx'],
+        extensions: ['.ts', '.tsx'],
       },
-      trans: {
-        component: 'Trans',
-        i18nKey: 'i18nKey',
-        defaultsKey: 'defaults',
-        extensions: ['.js', '.jsx'],
-        fallbackKey: (_ns, text) => text,
-      },
+      // trans: {
+      //   component: 'Trans',
+      //   i18nKey: 'i18nKey',
+      //   defaultsKey: 'defaults',
+      //   extensions: ['.tsx'],
+      //   fallbackKey: (_ns, text) => text,
+      // },
 
       lngs: i18next.supportedLngs || undefined,
       ns: i18next.ns,
@@ -99,11 +104,11 @@ void (async function main() {
     .pipe(
       new stream.Transform({
         objectMode: true,
-        transform(file, _enc, callback) {
+        async transform(file, _enc, callback) {
           const [lng, ns] = file.path.split('/');
           const newTranslations = JSON.parse(file.contents.toString()) as Record<string, string>;
-          const oldTranslations = readTranslations(lng, ns);
-          const archiveTranslations = readTranslations(lng, ns, 'archive');
+          const oldTranslations = await readTranslations(lng, ns);
+          const archiveTranslations = await readTranslations(lng, ns, 'archive');
           const promises = [] as Promise<TranslateReturn>[];
 
           for (const [key, translation] of Object.entries(newTranslations)) {
@@ -130,7 +135,7 @@ void (async function main() {
           }
 
           Promise.all(promises)
-            .then((results) => {
+            .then(async (results) => {
               for (const result of results) {
                 if (result.translation) {
                   newTranslations[result.key] = result.translation;
@@ -140,8 +145,8 @@ void (async function main() {
                 }
               }
 
-              writeTranslations(newTranslations, lng, ns);
-              writeTranslations(archiveTranslations, lng, ns, 'archive');
+              await writeTranslations(newTranslations, lng, ns);
+              await writeTranslations(archiveTranslations, lng, ns, 'archive');
 
               callback();
             })

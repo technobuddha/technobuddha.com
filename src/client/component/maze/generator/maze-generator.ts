@@ -1,24 +1,26 @@
 import { randomPick, randomShuffle } from '@technobuddha/library';
 
-import { animate } from '../drawing/animate.ts';
-import { type Cell, type Maze } from '../maze/maze.ts';
+import { type Cell, type CellDirection, type Maze } from '../geometry/maze.ts';
 
 export type MazeGeneratorProperties = {
   maze: Maze;
   start?: Cell;
+  speed?: number;
   random?(this: void): number;
 };
 
 export abstract class MazeGenerator {
   public maze: MazeGeneratorProperties['maze'];
   public random: Exclude<MazeGeneratorProperties['random'], undefined>;
+  public readonly speed: number;
   public start: Cell;
   public currentCell: Cell;
 
-  public constructor({ maze, start, random }: MazeGeneratorProperties) {
+  public constructor({ maze, start, speed = 5, random }: MazeGeneratorProperties) {
     this.maze = maze;
     this.start = start ?? this.maze.randomCell();
     this.currentCell = this.start;
+    this.speed = speed;
     this.random = random ?? Math.random;
   }
 
@@ -30,23 +32,16 @@ export abstract class MazeGenerator {
     return randomShuffle(array, this.random);
   }
 
-  public async generate(): Promise<Maze> {
-    const { maze } = this;
-
-    maze.draw();
-    let building = true;
-    while (building) {
-      building = await animate(() => {
-        let go = true;
-        for (let i = 0; go && i < 1; ++i) {
-          go = this.step();
-        }
-        return go;
-      });
-    }
-
-    return maze;
+  public *run(): Generator<void> {
+    this.maze.hookPreGeneration?.(this);
+    yield* this.generate();
+    this.maze.hookPostGeneration?.(this);
   }
 
-  protected abstract step(): boolean;
+  public abstract generate(): Generator<void>;
+
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  public addBridge(_bridge: CellDirection[]): void {
+    // no-op by default
+  }
 }

@@ -1,9 +1,9 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type CellDirection, type Direction } from '../../maze/maze.js';
+import { type CellDirection, type Direction } from '../../geometry/maze.ts';
 
-import { type MazeGeneratorProperties } from '../maze-generator.js';
-import { MazeGenerator } from '../maze-generator.js';
+import { type MazeGeneratorProperties } from '../maze-generator.ts';
+import { MazeGenerator } from '../maze-generator.ts';
 
 export class TruePrims extends MazeGenerator {
   private readonly visited: boolean[][];
@@ -22,7 +22,10 @@ export class TruePrims extends MazeGenerator {
       this.maze.height,
       (x, y) =>
         Object.fromEntries(
-          Object.entries(this.maze.walls[x][y]).map(([direction]) => [direction, this.random()]),
+          Object.entries(this.maze.nexus({ x: x, y: y }).walls).map(([direction]) => [
+            direction,
+            this.random(),
+          ]),
         ),
     );
 

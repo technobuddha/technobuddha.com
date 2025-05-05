@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell } from '../maze/maze.ts';
+import { type Cell } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -59,26 +59,23 @@ export class GrowingTree extends MazeGenerator {
     }
   }
 
-  public override step(): boolean {
-    for (let i = 0; i < 5 && this.list.length > 0; ++i) {
+  public *generate(): Generator<void> {
+    while (this.list.length > 0) {
       const index = this.selectCell(this.selectMethod());
       this.currentCell = this.list[index];
 
-      const unvisitedNeighbors = this.maze
-        .neighbors(this.currentCell)
-        .filter((cell) => !this.visited[cell.x][cell.y]);
-      if (unvisitedNeighbors.length > 0) {
-        const cell = this.randomPick(unvisitedNeighbors)!;
-        this.maze.removeWall(this.currentCell, cell.direction);
+      const cell = this.randomPick(
+        this.maze.neighbors(this.currentCell).filter((c) => !this.visited[c.x][c.y]),
+      );
+
+      if (cell) {
+        yield this.maze.removeWall(this.currentCell, cell.direction);
         this.visited[cell.x][cell.y] = true;
 
         this.list.push(cell);
       } else {
         this.list.splice(index, 1);
-        i--;
       }
     }
-
-    return this.list.length > 0;
   }
 }

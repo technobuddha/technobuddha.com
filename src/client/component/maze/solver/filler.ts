@@ -1,71 +1,75 @@
-import { animate } from '../drawing/animate.ts';
-import { type CellDirection } from '../maze/maze.ts';
+import { type CellDirection } from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 type DeadEndProperties = MazeSolverProperties & {
+  markedColor?: string;
   method?: 'cul-de-sac' | 'dead-end';
 };
 
 export class Filler extends MazeSolver {
+  public markedColor: string;
   protected method: DeadEndProperties['method'];
 
-  public constructor({ method = 'cul-de-sac', ...props }: DeadEndProperties) {
+  public constructor({
+    markedColor = '#EF3E36',
+    method = 'cul-de-sac',
+    ...props
+  }: DeadEndProperties) {
     super(props);
+    this.markedColor = markedColor;
     this.method = method;
   }
 
-  public async solve({ solutionColor = '#00FF00' }): Promise<void> {
-    const walls = this.maze.cloneWalls();
-    this.maze.prepareDrawing(this.drawing);
+  public *solve({ markedColor = this.markedColor, exit = this.maze.exit } = {}): Iterator<void> {
+    const walls = this.maze.backup();
 
-    let deadEnds = this.randomShuffle(this.maze.deadEnds({ walls }));
-    while (deadEnds.length > 0) {
-      for (const deadEnd of deadEnds) {
-        if (this.method === 'cul-de-sac') {
-          for (let cell = deadEnd; this.maze.isDeadEnd(cell, { walls }); ) {
-            const [move] = this.maze.validMoves(cell, { walls });
+    while (true) {
+      const deadEnds = this.randomShuffle(this.maze.deadEnds());
+      if (deadEnds.length === 0) {
+        break;
+      }
 
-            await animate(() => {
-              this.maze.addWall(cell, move.direction, { walls }, false);
-              this.maze.drawX(cell);
-            });
-            // eslint-disable-next-line require-atomic-updates
-            cell = { x: move.x, y: move.y };
+      if (this.method === 'cul-de-sac') {
+        for (const deadEnd of deadEnds) {
+          for (let culdesac = deadEnd; this.maze.isDeadEnd(culdesac); ) {
+            const [move] = this.maze.validMoves(culdesac);
+            this.maze.addWall(culdesac, move.direction, false);
+            this.maze.drawX(this.maze.drawCell(culdesac), markedColor);
+            yield;
+            culdesac = { x: move.x, y: move.y };
           }
-        } else {
-          await animate(() => {
-            const moves = this.maze.validMoves(deadEnd, { walls });
-
-            for (const move of moves) {
-              this.maze.addWall(deadEnd, move.direction, { walls }, false);
-            }
-
-            this.maze.drawX(deadEnd);
-          });
+        }
+      } else {
+        for (const deadEnd of deadEnds) {
+          const [move] = this.maze.validMoves(deadEnd);
+          this.maze.addWall(deadEnd, move.direction, false);
+          this.maze.drawX(this.maze.drawCell(deadEnd), markedColor);
+          yield;
         }
       }
-      deadEnds = this.randomShuffle(this.maze.deadEnds({ walls }));
     }
-
-    this.maze.clear();
-    this.maze.drawDistances();
 
     let cell = {
       ...this.maze.entrance,
-      direction: this.maze.opposite(this.maze.entrance.direction),
+      direction: this.maze.opposite(this.maze.entrance),
     };
     const path: CellDirection[] = [cell];
-    while (cell.x !== this.maze.exit.x || cell.y !== this.maze.exit.y) {
-      const [move] = this.maze
-        .validMoves(cell, { walls })
-        .filter((m) => !path.some((p) => p.x === m.x && p.y === m.y));
-      this.maze.drawPath({ ...cell, direction: move.direction });
+    while (!this.maze.isSame(cell, exit)) {
+      const moves = this.maze
+        .validMoves(cell)
+        .filter((m) => !path.some((p) => this.maze.isSame(p, m)));
+
+      if (moves.length > 1) {
+        throw new Error('Multiple paths found');
+      }
+
+      const [move] = moves;
+      this.maze.solution.push({ ...cell, direction: move.direction });
       path.push(cell);
       cell = move;
     }
 
-    this.maze.drawCell(this.maze.exit);
-    this.maze.drawPath(this.maze.exit, solutionColor);
+    this.maze.restore(walls);
   }
 }

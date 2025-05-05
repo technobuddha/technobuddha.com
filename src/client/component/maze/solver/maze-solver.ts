@@ -1,29 +1,28 @@
 import { randomPick, randomShuffle } from '@technobuddha/library';
 
-import { type Drawing } from '../drawing/drawing.ts';
-import { type CellDirection, type Maze } from '../maze/maze.ts';
+import { type CellDirection, type Maze } from '../geometry/maze.ts';
 
 export type MazeSolverProperties = {
   maze: Maze;
-  drawing: Drawing;
+  speed?: number;
   random?(this: void): number;
 };
 
 export type SolveArguments = {
   color?: string;
-  solutionColor?: string;
   entrance?: CellDirection;
   exit?: CellDirection;
 };
 
 export abstract class MazeSolver {
+  public readonly speed: number;
+
   protected maze: MazeSolverProperties['maze'];
-  protected drawing: MazeSolverProperties['drawing'];
   protected random: () => number;
 
-  public constructor({ maze, drawing, random = Math.random }: MazeSolverProperties) {
+  public constructor({ maze, speed = 1, random = Math.random }: MazeSolverProperties) {
     this.maze = maze;
-    this.drawing = drawing;
+    this.speed = speed;
     this.random = random;
   }
 
@@ -35,5 +34,5 @@ export abstract class MazeSolver {
     return randomShuffle(array, this.random);
   }
 
-  public abstract solve(args: SolveArguments): Promise<void>;
+  public abstract solve(args?: SolveArguments): Iterator<void>;
 }

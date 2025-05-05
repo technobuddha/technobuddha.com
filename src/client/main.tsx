@@ -22,3 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.textContent = 'Failed to mount React application';
   }
 });
+
+window.addEventListener('message', (e) => {
+  if (typeof e.data.event === 'string' && e.data.event.includes('fast')) {
+    console.log(e.data.source, e.data.payload); //
+  }
+});

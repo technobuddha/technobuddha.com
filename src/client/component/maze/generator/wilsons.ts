@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellDirection } from '../maze/maze.ts';
+import { type Cell, type CellDirection } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -14,9 +14,7 @@ export class Wilsons extends MazeGenerator {
     const { width, height } = this.maze;
 
     this.visited = create2DArray(width, height, false);
-    this.unvisited = create2DArray(width, height, (x, y) => ({ x, y }))
-      .flat()
-      .filter((cell) => this.maze.inMaze(cell));
+    this.unvisited = this.maze.cellsInMaze();
 
     this.currentCell = this.start;
     this.markAsVisited(this.currentCell);
@@ -31,9 +29,11 @@ export class Wilsons extends MazeGenerator {
     }
   }
 
-  public override step(): boolean {
-    for (let i = 0; i < 10 && this.unvisited.length > 0; ++i) {
-      this.currentCell = this.unvisited[Math.floor(this.random() * this.unvisited.length)];
+  public *generate(): Generator<void> {
+    this.maze.freezeWalls();
+
+    while (this.unvisited.length > 0) {
+      this.currentCell = this.randomPick(this.unvisited)!;
       let path: (Cell | CellDirection)[] = [this.currentCell];
 
       while (!this.visited[this.currentCell.x][this.currentCell.y]) {
@@ -42,7 +42,7 @@ export class Wilsons extends MazeGenerator {
         let cellVisited = false;
         let cellPreviousIndex = -1;
         for (const [index, pathCell] of path.entries()) {
-          if (pathCell.x === cell.x && pathCell.y === cell.y) {
+          if (this.maze.isSame(pathCell, cell)) {
             cellVisited = true;
             cellPreviousIndex = index;
           }
@@ -59,12 +59,11 @@ export class Wilsons extends MazeGenerator {
 
       for (const cell of path) {
         if ('direction' in cell) {
-          this.maze.removeWall(cell, this.maze.opposite(cell.direction));
+          this.maze.removeWall(cell, this.maze.opposite(cell));
+          yield;
         }
         this.markAsVisited(cell);
       }
     }
-
-    return this.unvisited.length > 0;
   }
 }

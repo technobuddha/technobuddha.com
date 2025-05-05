@@ -1,4 +1,4 @@
-import { type Cell, type CellDirection } from '../maze/maze.ts';
+import { type Cell, type CellDirection } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -53,39 +53,31 @@ class DisjointSet {
 
 export class Kruskals extends MazeGenerator {
   private readonly disjointSubsets: DisjointSet;
-  private readonly edges: CellDirection[];
+  private readonly preferreds: CellDirection[];
 
   public constructor(props: MazeGeneratorProperties) {
     super(props);
 
     this.disjointSubsets = new DisjointSet(this.maze.width * this.maze.height);
 
-    this.edges = [];
-    for (let x = 0; x < this.maze.width; ++x) {
-      for (let y = 0; y < this.maze.height; ++y) {
-        for (const direction of this.maze.edges({ x, y })) {
-          this.edges.push({ x, y, direction });
-        }
-      }
-    }
-    this.edges = this.randomShuffle(this.edges);
+    const allCells = this.maze.cellsInMaze();
 
-    this.currentCell = { x: 0, y: 0 };
+    this.preferreds = this.randomShuffle(
+      allCells.flatMap((c) => this.maze.preferreds(c).map((direction) => ({ ...c, direction }))),
+    );
+
+    this.currentCell = allCells.at(0)!;
   }
 
   private getCellIndex(cell: Cell): number {
-    const {
-      maze: { width },
-    } = this;
-
-    return cell.y * width + cell.x;
+    return cell.y * this.maze.width + cell.x;
   }
 
-  public override step(): boolean {
-    for (let i = 0; i < 10 && this.edges.length > 0; ++i) {
-      const edge = this.edges.pop()!;
-      const cell1 = { ...edge };
-      const cell2 = this.maze.move(cell1, edge.direction)!;
+  public *generate(): Generator<void> {
+    while (this.preferreds.length > 0) {
+      const preferred = this.preferreds.pop()!;
+      const cell1 = { ...preferred };
+      const cell2 = this.maze.move(cell1, preferred.direction)!;
 
       const idx1 = this.getCellIndex(cell1);
       const idx2 = this.getCellIndex(cell2);
@@ -94,11 +86,10 @@ export class Kruskals extends MazeGenerator {
       const parent2 = this.disjointSubsets.findParent(idx2);
 
       if (parent1 !== parent2) {
-        this.maze.removeWall(cell1, edge.direction);
+        this.maze.removeWall(cell1, preferred.direction);
+        yield;
         this.disjointSubsets.union(idx1, idx2);
       }
     }
-
-    return this.edges.length > 0;
   }
 }

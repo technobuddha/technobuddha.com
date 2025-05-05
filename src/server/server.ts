@@ -10,7 +10,7 @@ import { listener } from './listener.ts';
 import { proxy } from './proxy.ts';
 import { setup } from './setup.ts';
 import { staticContent } from './static-content.ts';
-import { translation } from './translation.ts';
+import { translation } from './translation/translation.ts';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 

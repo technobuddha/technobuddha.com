@@ -4,8 +4,8 @@ import { type Logger } from 'winston';
 import { browserSettings } from '#settings/browser.js';
 import { userInterfaceSettings } from '#settings/user-interface.js';
 
-import { authentication } from './router/authentication.ts';
-import { music } from './router/music.ts';
+import { authentication } from './authentication.ts';
+import { music } from './music.ts';
 
 export function api(app: Express, logger: Logger): void {
   app.use(

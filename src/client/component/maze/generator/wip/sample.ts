@@ -1,4 +1,4 @@
-import { MazeGenerator, type MazeGeneratorProperties } from '../maze-generator.js';
+import { MazeGenerator, type MazeGeneratorProperties } from '../maze-generator.ts';
 
 const steps = [
   { x: 0, y: 0, direction: 's' },

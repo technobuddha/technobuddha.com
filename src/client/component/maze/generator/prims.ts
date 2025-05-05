@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell } from '../maze/maze.ts';
+import { type Cell } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -16,25 +16,23 @@ export class Prims extends MazeGenerator {
     this.visited[this.start.x][this.start.y] = true;
   }
 
-  public override step(): boolean {
-    for (let i = 0; i < 10 && this.activeCells.length > 0; ++i) {
+  public override *generate(): Generator<void> {
+    while (this.activeCells.length > 0) {
       const cellIndex = Math.floor(this.random() * this.activeCells.length);
       this.currentCell = this.activeCells[cellIndex];
 
-      const unvisitedNeighbors = this.maze
-        .neighbors(this.currentCell)
-        .filter((cell) => !this.visited[cell.x][cell.y]);
-      if (unvisitedNeighbors.length > 0) {
-        const newCell = this.randomPick(unvisitedNeighbors)!;
-        this.maze.removeWall(this.currentCell, newCell.direction);
-        this.visited[newCell.x][newCell.y] = true;
+      const cell = this.randomPick(
+        this.maze.neighbors(this.currentCell).filter((c) => !this.visited[c.x][c.y]),
+      );
+      if (cell) {
+        this.maze.removeWall(this.currentCell, cell.direction);
+        yield;
+        this.visited[cell.x][cell.y] = true;
 
-        this.activeCells.push(newCell);
+        this.activeCells.push(cell);
       } else {
         this.activeCells.splice(cellIndex, 1);
       }
     }
-
-    return this.activeCells.length > 0;
   }
 }

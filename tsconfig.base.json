@@ -41,13 +41,13 @@
     "allowUnreachableCode": false,
     "skipLibCheck": true,
     "paths": {
+      "#api/*": ["./src/api/*/index.ts"],
       "#context/*": ["./src/client/context/*/index.ts"],
       "#control": ["./src/client/control/index.ts"],
-      "#component*": ["./src/client/component*"],
+      "#component*": ["./src/client/component/*/index.ts"],
       "#client*": ["./src/client*"],
-      "#server*": ["./src/server*"],
+      "#server/*": ["./src/server/*/index.ts"],
       "#util*": ["./src/util*"],
-      "#schema": ["./src/schema/index.ts"],
       "#settings*": ["./src/settings*"],
       "#config*": ["./src/config*"]
     }

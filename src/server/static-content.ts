@@ -9,6 +9,8 @@ import { paths } from '#config/paths';
 import { browserSettings } from '#settings/browser';
 import { userInterfaceSettings } from '#settings/user-interface';
 
+import { cacheControl } from './cache-control.ts';
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 function status404(_req: Request, res: Response): void {
@@ -19,23 +21,13 @@ function status404(_req: Request, res: Response): void {
   });
 }
 
-function cacheControl(days = 0): string {
-  const seconds = days * 24 * 60 * 60;
-
-  if (seconds === 0 || isDevelopment) {
-    return 'public, no-cache, no-store, must-revalidate';
-  }
-
-  return `public, max-age=${seconds}`;
-}
-
 export function staticContent(app: Application, logger: Logger): void {
   app
     .get('/oeoaa', (_req, res) => {
       res.send('Ting Tang Walla Walla Bing Bang\n');
     })
     .use('/.well-known/', express.static(paths.wellKnown), status404)
-    .get('/locales/*', express.static(paths.home), status404)
+    .use('/locales/', express.static(paths.locales), status404)
     .get(
       '/art/:id',
       (req, _res, next) => {

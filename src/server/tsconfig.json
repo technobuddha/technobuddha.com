@@ -6,10 +6,5 @@
   "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"] },
   "include": ["**/*.ts"],
   "exclude": [],
-  "references": [
-    { "path": "../config" },
-    { "path": "../settings" },
-    { "path": "../schema" },
-    { "path": "../util" }
-  ]
+  "references": [{ "path": "../config" }, { "path": "../settings" }]
 }

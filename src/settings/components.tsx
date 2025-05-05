@@ -11,6 +11,7 @@ import {
   GiOilySpiral,
   GiOrbital,
   GiPalette,
+  GiSpottedBug,
 } from 'react-icons/gi';
 import { HiColorSwatch } from 'react-icons/hi';
 
@@ -229,10 +230,10 @@ export const components: (t: TFunction) => Component[] = (t) => [
     active: true,
     loggedIn: true,
     name: 'maze-debugger',
-    icon: GiMaze,
+    icon: GiSpottedBug,
     primary: t('Maze'),
     secondary: t('Maze debugger'),
-    location: '/maze/debug',
+    location: '/debug',
     component: MazeDebugger,
     todo: [t('Add a description to this component')],
   },

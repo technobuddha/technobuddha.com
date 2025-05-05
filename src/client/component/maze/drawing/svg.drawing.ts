@@ -63,4 +63,17 @@ export class SVGDrawing extends Drawing {
   public circle(center: XY, radius: number, color = 'black'): void {
     this.svg.append(create('circle', { cx: center.x, cy: center.y, r: radius, fill: color }));
   }
+
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
+  public arc(
+    _cx: number,
+    _cy: number,
+    _innerRadius: number,
+    _outerRadius: number,
+    _startAngle: number,
+    _endAngle: number,
+    _color?: string,
+  ): void {
+    throw new Error('Method not implemented.');
+  }
 }

@@ -5,6 +5,7 @@ const config = {
   lint: {
     rules: {
       '@typescript-eslint/no-redundant-type-constituents': { rule: 'off' },
+      '@typescript-eslint/no-confusing-void-expression': { rule: 'off' }
     },
   },
   directories: {
@@ -22,19 +23,16 @@ const config = {
     'src/client': {
       environment: 'vite-client',
       tsconfig: {
-        references: ['src/settings', 'src/schema', 'src/server'],
+        references: ['src/api', 'src/settings', 'src/server'],
       },
     },
     'src/config': {
       environment: 'node',
     },
-    'src/schema': {
-      environment: 'universal',
-    },
     'src/server': {
       environment: 'node',
       tsconfig: {
-        references: ['src/config', 'src/settings', 'src/schema', 'src/util'],
+        references: ['src/config', 'src/settings'],
       },
     },
     'src/settings': {
@@ -43,25 +41,19 @@ const config = {
         references: ['src/client'],
       },
     },
-    'src/util': {
-      environment: 'universal',
-      tsconfig: {
-        references: ['src/config', 'src/settings'],
-      },
-    },
   },
   tsconfig: {
     base: {
       compilerOptions: {
         paths: {
           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+          '#api/*': ['./src/api/*/index.ts'],
           '#context/*': ['./src/client/context/*/index.ts'],
           '#control': ['./src/client/control/index.ts'],
-          '#component*': ['./src/client/component*'],
+          '#component*': ['./src/client/component/*/index.ts'],
           '#client*': ['./src/client*'],
-          '#server*': ['./src/server*'],
+          '#server/*': ['./src/server/*/index.ts'],
           '#util*': ['./src/util*'],
-          '#schema': ['./src/schema/index.ts'],
           '#settings*': ['./src/settings*'],
           '#config*': ['./src/config*'],
         },

@@ -1,3 +1,5 @@
+import { toRadians } from '@technobuddha/library';
+
 import { Drawing, type Rect, type XY } from './drawing.ts';
 
 export class CanvasDrawing extends Drawing {
@@ -16,6 +18,8 @@ export class CanvasDrawing extends Drawing {
 
   public clear(color = 'transparent', originX = 0, originY = 0): void {
     this.canvas.setTransform(1, 0, 0, 1, 0, 0);
+    this.canvas.imageSmoothingEnabled = false;
+    this.canvas.imageSmoothingQuality = 'high';
 
     if (color === 'transparent') {
       this.canvas.clearRect(0, 0, this.canvas.canvas.width, this.canvas.canvas.height);
@@ -39,6 +43,7 @@ export class CanvasDrawing extends Drawing {
     this.canvas.fillStyle = color;
     this.canvas.fillStyle = color;
 
+    this.canvas.beginPath();
     this.canvas.fillRect(start.x, start.y, finish.x - start.x, finish.y - start.y);
   }
 
@@ -54,6 +59,7 @@ export class CanvasDrawing extends Drawing {
 
   public override text(rect: Rect, text: string, color: string): void {
     this.canvas.fillStyle = color;
+    this.canvas.font = '8px sans-serif';
 
     const metrics = this.canvas.measureText(text);
 
@@ -67,6 +73,32 @@ export class CanvasDrawing extends Drawing {
     this.canvas.fillStyle = color;
     this.canvas.beginPath();
     this.canvas.arc(center.x, center.y, radius, 0, 2 * Math.PI);
+    this.canvas.fill();
+  }
+
+  public arc(
+    cx: number,
+    cy: number,
+    innerRadius: number,
+    outerRadius: number,
+    startAngle: number,
+    endAngle: number,
+    color = 'white',
+  ): void {
+    const a0 = toRadians(startAngle, 'degrees');
+    const a1 = toRadians(endAngle, 'degrees');
+
+    const x0 = cx + outerRadius * Math.cos(a1);
+    const y0 = cy + outerRadius * Math.sin(a1);
+    const x1 = cx + innerRadius * Math.cos(a0);
+    const y1 = cy + innerRadius * Math.sin(a0);
+
+    this.canvas.fillStyle = color;
+    this.canvas.beginPath();
+    this.canvas.arc(cx, cy, innerRadius, a0, a1);
+    this.canvas.lineTo(x0, y0);
+    this.canvas.arc(cx, cy, outerRadius, a1, a0, true);
+    this.canvas.lineTo(x1, y1);
     this.canvas.fill();
   }
 }

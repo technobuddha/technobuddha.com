@@ -1,42 +1,55 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { animate } from '../drawing/animate.ts';
-import { type CellDirection, type Direction } from '../maze/maze.ts';
+import { type CellDirection, type Direction } from '../geometry/maze.ts';
 
-import { MazeSolver, type MazeSolverProperties, type SolveArguments } from './maze-solver.ts';
+import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 type WallWalkingProperties = MazeSolverProperties & {
   turn?: 'right' | 'left';
+  avatarColor?: string;
+  pathColor?: string;
 };
 
 export class WallWalking extends MazeSolver {
-  private readonly turn: (direction: Direction) => Direction[];
+  private readonly avatarColor: string;
+  private readonly pathColor: string;
+  private readonly forward: (cell: CellDirection) => Direction[];
+  private readonly backward: (cell: CellDirection) => Direction[];
 
-  public constructor(props: WallWalkingProperties) {
+  public constructor({
+    avatarColor = '#08A4BD',
+    pathColor = '#DC0073',
+    ...props
+  }: WallWalkingProperties) {
     super(props);
 
-    if (props.turn === 'right') {
-      this.turn = this.maze.rightTurn.bind(this.maze);
-    } else if (props.turn === 'left') {
-      this.turn = this.maze.leftTurn.bind(this.maze);
+    this.avatarColor = avatarColor;
+    this.pathColor = pathColor;
+
+    const turn = props.turn ?? (this.random() < 0.5 ? 'left' : 'right');
+    if (turn === 'right') {
+      this.forward = this.maze.rightTurn.bind(this.maze);
+      this.backward = this.maze.leftTurn.bind(this.maze);
     } else {
-      this.turn =
-        this.random() < 0.0 ?
-          this.maze.rightTurn.bind(this.maze)
-        : this.maze.leftTurn.bind(this.maze);
+      this.forward = this.maze.leftTurn.bind(this.maze);
+      this.backward = this.maze.rightTurn.bind(this.maze);
     }
   }
 
-  public async solve({
+  public *solve({
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-    solutionColor = '#00FF00',
-  }: SolveArguments = {}): Promise<void> {
-    this.maze.prepareDrawing(this.drawing);
+    avatarColor = this.avatarColor,
+    pathColor = this.pathColor,
+  } = {}): Iterator<void> {
+    let seekingWall = true;
 
     let cell: CellDirection = {
       ...entrance,
-      direction: this.maze.opposite(this.randomPick(this.maze.validMoves(entrance))!.direction),
+      direction: this.maze.opposite({
+        ...entrance,
+        direction: this.randomPick(Object.keys(this.maze.nexus(entrance).walls))!,
+      }),
     };
 
     const cells: { visits: number; direction?: Direction }[][] = create2DArray(
@@ -45,45 +58,49 @@ export class WallWalking extends MazeSolver {
       () => ({ visits: 0 }),
     );
 
-    while (cell.x !== exit.x || cell.y !== exit.y) {
+    while (!this.maze.isSame(cell, exit)) {
       const v = ++cells[cell.x][cell.y].visits;
+      if (v > Object.keys(this.maze.nexus(cell).walls).length) {
+        throw new Error('Loop detected');
+      }
 
-      const turns = this.turn(cell.direction);
+      const wall = this.maze.nexus(cell).walls;
+
+      let dir: Direction | undefined;
       const moves = this.maze.validMoves(cell);
-      const dir = turns.find((d) => moves.find((m) => m.direction === d))!;
+
+      if (seekingWall) {
+        const wallDirection = this.backward(cell).find((d) => wall[d]);
+        if (wallDirection) {
+          cell.direction = this.maze.opposite(this.maze.move(cell, wallDirection)!);
+          dir = this.forward(cell).find((d) => moves.find((m) => m.direction === d))!;
+          seekingWall = false;
+        } else {
+          dir = this.maze.straight(cell).find((d) => moves.find((m) => m.direction === d))!;
+        }
+      } else {
+        dir = this.forward(cell).find((d) => moves.find((m) => m.direction === d))!;
+      }
+
       const next = this.maze.move(cell, dir)!;
-      // eslint-disable-next-line @typescript-eslint/no-loop-func
-      await animate(() => {
-        this.maze.drawPath({ ...cell, direction: dir }, `rgba(255, 165, 0, ${(v + 1) * 0.25})`);
-      });
-      // eslint-disable-next-line require-atomic-updates
+      this.maze.drawPath(this.maze.drawCell({ ...cell, direction: dir }), pathColor);
+      this.maze.drawAvatar(this.maze.drawCell(next), avatarColor);
+      yield;
+
       cells[cell.x][cell.y].direction = dir;
       cell = next!;
     }
 
-    await animate(() => {
-      this.maze.clear();
-      this.maze.drawDistances();
+    cell = {
+      x: entrance.x,
+      y: entrance.y,
+      direction: cells[entrance.x][entrance.y].direction!,
+    };
 
-      cell = {
-        x: entrance.x,
-        y: entrance.y,
-        direction: cells[entrance.x][entrance.y].direction!,
-      };
-
-      for (;;) {
-        if (cell.x === entrance.x && cell.y === entrance.y) {
-          this.maze.drawCell(cell);
-        } else if (cell.x === exit.x && cell.y === exit.y) {
-          this.maze.drawCell(exit);
-          this.maze.drawPath(exit, solutionColor);
-          return;
-        }
-
-        this.maze.drawPath(cell, solutionColor);
-        const next = this.maze.move(cell, cell.direction)!;
-        cell = { ...next, direction: cells[next.x][next.y].direction! };
-      }
-    });
+    do {
+      this.maze.solution.push(cell);
+      const next = this.maze.move(cell, cell.direction)!;
+      cell = { ...next, direction: cells[next.x][next.y].direction! };
+    } while (!this.maze.isSame(cell, this.maze.exit));
   }
 }

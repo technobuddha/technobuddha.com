@@ -1,18 +1,42 @@
 import React from 'react';
-import { TextField, type TextFieldProps } from '@mui/material';
+import { TextField } from '@mui/material';
 
-export type NumberFieldProps = TextFieldProps & {
+import css from './number-field.module.css';
+
+export type NumberFieldProps = {
+  readonly value: number;
+  readonly label?: string;
   readonly id?: string;
   readonly name?: string;
   readonly min?: number;
   readonly max?: number;
+  onChange?(this: void, value: number): void;
+  readonly children?: never;
 };
 
-export const NumberField: React.FC<NumberFieldProps> = (props: NumberFieldProps) => {
-  const { id, name, min, max, children, ...rest } = props;
+export const NumberField: React.FC<NumberFieldProps> = ({
+  id,
+  name,
+  value,
+  label,
+  onChange,
+  min,
+  max,
+}) => {
+  const handleOnChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onChange?.(Number(event.target.value));
+    },
+    [onChange],
+  );
+
   return (
-    <TextField {...rest} slotProps={{ htmlInput: { id, name, min, max } }}>
-      {children}
-    </TextField>
+    <TextField
+      className={css.numberField}
+      value={value}
+      label={label}
+      onChange={handleOnChange}
+      slotProps={{ htmlInput: { id, name, min, max, value, type: 'number' } }}
+    />
   );
 };

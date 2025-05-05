@@ -4,7 +4,7 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"] },
-  "include": ["*.ts"],
+  "include": ["**/*.ts"],
   "exclude": [],
   "references": [{ "path": "../src" }]
 }

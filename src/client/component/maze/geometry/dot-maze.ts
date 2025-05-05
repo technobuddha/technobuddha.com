@@ -51,7 +51,7 @@ export class DotMaze extends Maze {
   }
 
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  protected cellKind(_cell: Cell): number {
+  public cellKind(_cell: Cell): number {
     return 0;
   }
 

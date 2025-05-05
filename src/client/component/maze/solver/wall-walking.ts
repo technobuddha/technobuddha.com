@@ -83,7 +83,6 @@ export class WallWalking extends MazeSolver {
       }
 
       const next = this.maze.move(cell, dir)!;
-      //      this.maze.drawPath({ ...cell, direction: dir }, `rgba(255, 165, 0, ${/*(v + 1) * 0.25*/ 1})`);
       this.maze.drawPath(this.maze.drawCell({ ...cell, direction: dir }), pathColor);
       this.maze.drawAvatar(this.maze.drawCell(next), avatarColor);
       yield;

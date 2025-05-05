@@ -8,6 +8,7 @@ export class Nexus {
   public bridge: boolean;
   public mask: boolean;
   public distance: number;
+  public destination = false;
 
   public constructor({
     x,

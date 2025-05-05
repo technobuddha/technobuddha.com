@@ -51,7 +51,7 @@ export class BrickMaze extends Maze {
     };
   }
 
-  protected cellKind(cell: Cell): Kind {
+  public cellKind(cell: Cell): Kind {
     return modulo(cell.y, 2);
   }
 

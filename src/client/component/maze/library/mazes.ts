@@ -28,6 +28,8 @@ import {
 import { WeaveMaze } from '../geometry/weave-maze.ts';
 import { experimentalPlugin } from '../plugins/experiment.ts';
 import { donutPlugin, ellipisePlugin, trianglePlugin } from '../plugins/index.ts';
+import { portalPlugin } from '../plugins/portal.ts';
+import { DrunkardsWalk } from '../solver/drunkard.ts';
 import { FibonaccisRabbits } from '../solver/fibonaccis-rabbits.ts';
 import {
   Dijkstras,
@@ -54,11 +56,11 @@ export const mazes: Choice<MazeProperties, Maze> = {
   },
   '10:circle': {
     '10': (props) => new CircularMaze(props),
-    '0:Find Center': (props) =>
+    '10:Find Center': (props) =>
       new CircularMaze({ exit: { x: 0, y: 0 }, entrance: 'random edge', ...props }),
-    '0:Escape': (props) =>
+    '10:Escape': (props) =>
       new CircularMaze({ entrance: { x: 0, y: 0 }, exit: 'random edge', ...props }),
-    '0:Void': (props) => new CircularMaze({ centerRadius: 128, centerSegments: 16, ...props }),
+    '10:Void': (props) => new CircularMaze({ centerRadius: 128, centerSegments: 16, ...props }),
   },
   '1:cubic': {
     '10': (props) => new CubicMaze(props),
@@ -112,13 +114,18 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
   },
   '10:recursizeBacktracker': {
     '10': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
+    '0:bridge': (props) =>
+      new RecursiveBacktracker({
+        strategy: ['bridge-builder'],
+        ...props,
+      }),
     '10:parallel': (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
     '10:swirl': (props) =>
       new RecursiveBacktracker({
         strategy: [
           'right-turn',
           'left-turn',
-          'random',
+          'straight',
           'random',
           'random',
           'random',
@@ -132,12 +139,13 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
         strategy: [
           'right-turn',
           'left-turn',
+          'straight',
           'right-turn',
           'left-turn',
+          'straight',
           'right-turn',
           'left-turn',
-          'right-turn',
-          'left-turn',
+          'straight',
         ],
         ...props,
       }),
@@ -148,10 +156,10 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
 };
 
 export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
-  '0:trémaux': {
+  '10:trémaux': {
     '10': (props) => new Tremaux(props),
   },
-  '0:search': {
+  '10:search': {
     '10:random': (props) => new Search({ method: 'random', ...props }),
     '10:seekExit': (props) => new Search({ method: 'seek', ...props }),
     '10:leftTurn': (props) => new Search({ method: 'left-turn', ...props }),
@@ -161,18 +169,20 @@ export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
     '10:deadEnd': (props) => new Filler({ ...props, method: 'dead-end' }),
     '10:culDeSac': (props) => new Filler({ ...props, method: 'cul-de-sac' }),
   },
-  '0:followWall': {
+  '10:followWall': {
     '10:right': (props) => new WallWalking({ ...props, turn: 'right' }),
     '10:left': (props) => new WallWalking({ ...props, turn: 'left' }),
   },
-  '0:dijkstras': {
+  '10:dijkstras': {
     '10': (props) => new Dijkstras(props),
   },
-  '0:randomMouse': (props) => new RandomMouse(props),
+  "0:Drunkard's Walk": (props) => new DrunkardsWalk(props),
+  '0:Random Mouse': (props) => new RandomMouse({ ...props }),
   "0:Fibonacci's rabbits": (props) => new FibonaccisRabbits(props),
 };
 
 export const plugins: Choice<Maze, void> = {
+  '0:portal:': portalPlugin,
   '0:experimental bridges': experimentalPlugin,
   '0:ellipse': ellipisePlugin,
   '0:donut': donutPlugin,

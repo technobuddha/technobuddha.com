@@ -58,7 +58,7 @@ export class PentagonMaze extends Maze {
     };
   }
 
-  protected cellKind(cell: Cell): number {
+  public cellKind(cell: Cell): number {
     return kindMatrix[modulo(cell.y, 5)][modulo(cell.x, 4)];
   }
 

@@ -76,6 +76,13 @@ export type DrawingSizes = {
 
 type ShowDistances = 'none' | 'greyscale' | 'primary' | 'color' | 'spectrum';
 
+type Loop = {
+  cell: Cell;
+  distance: number;
+  loops: Cell[];
+  distances: number[];
+};
+
 export type MazeProperties = {
   drawing?: Drawing;
   width?: number;
@@ -155,6 +162,7 @@ export abstract class Maze {
 
   protected nexuses: Nexus[][] = [];
 
+  //#region Construction
   public constructor(
     {
       drawing,
@@ -304,6 +312,22 @@ export abstract class Maze {
     );
   }
 
+  public initialWalls(cell: Cell): Wall {
+    const kind = this.cellKind(cell);
+
+    const initialWalls = this.wallMatrix[kind];
+
+    if (initialWalls) {
+      return { ...initialWalls };
+    }
+
+    throw new Error(`No initial walls for cell (${cell.x}, ${cell.y}) kind ${kind}`);
+  }
+
+  public initialPortals(cell: Cell): Portal {
+    return Object.fromEntries(Object.keys(this.initialWalls(cell)).map((d) => [d, false]));
+  }
+  //#endregion
   //#region utility functions
   public randomPick<T>(array: T[]): T | undefined {
     return randomPick(array, this.random);
@@ -349,13 +373,13 @@ export abstract class Maze {
     throw new Error(`"${cell.direction}" is not a valid direction`);
   }
 
-  public straight(cell: CellDirection): Direction[] {
+  public straight(cell: CellDirection, bias = this.random() < 0.5): Direction[] {
     const straight = this.straightMatrix[cell.direction];
     if (straight) {
       const directions = Array.isArray(straight) ? straight : straight[this.cellKind(cell)];
       const validDirections = directions.flatMap((dir) => {
         const dirs = Array.from(dir).filter((d) => d in this.nexus(cell).walls);
-        return this.random() < 0.5 ? dirs : dirs.reverse();
+        return bias ? dirs : dirs.reverse();
       });
       return validDirections.filter((d) => d !== '');
     }
@@ -363,7 +387,7 @@ export abstract class Maze {
     throw new Error(`"${cell.direction}" is not a valid direction`);
   }
   //#endregion
-  //#region Maze
+  //#region Cell Selection
   public allCells(order: AllOrder = 'top-left'): Cell[] {
     const cells = create2DArray(this.width, this.height, (x, y) => ({ x, y })).flat();
 
@@ -434,6 +458,8 @@ export abstract class Maze {
       }
     }
   }
+  //#endregion
+  //#region Maze
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public freezeWalls(): void {
     // This is a no-op for most kinds of mazes
@@ -446,35 +472,51 @@ export abstract class Maze {
   public restore(backup: Nexus[][]): void {
     this.nexuses = structuredClone(backup);
   }
-
-  public computeDistances(entrance: Cell = this.entrance): { maxDistance: number; maxCell: Cell } {
+  public analyze(entrance: Cell = this.entrance): {
+    maxDistance: number;
+    maxCell: Cell;
+    distances: number[][];
+    unreachable: Cell[];
+    loops: Loop[];
+  } {
+    const distances = create2DArray(this.width, this.height, Infinity);
+    const loops: Loop[] = [];
     const queue: Cell[] = [];
     queue.unshift(entrance);
 
-    for (const cell of this.allCells()) {
-      this.nexus(cell).distance = Infinity;
-    }
-    this.nexus(entrance).distance = 0;
+    distances[entrance.x][entrance.y] = 0;
 
     let maxDistance = 1;
     let maxCell = entrance;
     while (queue.length > 0) {
       const cell = queue.pop()!;
-      const { distance } = this.nexus(cell);
+      const distance = distances[cell.x][cell.y];
 
       if (distance > maxDistance) {
         maxDistance = distance;
         maxCell = cell;
       }
 
-      const moves = this.validMoves(cell).filter((n) => this.nexus(n).distance === Infinity);
+      const loopCells = this.validMoves(cell).filter((n) => distances[n.x][n.y] < distance - 1);
+      if (loopCells.length > 0) {
+        loops.push({
+          cell,
+          loops: loopCells,
+          distance,
+          distances: loopCells.map((l) => distances[l.x][l.y]),
+        });
+      }
+
+      const moves = this.validMoves(cell).filter((n) => distances[n.x][n.y] === Infinity);
       for (const move of moves) {
-        this.nexus(move).distance = distance + 1;
+        distances[move.x][move.y] = distance + 1;
         queue.unshift(move);
       }
     }
 
-    return { maxDistance, maxCell };
+    const unreachable = this.cellsInMaze().filter((cell) => distances[cell.x][cell.y] === Infinity);
+
+    return { maxDistance, maxCell, distances, unreachable, loops };
   }
 
   public braid(): void {
@@ -508,13 +550,13 @@ export abstract class Maze {
       exit = this.parseSpecification(this.exitSpec);
     } else if (this.entranceSpec) {
       entrance = this.parseSpecification(this.entranceSpec);
-      exit = this.computeDistances(entrance).maxCell;
+      exit = this.analyze(entrance).maxCell;
     } else if (this.exitSpec) {
       exit = this.parseSpecification(this.exitSpec);
-      entrance = this.computeDistances(exit).maxCell;
+      entrance = this.analyze(exit).maxCell;
     } else {
-      entrance = this.computeDistances(this.randomCell()).maxCell;
-      exit = this.computeDistances(entrance).maxCell;
+      entrance = this.analyze(this.randomCell()).maxCell;
+      exit = this.analyze(entrance).maxCell;
     }
 
     const outsideEntrance = this.randomPick(this.adjacent(entrance).filter((c) => !this.inMaze(c)));
@@ -595,7 +637,29 @@ export abstract class Maze {
 
   public drawDistances(point = this.entrance): void {
     if (this.drawing) {
-      const { maxDistance } = this.computeDistances(point);
+      const { maxDistance, distances, unreachable, loops } = this.analyze(point);
+
+      if (unreachable.length > 0) {
+        // eslint-disable-next-line no-console
+        console.log(`Unreachable cells: `, unreachable);
+      }
+
+      if (loops.length > 0) {
+        for (const loop of loops) {
+          // eslint-disable-next-line no-console
+          console.log(
+            `Loop detected from ${loop.cell.x}, ${loop.cell.y} with distance ${loop.distance}`,
+            loop.loops,
+            loop.distances,
+          );
+        }
+      }
+
+      for (let x = 0; x < distances.length; ++x) {
+        for (let y = 0; y < distances[x].length; ++y) {
+          this.nexuses[x][y].distance = distances[x][y];
+        }
+      }
 
       for (const cell of this.cellsInMaze()) {
         if (this.isSame(this.entrance, cell) || this.isSame(this.exit, cell)) {
@@ -694,22 +758,6 @@ export abstract class Maze {
     );
   }
 
-  public initialWalls(cell: Cell): Wall {
-    const kind = this.cellKind(cell);
-
-    const initialWalls = this.wallMatrix[kind];
-
-    if (initialWalls) {
-      return { ...initialWalls };
-    }
-
-    throw new Error(`No initial walls for cell (${cell.x}, ${cell.y}) kind ${kind}`);
-  }
-
-  public initialPortals(cell: Cell): Portal {
-    return Object.fromEntries(Object.keys(this.initialWalls(cell)).map((d) => [d, false]));
-  }
-
   public addWall(cell: Cell, direction: Direction, draw = true): void {
     if (this.inMaze(cell)) {
       this.nexus(cell).walls[direction] = true;
@@ -740,7 +788,7 @@ export abstract class Maze {
     }
   }
 
-  public move(cell: Cell, dir: Direction): CellDirection | null {
+  public move(cell: Cell, dir: Direction): CellDirection | undefined {
     let move = this.moveMatrix[this.cellKind(cell)][dir];
 
     if (move) {
@@ -753,7 +801,11 @@ export abstract class Maze {
       while (true) {
         const portal = this.inMaze(next) ? this.nexus(next).portals[next.direction] : false;
         if (portal) {
+          const { destination } = this.nexus(next);
           next = portal;
+          if (destination) {
+            break;
+          }
         } else {
           break;
         }
@@ -761,7 +813,7 @@ export abstract class Maze {
 
       return next;
     }
-    return null;
+    return undefined;
   }
 
   public resolveMove(cell: Cell, move: Move): Cell {
@@ -811,7 +863,7 @@ export abstract class Maze {
       .map((cd) => cd.direction);
   }
 
-  protected abstract cellKind(cell: Cell): Kind;
+  public abstract cellKind(cell: Cell): Kind;
   //#endregion
   //#region Cell Drawing
   public drawCell<T extends Cell>(

@@ -141,7 +141,7 @@ export class CircularMaze extends Maze {
     return wall;
   }
 
-  protected cellKind(cell: Cell): number {
+  public cellKind(cell: Cell): number {
     const z0 = this.zones[cell.y];
     const zn = cell.y === this.height - 1 ? z0 : this.zones[cell.y + 1];
     /*
@@ -170,6 +170,9 @@ export class CircularMaze extends Maze {
         // no default
       }
     }
+
+    x += move.x;
+    y += move.y;
 
     const cols = this.zones[y];
     if (x >= cols) {

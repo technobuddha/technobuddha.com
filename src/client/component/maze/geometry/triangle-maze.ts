@@ -54,7 +54,7 @@ export class TriangleMaze extends Maze {
     };
   }
 
-  protected cellKind(cell: Cell): number {
+  public cellKind(cell: Cell): number {
     return modulo(cell.x + cell.y, 2);
   }
 

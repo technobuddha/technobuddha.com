@@ -285,7 +285,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
 
           setTimeout(() => {
             setMazeNumber((n) => n + 1);
-          }, 20000);
+          }, 10000);
           break;
         }
 

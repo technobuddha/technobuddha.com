@@ -48,7 +48,7 @@ export class SquareMaze extends Maze {
     };
   }
 
-  protected cellKind(_cell: Cell): number {
+  public cellKind(_cell: Cell): number {
     return 0;
   }
 

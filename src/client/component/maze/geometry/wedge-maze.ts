@@ -51,7 +51,7 @@ export class WedgeMaze extends Maze {
     };
   }
 
-  protected cellKind(cell: Cell): number {
+  public cellKind(cell: Cell): number {
     return modulo(cell.x + modulo(cell.y, 2) * 2, 4);
   }
 

@@ -4,10 +4,7 @@
 // 🚨
 import { app } from '@technobuddha/project';
 
-/**
- * @import { type Linter } from 'eslint';
- * @type {Linter.Config[]}
- */
+/* @type {(import('eslint').Linter.Config[]} */
 const config = [
   // scripts/tsconfig.json
   app.lint({

@@ -178,7 +178,7 @@ export abstract class Maze {
       wrapHorizontal = false,
       wrapVertical = false,
       random = Math.random,
-      showDistances = 'primary',
+      showDistances = 'color',
       solutionColor = '#08A4BD',
       width: requestedWidth,
       height: requestedHeight,
@@ -689,7 +689,7 @@ export abstract class Maze {
               }
 
               case 'color': {
-                color = `hsl(270, 100%, ${15 + 35 * (1 - this.nexus(cell).distance / maxDistance)}%)`;
+                color = `hsl(248, 100%, ${15 + 35 * (1 - this.nexus(cell).distance / maxDistance)}%)`;
                 break;
               }
 

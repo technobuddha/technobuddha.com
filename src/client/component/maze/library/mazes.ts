@@ -49,12 +49,12 @@ export const squareMazes: Choice<MazeProperties, Maze> = {
 };
 
 export const mazes: Choice<MazeProperties, Maze> = {
-  '10:weave': (props) => new WeaveMaze({ ...props }),
-  '10:dot': {
+  '10:Weave': (props) => new WeaveMaze({ ...props }),
+  '10:Dot': {
     '10': (props) => new DotMaze(props),
-    '10:zeta': (props) => new ZetaMaze(props),
+    '10:=Zeta': (props) => new ZetaMaze(props),
   },
-  '10:circle': {
+  '10:Circle': {
     '10': (props) => new CircularMaze(props),
     '10:Find Center': (props) =>
       new CircularMaze({ exit: { x: 0, y: 0 }, entrance: 'random edge', ...props }),
@@ -62,65 +62,62 @@ export const mazes: Choice<MazeProperties, Maze> = {
       new CircularMaze({ entrance: { x: 0, y: 0 }, exit: 'random edge', ...props }),
     '10:Void': (props) => new CircularMaze({ centerRadius: 128, centerSegments: 16, ...props }),
   },
-  '1:cubic': {
+  '1:Cubic': {
     '10': (props) => new CubicMaze(props),
   },
-  '10:pentagon': {
+  '10:Pentagon': {
     '10': (props) => new PentagonMaze(props),
   },
-  '10:brick': (props) => new BrickMaze(props),
-  '10:square': squareMazes,
-  '10:triangle': {
+  '10:Brick': (props) => new BrickMaze(props),
+  '10:Square': squareMazes,
+  '10:Triangle': {
     '10': (props) => new TriangleMaze(props),
   },
-  '10:hexagon': {
+  '10:Hexagon': {
     '10': (props) => new HexagonMaze(props),
   },
-  '10:octogon': {
+  '10:Octogon': {
     '10': (props) => new OctogonMaze(props),
   },
-  '10:wedge': (props) => new WedgeMaze(props),
+  '10:Wedge': (props) => new WedgeMaze(props),
 };
 
 export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
-  '10:division': {
+  '10:Division': {
     '10': (props) => new Division(props),
-    '0:9 threshold': (props) => new Division({ threshold: 9, ...props }),
-    '0:27 threshold': (props) => new Division({ threshold: 27, ...props }),
-    '0:81 threshold': (props) => new Division({ threshold: 81, ...props }),
   },
-  '10:huntAndKill': {
-    '10:random': (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
-    '10:topLeft': (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
-    '10:topRight': (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
-    '10:bottomLeft': (props) => new HuntAndKill({ huntMethod: 'bottom-left', ...props }),
-    '10:bottomRight': (props) => new HuntAndKill({ huntMethod: 'bottom-right', ...props }),
-    '10:leftTop': (props) => new HuntAndKill({ huntMethod: 'left-top', ...props }),
-    '10:leftBottom': (props) => new HuntAndKill({ huntMethod: 'left-bottom', ...props }),
-    '10:rightTop': (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
-    '10:rightBottom': (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
+  '10:Hunt & Kill -': {
+    '10:Random': (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
+    '10:Top Left': (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
+    '10:Top Right': (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
+    '10:Bottom Left': (props) => new HuntAndKill({ huntMethod: 'bottom-left', ...props }),
+    '10:Bottom Right': (props) => new HuntAndKill({ huntMethod: 'bottom-right', ...props }),
+    '10:Left Top': (props) => new HuntAndKill({ huntMethod: 'left-top', ...props }),
+    '10:Left Bottom': (props) => new HuntAndKill({ huntMethod: 'left-bottom', ...props }),
+    '10:Right Top': (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
+    '10:Right Bottom': (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
   },
-  '10:growingTree': {
-    '10:newest': (props) => new GrowingTree({ method: 'newest', ...props }),
-    '10:random': (props) => new GrowingTree({ method: 'random', ...props }),
-    '0:oldest': (props) => new GrowingTree({ method: 'oldest', ...props }),
-    '0:middle': (props) => new GrowingTree({ method: 'middle', ...props }),
+  '10:Growing Tree ': {
+    '10:Newest': (props) => new GrowingTree({ method: 'newest', ...props }),
+    '10:Random': (props) => new GrowingTree({ method: 'random', ...props }),
+    '0:Oldest': (props) => new GrowingTree({ method: 'oldest', ...props }),
+    '0:Middle': (props) => new GrowingTree({ method: 'middle', ...props }),
   },
-  '10:kruskals': {
+  '10:Kruskals': {
     '10': (props) => new Kruskals(props),
   },
-  '10:prims': {
+  '10:Prims': {
     '10': (props) => new Prims(props),
   },
-  '10:recursizeBacktracker': {
+  '10:Recursize Backtracker': {
     '10': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
     '0:bridge': (props) =>
       new RecursiveBacktracker({
         strategy: ['bridge-builder'],
         ...props,
       }),
-    '10:parallel': (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
-    '10:swirl': (props) =>
+    '10:Parallel': (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
+    '10:Swirl': (props) =>
       new RecursiveBacktracker({
         strategy: [
           'right-turn',
@@ -134,7 +131,7 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
         ],
         ...props,
       }),
-    '10:whirpool': (props) =>
+    '10:Whirpool': (props) =>
       new RecursiveBacktracker({
         strategy: [
           'right-turn',
@@ -150,35 +147,35 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
         ...props,
       }),
   },
-  '10:wilsons': {
+  '10:Wilsons': {
     '10': (props) => new Wilsons(props),
   },
 };
 
 export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
-  '10:trémaux': {
+  '10:Trémaux': {
     '10': (props) => new Tremaux(props),
   },
-  '10:search': {
-    '10:random': (props) => new Search({ method: 'random', ...props }),
-    '10:seekExit': (props) => new Search({ method: 'seek', ...props }),
-    '10:leftTurn': (props) => new Search({ method: 'left-turn', ...props }),
-    '10:rightTurn': (props) => new Search({ method: 'right-turn', ...props }),
+  '10:Search': {
+    '10:Random': (props) => new Search({ method: 'random', ...props }),
+    '10:Seek Exit': (props) => new Search({ method: 'seek', ...props }),
+    '10:Left Turn': (props) => new Search({ method: 'left-turn', ...props }),
+    '10:Right Turn': (props) => new Search({ method: 'right-turn', ...props }),
   },
-  '10:fill': {
-    '10:deadEnd': (props) => new Filler({ ...props, method: 'dead-end' }),
-    '10:culDeSac': (props) => new Filler({ ...props, method: 'cul-de-sac' }),
+  '10:Fill': {
+    '10:Dead Ends': (props) => new Filler({ ...props, method: 'dead-end' }),
+    '10:Cul-De-Sacs': (props) => new Filler({ ...props, method: 'cul-de-sac' }),
   },
-  '10:followWall': {
-    '10:right': (props) => new WallWalking({ ...props, turn: 'right' }),
-    '10:left': (props) => new WallWalking({ ...props, turn: 'left' }),
+  '10': {
+    '10:Follow the Right Wall': (props) => new WallWalking({ ...props, turn: 'right' }),
+    '10:Follow the Left Wall': (props) => new WallWalking({ ...props, turn: 'left' }),
   },
-  '10:dijkstras': {
+  "10:Dijkstra's": {
     '10': (props) => new Dijkstras(props),
   },
   "0:Drunkard's Walk": (props) => new DrunkardsWalk(props),
   '0:Random Mouse': (props) => new RandomMouse({ ...props }),
-  "0:Fibonacci's rabbits": (props) => new FibonaccisRabbits(props),
+  "0:Fibonacci's Rabbits": (props) => new FibonaccisRabbits(props),
 };
 
 export const plugins: Choice<Maze, void> = {

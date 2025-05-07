@@ -37,7 +37,12 @@ export function chooser<A, B>(
         index -= weight;
         if (index <= 0) {
           if (description) {
-            name.push(description);
+            if (description.startsWith('=')) {
+              name.length = 0;
+              name.push(description.slice(1));
+            } else {
+              name.push(description);
+            }
           }
           return chooser(choice, name);
         }

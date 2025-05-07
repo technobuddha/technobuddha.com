@@ -30,7 +30,7 @@
     "@dotenvx/dotenvx": "1.43.0",
     "@react-router/dev": "7.5.3",
     "@technobuddha/openapi": "link:../@technobuddha/openapi/",
-    "@technobuddha/project": "0.0.176",
+    "@technobuddha/project": "0.0.178",
     "@types/cli-progress": "^3.11.6",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.1",
@@ -66,9 +66,9 @@
     "vite-tsconfig-paths": "5.1.4"
   },
   "technobuddhaProject": {
-    "version": "0.0.175",
+    "version": "0.0.178",
     "created": "2020-04-01T04:20:42.690Z",
-    "updated": "2025-04-17T15:42:08.318Z"
+    "updated": "2025-05-06T19:29:02.209Z"
   },
   "type": "module",
   "engines": {

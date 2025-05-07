@@ -64,6 +64,7 @@ export class TranslationWorker {
     this.queue = {};
 
     for (const ns of Object.keys(myQueue)) {
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       for (const lng of i18next.supportedLngs || []) {
         const currentTranslations = await readTranslations(lng, ns);
         const archiveTranslations = await readTranslations(lng, ns, 'archive');

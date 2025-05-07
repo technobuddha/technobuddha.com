@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
 /* eslint-disable @typescript-eslint/class-methods-use-this */
 
 import { modulo } from '@technobuddha/library';

@@ -40,8 +40,27 @@ export abstract class MazeGenerator {
 
   public abstract generate(): Generator<void>;
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public addBridge(_bridge: CellDirection[]): void {
-    // no-op by default
+  protected buildBridge(current: CellDirection, bridge: CellDirection[]): CellDirection {
+    let prev = current;
+    for (const span of bridge) {
+      this.maze.nexus(span).bridge = true;
+      this.maze.removeWall(prev, span.direction);
+
+      for (const tunnelEntrance of this.maze
+        .neighbors(span)
+        .filter(
+          (c) => c.direction !== span.direction && c.direction !== this.maze.opposite(span),
+        )) {
+        const moveDirection = this.maze
+          .straight({ ...span, direction: this.maze.opposite(tunnelEntrance) })
+          .at(0)!;
+        const tunnelExit = this.maze.move(span, moveDirection)!;
+
+        this.maze.nexus(span).portals[this.maze.opposite(tunnelEntrance)] = tunnelExit;
+      }
+      prev = span;
+    }
+
+    return prev;
   }
 }

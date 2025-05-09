@@ -16,6 +16,21 @@
       z-index: 4;
       top: 0;
       left: 0;
+
+      .text {
+        margin: 0 0.5rem 0 1rem;
+      }
+
+      .text:not(:first-child):before {
+        content: '';
+        position: relative;
+        left: -0.5rem;
+        border-left: 1px solid white;
+      }
+
+      .option {
+        font-style: italic;
+      }
     }
 
     .canvas {
@@ -35,6 +50,12 @@
 
     .gap {
       flex-grow: 1;
+    }
+
+    .buttons {
+      .button {
+        font-size: 0.75rem;
+      }
     }
   }
 }

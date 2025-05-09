@@ -644,17 +644,6 @@ export abstract class Maze {
         console.log(`Unreachable cells: `, unreachable);
       }
 
-      if (loops.length > 0) {
-        for (const loop of loops) {
-          // eslint-disable-next-line no-console
-          console.log(
-            `Loop detected from ${loop.cell.x}, ${loop.cell.y} with distance ${loop.distance}`,
-            loop.loops,
-            loop.distances,
-          );
-        }
-      }
-
       for (let x = 0; x < distances.length; ++x) {
         for (let y = 0; y < distances[x].length; ++y) {
           this.nexuses[x][y].distance = distances[x][y];
@@ -689,7 +678,7 @@ export abstract class Maze {
               }
 
               case 'color': {
-                color = `hsl(248, 100%, ${15 + 35 * (1 - this.nexus(cell).distance / maxDistance)}%)`;
+                color = `hsl(276, 100%, ${15 + 35 * (1 - this.nexus(cell).distance / maxDistance)}%)`;
                 break;
               }
 
@@ -708,6 +697,17 @@ export abstract class Maze {
       }
 
       this.drawMasks();
+
+      if (loops.length > 0) {
+        for (const loop of loops) {
+          // eslint-disable-next-line no-console
+          console.log(
+            `Loop detected from {x: ${loop.cell.x}, y: ${loop.cell.y} :: ${loop.distance}} with ${loop.loops.map((l, i) => `{x: ${l.x}, y:${l.y} :: ${loop.distances[i]}}`).join(' ')}`,
+          );
+
+          this.drawX(loop.cell, 'lime');
+        }
+      }
     }
   }
 
@@ -788,18 +788,26 @@ export abstract class Maze {
     }
   }
 
-  public move(cell: Cell, dir: Direction): CellDirection | undefined {
-    let move = this.moveMatrix[this.cellKind(cell)][dir];
+  public shift(cell: Cell, direction: Direction): CellDirection | undefined {
+    let move = this.moveMatrix[this.cellKind(cell)][direction];
 
     if (move) {
       if (Array.isArray(move)) {
         move = move[modulo(cell.y, move.length)];
       }
 
-      let next = { ...this.resolveMove(cell, move), direction: dir };
+      return { ...this.resolveMove(cell, move), direction };
+    }
+    return undefined;
+  }
 
+  public move(cell: Cell, dir: Direction): CellDirection | undefined {
+    let next = this.shift(cell, dir);
+
+    if (next) {
       while (true) {
-        const portal = this.inMaze(next) ? this.nexus(next).portals[next.direction] : false;
+        const portal: CellDirection | undefined | false =
+          this.inMaze(next) ? this.nexus(next).portals[next.direction] : false;
         if (portal) {
           const { destination } = this.nexus(next);
           next = portal;
@@ -879,20 +887,36 @@ export abstract class Maze {
     );
 
     if (this.nexus(cell).bridge) {
-      this.drawText(cell, '◯', 'white'); //'rgb(123 51 6)'  ✧✦
+      this.drawText(cell, '◯', 'white');
     }
 
-    const wall = this.nexus(cell).walls;
-    for (const direction of Object.keys(wall)) {
-      if (wall[direction]) {
+    const { walls, portals } = this.nexus(cell);
+    for (const direction of Object.keys(walls)) {
+      if (walls[direction]) {
+        if (portals[direction]) {
+          const move = this.shift(cell, direction);
+          if (move && this.inMaze(move) && !this.nexus(move).walls[this.opposite(move)]) {
+            this.drawDoor({ ...cell, direction }, wallColor);
+            this.drawWall({ ...cell, direction }, '#befefe'); //wallColor);
+            continue;
+          }
+        }
         this.drawWall({ ...cell, direction }, wallColor);
       } else {
         this.drawDoor({ ...cell, direction }, wallColor);
       }
     }
+    // for (const direction of Object.keys(portals)) {
+    //   if (portals[direction]) {
+    //     const move = this.shift(cell, direction);
+    //     if (move && this.inMaze(move) && !this.nexus(move).walls[this.opposite(move)]) {
+    //       this.drawDoor({ ...cell, direction }, wallColor);
+    //     }
+    //   }
+    // }
 
     for (const pillar of this.pillars) {
-      if (pillar[0] in wall && pillar[1] in wall) {
+      if (pillar[0] in walls && pillar[1] in walls) {
         this.drawPillar({ ...cell, pillar }, this.wallColor);
       }
     }

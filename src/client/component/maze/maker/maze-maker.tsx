@@ -75,7 +75,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         setDrawing(drawingMaze);
       }
     }
-  }, [width, height, mazeNumber]);
+  }, [width, height]);
 
   React.useEffect(() => {
     if (timer.current) {
@@ -214,24 +214,21 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       <div ref={top} className={css.maze}>
         {width > 0 && height > 0 && (
           <div ref={frame} className={css.title}>
-            Maze Shape:&nbsp;
-            {mazeName}
-            &nbsp;|&nbsp;Generator:&nbsp;
-            {generatorName}
-            &nbsp;|&nbsp; Solver:&nbsp;
-            {solverName}
-            {pluginName !== '' && <span>&nbsp;|&nbsp; Plugin:&nbsp;{pluginName}</span>}
+            <span className={css.text}>Geometry:</span>
+            <span className={css.option}>{mazeName}</span>
+            <span className={css.text}>Generator:</span>
+            <span className={css.option}>{generatorName}</span>
+            <span className={css.text}>Solver:</span>
+            <span className={css.option}>{solverName}</span>
+            {pluginName !== '' && <span className={css.text}>Plugin:</span>}
+            {pluginName !== '' && <span className={css.option}>{pluginName}</span>}
           </div>
         )}
       </div>
       <div className={css.panel}>
         <fieldset>
-          <legend>Maze Geometry</legend>
-          <Select
-            label="Algorthim"
-            value={selectedMaze ?? '(undefined)'}
-            onChange={handleMazeChange}
-          >
+          <legend>Geometry</legend>
+          <Select label="Shape" value={selectedMaze ?? '(undefined)'} onChange={handleMazeChange}>
             <MenuItem key="(undefined)" value="(undefined)">
               (random)
             </MenuItem>
@@ -243,7 +240,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           </Select>
         </fieldset>
         <fieldset>
-          <legend>Maze Generator</legend>
+          <legend>Generator</legend>
           <Select
             label="Algorthim"
             value={selectedGenerator ?? '(undefined)'}
@@ -279,7 +276,6 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         </fieldset>
         <fieldset>
           <legend>Maze Solver</legend>
-
           <Select
             label="Algorthim"
             value={selectedSolver ?? '(undefined)'}
@@ -314,23 +310,23 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           </Select>
         </fieldset>
         <div className={css.gap} />
-        <div>
-          <button type="button" onClick={handlePause}>
+        <div className={css.buttons}>
+          <button className={css.button} type="button" onClick={handlePause}>
             <IoPause />
           </button>
-          <button type="button" onClick={handleStep}>
+          <button className={css.button} type="button" onClick={handleStep}>
             <IoFootsteps />
           </button>
-          <button type="button" onClick={handlePlay}>
+          <button className={css.button} type="button" onClick={handlePlay}>
             <IoPlay />
           </button>
-          <button type="button" onClick={handleFast}>
+          <button className={css.button} type="button" onClick={handleFast}>
             <IoPlayForward />
           </button>
-          <button type="button" onClick={handleInstant}>
+          <button className={css.button} type="button" onClick={handleInstant}>
             <IoPlaySkipForward />
           </button>
-          <button type="button" onClick={handleRefresh}>
+          <button className={css.button} type="button" onClick={handleRefresh}>
             <IoRefresh />
           </button>
         </div>

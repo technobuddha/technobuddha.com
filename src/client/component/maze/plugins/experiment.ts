@@ -101,7 +101,7 @@ export function experimentalPlugin(maze: Maze): void {
       for (const span of bridge) {
         maze.nexus(span).mask = true;
       }
-      generator.addBridge(bridge);
+      // generator.addBridge(bridge);
     }
   };
   maze.hookPostGeneration = () => {

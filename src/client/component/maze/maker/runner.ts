@@ -91,55 +91,59 @@ export class Runner extends EventTarget {
   }
 
   private switchPhase(phase: Phase): void {
-    if (this.maze && this.generator && this.solver) {
-      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-      switch (phase) {
-        case 'generate': {
-          this.stepper = this.generator.run();
-          this.baseSpeed = this.generator.speed;
-          break;
+    if (!this.aborted) {
+      if (this.maze && this.generator && this.solver) {
+        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+        switch (phase) {
+          case 'generate': {
+            this.stepper = this.generator.run();
+            this.baseSpeed = this.generator.speed;
+            break;
+          }
+
+          case 'braid': {
+            this.stepper = undefined;
+            break;
+          }
+
+          case 'solve': {
+            this.stepper = this.solver.solve();
+            this.baseSpeed = this.solver.speed;
+            break;
+          }
+
+          // no default
         }
 
-        case 'braid': {
-          this.stepper = undefined;
-          break;
-        }
-
-        case 'solve': {
-          this.stepper = this.solver.solve();
-          this.baseSpeed = this.solver.speed;
-          break;
-        }
-
-        // no default
+        this.phase = phase;
+        this.setPlayMode(this.phasePlayMode[phase]);
       }
-
-      this.phase = phase;
-      this.setPlayMode(this.phasePlayMode[phase]);
     }
   }
 
   private async run(): Promise<boolean> {
-    if (this.stepper) {
-      while (true) {
-        const done = await animate(() => {
-          for (let i = 0; i < this.speed; ++i) {
-            if (this.stepper!.next().done) {
-              return true;
+    if (!this.aborted) {
+      if (this.stepper) {
+        while (true) {
+          const done = await animate(() => {
+            for (let i = 0; i < this.speed; ++i) {
+              if (this.stepper!.next().done) {
+                return true;
+              }
+              if (!this.playing) {
+                return false;
+              }
             }
-            if (!this.playing) {
-              return false;
-            }
+            return false;
+          });
+
+          if (done || !this.playing) {
+            return done;
           }
-          return false;
-        });
 
-        if (done || !this.playing) {
-          return done;
-        }
-
-        if (this.delay > 0) {
-          await new Promise((resolve) => void setTimeout(resolve, this.delay));
+          if (this.delay > 0) {
+            await new Promise((resolve) => void setTimeout(resolve, this.delay));
+          }
         }
       }
     }
@@ -158,54 +162,57 @@ export class Runner extends EventTarget {
   }
 
   public async execute(): Promise<void> {
-    if (this.maze && this.generator && this.solver) {
-      while (true) {
-        switch (this.phase) {
-          case 'maze': {
-            this.maze.draw();
-            this.switchPhase('generate');
-            break;
-          }
-
-          case 'generate': {
-            const done = await this.run();
-
-            if (done) {
-              this.maze.addTermini();
+    if (!this.aborted) {
+      if (this.maze && this.generator && this.solver) {
+        while (true) {
+          switch (this.phase) {
+            case 'maze': {
               this.maze.draw();
-              this.switchPhase('braid');
+              this.switchPhase('generate');
+              break;
             }
-            break;
-          }
 
-          case 'braid': {
-            // maze.braid();
-            this.switchPhase('solve');
-            break;
-          }
+            case 'generate': {
+              const done = await this.run();
 
-          case 'solve': {
-            const done = await this.run();
+              if (done) {
+                this.maze.addTermini();
+                this.maze.draw();
 
-            if (done) {
-              this.switchPhase('done');
+                this.switchPhase('braid');
+              }
+              break;
             }
-            break;
+
+            case 'braid': {
+              // maze.braid();
+              this.switchPhase('solve');
+              break;
+            }
+
+            case 'solve': {
+              const done = await this.run();
+
+              if (done) {
+                this.switchPhase('done');
+              }
+              break;
+            }
+
+            case 'done': {
+              this.maze.drawSolution();
+              return;
+            }
+
+            // no default
           }
 
-          case 'done': {
-            this.maze.drawSolution();
-            return;
+          if (!this.playing) {
+            if (this.aborted) {
+              return;
+            }
+            await this.waitForCommand();
           }
-
-          // no default
-        }
-
-        if (!this.playing) {
-          if (this.aborted) {
-            return;
-          }
-          await this.waitForCommand();
         }
       }
     }

@@ -19,18 +19,39 @@ type Strategy = 'random' | 'right-turn' | 'left-turn' | 'straight' | 'bridge-bui
 export type RecursiveBacktrackerProperties = MazeGeneratorProperties & {
   parallel?: number;
   strategy?: Strategy[];
+  bridgeMinLength?: number;
+  bridgeMaxLength?: number;
+  stepsAfterBridge?: number;
+  forcedBacktrack?: number;
 };
 
 export class RecursiveBacktracker extends MazeGenerator {
   private readonly parallel: number;
   private readonly visited: (false | number)[][];
+
+  public readonly bridgeMinLength: number;
+  public readonly bridgeMaxLength: number;
+  public readonly stepsAfterBridge: number;
+  public readonly forcedBacktrack: number;
   public player: number;
   public state: State[];
 
-  public constructor({ parallel, strategy, ...props }: RecursiveBacktrackerProperties) {
+  public constructor({
+    parallel,
+    strategy,
+    bridgeMinLength = 1,
+    bridgeMaxLength = 1,
+    stepsAfterBridge = 1,
+    forcedBacktrack = 0,
+    ...props
+  }: RecursiveBacktrackerProperties) {
     super(props);
 
     this.parallel = parallel ?? strategy?.length ?? 1;
+    this.bridgeMinLength = bridgeMinLength;
+    this.bridgeMaxLength = bridgeMaxLength;
+    this.stepsAfterBridge = stepsAfterBridge;
+    this.forcedBacktrack = forcedBacktrack;
 
     this.visited = create2DArray(this.maze.width, this.maze.height, false);
     this.state = [];
@@ -68,108 +89,131 @@ export class RecursiveBacktracker extends MazeGenerator {
 
   public step(state: State): {
     current: CellDirection;
+    prev: CellDirection;
     next: CellDirection | undefined;
   } {
-    let current = state.current!;
+    const current = state.current!;
+    let prev = current;
+
     let next: CellDirection | undefined;
-    switch (this.state[this.player].strategy) {
-      case 'right-turn': {
-        next = this.maze
-          .rightTurn(current)
-          .map((d) => this.maze.move(current, d))
-          .filter((c) => c != null)
-          .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
-        break;
-      }
 
-      case 'left-turn': {
-        next = this.maze
-          .leftTurn(current)
-          .map((d) => this.maze.move(current, d))
-          .filter((c) => c != null)
-          .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
-        break;
-      }
-
-      case 'straight': {
-        next = this.maze
-          .straight(current, state.bias)
-          .map((d) => this.maze.move(current, d))
-          .filter((c) => c != null)
-          .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
-
-        state.bias = !state.bias;
-        break;
-      }
-
-      case 'bridge-builder': {
-        if (state.bridge.random <= 0) {
-          let probe = current;
-          const bridge: CellDirection[] = [];
-
-          while (true) {
-            const [dir] = this.maze.straight(probe, state.bias);
-            state.bias = !state.bias;
-
-            const cell = this.maze.move(probe, dir);
-            if (cell && this.maze.inMaze(cell) && this.visited[cell.x][cell.y] === false) {
-              bridge.push(cell);
-              probe = cell;
-            } else {
-              break;
-            }
-          }
-
-          if (bridge.length > 2) {
-            if (bridge.length > 2) {
-              bridge.length = 2;
-            }
-            next = bridge.pop()!;
-            for (const span of bridge) {
-              this.maze.nexus(span).bridge = true;
-              this.maze.removeWall(current, span.direction);
-              // yield;
-              this.visited[span.x][span.y] = this.player;
-
-              for (const tunnelEntrance of this.maze
-                .neighbors(span)
-                .filter(
-                  (c) => c.direction !== span.direction && c.direction !== this.maze.opposite(span),
-                )) {
-                const moveDirection = this.maze
-                  .straight({ ...span, direction: this.maze.opposite(tunnelEntrance) })
-                  .at(0)!;
-                const tunnelExit = this.maze.move(span, moveDirection)!;
-
-                this.maze.nexus(span).portals[this.maze.opposite(tunnelEntrance)] = tunnelExit;
-              }
-
-              current = span;
-            }
-
-            state.bridge.random = 1;
-            break;
-          }
+    if (state.stack.length > 0 && this.random() < this.forcedBacktrack) {
+      next = undefined;
+    } else {
+      switch (state.strategy) {
+        case 'right-turn': {
+          next = this.maze
+            .rightTurn(current)
+            .map((d) => this.maze.move(current, d))
+            .filter((c) => c != null)
+            .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
+          break;
         }
 
-        state.bridge.random -= 1;
-        next = this.randomPick(
-          this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
-        );
+        case 'left-turn': {
+          next = this.maze
+            .leftTurn(current)
+            .map((d) => this.maze.move(current, d))
+            .filter((c) => c != null)
+            .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
+          break;
+        }
 
-        break;
-      }
+        case 'straight': {
+          next = this.maze
+            .straight(current, state.bias)
+            .map((d) => this.maze.move(current, d))
+            .filter((c) => c != null)
+            .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
 
-      case 'random':
-      default: {
-        next = this.randomPick(
-          this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
-        );
-        break;
+          state.bias = !state.bias;
+          break;
+        }
+
+        case 'random': {
+          next = this.randomPick(
+            this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
+          );
+          break;
+        }
+
+        case 'bridge-builder': {
+          if (state.bridge.random <= 0) {
+            let probe = { ...current };
+            const bridge: CellDirection[] = [];
+
+            const turn = this.randomPick(
+              this.maze.neighbors(probe).filter((c) => this.visited[c.x][c.y] === false),
+            )?.direction;
+            if (turn) {
+              probe.direction = turn;
+            }
+
+            while (true) {
+              const [dir] = this.maze.straight(probe, state.bias);
+              state.bias = !state.bias;
+
+              const moves = this.maze
+                .neighbors(probe)
+                .filter(
+                  (c) =>
+                    this.visited[c.x][c.y] === false && !bridge.some((b) => this.maze.isSame(b, c)),
+                );
+              const cell = moves.find((c) => c.direction === dir);
+              if (cell) {
+                bridge.push(cell);
+                probe = cell;
+              } else {
+                next = bridge.pop();
+                if (moves.length === 0) {
+                  next = bridge.pop();
+                }
+                break;
+              }
+            }
+
+            if (bridge.length > this.bridgeMinLength) {
+              if (bridge.length > this.bridgeMaxLength) {
+                next = bridge[this.bridgeMaxLength];
+                bridge.length = this.bridgeMaxLength;
+              }
+
+              prev = this.buildBridge(current, bridge);
+              for (const span of bridge) {
+                this.visited[span.x][span.y] = this.player;
+              }
+
+              state.bridge.random = this.stepsAfterBridge;
+            } else {
+              next = this.randomPick(
+                this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
+              );
+            }
+          } else {
+            state.bridge.random -= 1;
+
+            if (this.random() < this.forcedBacktrack) {
+              next = undefined;
+            } else {
+              const [dir] = this.maze.straight(current, state.bias);
+              next = this.randomPick(
+                this.maze
+                  .neighbors(current)
+                  .filter((c) => this.visited[c.x][c.y] === false && c.direction !== dir),
+              );
+              next ??= this.randomPick(
+                this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
+              );
+            }
+          }
+
+          break;
+        }
+
+        // no default
       }
     }
-
-    return { current, next };
+    return { current, next, prev };
   }
 
   public *generate(): Generator<void> {
@@ -179,8 +223,12 @@ export class RecursiveBacktracker extends MazeGenerator {
         const borderCell = this.randomPick(
           this.maze
             .cellsInMaze()
-            .filter((c) => this.visited[c.x][c.y] === 0)
-            .flatMap((c) => this.maze.neighbors(c).filter((n) => this.visited[n.x][n.y] !== 0)),
+            .filter((c) => this.visited[c.x][c.y] === 0 && !this.maze.nexus(c).bridge)
+            .flatMap((c) =>
+              this.maze
+                .neighbors(c)
+                .filter((n) => this.visited[n.x][n.y] !== 0 && !this.maze.nexus(n).bridge),
+            ),
         );
 
         if (borderCell) {
@@ -209,14 +257,15 @@ export class RecursiveBacktracker extends MazeGenerator {
           this.player = (this.player + 1) % this.parallel;
         }
 
-        const { current, next } = this.step(this.state[this.player]);
+        const { current, prev, next } = this.step(this.state[this.player]);
 
         if (next) {
-          this.maze.removeWall(current, next.direction);
+          this.maze.removeWall(prev, next.direction);
           yield;
 
           this.state[this.player].stack.push(current);
           this.state[this.player].current = next;
+
           this.visited[next.x][next.y] = this.player;
 
           this.player = (this.player + 1) % this.parallel;
@@ -225,21 +274,5 @@ export class RecursiveBacktracker extends MazeGenerator {
         }
       }
     }
-  }
-
-  private bridge = 1;
-
-  public override addBridge(bridge: CellDirection[]): void {
-    const enter = bridge.at(0)!;
-    const exit = bridge.at(-1)!;
-
-    const exitCell = this.maze.move(exit, exit.direction)!;
-    const enterCell = this.maze.move(enter, this.maze.opposite(enter))!;
-
-    this.maze.removeWall(enterCell, enter.direction);
-
-    const player = this.parallel + ++this.bridge;
-    this.visited[enterCell.x][enterCell.y] = player;
-    this.visited[exitCell.x][exitCell.y] = player;
   }
 }

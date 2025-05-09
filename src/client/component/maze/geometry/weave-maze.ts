@@ -9,24 +9,31 @@ import {
 } from './maze.ts';
 import { SquareMaze } from './square-maze.ts';
 
+type WeaveMazeProperties = MazeProperties & {
+  gapSize?: number;
+};
+
 export class WeaveMaze extends SquareMaze {
-  public constructor({ cellSize = 24, wallSize = 2, ...props }: MazeProperties) {
+  public gapSize: number;
+
+  public constructor({ cellSize = 22, wallSize = 2, gapSize = 2, ...props }: WeaveMazeProperties) {
     super({ cellSize, wallSize, ...props });
+    this.gapSize = gapSize;
   }
 
   protected override offsets(_kind: Kind): Record<string, number> {
     const x0 = 0;
-    const x5 = x0 + this.cellSize;
-    const x1 = x0 + this.wallSize;
+    const x1 = x0 + this.gapSize;
     const x2 = x1 + this.wallSize;
-    const x4 = x5 - this.wallSize;
+    const x5 = x0 + this.cellSize;
+    const x4 = x5 - this.gapSize;
     const x3 = x4 - this.wallSize;
 
     const y0 = 0;
-    const y5 = y0 + this.cellSize;
-    const y1 = y0 + this.wallSize;
+    const y1 = y0 + this.gapSize;
     const y2 = y1 + this.wallSize;
-    const y4 = y5 - this.wallSize;
+    const y5 = y0 + this.cellSize;
+    const y4 = y5 - this.gapSize;
     const y3 = y4 - this.wallSize;
 
     return { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 };

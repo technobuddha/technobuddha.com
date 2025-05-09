@@ -111,9 +111,11 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
   },
   '10:Recursize Backtracker': {
     '10': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
-    '0:bridge': (props) =>
+    '0:Bridge Builder': (props) =>
       new RecursiveBacktracker({
         strategy: ['bridge-builder'],
+        forcedBacktrack: 0.2,
+        stepsAfterBridge: 0,
         ...props,
       }),
     '10:Parallel': (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
@@ -153,20 +155,20 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
 };
 
 export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
-  '10:Trémaux': {
+  '0:Trémaux': {
     '10': (props) => new Tremaux(props),
   },
-  '10:Search': {
+  '0:Search': {
     '10:Random': (props) => new Search({ method: 'random', ...props }),
     '10:Seek Exit': (props) => new Search({ method: 'seek', ...props }),
     '10:Left Turn': (props) => new Search({ method: 'left-turn', ...props }),
     '10:Right Turn': (props) => new Search({ method: 'right-turn', ...props }),
   },
-  '10:Fill': {
+  '0:Fill': {
     '10:Dead Ends': (props) => new Filler({ ...props, method: 'dead-end' }),
     '10:Cul-De-Sacs': (props) => new Filler({ ...props, method: 'cul-de-sac' }),
   },
-  '10': {
+  '0': {
     '10:Follow the Right Wall': (props) => new WallWalking({ ...props, turn: 'right' }),
     '10:Follow the Left Wall': (props) => new WallWalking({ ...props, turn: 'left' }),
   },

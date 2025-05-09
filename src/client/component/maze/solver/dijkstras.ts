@@ -25,7 +25,7 @@ export class Dijkstras extends MazeSolver {
   public constructor({
     scannedColor = '#DC0073',
     avatarColor = '#08A4BD',
-    prunedColor = '#F5B700',
+    prunedColor = '#EF3E36', //'#9a0050',
     ...props
   }: DijkstrasProperties) {
     super({ ...props });

@@ -26,7 +26,7 @@ import {
 } from './octogon-matrix.ts';
 
 export class OctogonMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 32, wallSize = 2, ...props }: MazeProperties) {
     super(
       { cellSize, wallSize, ...props },
       directionMatrix,

@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type AllOrder, type CellDirection } from '../geometry/maze.ts';
+import { type AllOrder } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -60,12 +60,6 @@ export class HuntAndKill extends MazeGenerator {
           return;
         }
       }
-    }
-  }
-
-  public override addBridge(bridge: CellDirection[]): void {
-    for (const span of bridge) {
-      this.visited[span.x][span.y] = true;
     }
   }
 }

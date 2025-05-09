@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
 import {
   type AngleMatrix,
   type DirectionMatrix,

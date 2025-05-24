@@ -1,4 +1,5 @@
 import { randomPick, randomShuffle } from '@technobuddha/library';
+import { groupBy, uniq } from 'lodash-es';
 
 import { type Cell, type CellDirection, type Maze } from '../geometry/maze.ts';
 
@@ -40,24 +41,63 @@ export abstract class MazeGenerator {
 
   public abstract generate(): Generator<void>;
 
-  protected buildBridge(current: CellDirection, bridge: CellDirection[]): CellDirection {
+  protected buildBridge(
+    current: CellDirection,
+    bridge: CellDirection[],
+    next: CellDirection,
+  ): CellDirection {
     let prev = current;
+
+    const xBridge = [current, ...bridge, next];
+    const bridgeDirections = uniq(bridge.flatMap((c) => [c.direction, this.maze.opposite(c)]));
+
+    const tunnels = groupBy(
+      bridge.flatMap((b) =>
+        this.maze
+          .adjacent(b)
+          .filter(
+            (c) =>
+              !(
+                bridgeDirections.includes(c.direction) ||
+                xBridge.some((x) => this.maze.isSame(x, c))
+              ),
+          ),
+      ),
+      (cell) => cell.direction,
+    );
+
+    let keys = Object.keys(tunnels);
+    while (keys.length > 0) {
+      const [key1] = keys;
+      const key2 = this.maze.inverse(tunnels[key1][0]);
+
+      if (tunnels[key1]?.length !== tunnels[key2]?.length) {
+        // eslint-disable-next-line no-console
+        console.warn(`Tunnel length mismatch for ${key1} and ${key2}`, tunnels);
+      }
+
+      if (key2 in tunnels) {
+        for (let i = 0; i < tunnels[key1].length; i++) {
+          const t1 = tunnels[key1][i];
+          const t2 = tunnels[key2][i];
+
+          if (t2) {
+            const b1 = this.maze.shift(t1, this.maze.opposite(t1))!;
+            const b2 = this.maze.shift(t2, this.maze.opposite(t2))!;
+
+            this.maze.nexus(b1).portals[this.maze.opposite({ ...b1, direction: key1 })] = t2;
+            this.maze.nexus(b2).portals[this.maze.opposite({ ...b2, direction: key2 })] = t1;
+          }
+        }
+        delete tunnels[key2];
+      }
+      delete tunnels[key1];
+      keys = Object.keys(tunnels);
+    }
+
     for (const span of bridge) {
       this.maze.nexus(span).bridge = true;
       this.maze.removeWall(prev, span.direction);
-
-      for (const tunnelEntrance of this.maze
-        .neighbors(span)
-        .filter(
-          (c) => c.direction !== span.direction && c.direction !== this.maze.opposite(span),
-        )) {
-        const moveDirection = this.maze
-          .straight({ ...span, direction: this.maze.opposite(tunnelEntrance) })
-          .at(0)!;
-        const tunnelExit = this.maze.move(span, moveDirection)!;
-
-        this.maze.nexus(span).portals[this.maze.opposite(tunnelEntrance)] = tunnelExit;
-      }
       prev = span;
     }
 

@@ -6,42 +6,20 @@ import { type Rect } from '../drawing/drawing.ts';
 import {
   type Cell,
   type CellDirection,
-  type CellPillar,
   type DrawingSizes,
   type Kind,
   type MazeProperties,
+  type Pillar,
 } from './maze.ts';
 import { Maze } from './maze.ts';
-import {
-  directionMatrix,
-  leftTurnMatrix,
-  moveMatrix,
-  oppositeMatrix,
-  pathMatrix,
-  pillarMatrix,
-  preferredMatrix,
-  rightTurnMatrix,
-  straightMatrix,
-  wallMatrix,
-} from './triangle-matrix.ts';
+import { matrix } from './triangle-matrix.ts';
 
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class TriangleMaze extends Maze {
   public constructor({ cellSize = 24, wallSize = 2, ...props }: MazeProperties) {
-    super(
-      { cellSize, wallSize, ...props },
-      directionMatrix,
-      pillarMatrix,
-      wallMatrix,
-      oppositeMatrix,
-      rightTurnMatrix,
-      leftTurnMatrix,
-      straightMatrix,
-      moveMatrix,
-      preferredMatrix,
-      pathMatrix,
-    );
+    super({ cellSize, wallSize, ...props }, matrix);
+    this.bridgePieces = 2;
   }
 
   protected drawingSize(): DrawingSizes {
@@ -185,7 +163,7 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
+  public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       const ctx = this.drawing;
       const { x0, x1, x2, x3, x4, x5, x6, x7, x8, y0, y1, y2, y3, y4, y5 } = this.cellOffsets({
@@ -239,7 +217,7 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = 'red'): void {
+  public drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       const { x2, x4, x6, y2, y4 } = this.cellOffsets(cell);
       const yc = (y2 + y4) / 2;
@@ -253,11 +231,18 @@ export class TriangleMaze extends Maze {
   public getRect(cell: Cell): Rect {
     const { x2, x6, y2, y4 } = this.cellOffsets(cell);
 
-    return {
-      x: x2 + this.wallSize,
-      y: y2 + this.wallSize,
-      w: x6 - x2 - this.wallSize * 2,
-      h: y4 - y2 - this.wallSize * 2,
-    };
+    return this.cellKind(cell) === 0 ?
+        {
+          x: x2 + this.wallSize,
+          y: y2 + this.wallSize,
+          w: x6 - x2 - this.wallSize * 2,
+          h: y4 - y2 - this.wallSize * 2,
+        }
+      : {
+          x: x2 + this.wallSize,
+          y: y4 + this.wallSize,
+          w: x6 - x2 - this.wallSize * 2,
+          h: y2 - y4 - this.wallSize * 2,
+        };
   }
 }

@@ -35,10 +35,6 @@ export type Terminus = Cell & {
   direction: Direction;
 };
 
-export type CellPillar = Cell & {
-  pillar: Pillar;
-};
-
 export type AllOrder =
   | 'top-left'
   | 'left-top'
@@ -57,9 +53,14 @@ export type Directional<T> = Record<Direction, T | false | undefined>;
 export type Wall = Directional<true>;
 export type Portal = Directional<CellDirection>;
 
+export type CustomDrawingSize = {
+  width: number;
+  height: number;
+  actualWidth: number;
+  actualHeight: number;
+};
+
 export type DrawingSizes = {
-  fixedWidth?: number;
-  fixedHeight?: number;
   groupWidth: number;
   groupHeight: number;
   verticalCellsPerGroup?: number;
@@ -68,10 +69,7 @@ export type DrawingSizes = {
   leftPadding?: number;
   bottomPadding?: number;
   rightPadding?: number;
-  custom?(
-    this: void,
-    args: { width: number; height: number; actualWidth: number; actualHeight: number },
-  ): { width: number; height: number; actualWidth: number; actualHeight: number };
+  custom?(this: void, args: CustomDrawingSize): CustomDrawingSize;
 };
 
 type ShowDistances = 'none' | 'greyscale' | 'primary' | 'color' | 'spectrum';
@@ -88,74 +86,105 @@ export type MazeProperties = {
   width?: number;
   height?: number;
   cellSize?: number;
-  cellColor?: string;
   wallSize?: number;
-  wallColor?: string;
-  maskColor?: string;
   entrance?: Cell | CellDirection | Location;
   exit?: Cell | CellDirection | Location;
-  entranceColor?: string;
-  exitColor?: string;
-  random?(this: void): number;
-  plugin?(this: void, maze: Maze): void;
   wrapHorizontal?: boolean;
   wrapVertical?: boolean;
-  showDistances?: ShowDistances;
+
+  cellColor?: string;
+  wallColor?: string;
+  maskColor?: string;
+  entranceColor?: string;
+  exitColor?: string;
+  tunnelColor?: string;
   solutionColor?: string;
+  scannedColor?: string;
+  avatarColor?: string;
+  prunedColor?: string;
+  pathColor?: string;
+  blockedColor?: string;
+  errorColor?: string;
+  bridgeColor?: string;
+  textColor?: string;
+
+  showDistances?: ShowDistances;
+  showCoordinates?: boolean;
+
+  random?(this: void): number;
+  plugin?(this: void, maze: Maze): void;
 };
 
-export type DirectionMatrix = Direction[];
-export type PillarMatrix = Pillar[];
-export type WallMatrix = Record<Kind, Record<Direction, boolean>>;
-export type OppositeMatrix = Record<Direction, Direction | Record<Kind, Direction>>;
-export type TurnMatrix = Record<Direction, Direction[] | Record<Kind, Direction[]>>;
-export type AngleMatrix = Record<Direction, number>;
-export type MoveMatrix = Record<Kind, Record<Direction, Move | Move[]>>;
-export type PreferredMatrix = Record<Kind, Direction[]>;
-export type PathMatrix = Record<Direction, number>;
+export type Matrix = {
+  readonly directions: Direction[];
+  readonly pillars: Pillar[];
+  readonly wall: Record<Kind, Record<Direction, boolean>>;
+  readonly opposite: Record<Direction, Direction | Record<Kind, Direction>>;
+  readonly inverse: Record<Direction, Direction | Record<Kind, Direction>>;
+  readonly rightTurn: Record<Direction, Direction[] | Record<Kind, Direction[]>>;
+  readonly leftTurn: Record<Direction, Direction[] | Record<Kind, Direction[]>>;
+  readonly straight: Record<Direction, Direction[] | Record<Kind, Direction[]>>;
+  readonly move: Record<Kind, Record<Direction, Move | Move[]>>;
+  readonly preferred: Record<Kind, Direction[]>;
+  readonly angle: Record<Direction, number>;
+};
 
 export abstract class Maze {
-  public width: NonNullable<MazeProperties['width']> = 25;
-  public height: NonNullable<MazeProperties['height']> = 25;
-  public readonly cellSize: NonNullable<MazeProperties['cellSize']>;
-  public readonly cellColor: NonNullable<MazeProperties['cellColor']>;
-  public readonly wallSize: NonNullable<MazeProperties['wallSize']>;
-  public readonly wallColor: NonNullable<MazeProperties['wallColor']>;
-  public readonly maskColor: NonNullable<MazeProperties['maskColor']>;
   public readonly wrapHorizontal: boolean;
   public readonly wrapVertical: boolean;
-  public readonly showDistances: ShowDistances;
   public entrance: Terminus = { x: -1, y: -1, direction: '?' };
   public exit: Terminus = { x: -1, y: -1, direction: '?' };
   public solution: CellDirection[] = [];
-  public solutionColor: string;
 
-  public readonly directions: DirectionMatrix;
-  public readonly pillars: PillarMatrix;
+  public leftOffset = 0;
+  public topOffset = 0;
+  public bridgePieces = 1;
 
-  protected leftOffset = 0;
-  protected topOffset = 0;
+  public width: NonNullable<MazeProperties['width']> = 25;
+  public height: NonNullable<MazeProperties['height']> = 25;
+  public readonly wallSize: NonNullable<MazeProperties['wallSize']>;
+  public readonly cellSize: NonNullable<MazeProperties['cellSize']>;
+
+  public readonly cellColor: NonNullable<MazeProperties['cellColor']>;
+  public readonly wallColor: NonNullable<MazeProperties['wallColor']>;
+  public readonly maskColor: NonNullable<MazeProperties['maskColor']>;
+  public readonly entranceColor: NonNullable<MazeProperties['entranceColor']>;
+  public readonly exitColor: NonNullable<MazeProperties['exitColor']>;
+  public readonly tunnelColor: NonNullable<MazeProperties['tunnelColor']>;
+  public readonly solutionColor: NonNullable<MazeProperties['solutionColor']>;
+  public readonly scannedColor: NonNullable<MazeProperties['scannedColor']>;
+  public readonly avatarColor: NonNullable<MazeProperties['avatarColor']>;
+  public readonly prunedColor: NonNullable<MazeProperties['prunedColor']>;
+  public readonly pathColor: NonNullable<MazeProperties['pathColor']>;
+  public readonly blockedColor: NonNullable<MazeProperties['blockedColor']>;
+  public readonly errorColor: NonNullable<MazeProperties['errorColor']>;
+  public readonly bridgeColor: NonNullable<MazeProperties['bridgeColor']>;
+  public readonly textColor: NonNullable<MazeProperties['textColor']>;
+
+  public readonly showDistances: NonNullable<MazeProperties['showDistances']>;
+  public readonly showCoordinates: NonNullable<MazeProperties['showCoordinates']>;
 
   public readonly random: NonNullable<MazeProperties['random']>;
-
-  protected entranceColor: NonNullable<MazeProperties['entranceColor']>;
-  protected exitColor: NonNullable<MazeProperties['exitColor']>;
-  protected drawing: MazeProperties['drawing'];
-
-  private readonly wallMatrix: WallMatrix;
-  private readonly oppositeMatrix: OppositeMatrix;
-  private readonly rightTurnMatrix: TurnMatrix;
-  private readonly leftTurnMatrix: TurnMatrix;
-  private readonly straightMatrix: TurnMatrix;
-  private readonly moveMatrix: MoveMatrix;
-  private readonly preferredMatrix: PreferredMatrix;
-  private readonly pathMatrix: PathMatrix;
 
   private readonly entranceSpec: MazeProperties['entrance'];
   private readonly exitSpec: MazeProperties['exit'];
   protected plugin: MazeProperties['plugin'];
   protected readonly requestedWidth: MazeProperties['width'];
   protected readonly requestedHeight: MazeProperties['height'];
+
+  protected drawing: MazeProperties['drawing'];
+
+  public readonly directions: Matrix['directions'];
+  public readonly pillars: Matrix['pillars'];
+  protected readonly wallMatrix: Matrix['wall'];
+  protected readonly oppositeMatrix: Matrix['opposite'];
+  protected readonly inverseMatrix: Matrix['inverse'];
+  protected readonly rightTurnMatrix: Matrix['rightTurn'];
+  protected readonly leftTurnMatrix: Matrix['leftTurn'];
+  protected readonly straightMatrix: Matrix['straight'];
+  protected readonly moveMatrix: Matrix['move'];
+  protected readonly preferredMatrix: Matrix['preferred'];
+  protected readonly angleMatrix: Matrix['angle'];
 
   public hookPreGeneration: ((generator: MazeGenerator) => void) | undefined = undefined;
   public hookPostGeneration: ((generator: MazeGenerator) => void) | undefined = undefined;
@@ -166,64 +195,80 @@ export abstract class Maze {
   public constructor(
     {
       drawing,
-      cellSize = 21,
-      cellColor = 'black',
-      wallSize = 1,
-      wallColor = '#9e9e9e',
-      maskColor = cellColor,
-      entrance,
-      exit,
-      entranceColor = 'green',
-      exitColor = 'red',
-      wrapHorizontal = false,
-      wrapVertical = false,
-      random = Math.random,
-      showDistances = 'color',
-      solutionColor = '#08A4BD',
       width: requestedWidth,
       height: requestedHeight,
+      cellSize = 21,
+      wallSize = 1,
+      entrance,
+      exit,
+      wrapHorizontal = false,
+      wrapVertical = false,
+
+      cellColor = 'oklch(0 0 0)',
+      wallColor = 'oklch(0.6993 0 0)',
+      maskColor = cellColor,
+      entranceColor = 'oklch(0.5198 0.176858 142.4953)',
+      exitColor = 'oklch(0.628 0.2577 29.23)',
+      tunnelColor = 'oklch(0.9544 0.0637 196.13)',
+      solutionColor = 'oklch(0.6611 0.115 213.72)',
+      scannedColor = 'oklch(0.5789 0.2344 0.51)',
+      avatarColor = 'oklch(0.6611 0.115 213.72)',
+      prunedColor = 'oklch(0.4446 0.1803 359.81)',
+      pathColor = 'oklch(0.8145 0.1672 83.88)',
+      blockedColor = 'oklch(0.6298 0.2145 27.83)',
+      errorColor = 'oklch(0.8664 0.294827 142.4953)',
+      bridgeColor = '#222222', //'oklch(0.4806 0.1597 25.56)',
+      textColor = 'oklch(1 0 0)',
+
+      showDistances = 'greyscale',
+      showCoordinates = false,
+
+      random = Math.random,
       plugin,
     }: MazeProperties,
-    directions: DirectionMatrix,
-    pillars: PillarMatrix,
-    wallMatrix: WallMatrix,
-    oppositeMatrix: OppositeMatrix,
-    rightTurnMatrix: TurnMatrix,
-    leftTurnMatrix: TurnMatrix,
-    straightMatrix: TurnMatrix,
-    moveMatrix: MoveMatrix,
-    preferredMatrix: PreferredMatrix,
-    pathMatrix: PathMatrix,
+    matrix: Matrix,
   ) {
-    this.wallMatrix = wallMatrix;
-    this.oppositeMatrix = oppositeMatrix;
-    this.rightTurnMatrix = rightTurnMatrix;
-    this.leftTurnMatrix = leftTurnMatrix;
-    this.straightMatrix = straightMatrix;
-    this.moveMatrix = moveMatrix;
-    this.preferredMatrix = preferredMatrix;
-    this.pathMatrix = pathMatrix;
+    this.directions = matrix.directions;
+    this.pillars = matrix.pillars;
+    this.wallMatrix = matrix.wall;
+    this.oppositeMatrix = matrix.opposite;
+    this.inverseMatrix = matrix.inverse;
+    this.rightTurnMatrix = matrix.rightTurn;
+    this.leftTurnMatrix = matrix.leftTurn;
+    this.straightMatrix = matrix.straight;
+    this.moveMatrix = matrix.move;
+    this.preferredMatrix = matrix.preferred;
+    this.angleMatrix = matrix.angle;
 
     this.cellSize = cellSize;
     this.wallSize = wallSize;
     this.drawing = drawing;
 
-    this.directions = directions;
-    this.pillars = pillars;
     this.cellColor = cellColor;
     this.wallColor = wallColor;
     this.maskColor = maskColor;
+    this.entranceColor = entranceColor;
+    this.exitColor = exitColor;
+    this.tunnelColor = tunnelColor;
+    this.solutionColor = solutionColor;
+    this.scannedColor = scannedColor;
+    this.avatarColor = avatarColor;
+    this.prunedColor = prunedColor;
+    this.pathColor = pathColor;
+    this.blockedColor = blockedColor;
+    this.errorColor = errorColor;
+    this.bridgeColor = bridgeColor;
+    this.textColor = textColor;
+
+    this.showDistances = showDistances;
+    this.showCoordinates = showCoordinates;
 
     this.wrapHorizontal = wrapHorizontal;
     this.wrapVertical = wrapVertical;
-    this.showDistances = showDistances;
 
     this.random = random;
     this.entranceSpec = entrance;
     this.exitSpec = exit;
-    this.entranceColor = entranceColor;
-    this.exitColor = exitColor;
-    this.solutionColor = solutionColor;
 
     this.requestedWidth = requestedWidth;
     this.requestedHeight = requestedHeight;
@@ -325,7 +370,12 @@ export abstract class Maze {
   }
 
   public initialPortals(cell: Cell): Portal {
-    return Object.fromEntries(Object.keys(this.initialWalls(cell)).map((d) => [d, false]));
+    return Object.fromEntries(
+      Object.keys(this.initialWalls(cell)).map((d) => [
+        this.opposite({ ...cell, direction: d }),
+        false,
+      ]),
+    );
   }
   //#endregion
   //#region utility functions
@@ -338,6 +388,15 @@ export abstract class Maze {
   }
   //#endregion
   //#region Direction
+  public angle(direction: Direction): number {
+    const angle = this.angleMatrix[direction];
+    if (angle != null) {
+      return angle;
+    }
+
+    throw new Error(`"${direction}" is not a valid direction`);
+  }
+
   public opposite(cell: CellDirection): Direction {
     if (cell.direction === '?') {
       return '?';
@@ -346,6 +405,19 @@ export abstract class Maze {
     const opposite = this.oppositeMatrix[cell.direction];
     if (opposite) {
       return isObject(opposite) ? opposite[this.cellKind(cell)] : opposite;
+    }
+
+    throw new Error(`"${cell.direction}" is not a valid direction`);
+  }
+
+  public inverse(cell: CellDirection): Direction {
+    if (cell.direction === '?') {
+      return '?';
+    }
+
+    const inverse = this.inverseMatrix[cell.direction];
+    if (inverse) {
+      return isObject(inverse) ? inverse[this.cellKind(cell)] : inverse;
     }
 
     throw new Error(`"${cell.direction}" is not a valid direction`);
@@ -385,6 +457,20 @@ export abstract class Maze {
     }
 
     throw new Error(`"${cell.direction}" is not a valid direction`);
+  }
+
+  public straightest(cell: CellDirection, bias = this.random() < 0.5): Direction {
+    const straights = this.straight(cell, bias);
+    if (straights.length > 1) {
+      return straights[0];
+    }
+
+    throw new Error(`(${cell.x},${cell.y}):${cell.direction} has no straight.`);
+  }
+
+  public forward(cell: CellDirection, bias = this.random() < 0.5): Direction {
+    const [forward] = this.straight(cell, bias);
+    return forward;
   }
   //#endregion
   //#region Cell Selection
@@ -460,11 +546,6 @@ export abstract class Maze {
   }
   //#endregion
   //#region Maze
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public freezeWalls(): void {
-    // This is a no-op for most kinds of mazes
-  }
-
   public backup(): Nexus[][] {
     return structuredClone(this.nexuses);
   }
@@ -617,7 +698,7 @@ export abstract class Maze {
 
           for (const pillar of this.pillars) {
             if (pillar.includes(this.opposite(outside))) {
-              this.drawOutsidePillar({ ...outside, pillar });
+              this.drawOutsidePillar(outside, pillar);
             }
           }
         }
@@ -658,22 +739,25 @@ export abstract class Maze {
           let color: string | undefined = undefined;
 
           if (distance === Infinity) {
-            color = 'rgba(0,255,0,.5)';
+            color = this.errorColor;
           } else {
+            const grey = (1 - distance / maxDistance) * 0.35 + 0.15;
+
             switch (this.showDistances) {
               case 'none': {
                 break;
               }
 
               case 'greyscale': {
-                const grey = (1 - distance / maxDistance) * 0.35 + 0.15;
-
-                color = `rgba(${255 * grey}, ${255 * grey}, ${255 * grey})`;
+                // color = `rgba(${255 * grey}, ${255 * grey}, ${255 * grey})`;
+                color = `oklch(${grey} 0 0)`;
                 break;
               }
 
               case 'primary': {
-                color = `hsl(212, 72.3%, ${3 + 35 * (1 - this.nexus(cell).distance / maxDistance)}%)`;
+                // color = `hsl(212, 72.3%, ${3 + 35 * (1 - this.nexus(cell).distance / maxDistance)}%)`;
+                color = `oklch(${grey} 0.115 213.72)`;
+                //oklch(0.6611 0.115 213.72)
                 break;
               }
 
@@ -683,7 +767,8 @@ export abstract class Maze {
               }
 
               case 'spectrum': {
-                color = `hsl(${(this.nexus(cell).distance * 360) / maxDistance}, 25%, 50%)`;
+                //color = `hsl(${(this.nexus(cell).distance * 360) / maxDistance}, 25%, 50%)`;
+                color = `oklch(0.5999 0.1279 ${(1 - distance / maxDistance) * 360} )`;
                 break;
               }
               // no default
@@ -705,7 +790,7 @@ export abstract class Maze {
             `Loop detected from {x: ${loop.cell.x}, y: ${loop.cell.y} :: ${loop.distance}} with ${loop.loops.map((l, i) => `{x: ${l.x}, y:${l.y} :: ${loop.distances[i]}}`).join(' ')}`,
           );
 
-          this.drawX(loop.cell, 'lime');
+          this.drawX(loop.cell, this.errorColor);
         }
       }
     }
@@ -809,11 +894,7 @@ export abstract class Maze {
         const portal: CellDirection | undefined | false =
           this.inMaze(next) ? this.nexus(next).portals[next.direction] : false;
         if (portal) {
-          const { destination } = this.nexus(next);
           next = portal;
-          if (destination) {
-            break;
-          }
         } else {
           break;
         }
@@ -883,50 +964,86 @@ export abstract class Maze {
       cell,
       this.isSame(cell, this.entrance) ? this.entranceColor
       : this.isSame(cell, this.exit) ? this.exitColor
+        // todo : this.nexus(cell).bridge ? this.bridgeColor
       : cellColor,
     );
 
-    if (this.nexus(cell).bridge) {
-      this.drawText(cell, '◯', 'white');
-    }
+    this.drawWalls(cell, wallColor);
+    this.drawPillars(cell, wallColor);
 
-    const { walls, portals } = this.nexus(cell);
-    for (const direction of Object.keys(walls)) {
-      if (walls[direction]) {
-        if (portals[direction]) {
-          const move = this.shift(cell, direction);
-          if (move && this.inMaze(move) && !this.nexus(move).walls[this.opposite(move)]) {
-            this.drawDoor({ ...cell, direction }, wallColor);
-            this.drawWall({ ...cell, direction }, '#befefe'); //wallColor);
-            continue;
-          }
-        }
-        this.drawWall({ ...cell, direction }, wallColor);
-      } else {
-        this.drawDoor({ ...cell, direction }, wallColor);
-      }
-    }
-    // for (const direction of Object.keys(portals)) {
-    //   if (portals[direction]) {
-    //     const move = this.shift(cell, direction);
-    //     if (move && this.inMaze(move) && !this.nexus(move).walls[this.opposite(move)]) {
-    //       this.drawDoor({ ...cell, direction }, wallColor);
-    //     }
-    //   }
-    // }
-
-    for (const pillar of this.pillars) {
-      if (pillar[0] in walls && pillar[1] in walls) {
-        this.drawPillar({ ...cell, pillar }, this.wallColor);
-      }
+    if (this.showCoordinates) {
+      this.drawText(cell, cell.x === 0 ? cell.y.toString() : cell.x.toString());
     }
 
     return cell;
   }
 
-  public drawText(cell: Cell, text: string, color = 'black'): void {
+  public drawWalls(cell: Cell, color = this.wallColor): void {
+    const { walls, portals } = this.nexus(cell);
+
+    for (const direction of Object.keys(walls)) {
+      if (walls[direction]) {
+        if (portals[this.opposite({ ...cell, direction })]) {
+          const move = this.shift(cell, direction);
+          if (move && this.inMaze(move) && !this.nexus(move).walls[this.inverse(move)]) {
+            this.drawTunnel({ ...cell, direction }, color);
+            this.drawDoor({ ...cell, direction }, color);
+            this.drawWall({ ...cell, direction }, this.tunnelColor);
+            continue;
+          }
+        }
+        this.drawWall({ ...cell, direction }, color);
+      } else {
+        this.drawDoor({ ...cell, direction }, color);
+      }
+    }
+  }
+
+  public drawPillars(cell: Cell, color = this.wallColor): void {
+    const { walls } = this.nexus(cell);
+
+    for (const pillar of this.pillars) {
+      if (pillar[0] in walls && pillar[1] in walls) {
+        this.drawPillar(cell, pillar, color);
+      }
+    }
+  }
+
+  public drawText(cell: Cell, text: string, color = this.textColor): void {
     if (this.drawing) {
       this.drawing.text(this.getRect(cell), text, color);
+    }
+  }
+
+  public drawTunnel(cell: CellDirection, color = this.wallColor): void {
+    if (this.drawing) {
+      this.drawDoor(cell, color);
+      this.drawWall(cell, this.tunnelColor);
+    }
+  }
+
+  public drawDoor(_cell: CellDirection, _color: string = this.wallColor): void {
+    // Most mazes don't have to draw a door, it just the lack of a wall.
+  }
+
+  public drawOutsideWall(cell: CellDirection, color = this.wallColor): void {
+    this.drawWall(cell, color);
+  }
+
+  public drawOutsidePillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
+    this.drawPillar(cell, pillar, color);
+  }
+
+  public drawPath(cell: CellDirection, color = this.pathColor): void {
+    if (this.drawing) {
+      const rect = this.cellRect(cell);
+      if (cell.direction === '?') {
+        this.renderCircle(rect, color);
+      } else {
+        const angle = this.angleMatrix[cell.direction];
+
+        this.renderArrow(rect, angle, color);
+      }
     }
   }
 
@@ -961,6 +1078,19 @@ export abstract class Maze {
     }
   }
 
+  public drawAvatar(cell: Cell, color = this.avatarColor): void {
+    if (this.drawing) {
+      this.drawCell(cell);
+      const rect = this.cellRect(cell);
+
+      this.drawing.circle(
+        { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 },
+        Math.abs(rect.w) / 4,
+        color,
+      );
+    }
+  }
+
   protected renderCircle(rect: Rect, color: string): void {
     if (this.drawing) {
       this.drawing.circle(
@@ -985,31 +1115,12 @@ export abstract class Maze {
     return rect;
   }
 
-  public drawAvatar(cell: Cell, color = 'cyan'): void {
-    if (this.drawing) {
-      this.drawCell(cell);
-      const rect = this.cellRect(cell);
-
-      this.drawing.circle(
-        { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 },
-        Math.abs(rect.w) / 4,
-        color,
-      );
-    }
-  }
-
-  public drawPath(cell: CellDirection, color = 'cyan'): void {
-    if (this.drawing) {
-      const rect = this.cellRect(cell);
-      if (cell.direction === '?') {
-        this.renderCircle(rect, color);
-      } else {
-        const angle = this.pathMatrix[cell.direction];
-
-        this.renderArrow(rect, angle, color);
-      }
-    }
-  }
+  protected abstract offsets(kind: Kind): Record<string, number>;
+  public abstract drawFloor(cell: Cell, color?: string): void;
+  public abstract drawWall(cd: CellDirection, color?: string): void;
+  public abstract drawPillar(cell: Cell, pillar: Pillar, color?: string): void;
+  public abstract drawX(cell: Cell, color?: string): void;
+  public abstract getRect(cell: Cell): Rect;
 
   protected translateOffsets(cell: Cell, x: number, y: number): Record<string, number> {
     return Object.fromEntries(
@@ -1024,25 +1135,6 @@ export abstract class Maze {
       }),
     );
   }
-
-  public drawDoor(_cd: CellDirection, _color: string = this.wallColor): void {
-    // Most mazes don't have to draw a door, it just the lack of a wall.
-  }
-
-  public drawOutsideWall(cd: CellDirection, color = this.wallColor): void {
-    this.drawWall(cd, color);
-  }
-
-  public drawOutsidePillar(cell: CellPillar, color = this.wallColor): void {
-    this.drawPillar(cell, color);
-  }
-
-  protected abstract offsets(kind: Kind): Record<string, number>;
-  public abstract drawFloor(cell: Cell, color?: string): void;
-  public abstract drawWall(cd: CellDirection, color?: string): void;
-  public abstract drawPillar(cell: CellPillar, color?: string): void;
-  public abstract drawX(cell: Cell, color?: string): void;
-  public abstract getRect(cell: Cell): Rect;
   //#endregion
   //#region Location
   public parseLocation(p: Location): Cell {

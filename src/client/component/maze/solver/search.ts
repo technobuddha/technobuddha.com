@@ -23,12 +23,13 @@ export class Search extends MazeSolver {
   protected readonly method: Method;
 
   public constructor({
-    avatarColor = '#08A4BD',
-    pathColor = '#F5B700',
+    maze,
+    avatarColor = maze.avatarColor,
+    pathColor = maze.pathColor,
     method = 'random',
     ...props
   }: SearchProperties) {
-    super(props);
+    super({ maze, ...props });
     this.avatarColor = avatarColor;
     this.pathColor = pathColor;
     this.method = method;

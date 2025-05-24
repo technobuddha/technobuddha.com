@@ -3,9 +3,9 @@ import { type Rect } from '../drawing/drawing.ts';
 import {
   type Cell,
   type CellDirection,
-  type CellPillar,
   type Kind,
   type MazeProperties,
+  type Pillar,
 } from './maze.ts';
 import { SquareMaze } from './square-maze.ts';
 
@@ -109,7 +109,7 @@ export class WeaveMaze extends SquareMaze {
     }
   }
 
-  public override drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
+  public override drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       const { x1, x2, x3, x4, y1, y2, y3, y4 } = this.cellOffsets({ x, y });
 
@@ -128,11 +128,11 @@ export class WeaveMaze extends SquareMaze {
     }
   }
 
-  public override drawOutsidePillar(_cell: CellPillar, _color = this.wallColor): void {
+  public override drawOutsidePillar(_cell: Cell, _pillar: Pillar, _color = this.wallColor): void {
     // no-op
   }
 
-  public override drawX(cell: Cell, color = 'red'): void {
+  public override drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       const { x2, x3, y2, y3 } = this.cellOffsets(cell);
 

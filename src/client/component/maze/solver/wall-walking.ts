@@ -17,11 +17,12 @@ export class WallWalking extends MazeSolver {
   private readonly backward: (cell: CellDirection) => Direction[];
 
   public constructor({
-    avatarColor = '#08A4BD',
-    pathColor = '#DC0073',
+    maze,
+    avatarColor = maze.avatarColor,
+    pathColor = maze.pathColor,
     ...props
   }: WallWalkingProperties) {
-    super(props);
+    super({ maze, ...props });
 
     this.avatarColor = avatarColor;
     this.pathColor = pathColor;

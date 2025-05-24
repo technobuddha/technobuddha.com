@@ -30,8 +30,6 @@ export class Wilsons extends MazeGenerator {
   }
 
   public *generate(): Generator<void> {
-    this.maze.freezeWalls();
-
     while (this.unvisited.length > 0) {
       this.currentCell = this.randomPick(this.unvisited)!;
       let path: (Cell | CellDirection)[] = [this.currentCell];

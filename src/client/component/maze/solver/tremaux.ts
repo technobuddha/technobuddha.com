@@ -6,13 +6,13 @@ import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 type TremauxProperties = MazeSolverProperties & {
   avatarColor?: string;
-  markedColor?: string;
+  pathColor?: string;
   blockedColor?: string;
 };
 
 export class Tremaux extends MazeSolver {
   public avatarColor: string;
-  public markedColor: string;
+  public pathColor: string;
   public blockedColor: string;
   private curr: CellDirection;
   private prev: Cell | undefined = undefined;
@@ -20,14 +20,15 @@ export class Tremaux extends MazeSolver {
   private readonly marks: Record<Direction, number>[][];
 
   public constructor({
-    avatarColor = '#08A4BD',
-    markedColor = '#F5B700',
-    blockedColor = '#EF3E36',
+    maze,
+    avatarColor = maze.avatarColor,
+    pathColor = maze.pathColor,
+    blockedColor = maze.blockedColor,
     ...props
   }: TremauxProperties) {
-    super(props);
+    super({ maze, ...props });
     this.avatarColor = avatarColor;
-    this.markedColor = markedColor;
+    this.pathColor = pathColor;
     this.blockedColor = blockedColor;
 
     this.marks = create2DArray(this.maze.width, this.maze.height, (x, y) =>
@@ -72,7 +73,7 @@ export class Tremaux extends MazeSolver {
   }
 
   public *solve({
-    markedColor = this.markedColor,
+    markedColor = this.pathColor,
     blockedColor = this.blockedColor,
     avatarColor = this.avatarColor,
     entrance = this.maze.entrance,
@@ -123,6 +124,7 @@ export class Tremaux extends MazeSolver {
       } else {
         // 3. Pick any entrance with the fewest marks (zero if possible, else one).
         if (moves.length === 0) {
+          debugger;
           throw new Error('No moves found for tremaux');
         }
         const [next] = this.randomShuffle(moves).sort(

@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { angleDifference, create2DArray, toRadians } from '@technobuddha/library';
 
 import { type CellDirection } from '../geometry/maze.ts';
 
@@ -97,88 +97,109 @@ export class RecursiveBacktracker extends MazeGenerator {
 
     let next: CellDirection | undefined;
 
-    if (state.stack.length > 0 && this.random() < this.forcedBacktrack) {
-      next = undefined;
-    } else {
-      switch (state.strategy) {
-        case 'right-turn': {
-          next = this.maze
-            .rightTurn(current)
-            .map((d) => this.maze.move(current, d))
-            .filter((c) => c != null)
-            .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
-          break;
-        }
+    // if (state.stack.length > 0 && this.random() < this.forcedBacktrack) {
+    //   next = undefined;
+    // } else {
+    switch (state.strategy) {
+      case 'right-turn': {
+        next = this.maze
+          .rightTurn(current)
+          .map((d) => this.maze.move(current, d))
+          .filter((c) => c != null)
+          .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
+        break;
+      }
 
-        case 'left-turn': {
-          next = this.maze
-            .leftTurn(current)
-            .map((d) => this.maze.move(current, d))
-            .filter((c) => c != null)
-            .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
-          break;
-        }
+      case 'left-turn': {
+        next = this.maze
+          .leftTurn(current)
+          .map((d) => this.maze.move(current, d))
+          .filter((c) => c != null)
+          .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
+        break;
+      }
 
-        case 'straight': {
-          next = this.maze
-            .straight(current, state.bias)
-            .map((d) => this.maze.move(current, d))
-            .filter((c) => c != null)
-            .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
+      case 'straight': {
+        next = this.maze
+          .straight(current, state.bias)
+          .map((d) => this.maze.move(current, d))
+          .filter((c) => c != null)
+          .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
 
-          state.bias = !state.bias;
-          break;
-        }
+        state.bias = !state.bias;
+        break;
+      }
 
-        case 'random': {
+      case 'random': {
+        next = this.randomPick(
+          this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
+        );
+        break;
+      }
+
+      case 'bridge-builder': {
+        if (state.bridge.random <= 0) {
           next = this.randomPick(
             this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
           );
-          break;
-        }
 
-        case 'bridge-builder': {
-          if (state.bridge.random <= 0) {
-            let probe = { ...current };
+          if (next) {
+            const angle = this.maze.angle(next.direction);
+            let probe = { ...current, direction: next.direction };
+
             const bridge: CellDirection[] = [];
 
-            const turn = this.randomPick(
-              this.maze.neighbors(probe).filter((c) => this.visited[c.x][c.y] === false),
-            )?.direction;
-            if (turn) {
-              probe.direction = turn;
-            }
-
             while (true) {
-              const [dir] = this.maze.straight(probe, state.bias);
-              state.bias = !state.bias;
-
-              const moves = this.maze
-                .neighbors(probe)
-                .filter(
-                  (c) =>
-                    this.visited[c.x][c.y] === false && !bridge.some((b) => this.maze.isSame(b, c)),
-                );
-              const cell = moves.find((c) => c.direction === dir);
-              if (cell) {
-                bridge.push(cell);
-                probe = cell;
-              } else {
+              const cell = this.maze.move(probe, probe.direction);
+              if (
+                cell == null ||
+                !this.maze.inMaze(cell) ||
+                this.visited[cell.x][cell.y] !== false ||
+                bridge.some((b) => this.maze.isSame(b, cell))
+              ) {
                 next = bridge.pop();
-                if (moves.length === 0) {
+                if (
+                  this.maze
+                    .neighbors(probe)
+                    .filter(
+                      (c) =>
+                        this.visited[c.x][c.y] === false &&
+                        !bridge.some((b) => this.maze.isSame(b, c)),
+                    ).length === 0
+                ) {
                   next = bridge.pop();
                 }
                 break;
+              } else {
+                bridge.push(cell);
+
+                probe = { ...cell };
+
+                const [best] = Object.keys(this.maze.nexus(cell).walls).sort(
+                  (a, b) =>
+                    Math.abs(angleDifference(toRadians(angle), toRadians(this.maze.angle(a)))) -
+                    Math.abs(angleDifference(toRadians(angle), toRadians(this.maze.angle(b)))),
+                );
+                probe.direction = best;
+                state.bias = !state.bias;
               }
             }
 
-            if (bridge.length > this.bridgeMinLength) {
-              if (bridge.length > this.bridgeMaxLength) {
-                next = bridge[this.bridgeMaxLength];
-                bridge.length = this.bridgeMaxLength;
+            const pieces = Math.floor(bridge.length / this.maze.bridgePieces);
+            const len = pieces * this.maze.bridgePieces;
+            if (bridge.length > len) {
+              next = bridge[len];
+              bridge.length = len;
+            }
+
+            if (pieces > this.bridgeMinLength) {
+              if (pieces > this.bridgeMaxLength) {
+                const maxLen = this.bridgeMaxLength * this.maze.bridgePieces;
+                next = bridge[maxLen];
+                bridge.length = maxLen;
               }
 
-              prev = this.buildBridge(current, bridge);
+              prev = this.buildBridge(current, bridge, next!);
               for (const span of bridge) {
                 this.visited[span.x][span.y] = this.player;
               }
@@ -190,29 +211,32 @@ export class RecursiveBacktracker extends MazeGenerator {
               );
             }
           } else {
-            state.bridge.random -= 1;
-
-            if (this.random() < this.forcedBacktrack) {
-              next = undefined;
-            } else {
-              const [dir] = this.maze.straight(current, state.bias);
-              next = this.randomPick(
-                this.maze
-                  .neighbors(current)
-                  .filter((c) => this.visited[c.x][c.y] === false && c.direction !== dir),
-              );
-              next ??= this.randomPick(
-                this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
-              );
-            }
+            break;
           }
+        } else {
+          state.bridge.random -= 1;
 
-          break;
+          if (this.random() < this.forcedBacktrack) {
+            next = undefined;
+          } else {
+            const [dir] = this.maze.straight(current, state.bias);
+            next = this.randomPick(
+              this.maze
+                .neighbors(current)
+                .filter((c) => this.visited[c.x][c.y] === false && c.direction !== dir),
+            );
+            next ??= this.randomPick(
+              this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
+            );
+          }
         }
 
-        // no default
+        break;
       }
+
+      // no default
     }
+    // }
     return { current, next, prev };
   }
 

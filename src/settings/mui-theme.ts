@@ -14,19 +14,19 @@ export const themeSettings = {
       contrastText: '#FFF',
     },
     secondary: {
-      main: '#08A4BD',
+      main: '#641EB6',
     },
     error: {
-      main: '#EF3E36',
+      main: '#A8201B',
     },
     warning: {
-      main: '#F5B700',
+      main: '#E8800B',
     },
     info: {
-      main: '#DC0073',
+      main: '#A81BA2',
     },
     success: {
-      main: '#89FC00',
+      main: '#1BA820',
     },
   },
   typography: {

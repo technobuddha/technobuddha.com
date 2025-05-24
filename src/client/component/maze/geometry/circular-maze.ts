@@ -2,26 +2,15 @@ import { toCartesian, toRadians } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
 
-import {
-  directionMatrix,
-  leftTurnMatrix,
-  moveMatrix,
-  oppositeMatrix,
-  pathMatrix,
-  pillarMatrix,
-  preferredMatrix,
-  rightTurnMatrix,
-  straightMatrix,
-  wallMatrix,
-} from './circular-matrix.ts';
+import { matrix } from './circular-matrix.ts';
 import {
   type Cell,
   type CellDirection,
-  type CellPillar,
   type DrawingSizes,
   type Kind,
   type MazeProperties,
   type Move,
+  type Pillar,
   type Wall,
 } from './maze.ts';
 import { Maze } from './maze.ts';
@@ -52,16 +41,7 @@ export class CircularMaze extends Maze {
         wrapHorizontal: false,
         wrapVertical: false,
       },
-      directionMatrix,
-      pillarMatrix,
-      wallMatrix,
-      oppositeMatrix,
-      rightTurnMatrix,
-      leftTurnMatrix,
-      straightMatrix,
-      moveMatrix,
-      preferredMatrix,
-      pathMatrix,
+      matrix,
     );
 
     this.centerRadius = centerRadius;
@@ -304,7 +284,7 @@ export class CircularMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
+  public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       switch (pillar) {
         case 'ab':
@@ -342,7 +322,7 @@ export class CircularMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = 'red'): void {
+  public drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       if (this.zones[cell.y] === 1) {
         const { cx, cy } = this.cellOffsets(cell);
@@ -390,7 +370,7 @@ export class CircularMaze extends Maze {
     };
   }
 
-  public override drawPath(cell: CellDirection, color = 'cyan'): void {
+  public override drawPath(cell: CellDirection, color = this.pathColor): void {
     if (this.drawing) {
       const cols = this.zones[cell.y];
 
@@ -417,7 +397,7 @@ export class CircularMaze extends Maze {
           if (cell.direction === '?') {
             this.renderCircle(rect, color);
           } else {
-            const angle = pathMatrix[cell.direction] + (cell.x === 0 ? -90 : 90);
+            const angle = this.angleMatrix[cell.direction] + (cell.x === 0 ? -90 : 90);
             this.renderArrow(rect, angle, color);
           }
           break;
@@ -428,7 +408,8 @@ export class CircularMaze extends Maze {
           if (cell.direction === '?') {
             this.renderCircle(rect, color);
           } else {
-            const angle = pathMatrix[cell.direction] - (cell.x * (360 / cols) + 360 / cols / 2);
+            const angle =
+              this.angleMatrix[cell.direction] - (cell.x * (360 / cols) + 360 / cols / 2);
             this.renderArrow(rect, angle, color);
           }
           break;

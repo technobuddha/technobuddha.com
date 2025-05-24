@@ -5,40 +5,17 @@ import { type Rect } from '../drawing/drawing.ts';
 import {
   type Cell,
   type CellDirection,
-  type CellPillar,
   type DrawingSizes,
   type Kind,
   type MazeProperties,
+  type Pillar,
 } from './maze.ts';
 import { Maze } from './maze.ts';
-import {
-  directionMatrix,
-  leftTurnMatrix,
-  moveMatrix,
-  oppositeMatrix,
-  pathMatrix,
-  pillarMatrix,
-  preferredMatrix,
-  rightTurnMatrix,
-  straightMatrix,
-  wallMatrix,
-} from './square-matrix.ts';
+import { matrix } from './square-matrix.ts';
 
 export class SquareMaze extends Maze {
   public constructor({ cellSize = 16, wallSize = 1, ...props }: MazeProperties) {
-    super(
-      { cellSize, wallSize, ...props },
-      directionMatrix,
-      pillarMatrix,
-      wallMatrix,
-      oppositeMatrix,
-      rightTurnMatrix,
-      leftTurnMatrix,
-      straightMatrix,
-      moveMatrix,
-      preferredMatrix,
-      pathMatrix,
-    );
+    super({ cellSize, wallSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -113,7 +90,7 @@ export class SquareMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
+  public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       const { x0, x1, x2, x3, y0, y1, y2, y3 } = this.cellOffsets({ x, y });
 
@@ -132,7 +109,7 @@ export class SquareMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = 'red'): void {
+  public drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       const { x1, x2, y1, y2 } = this.cellOffsets(cell);
 

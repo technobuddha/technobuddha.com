@@ -5,43 +5,20 @@ import { modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
 
-import {
-  directionMatrix,
-  leftTurnMatrix,
-  moveMatrix,
-  oppositeMatrix,
-  pathMatrix,
-  pillarMatrix,
-  preferredMatrix,
-  rightTurnMatrix,
-  straightMatrix,
-  wallMatrix,
-} from './cubic-matrix.ts';
+import { matrix } from './cubic-matrix.ts';
 import {
   type Cell,
   type CellDirection,
-  type CellPillar,
   type DrawingSizes,
   type Kind,
   type MazeProperties,
+  type Pillar,
 } from './maze.ts';
 import { Maze } from './maze.ts';
 
 export class CubicMaze extends Maze {
   public constructor({ cellSize = 16, wallSize = 1, ...props }: MazeProperties) {
-    super(
-      { cellSize, wallSize, ...props },
-      directionMatrix,
-      pillarMatrix,
-      wallMatrix,
-      oppositeMatrix,
-      rightTurnMatrix,
-      leftTurnMatrix,
-      straightMatrix,
-      moveMatrix,
-      preferredMatrix,
-      pathMatrix,
-    );
+    super({ cellSize, wallSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -403,9 +380,9 @@ export class CubicMaze extends Maze {
     }
   }
 
-  public drawPillar(cell: CellPillar, color = this.wallColor): void {
+  public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
-      switch (cell.pillar) {
+      switch (pillar) {
         case 'ab': {
           const { x2, x3, y0, y1 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x2, y: y0 }, { x: x3, y: y1 }, color);
@@ -545,24 +522,9 @@ export class CubicMaze extends Maze {
         // no default
       }
     }
-    // if (this.drawing) {
-    //   const { x0, x1, x2, x3, y0, y1, y2, y3 } = this.cellOffsets({ x, y });
-    //   if (pillar === 'nw') {
-    //     this.drawing.rect({ x: x0, y: y0 }, { x: x1, y: y1 }, color);
-    //   }
-    //   if (pillar === 'ne') {
-    //     this.drawing.rect({ x: x2, y: y0 }, { x: x3, y: y1 }, color);
-    //   }
-    //   if (pillar === 'sw') {
-    //     this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, color);
-    //   }
-    //   if (pillar === 'se') {
-    //     this.drawing.rect({ x: x2, y: y2 }, { x: x3, y: y3 }, color);
-    //   }
-    // }
   }
 
-  public drawX(cell: Cell, color = 'red'): void {
+  public drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0:

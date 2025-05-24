@@ -6,43 +6,17 @@ import { type Rect } from '../drawing/drawing.ts';
 import {
   type Cell,
   type CellDirection,
-  type CellPillar,
   type DrawingSizes,
   type Kind,
   type MazeProperties,
+  type Pillar,
 } from './maze.ts';
 import { Maze } from './maze.ts';
-import {
-  directionMatrix,
-  kindMatrix,
-  leftTurnMatrix,
-  moveMatrix,
-  offsetXMatrix,
-  offsetYMatrix,
-  oppositeMatrix,
-  pathMatrix,
-  pillarMatrix,
-  preferredMatrix,
-  rightTurnMatrix,
-  straightMatrix,
-  wallMatrix,
-} from './pentagon-matrix.ts';
+import { kindMatrix, matrix, offsetXMatrix, offsetYMatrix } from './pentagon-matrix.ts';
 
 export class PentagonMaze extends Maze {
   public constructor({ cellSize = 16, wallSize = 1, ...props }: MazeProperties) {
-    super(
-      { cellSize, wallSize, ...props },
-      directionMatrix,
-      pillarMatrix,
-      wallMatrix,
-      oppositeMatrix,
-      rightTurnMatrix,
-      leftTurnMatrix,
-      straightMatrix,
-      moveMatrix,
-      preferredMatrix,
-      pathMatrix,
-    );
+    super({ cellSize, wallSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -589,7 +563,7 @@ export class PentagonMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
+  public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       switch (pillar) {
         case 'ab': {
@@ -852,7 +826,7 @@ export class PentagonMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = 'red'): void {
+  public drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0: {

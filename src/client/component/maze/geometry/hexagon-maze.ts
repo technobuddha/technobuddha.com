@@ -3,25 +3,14 @@ import { modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
 
-import {
-  directionMatrix,
-  leftTurnMatrix,
-  moveMatrix,
-  oppositeMatrix,
-  pathMatrix,
-  pillarMatrix,
-  preferredMatrix,
-  rightTurnMatrix,
-  straightMatrix,
-  wallMatrix,
-} from './hexagon-matrix.ts';
+import { matrix } from './hexagon-matrix.ts';
 import {
   type Cell,
   type CellDirection,
-  type CellPillar,
   type DrawingSizes,
   type Kind,
   type MazeProperties,
+  type Pillar,
 } from './maze.ts';
 import { Maze } from './maze.ts';
 
@@ -30,21 +19,8 @@ const TAN30 = Math.tan(Math.PI / 6);
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class HexagonMaze extends Maze {
-  // 20 x 1
-  public constructor({ cellSize = 30, wallSize = 3, ...props }: MazeProperties) {
-    super(
-      { cellSize, wallSize, ...props },
-      directionMatrix,
-      pillarMatrix,
-      wallMatrix,
-      oppositeMatrix,
-      rightTurnMatrix,
-      leftTurnMatrix,
-      straightMatrix,
-      moveMatrix,
-      preferredMatrix,
-      pathMatrix,
-    );
+  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
+    super({ cellSize, wallSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -208,9 +184,9 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public drawPillar(cell: CellPillar, color = this.wallColor): void {
+  public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
-      switch (cell.pillar) {
+      switch (pillar) {
         case 'ab': {
           const { x6, x7, x8, y0, y1, y2 } = this.cellOffsets(cell);
 
@@ -299,7 +275,7 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = 'red'): void {
+  public drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       const { x2, x5, x6, x9, y2, y4, y6 } = this.cellOffsets(cell);
 

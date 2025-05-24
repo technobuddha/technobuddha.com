@@ -3,7 +3,7 @@ import { type CellDirection } from '../geometry/maze.ts';
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 type DeadEndProperties = MazeSolverProperties & {
-  markedColor?: string;
+  blockedColor?: string;
   method?: 'cul-de-sac' | 'dead-end';
 };
 
@@ -12,12 +12,13 @@ export class Filler extends MazeSolver {
   protected method: DeadEndProperties['method'];
 
   public constructor({
-    markedColor = '#EF3E36',
+    maze,
+    blockedColor = maze.blockedColor,
     method = 'cul-de-sac',
     ...props
   }: DeadEndProperties) {
-    super(props);
-    this.markedColor = markedColor;
+    super({ maze, ...props });
+    this.markedColor = blockedColor;
     this.method = method;
   }
 

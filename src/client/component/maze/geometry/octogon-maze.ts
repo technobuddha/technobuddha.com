@@ -6,40 +6,19 @@ import { type Rect } from '../drawing/drawing.ts';
 import {
   type Cell,
   type CellDirection,
-  type CellPillar,
+  type CustomDrawingSize,
   type DrawingSizes,
   type Kind,
   type MazeProperties,
+  type Pillar,
 } from './maze.ts';
 import { Maze } from './maze.ts';
-import {
-  directionMatrix,
-  leftTurnMatrix,
-  moveMatrix,
-  oppositeMatrix,
-  pathMatrix,
-  pillarMatrix,
-  preferredMatrix,
-  rightTurnMatrix,
-  straightMatrix,
-  wallMatrix,
-} from './octogon-matrix.ts';
+import { matrix } from './octogon-matrix.ts';
 
 export class OctogonMaze extends Maze {
-  public constructor({ cellSize = 32, wallSize = 2, ...props }: MazeProperties) {
-    super(
-      { cellSize, wallSize, ...props },
-      directionMatrix,
-      pillarMatrix,
-      wallMatrix,
-      oppositeMatrix,
-      rightTurnMatrix,
-      leftTurnMatrix,
-      straightMatrix,
-      moveMatrix,
-      preferredMatrix,
-      pathMatrix,
-    );
+  public constructor({ cellSize = 32, wallSize = 1, ...props }: MazeProperties) {
+    super({ cellSize, wallSize, ...props }, matrix);
+    this.bridgePieces = 2;
   }
 
   protected drawingSize(): DrawingSizes {
@@ -49,6 +28,14 @@ export class OctogonMaze extends Maze {
       groupHeight: this.cellSize,
       rightPadding: this.cellSize * 0.25,
       bottomPadding: this.cellSize * 0.25,
+      custom({ width, height, actualWidth, actualHeight }: CustomDrawingSize): CustomDrawingSize {
+        return {
+          width: width % 2 === 0 ? width - 1 : width,
+          height: height % 2 === 0 ? height - 1 : height,
+          actualWidth,
+          actualHeight,
+        };
+      },
     };
   }
 
@@ -362,7 +349,7 @@ export class OctogonMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
+  public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       if (this.cellKind({ x, y }) === 0) {
         switch (pillar) {
@@ -560,7 +547,7 @@ export class OctogonMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = 'red'): void {
+  public drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       if (this.cellKind(cell) === 0) {
         const { x2, x6, x9, xd, y2, y6, y9, yd } = this.cellOffsets(cell);

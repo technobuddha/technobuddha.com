@@ -23,12 +23,13 @@ export class Dijkstras extends MazeSolver {
   public avatarColor: string;
 
   public constructor({
-    scannedColor = '#DC0073',
-    avatarColor = '#08A4BD',
-    prunedColor = '#EF3E36', //'#9a0050',
+    maze,
+    scannedColor = maze.scannedColor,
+    avatarColor = maze.avatarColor,
+    prunedColor = maze.prunedColor,
     ...props
   }: DijkstrasProperties) {
-    super({ ...props });
+    super({ maze, ...props });
     this.scannedColor = scannedColor;
     this.avatarColor = avatarColor;
     this.prunedColor = prunedColor;

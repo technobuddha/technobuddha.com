@@ -156,6 +156,8 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
 
       void runner.execute().then(() => {
         timer.current = setTimeout(() => {
+          // eslint-disable-next-line no-console
+          console.clear();
           setMazeNumber((n) => n + 1);
         }, 10000);
       });

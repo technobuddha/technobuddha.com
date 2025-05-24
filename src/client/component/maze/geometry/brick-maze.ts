@@ -3,43 +3,20 @@ import { modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
 
-import {
-  directionMatrix,
-  leftTurnMatrix,
-  moveMatrix,
-  oppositeMatrix,
-  pathMatrix,
-  pillarMatrix,
-  preferredMatrix,
-  rightTurnMatrix,
-  straightMatrix,
-  wallMatrix,
-} from './brick-matrix.ts';
+import { matrix } from './brick-matrix.ts';
 import {
   type Cell,
   type CellDirection,
-  type CellPillar,
   type DrawingSizes,
   type Kind,
   type MazeProperties,
+  type Pillar,
 } from './maze.ts';
 import { Maze } from './maze.ts';
 
 export class BrickMaze extends Maze {
   public constructor({ cellSize = 16, wallSize = 2, ...props }: MazeProperties) {
-    super(
-      { cellSize, wallSize, ...props },
-      directionMatrix,
-      pillarMatrix,
-      wallMatrix,
-      oppositeMatrix,
-      rightTurnMatrix,
-      leftTurnMatrix,
-      straightMatrix,
-      moveMatrix,
-      preferredMatrix,
-      pathMatrix,
-    );
+    super({ cellSize, wallSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -122,7 +99,7 @@ export class BrickMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y, pillar }: CellPillar, color = this.wallColor): void {
+  public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       const { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3 } = this.cellOffsets({ x, y });
 
@@ -168,7 +145,7 @@ export class BrickMaze extends Maze {
     return { x: x1, y: y1, w: x4 - x1, h: y2 - y1 };
   }
 
-  public drawX(cell: Cell, color = 'red'): void {
+  public drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       const { x1, x4, y1, y2 } = this.cellOffsets(cell);
 

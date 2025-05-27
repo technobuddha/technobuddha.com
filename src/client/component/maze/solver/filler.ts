@@ -34,7 +34,7 @@ export class Filler extends MazeSolver {
       if (this.method === 'cul-de-sac') {
         for (const deadEnd of deadEnds) {
           for (let culdesac = deadEnd; this.maze.isDeadEnd(culdesac); ) {
-            const [move] = this.maze.validMoves(culdesac);
+            const [{ move }] = this.maze.validMoves(culdesac);
             this.maze.addWall(culdesac, move.direction, false);
             this.maze.drawX(this.maze.drawCell(culdesac), markedColor);
             yield;
@@ -43,7 +43,7 @@ export class Filler extends MazeSolver {
         }
       } else {
         for (const deadEnd of deadEnds) {
-          const [move] = this.maze.validMoves(deadEnd);
+          const [{ move }] = this.maze.validMoves(deadEnd);
           this.maze.addWall(deadEnd, move.direction, false);
           this.maze.drawX(this.maze.drawCell(deadEnd), markedColor);
           yield;
@@ -59,7 +59,8 @@ export class Filler extends MazeSolver {
     while (!this.maze.isSame(cell, exit)) {
       const moves = this.maze
         .validMoves(cell)
-        .filter((m) => !path.some((p) => this.maze.isSame(p, m)));
+        .filter(({ move }) => !path.some((p) => this.maze.isSame(p, move)))
+        .map(({ move }) => move);
 
       if (moves.length > 1) {
         throw new Error('Multiple paths found');

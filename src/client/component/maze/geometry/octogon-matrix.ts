@@ -1,29 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
 import { type Matrix } from './maze.ts';
 
-const bridge = {
-  bridgePieces: 1,
-  build: {
-    0: {
-      a: [['a']],
-      b: [['b', 'i']],
-      c: [['c']],
-      d: [['d', 'j']],
-      e: [['e']],
-      f: [['f', 'k']],
-      g: [['g']],
-      h: [['h', 'l']],
-    },
-    1: {
-      i: [['i', 'b']],
-      j: [['j', 'd']],
-      k: [['k', 'f']],
-      l: [['l', 'h']],
+export const matrix: Matrix = {
+  bridge: {
+    pieces: 1,
+    layouts: {
+      0: [
+        { path: ['a'] },
+        { path: ['b', 'i'] },
+        { path: ['c'] },
+        { path: ['d', 'j'] },
+        { path: ['e'] },
+        { path: ['f', 'k'] },
+        { path: ['g'] },
+        { path: ['h', 'l'] },
+      ],
+      1: [{ path: ['i', 'b'] }, { path: ['j', 'd'] }, { path: ['k', 'f'] }, { path: ['l', 'h'] }],
     },
   },
-};
-
-export const matrix: Matrix = {
   directions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'],
   pillars: ['ab', 'bc', 'cd', 'de', 'ef', 'fg', 'gh', 'ha', 'ij', 'jk', 'kl', 'li'],
   wall: {

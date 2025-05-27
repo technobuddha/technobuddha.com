@@ -1,4 +1,4 @@
-import { angleDifference, create2DArray, toRadians } from '@technobuddha/library';
+import { create2DArray } from '@technobuddha/library';
 
 import { type CellDirection } from '../geometry/maze.ts';
 
@@ -93,7 +93,7 @@ export class RecursiveBacktracker extends MazeGenerator {
     next: CellDirection | undefined;
   } {
     const current = state.current!;
-    let prev = current;
+    const prev = current;
 
     let next: CellDirection | undefined;
 
@@ -139,79 +139,25 @@ export class RecursiveBacktracker extends MazeGenerator {
 
       case 'bridge-builder': {
         if (state.bridge.random <= 0) {
-          next = this.randomPick(
-            this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
+          const blueprint = this.maze.blueprintBridge(
+            current,
+            this.visited,
+            this.bridgeMinLength,
+            this.bridgeMaxLength,
           );
-
-          if (next) {
-            const angle = this.maze.angle(next.direction);
-            let probe = { ...current, direction: next.direction };
-
-            const bridge: CellDirection[] = [];
-
-            while (true) {
-              const cell = this.maze.move(probe, probe.direction);
-              if (
-                cell == null ||
-                !this.maze.inMaze(cell) ||
-                this.visited[cell.x][cell.y] !== false ||
-                bridge.some((b) => this.maze.isSame(b, cell))
-              ) {
-                next = bridge.pop();
-                if (
-                  this.maze
-                    .neighbors(probe)
-                    .filter(
-                      (c) =>
-                        this.visited[c.x][c.y] === false &&
-                        !bridge.some((b) => this.maze.isSame(b, c)),
-                    ).length === 0
-                ) {
-                  next = bridge.pop();
-                }
-                break;
-              } else {
-                bridge.push(cell);
-
-                probe = { ...cell };
-
-                const [best] = Object.keys(this.maze.nexus(cell).walls).sort(
-                  (a, b) =>
-                    Math.abs(angleDifference(toRadians(angle), toRadians(this.maze.angle(a)))) -
-                    Math.abs(angleDifference(toRadians(angle), toRadians(this.maze.angle(b)))),
-                );
-                probe.direction = best;
-                state.bias = !state.bias;
-              }
+          if (blueprint) {
+            // eslint-disable-next-line @typescript-eslint/prefer-destructuring
+            next = blueprint.next;
+            const { bridge } = blueprint;
+            for (const span of bridge) {
+              this.visited[span.x][span.y] = this.player;
             }
 
-            const pieces = Math.floor(bridge.length / this.maze.bridgePieces);
-            const len = pieces * this.maze.bridgePieces;
-            if (bridge.length > len) {
-              next = bridge[len];
-              bridge.length = len;
-            }
-
-            if (pieces > this.bridgeMinLength) {
-              if (pieces > this.bridgeMaxLength) {
-                const maxLen = this.bridgeMaxLength * this.maze.bridgePieces;
-                next = bridge[maxLen];
-                bridge.length = maxLen;
-              }
-
-              prev = this.buildBridge(current, bridge, next!);
-              for (const span of bridge) {
-                this.visited[span.x][span.y] = this.player;
-              }
-
-              state.bridge.random = this.stepsAfterBridge;
-            } else {
-              next = this.randomPick(
-                this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
-              );
-            }
+            state.bridge.random = this.stepsAfterBridge;
           } else {
-            break;
+            next = this.randomPick(
+              this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
+            );
           }
         } else {
           state.bridge.random -= 1;

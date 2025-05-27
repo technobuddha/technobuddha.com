@@ -42,7 +42,10 @@ export class FibonaccisRabbits extends MazeSolver {
       for (const rabbit of rabbits) {
         const next =
           this.randomPick(
-            this.maze.validMoves(rabbit.cell).filter((c) => !this.maze.isSame(c, rabbit.tail)),
+            this.maze
+              .validMoves(rabbit.cell)
+              .filter(({ move }) => !this.maze.isSame(move, rabbit.tail))
+              .map(({ move }) => move),
           ) ?? rabbit.tail;
 
         currentCount[rabbit.cell.x][rabbit.cell.y]--;

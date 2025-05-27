@@ -11,7 +11,7 @@ export class DrunkardsWalk extends MazeSolver {
     let mouse = entrance;
 
     while (!this.maze.isSame(mouse, exit)) {
-      const next = this.randomPick(this.maze.validMoves(mouse));
+      const next = this.randomPick(this.maze.validMoves(mouse).map(({ move }) => move));
       if (next) {
         this.maze.drawCell(mouse);
         this.maze.drawCell(next);

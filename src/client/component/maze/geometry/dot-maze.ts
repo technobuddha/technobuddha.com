@@ -13,7 +13,7 @@ import {
 } from './maze.ts';
 
 export class DotMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 6, ...props }: MazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 8, ...props }: MazeProperties) {
     super({ cellSize, wallSize, ...props }, matrix);
   }
 

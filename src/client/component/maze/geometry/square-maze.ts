@@ -14,7 +14,7 @@ import { Maze } from './maze.ts';
 import { matrix } from './square-matrix.ts';
 
 export class SquareMaze extends Maze {
-  public constructor({ cellSize = 16, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 2, ...props }: MazeProperties) {
     super({ cellSize, wallSize, ...props }, matrix);
   }
 
@@ -109,6 +109,38 @@ export class SquareMaze extends Maze {
     }
   }
 
+  public override drawTunnel(cd: CellDirection, color = this.wallColor): void {
+    if (this.drawing) {
+      const { x0, x1, x2, x3, y0, y1, y2, y3 } = this.cellOffsets(cd);
+      const ww = this.wallSize;
+
+      switch (cd.direction) {
+        case 'n': {
+          this.drawing.rect({ x: x1, y: y0 }, { x: x1 + ww, y: y0 + ww }, color);
+          this.drawing.rect({ x: x2, y: y0 }, { x: x2 - ww, y: y0 + ww }, color);
+          break;
+        }
+        case 's': {
+          this.drawing.rect({ x: x1, y: y3 }, { x: x1 + ww, y: y3 - ww }, color);
+          this.drawing.rect({ x: x2, y: y3 }, { x: x2 - ww, y: y3 - ww }, color);
+          break;
+        }
+        case 'e': {
+          this.drawing.rect({ x: x3 - ww, y: y1 }, { x: x3, y: y1 + ww }, color);
+          this.drawing.rect({ x: x3 - ww, y: y2 - ww }, { x: x3, y: y3 }, color);
+          break;
+        }
+        case 'w': {
+          this.drawing.rect({ x: x0, y: y1 }, { x: x0 + ww, y: y1 + ww }, color);
+          this.drawing.rect({ x: x0, y: y2 - ww }, { x: x0 + ww, y: y2 }, color);
+          break;
+        }
+
+        // no default
+      }
+    }
+  }
+
   public drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       const { x1, x2, y1, y2 } = this.cellOffsets(cell);
@@ -122,26 +154,5 @@ export class SquareMaze extends Maze {
     const { x1, x2, y1, y2 } = this.cellOffsets(cell);
 
     return { x: x1, y: y1, w: x2 - x1, h: y2 - y1 };
-  }
-
-  public override toString(): string {
-    let str = '';
-
-    for (let y = 0; y < this.height; ++y) {
-      for (let x = 0; x < this.width; ++x) {
-        str += this.nexus({ x: x, y: y }).walls.n ? '+==' : '+  ';
-      }
-      str += '+\n';
-      for (let x = 0; x < this.width; ++x) {
-        str += this.nexus({ x: x, y: y }).walls.w ? '|  ' : '   ';
-      }
-      str += this.nexus({ x: this.width - 1, y: y }).walls.e ? '|\n' : ' \n';
-    }
-    for (let x = 0; x < this.width; ++x) {
-      str += this.nexus({ x: x, y: this.height - 1 }).walls.s ? '+==' : '+  ';
-    }
-    str += '+\n';
-
-    return str;
   }
 }

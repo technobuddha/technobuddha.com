@@ -19,7 +19,7 @@ const TAN30 = Math.tan(Math.PI / 6);
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class HexagonMaze extends Maze {
-  public constructor({ cellSize = 20, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 2, ...props }: MazeProperties) {
     super({ cellSize, wallSize, ...props }, matrix);
   }
 

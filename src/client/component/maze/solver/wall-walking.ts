@@ -68,7 +68,7 @@ export class WallWalking extends MazeSolver {
       const wall = this.maze.nexus(cell).walls;
 
       let dir: Direction | undefined;
-      const moves = this.maze.validMoves(cell);
+      const moves = this.maze.validMoves(cell).map(({ move }) => move);
 
       if (seekingWall) {
         const wallDirection = this.backward(cell).find((d) => wall[d]);

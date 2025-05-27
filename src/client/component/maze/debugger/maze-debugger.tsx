@@ -143,7 +143,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
               const w = maze.nexus({ x: i, y: j }).walls;
 
               if (pillar[0] in w && pillar[1] in w) {
-                maze.drawPillar({ x: i, y: j, pillar }, 'magenta');
+                maze.drawPillar({ x: i, y: j }, pillar, 'magenta');
               }
             }
           }
@@ -165,19 +165,17 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
           maze.drawX(maze.drawCell({ x, y }), 'red');
           const moves = maze.neighbors({ x, y });
           for (const move of moves) {
-            if (maze.inMaze(move)) {
-              switch (show) {
-                case 'moves': {
-                  maze.drawText(maze.drawCell(move), move.direction, 'cyan');
-                  break;
-                }
-                case 'paths': {
-                  maze.drawPath(maze.drawCell({ ...move, direction: maze.opposite(move) }), 'cyan');
-                  break;
-                }
-
-                // no default
+            switch (show) {
+              case 'moves': {
+                maze.drawText(maze.drawCell(move), move.direction, 'cyan');
+                break;
               }
+              case 'paths': {
+                maze.drawPath(maze.drawCell({ ...move, direction: maze.opposite(move) }), 'cyan');
+                break;
+              }
+
+              // no default
             }
           }
           break;

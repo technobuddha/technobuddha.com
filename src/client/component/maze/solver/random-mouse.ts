@@ -14,8 +14,12 @@ export class RandomMouse extends MazeSolver {
 
     while (!this.maze.isSame(mouse, exit)) {
       const next =
-        this.randomPick(this.maze.validMoves(mouse).filter((c) => !this.maze.isSame(c, tail))) ??
-        tail;
+        this.randomPick(
+          this.maze
+            .validMoves(mouse)
+            .filter(({ move }) => !this.maze.isSame(move, tail))
+            .map(({ move }) => move),
+        ) ?? tail;
 
       this.maze.drawCell(mouse);
       this.maze.drawCell(next);

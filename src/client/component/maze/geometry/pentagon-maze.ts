@@ -15,7 +15,7 @@ import { Maze } from './maze.ts';
 import { kindMatrix, matrix, offsetXMatrix, offsetYMatrix } from './pentagon-matrix.ts';
 
 export class PentagonMaze extends Maze {
-  public constructor({ cellSize = 16, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 2, ...props }: MazeProperties) {
     super({ cellSize, wallSize, ...props }, matrix);
   }
 

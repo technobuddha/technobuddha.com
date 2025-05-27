@@ -16,7 +16,7 @@ type WeaveMazeProperties = MazeProperties & {
 export class WeaveMaze extends SquareMaze {
   public gapSize: number;
 
-  public constructor({ cellSize = 22, wallSize = 2, gapSize = 2, ...props }: WeaveMazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 2, gapSize = 2, ...props }: WeaveMazeProperties) {
     super({ cellSize, wallSize, ...props });
     this.gapSize = gapSize;
   }

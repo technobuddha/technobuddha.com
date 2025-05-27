@@ -99,7 +99,10 @@ export class Search extends MazeSolver {
             queue = [cell];
           } else {
             const next = this.decide(
-              this.maze.validMoves(cell).filter((n) => !discovered[n.x][n.y]),
+              this.maze
+                .validMoves(cell)
+                .filter(({ move }) => !discovered[move.x][move.y])
+                .map(({ move }) => move),
               cell,
             );
             if (next) {
@@ -129,7 +132,7 @@ export class Search extends MazeSolver {
         }
 
         case 'backward': {
-          if (this.maze.validMoves(cell).some((n) => !discovered[n.x][n.y])) {
+          if (this.maze.validMoves(cell).some(({ move }) => !discovered[move.x][move.y])) {
             const topOfQueue = queue.pop();
             if (topOfQueue) {
               const { parent, direction } = topOfQueue;

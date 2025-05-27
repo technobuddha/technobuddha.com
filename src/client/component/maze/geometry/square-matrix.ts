@@ -1,35 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
 import { type Matrix } from './maze.ts';
 
-/*
-
-{
-  bridgePieces: 1,
-  build: {
-    0: {
-      e: ['e'],
-      s: ['s'],
-      w: ['w'],
-      n: ['n'],
-    }
-  }
-}
-
-*/
-
 export const matrix: Matrix = {
+  bridge: {
+    pieces: 1,
+    layouts: {
+      0: [{ path: ['n'] }, { path: ['e'] }, { path: ['w'] }, { path: ['s'] }],
+    },
+  },
   directions: ['n', 'e', 'w', 's'],
   pillars: ['ne', 'nw', 'se', 'sw'],
   wall: {
     0: { n: true, e: true, w: true, s: true },
   },
   opposite: {
-    n: 's',
-    e: 'w',
-    w: 'e',
-    s: 'n',
-  },
-  inverse: {
     n: 's',
     e: 'w',
     w: 'e',

@@ -1,35 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
 import { type Matrix } from './maze.ts';
 
-const bridge = {
-  bridgePieces: 1,
-  build: {
-    0: {
-      a: [['a']],
-      b: [['b'], ['b', 'c']],
-      c: [['c'], ['c', 'b']],
-      d: [['d']],
-      e: [['e'], ['e', 'f']],
-      f: [['f'], ['f', 'e']],
-    },
-    // 1: {
-    //   b: [
-    //     ['b', 'a'],
-    //     ['b', 'c'],
-    //   ],
-    //   d: [
-    //     ['d', 'c'],
-    //     ['d', 'e'],
-    //   ],
-    //   f: [
-    //     ['f', 'a'],
-    //     ['f', 'e'],
-    //   ],
-    // },
-  },
-};
-
 export const matrix: Matrix = {
+  bridge: {
+    pieces: 1,
+    layouts: {
+      0: [
+        { path: ['a'] },
+        { path: ['b'] },
+        { path: ['c'] },
+        { path: ['d'] },
+        { path: ['e'] },
+        { path: ['f'] },
+      ],
+      1: [
+        { path: ['a'] },
+        { path: ['b'] },
+        { path: ['c'] },
+        { path: ['d'] },
+        { path: ['e'] },
+        { path: ['f'] },
+      ],
+    },
+  },
   directions: ['a', 'b', 'c', 'd', 'e', 'f'],
   pillars: ['ab', 'bc', 'cd', 'de', 'ef', 'fa'],
   wall: {
@@ -37,14 +30,6 @@ export const matrix: Matrix = {
     1: { a: true, b: true, c: true, d: true, e: true, f: true },
   },
   opposite: {
-    a: 'd',
-    b: 'e',
-    c: 'f',
-    d: 'a',
-    e: 'b',
-    f: 'c',
-  },
-  inverse: {
     a: 'd',
     b: 'e',
     c: 'f',

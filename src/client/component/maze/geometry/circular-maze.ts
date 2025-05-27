@@ -132,6 +132,10 @@ export class CircularMaze extends Maze {
     return z0 === zn ? 0 : 1;
   }
 
+  public override cellZone(cell: Cell): number {
+    return this.zones[cell.y];
+  }
+
   public override resolveMove(cell: Cell, move: Move): Cell {
     let { x, y } = cell;
 

@@ -17,7 +17,7 @@ import { matrix } from './triangle-matrix.ts';
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class TriangleMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 2, ...props }: MazeProperties) {
+  public constructor({ cellSize = 48, wallSize = 2, ...props }: MazeProperties) {
     super({ cellSize, wallSize, ...props }, matrix);
     this.bridgePieces = 2;
   }

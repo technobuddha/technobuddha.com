@@ -2,22 +2,27 @@
 import { type Matrix } from './maze.ts';
 
 export const matrix: Matrix = {
+  bridge: {
+    pieces: 1,
+    layouts: {
+      0: [
+        { path: ['a'] },
+        { path: ['b'] },
+        { path: ['c'] },
+        { path: ['d'] },
+        { path: ['e'] },
+        { path: ['f'] },
+        { path: ['g'] },
+        { path: ['h'] },
+      ],
+    },
+  },
   directions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
   pillars: ['ab', 'bc', 'cd', 'de', 'ef', 'fg', 'gh', 'ha'],
   wall: {
     0: { a: true, b: true, c: true, d: true, e: true, f: true, g: true, h: true },
   },
   opposite: {
-    a: 'e',
-    b: 'f',
-    c: 'g',
-    d: 'h',
-    e: 'a',
-    f: 'b',
-    g: 'c',
-    h: 'd',
-  },
-  inverse: {
     a: 'e',
     b: 'f',
     c: 'g',

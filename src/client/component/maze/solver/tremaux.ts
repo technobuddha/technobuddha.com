@@ -93,7 +93,7 @@ export class Tremaux extends MazeSolver {
       //   continue;
       // }
 
-      const moves = this.maze.validMoves(this.curr);
+      const moves = this.maze.validMoves(this.curr).map(({ move }) => move);
 
       const pmi = moves.findIndex((c) => c.x === this.prev?.x && c.y === this.prev?.y);
       const prevMove = pmi >= 0 ? moves[pmi] : undefined;
@@ -139,18 +139,19 @@ export class Tremaux extends MazeSolver {
     this.curr = entrance;
 
     while (!this.maze.isSame(this.curr, exit)) {
-      const [move] = this.maze
+      const [next] = this.maze
         .validMoves(this.curr)
         .filter(
-          (m) =>
-            !(m.x === this.prev?.x && m.y === this.prev?.y) &&
-            this.marks[this.curr.x][this.curr.y][m.direction] === 1,
-        );
+          ({ move }) =>
+            !(move.x === this.prev?.x && move.y === this.prev?.y) &&
+            this.marks[this.curr.x][this.curr.y][move.direction] === 1,
+        )
+        .map(({ move }) => move);
 
-      if (move) {
-        this.maze.solution.push({ ...this.curr, direction: move.direction });
+      if (next) {
+        this.maze.solution.push({ ...this.curr, direction: next.direction });
         this.prev = this.curr;
-        this.curr = move;
+        this.curr = next;
       } else {
         throw new Error('No solution found for tremaux');
       }

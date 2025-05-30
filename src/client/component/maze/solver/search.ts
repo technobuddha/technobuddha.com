@@ -1,6 +1,12 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellDirection, type Direction, type XY } from '../geometry/maze.ts';
+import {
+  type Cell,
+  type CellDirection,
+  type Direction,
+  type Move,
+  type XY,
+} from '../geometry/maze.ts';
 
 import { type MazeSolverProperties } from './maze-solver.ts';
 import { MazeSolver } from './maze-solver.ts';
@@ -35,7 +41,7 @@ export class Search extends MazeSolver {
     this.method = method;
   }
 
-  protected decide(array: CellDirection[], origin: CellDirection): CellDirection {
+  protected decide(array: Move[], origin: CellDirection): Move {
     switch (this.method) {
       case 'random': {
         return this.randomPick(array)!;
@@ -44,8 +50,8 @@ export class Search extends MazeSolver {
       case 'seek': {
         return array.sort(
           (a, b) =>
-            manhattanDistance({ x: a.x, y: a.y }, this.maze.exit) -
-            manhattanDistance({ x: b.x, y: b.y }, this.maze.exit),
+            manhattanDistance({ x: a.move.x, y: a.move.y }, this.maze.exit) -
+            manhattanDistance({ x: b.move.x, y: b.move.y }, this.maze.exit),
         )[0];
       }
 
@@ -100,9 +106,8 @@ export class Search extends MazeSolver {
           } else {
             const next = this.decide(
               this.maze
-                .validMoves(cell)
-                .filter(({ move }) => !discovered[move.x][move.y])
-                .map(({ move }) => move),
+                .moves(cell, { wall: false })
+                .filter(({ move }) => !discovered[move.x][move.y]),
               cell,
             );
             if (next) {
@@ -110,9 +115,9 @@ export class Search extends MazeSolver {
                 this.maze.drawCell({ ...cell, direction: next.direction }),
                 pathColor,
               );
-              this.maze.drawAvatar(this.maze.drawCell(next), avatarColor);
+              this.maze.drawAvatar(this.maze.drawCell(next.move), avatarColor);
               yield;
-              queue.push({ ...next, parent: cell });
+              queue.push({ ...next.move, parent: cell });
             } else {
               this.maze.drawX(this.maze.drawCell(cell));
               if (cell.parent) {
@@ -132,7 +137,9 @@ export class Search extends MazeSolver {
         }
 
         case 'backward': {
-          if (this.maze.validMoves(cell).some(({ move }) => !discovered[move.x][move.y])) {
+          if (
+            this.maze.moves(cell, { wall: false }).some(({ move }) => !discovered[move.x][move.y])
+          ) {
             const topOfQueue = queue.pop();
             if (topOfQueue) {
               const { parent, direction } = topOfQueue;

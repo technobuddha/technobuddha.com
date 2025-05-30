@@ -21,7 +21,7 @@ export type Kind = number;
 
 export type XY = { x: number; y: number };
 
-export type Move = { x: number; y: number; zone?: 'up' | 'down' };
+export type MoveOffset = { x: number; y: number; zone?: 'up' | 'down' };
 
 export type Cell = {
   x: number;
@@ -30,6 +30,11 @@ export type Cell = {
 
 export type CellDirection = Cell & {
   direction: Direction;
+};
+
+export type Move = {
+  direction: Direction;
+  move: CellDirection;
 };
 
 export type Terminus = Cell & {
@@ -111,6 +116,7 @@ export type MazeProperties = {
 
   showDistances?: ShowDistances;
   showCoordinates?: boolean;
+  showKind?: boolean;
 
   random?(this: void): number;
   plugin?(this: void, maze: Maze): void;
@@ -134,7 +140,7 @@ export type Matrix = {
   readonly rightTurn: Record<Direction, Direction[] | Record<Kind, Direction[]>>;
   readonly leftTurn: Record<Direction, Direction[] | Record<Kind, Direction[]>>;
   readonly straight: Record<Direction, Direction[] | Record<Kind, Direction[]>>;
-  readonly move: Record<Kind, Record<Direction, Move | Move[]>>;
+  readonly move: Record<Kind, Record<Direction, MoveOffset | MoveOffset[]>>;
   readonly preferred: Record<Kind, Direction[]>;
   readonly angle: Record<Direction, number>;
   readonly bridge?: BridgeMatrix;
@@ -158,6 +164,7 @@ export abstract class Maze {
   public readonly cellSize: NonNullable<MazeProperties['cellSize']>;
   public readonly showDistances: NonNullable<MazeProperties['showDistances']>;
   public readonly showCoordinates: NonNullable<MazeProperties['showCoordinates']>;
+  public readonly showKind: NonNullable<MazeProperties['showKind']>;
 
   public readonly random: NonNullable<MazeProperties['random']>;
 
@@ -233,12 +240,13 @@ export abstract class Maze {
       blockedColor = 'oklch(0.6298 0.2145 27.83)',
       errorColor = 'oklch(0.8664 0.294827 142.4953)',
 
-      tunnelColor = 'oklch(0.9544 0.0637 196.13)',
-      bridgeColor = 'pink', //wallColor, //'oklch(0.4806 0.1597 25.56)',
+      tunnelColor = wallColor, //'magenta', //'oklch(0.9544 0.0637 196.13)',
+      bridgeColor = 'oklch(0.9544 0.0637 196.13)',
       textColor = 'oklch(1 0 0)',
 
       showDistances = 'none',
       showCoordinates = false,
+      showKind = false,
 
       random = Math.random,
       plugin,
@@ -280,6 +288,7 @@ export abstract class Maze {
 
     this.showDistances = showDistances;
     this.showCoordinates = showCoordinates;
+    this.showKind = showKind;
 
     this.wrapHorizontal = wrapHorizontal;
     this.wrapVertical = wrapVertical;
@@ -350,15 +359,6 @@ export abstract class Maze {
     this.createCells();
 
     this.plugin?.(this);
-
-    for (const cell of this.allCells()) {
-      if (this.nexus(cell).mask) {
-        const wall = this.nexus(cell).walls;
-        for (const direction of Object.keys(wall)) {
-          delete wall[direction];
-        }
-      }
-    }
   }
 
   public createCells(): void {
@@ -532,15 +532,17 @@ export abstract class Maze {
   }
 
   public cellsUnderMask(order: AllOrder = 'top-left'): Cell[] {
-    return this.allCells(order).filter((cell) => this.nexus(cell).mask);
+    return this.cellsInMaze(order).filter((cell) => this.nexus(cell).mask);
   }
 
   public cellsOnEdge(order: AllOrder = 'top-left'): Cell[] {
-    return this.allCells(order).filter((cell) => this.adjacent(cell).some((c) => !this.inMaze(c)));
+    return this.cellsInMaze(order).filter((cell) => this.moves(cell, { inMaze: false }).length > 0);
   }
 
   public cellsInterior(order: AllOrder = 'top-left'): Cell[] {
-    return this.allCells(order).filter((cell) => this.adjacent(cell).every((c) => this.inMaze(c)));
+    return this.cellsInMaze(order).filter((cell) =>
+      this.moves(cell, { inMaze: 'all' }).every(({ move }) => this.inMaze(move)),
+    );
   }
 
   public deadEnds(): Cell[] {
@@ -596,7 +598,7 @@ export abstract class Maze {
         maxCell = cell;
       }
 
-      const loopCells = this.validMoves(cell)
+      const loopCells = this.moves(cell, { wall: false })
         .filter(({ move }) => distances[move.x][move.y] < distance - 1)
         .map(({ move }) => move);
       if (loopCells.length > 0) {
@@ -608,7 +610,7 @@ export abstract class Maze {
         });
       }
 
-      const moves = this.validMoves(cell)
+      const moves = this.moves(cell, { wall: false })
         .filter(({ move }) => distances[move.x][move.y] === Infinity)
         .map(({ move }) => move);
       for (const next of moves) {
@@ -631,12 +633,10 @@ export abstract class Maze {
 
       deadEnds.splice(index, 1);
 
-      const neighbor = this.randomPick(
-        this.neighbors(cell).filter((c) => this.nexus(cell).walls[c.direction]),
-      );
-      if (neighbor) {
-        this.removeWall(cell, neighbor.direction);
-        const nindex = deadEnds.findIndex((c) => this.isSame(c, neighbor));
+      const move = this.randomPick(this.moves(cell, { wall: true }));
+      if (move) {
+        this.removeWall(cell, move.direction);
+        const nindex = deadEnds.findIndex((c) => this.isSame(c, move.move));
         if (nindex >= 0) {
           deadEnds.splice(nindex, 1);
         }
@@ -669,7 +669,7 @@ export abstract class Maze {
     } else {
       this.entrance = {
         ...entrance,
-        direction: this.randomPick(this.validMoves(entrance))?.direction ?? '?',
+        direction: this.randomPick(this.moves(entrance, { wall: false }))?.direction ?? '?',
       };
     }
 
@@ -895,7 +895,7 @@ export abstract class Maze {
     }
   }
 
-  public shift(cell: Cell, direction: Direction): CellDirection | undefined {
+  public traverse(cell: Cell, direction: Direction): CellDirection {
     let move = this.moveMatrix[this.cellKind(cell)][direction];
 
     if (move) {
@@ -905,11 +905,22 @@ export abstract class Maze {
 
       return { ...this.resolveMove(cell, move), direction };
     }
-    return undefined;
+
+    throw new Error(`No traverse for cell (${cell.x}, ${cell.y}) in direction "${direction}"`);
   }
 
-  public move(cell: Cell, direction: Direction): CellDirection | undefined {
-    let next = this.shift(cell, direction);
+  public traversals(
+    cell: Cell,
+    { wall = 'all', inMaze = 'all' }: { wall?: boolean | 'all'; inMaze?: boolean | 'all' } = {},
+  ): Move[] {
+    return Object.entries(this.nexus(cell).walls)
+      .filter(([, w]) => wall === 'all' || w === wall)
+      .map(([direction]) => ({ direction, move: this.traverse(cell, direction) }))
+      .filter(({ move }) => inMaze === 'all' || this.inMaze(move) === inMaze);
+  }
+
+  public move(cell: Cell, direction: Direction): CellDirection {
+    let next = this.traverse(cell, direction);
 
     if (next) {
       while (true) {
@@ -922,35 +933,40 @@ export abstract class Maze {
         }
       }
 
-      return { ...next, direction };
+      return next;
     }
-    return undefined;
+
+    throw new Error(`No move for cell (${cell.x}, ${cell.y}) in direction "${direction}"`);
   }
 
-  public walk(
+  public moves(
     cell: Cell,
-    dir: Direction,
-  ): { next: CellDirection | undefined; tunnel: CellDirection[] } {
-    let next = this.shift(cell, dir);
+    { wall = 'all', inMaze = true }: { wall?: boolean | 'all'; inMaze?: boolean | 'all' } = {},
+  ): Move[] {
+    return Object.entries(this.nexus(cell).walls)
+      .filter(([, w]) => wall === 'all' || w === wall)
+      .map(([direction]) => ({ direction, move: this.move(cell, direction) }))
+      .filter(({ move }) => inMaze === 'all' || this.inMaze(move) === inMaze);
+  }
+
+  public walk(cell: Cell, dir: Direction): { next: CellDirection; tunnel: CellDirection[] } {
+    let next = this.traverse(cell, dir);
     const tunnel: CellDirection[] = [];
 
-    if (next) {
-      while (true) {
-        const portal: CellDirection | undefined | false =
-          this.inMaze(next) ? this.nexus(next).portals[next.direction] : false;
-        if (portal) {
-          tunnel.push(next);
-          next = portal;
-        } else {
-          break;
-        }
+    while (true) {
+      const portal = this.inMaze(next) ? this.nexus(next).portals[next.direction] : false;
+      if (portal) {
+        tunnel.push(next);
+        next = portal;
+      } else {
+        break;
       }
     }
 
     return { next, tunnel };
   }
 
-  public resolveMove(cell: Cell, move: Move): Cell {
+  public resolveMove(cell: Cell, move: MoveOffset): Cell {
     let { x, y } = cell;
 
     x += move.x;
@@ -977,12 +993,6 @@ export abstract class Maze {
     return { x, y };
   }
 
-  public connected(cell: Cell): CellDirection[] {
-    return Object.keys(this.nexus(cell).walls)
-      .map((direction) => this.shift(cell, direction))
-      .filter((c) => c != null);
-  }
-
   public adjacent(cell: Cell): CellDirection[] {
     return Object.keys(this.nexus(cell).walls)
       .map((direction) => this.move(cell, direction))
@@ -993,12 +1003,6 @@ export abstract class Maze {
     return this.adjacent(cell).filter((c) => this.inMaze(c));
   }
 
-  public validMoves(cell: Cell): { direction: Direction; move: CellDirection }[] {
-    return Object.entries(this.nexus(cell).walls)
-      .filter(([, w]) => w)
-      .map(([direction]) => ({ direction, move: this.move(cell, direction)! }));
-  }
-
   public directionTo(source: Cell, destination: Cell): Direction | undefined {
     return Object.keys(this.nexus(source).walls).find((direction) =>
       this.isSame(destination, this.move(source, direction)),
@@ -1006,9 +1010,9 @@ export abstract class Maze {
   }
 
   public preferreds(cell: Cell): string[] {
-    return this.neighbors(cell)
-      .filter((cd) => this.preferredMatrix[this.cellKind(cell)].includes(cd.direction))
-      .map((cd) => cd.direction);
+    return this.moves(cell)
+      .filter(({ direction }) => this.preferredMatrix[this.cellKind(cell)].includes(direction))
+      .map(({ direction }) => direction);
   }
 
   public abstract cellKind(cell: Cell): Kind;
@@ -1034,9 +1038,11 @@ export abstract class Maze {
     this.drawPillars(cell, wallColor);
 
     if (this.nexus(cell).bridge) {
-      this.drawText(cell, '◯', 'white');
+      // this.drawText(cell, '◯', 'white');
     } else if (this.showCoordinates) {
       this.drawText(cell, cell.x === 0 ? cell.y.toString() : cell.x.toString());
+    } else if (this.showKind) {
+      this.drawText(cell, this.cellKind(cell).toString());
     }
 
     return cell;
@@ -1048,7 +1054,7 @@ export abstract class Maze {
     for (const direction of Object.keys(walls)) {
       if (walls[direction]) {
         if (portals[this.opposite({ ...cell, direction })]) {
-          const move = this.shift(cell, direction);
+          const move = this.traverse(cell, direction);
           if (move && this.inMaze(move) && !this.nexus(move).walls[this.opposite(move)]) {
             this.drawBridge({ ...cell, direction }, this.bridgeColor); //color);
             continue;
@@ -1056,7 +1062,7 @@ export abstract class Maze {
         }
         this.drawWall({ ...cell, direction }, color);
       } else {
-        const move = this.shift(cell, direction);
+        const move = this.traverse(cell, direction);
         if (move && this.inMaze(move) && this.nexus(move).portals[direction]) {
           this.drawTunnel({ ...cell, direction }, this.tunnelColor); //color);
           continue;
@@ -1082,7 +1088,7 @@ export abstract class Maze {
     }
   }
 
-  public drawBridge(cell: CellDirection, color = this.wallColor): void {
+  public drawBridge(cell: CellDirection, color = this.bridgeColor): void {
     if (this.drawing) {
       this.drawWall(cell, color);
     }
@@ -1239,13 +1245,22 @@ export abstract class Maze {
     forbidden: (false | true | number)[][],
     min: number,
     max: number,
-  ): { prev: CellDirection; bridge: CellDirection[]; next: CellDirection } | null {
+  ): { prev: CellDirection; bridge: CellDirection[]; next: Move } | null {
     if (this.bridgeMatrix) {
       const bridgePieces = this.bridgeMatrix.pieces;
       const kind = this.cellKind(current);
       const zone = this.cellZone(current);
 
-      const layout = this.randomPick(this.bridgeMatrix.layouts[kind]);
+      const layout = this.randomPick(
+        this.bridgeMatrix.layouts[kind].filter((l) => {
+          const [direction] = l.path;
+          if (direction in this.nexus(current).walls) {
+            const cell = this.traverse(current, direction);
+            return this.inMaze(cell) && forbidden[cell.x][cell.y] === false;
+          }
+          return false;
+        }),
+      );
       if (layout) {
         const { path } = layout;
         const bridge: CellDirection[] = [];
@@ -1254,17 +1269,14 @@ export abstract class Maze {
 
         while (true) {
           const direction = path[index++ % path.length];
-          const { next, tunnel } = this.walk(probe, direction);
-          // if (!next) {
-          // throw new Error(
-          // `No cell for (${probe.x}, ${probe.y}:${this.cellKind(probe)}) direction ${direction}`,
-          // );
-          // }
+          if (!(direction in this.nexus(probe).walls)) {
+            break;
+          }
 
+          const next = this.traverse(probe, direction);
           if (
-            !next ||
             !this.inMaze(next) ||
-            forbidden[next.x][next.y] !== false ||
+            (forbidden[next.x][next.y] !== false && !this.nexus(next).bridge) ||
             this.cellZone(next) !== zone ||
             bridge.some((b) => this.isSame(b, next))
           ) {
@@ -1272,15 +1284,31 @@ export abstract class Maze {
           } else {
             bridge.push(next);
             probe = next;
-            index += tunnel.length;
           }
+        }
+
+        for (let i = 0; i < bridge.length - 1; i++) {
+          const span0 = bridge[i];
+          const span1 = bridge[i + 1];
+
+          const next = this.move(span0, span1.direction);
+          const find = bridge.findIndex((b) => this.isSame(b, next));
+          if (find === i + 1) {
+            continue;
+          } else if (find > i + 1) {
+            bridge.splice(i + 1, find - (i + 1));
+          } else {
+            bridge.length = i;
+          }
+          probe = span0;
         }
 
         while (bridge.length > 0) {
           const end = bridge.at(-1)!;
           if (
-            this.neighbors(end).filter(
-              (n) => forbidden[n.x][n.y] === false && !bridge.some((b) => this.isSame(n, b)),
+            this.moves(end).filter(
+              ({ move }) =>
+                forbidden[move.x][move.y] === false && !bridge.some((b) => this.isSame(move, b)),
             ).length === 0
           ) {
             bridge.pop();
@@ -1309,16 +1337,16 @@ export abstract class Maze {
             const { direction: direction1 } = span;
             const direction2 = this.directionTo(span, prev)!;
 
-            for (const cell of this.connected(span).filter(
-              (s) =>
-                s.direction !== direction1 &&
-                s.direction !== direction2 &&
-                xBridge.every((x) => !this.isSame(s, x)),
+            for (const traversal of this.traversals(span).filter(
+              (t) =>
+                t.direction !== direction1 &&
+                t.direction !== direction2 &&
+                xBridge.every((x) => !this.isSame(t.move, x)),
             )) {
-              if (!(cell.direction in tunnels)) {
-                tunnels[cell.direction] = [];
+              if (!(traversal.direction in tunnels)) {
+                tunnels[traversal.direction] = [];
               }
-              tunnels[cell.direction].push({ ...cell, from: { ...span } });
+              tunnels[traversal.direction].push({ ...traversal.move, from: { ...span } });
             }
             prev = span;
           }
@@ -1344,8 +1372,16 @@ export abstract class Maze {
                   const b1 = t1.from;
                   const b2 = t2.from;
 
-                  this.nexus(b1).portals[this.inverse({ ...b1, direction: key1 })] = t2;
-                  this.nexus(b2).portals[this.inverse({ ...b2, direction: key2 })] = t1;
+                  this.nexus(b1).portals[this.inverse({ ...b1, direction: key1 })] = {
+                    x: t2.x,
+                    y: t2.y,
+                    direction: t2.direction,
+                  };
+                  this.nexus(b2).portals[this.inverse({ ...b2, direction: key2 })] = {
+                    x: t1.x,
+                    y: t1.y,
+                    direction: t1.direction,
+                  };
                 }
               }
             }
@@ -1353,15 +1389,20 @@ export abstract class Maze {
             delete tunnels[key1];
           }
 
-          return { prev: current, bridge, next };
-        }
+          prev = current;
+          for (const span of bridge) {
+            this.nexus(span).bridge = true;
+            this.removeWall(prev, span.direction);
+            prev = span;
+          }
+          this.removeWall(prev, next.direction);
 
-        return null;
+          return { prev: current, bridge, next: { direction: next.direction, move: next } };
+        }
       }
-      throw new Error(`No bridge layout for cell (${current.x}, ${current.y}) kind ${kind}`);
-    } else {
-      throw new Error('Bridge matrix is not defined.');
+      return null;
     }
+    throw new Error('Bridge matrix is not defined.');
   }
   //#endregion
 }

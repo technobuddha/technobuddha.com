@@ -35,12 +35,12 @@ export class Wilsons extends MazeGenerator {
       let path: (Cell | CellDirection)[] = [this.currentCell];
 
       while (!this.visited[this.currentCell.x][this.currentCell.y]) {
-        const cell = this.randomPick(this.maze.neighbors(this.currentCell))!;
+        const { move } = this.randomPick(this.maze.moves(this.currentCell))!;
 
         let cellVisited = false;
         let cellPreviousIndex = -1;
         for (const [index, pathCell] of path.entries()) {
-          if (this.maze.isSame(pathCell, cell)) {
+          if (this.maze.isSame(pathCell, move)) {
             cellVisited = true;
             cellPreviousIndex = index;
           }
@@ -50,8 +50,8 @@ export class Wilsons extends MazeGenerator {
           this.currentCell = path[cellPreviousIndex];
           path = path.slice(0, cellPreviousIndex + 1);
         } else {
-          path.push(cell);
-          this.currentCell = cell;
+          path.push(move);
+          this.currentCell = move;
         }
       }
 

@@ -15,7 +15,7 @@ import { Maze } from './maze.ts';
 import { matrix } from './wedge-matrix.ts';
 
 export class WedgeMaze extends Maze {
-  public constructor({ cellSize = 32, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 2, ...props }: MazeProperties) {
     super({ cellSize, wallSize, ...props }, matrix);
     this.bridgePieces = 4;
   }

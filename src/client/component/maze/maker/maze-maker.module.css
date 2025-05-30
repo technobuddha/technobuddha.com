@@ -48,6 +48,13 @@
     background: '#888888';
     padding: 1rem;
 
+    .display {
+      height: 18rem;
+      background-color: #444;
+      color: white;
+      overflow-y: scroll;
+    }
+
     .gap {
       flex-grow: 1;
     }

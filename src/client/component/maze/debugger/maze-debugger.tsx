@@ -163,15 +163,18 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
         default: {
           maze.drawX(maze.drawCell({ x, y }), 'red');
-          const moves = maze.neighbors({ x, y });
+          const moves = maze.moves({ x, y });
           for (const move of moves) {
             switch (show) {
               case 'moves': {
-                maze.drawText(maze.drawCell(move), move.direction, 'cyan');
+                maze.drawText(maze.drawCell(move.move), move.direction, 'cyan');
                 break;
               }
               case 'paths': {
-                maze.drawPath(maze.drawCell({ ...move, direction: maze.opposite(move) }), 'cyan');
+                maze.drawPath(
+                  maze.drawCell({ ...move.move, direction: maze.opposite(move.move) }),
+                  'cyan',
+                );
                 break;
               }
 
@@ -191,43 +194,41 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
       for (const cell of maze.cellsInMaze()) {
         for (const direction of Object.keys(maze.nexus(cell).walls)) {
           const move = maze.move(cell, direction);
-          if (move) {
-            if (maze.inMaze(move)) {
-              const back = maze.move(move, maze.opposite(move));
-              if (back) {
-                if (cell.x !== back.x || cell.y !== back.y) {
-                  err.push(
-                    `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move)} }; back = { x: ${back.x}, y: ${back.y}}`,
-                  );
-                }
-              } else {
+          if (maze.inMaze(move)) {
+            const back = maze.move(move, maze.opposite(move));
+            if (back) {
+              if (cell.x !== back.x || cell.y !== back.y) {
                 err.push(
-                  `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move)} }; back = NULL`,
+                  `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move)} }; back = { x: ${back.x}, y: ${back.y}}`,
                 );
               }
+            } else {
+              err.push(
+                `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move)} }; back = NULL`,
+              );
+            }
 
-              const rt = maze.rightTurn(move);
-              const lt = maze.leftTurn(move);
+            const rt = maze.rightTurn(move);
+            const lt = maze.leftTurn(move);
 
-              const ltr = [...lt.slice(0, -1).reverse(), lt.at(-1)];
+            const ltr = [...lt.slice(0, -1).reverse(), lt.at(-1)];
 
-              if (rt.some((t, i) => t !== ltr.at(i))) {
-                err.push(
-                  `{ x: ${move.x}, y: ${move.y}, direction: ${move.direction}}: rt[${rt.join(',')}] != lt[${lt.join(';')} --- ${ltr.join(',')}]`,
-                );
-              }
+            if (rt.some((t, i) => t !== ltr.at(i))) {
+              err.push(
+                `{ x: ${move.x}, y: ${move.y}, direction: ${move.direction}}: rt[${rt.join(',')}] != lt[${lt.join(';')} --- ${ltr.join(',')}]`,
+              );
             }
           }
         }
       }
 
       for (const cell of maze.cellsInMaze()) {
-        for (const move of maze.neighbors(cell)) {
-          const back = maze.move(move, maze.opposite(move));
+        for (const move of maze.moves(cell)) {
+          const back = maze.move(move.move, maze.opposite(move.move));
           if (back) {
             if (cell.x !== back.x || cell.y !== back.y) {
               err.push(
-                `{ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}} = { x: ${move.x}, y: ${move.y} } back = { x: ${back.x}, y: ${back.y}, ${maze.opposite(move)} }`,
+                `{ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}} = { x: ${move.move.x}, y: ${move.move.y} } back = { x: ${back.x}, y: ${back.y}, ${maze.opposite(move.move)} }`,
               );
             }
           } else {

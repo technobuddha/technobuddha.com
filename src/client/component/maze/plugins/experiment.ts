@@ -8,9 +8,7 @@ const BRIDGE_LENGTH = 5;
 function findBridgeEntrance(maze: Maze, forbiddenZone: boolean[][]): CellDirection {
   let cell: CellDirection | undefined = undefined;
   do {
-    cell = maze.randomPick(
-      maze.neighbors(maze.randomCell()).filter((c) => !forbiddenZone[c.x][c.y]),
-    );
+    cell = maze.randomPick(maze.moves(maze.randomCell()).filter((c) => !forbiddenZone[c.x][c.y]));
   } while (cell === undefined);
   return cell;
 }
@@ -70,7 +68,7 @@ export function experimentalPlugin(maze: Maze): void {
 
       for (cell of bridge) {
         for (const tunnelEntrance of maze
-          .neighbors(cell)
+          .moves(cell)
           .filter((c) => c.direction !== direction && c.direction !== opposite)) {
           const moveDirection = maze
             .straight({ ...cell, direction: maze.opposite(tunnelEntrance) })
@@ -80,7 +78,7 @@ export function experimentalPlugin(maze: Maze): void {
           maze.nexus(cell).portals[maze.opposite(tunnelEntrance)] = tunnelExit;
         }
 
-        for (const neighbor of maze.neighbors(cell)) {
+        for (const neighbor of maze.moves(cell)) {
           if (maze.inMaze(neighbor)) {
             forbiddenZone[neighbor.x][neighbor.y] = true;
           }

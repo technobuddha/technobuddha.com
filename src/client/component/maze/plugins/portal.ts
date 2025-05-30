@@ -11,10 +11,10 @@ export function portalPlugin(maze: Maze): void {
         cell2 = maze.randomCell();
       }
 
-      for (const move of maze.neighbors(cell1)) {
+      for (const move of maze.moves(cell1)) {
         maze.nexus(cell2).portals[move.direction] = move;
       }
-      for (const move of maze.neighbors(cell2)) {
+      for (const move of maze.moves(cell2)) {
         maze.nexus(cell1).portals[move.direction] = move;
       }
 

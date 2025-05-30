@@ -45,48 +45,48 @@ import { RandomMouse } from '../solver/random-mouse.ts';
 import { type Choice } from './chooser.ts';
 
 export const squareMazes: Choice<MazeProperties, Maze> = {
-  '1': (props) => new SquareMaze(props),
+  '1': (props) => new SquareMaze({ showCoordinates: true, ...props }),
 };
 
 export const mazes: Choice<MazeProperties, Maze> = {
-  '10:Weave': (props) => new WeaveMaze({ ...props }),
-  '10:Dot': {
+  '0:Weave': (props) => new WeaveMaze({ ...props }),
+  '0:Dot': {
     '10': (props) => new DotMaze(props),
     '0:=Zeta': (props) => new ZetaMaze(props),
   },
   '10:Circle': {
-    '10': (props) => new CircularMaze(props),
-    '10:Find Center': (props) =>
+    '10': (props) => new CircularMaze({ showKind: true, ...props }),
+    '0:Find Center': (props) =>
       new CircularMaze({ exit: { x: 0, y: 0 }, entrance: 'random edge', ...props }),
-    '10:Escape': (props) =>
+    '0:Escape': (props) =>
       new CircularMaze({ entrance: { x: 0, y: 0 }, exit: 'random edge', ...props }),
-    '10:Void': (props) => new CircularMaze({ centerRadius: 128, centerSegments: 16, ...props }),
+    '0:Void': (props) => new CircularMaze({ centerRadius: 128, centerSegments: 16, ...props }),
   },
   '0:Cubic': {
     '10': (props) => new CubicMaze(props),
   },
-  '10:Pentagon': {
+  '0:Pentagon': {
     '10': (props) => new PentagonMaze(props),
   },
-  '10:Brick': (props) => new BrickMaze(props),
-  '10:Square': squareMazes,
-  '10:Triangle': {
-    '10': (props) => new TriangleMaze({ showCoordinates: false, ...props }),
+  '0:Brick': (props) => new BrickMaze({ showCoordinates: false, ...props }),
+  '0:Square': squareMazes,
+  '0:Triangle': {
+    '10': (props) => new TriangleMaze({ showCoordinates: true, ...props }),
   },
-  '10:Hexagon': {
+  '0:Hexagon': {
     '10': (props) => new HexagonMaze(props),
   },
-  '10:Octogon': {
+  '0:Octogon': {
     '10': (props) => new OctogonMaze({ showCoordinates: false, ...props }),
   },
-  '10:Wedge': (props) => new WedgeMaze({ showCoordinates: false, ...props }),
+  '0:Wedge': (props) => new WedgeMaze({ showCoordinates: false, ...props }),
 };
 
 export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
-  '10:Division': {
+  '0:Division': {
     '10': (props) => new Division(props),
   },
-  '10:Hunt & Kill -': {
+  '0:Hunt & Kill -': {
     '10:Random': (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
     '10:Top Left': (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
     '10:Top Right': (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
@@ -97,19 +97,19 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
     '10:Right Top': (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
     '10:Right Bottom': (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
   },
-  '10:Growing Tree ': {
+  '0:Growing Tree ': {
     '10:Newest': (props) => new GrowingTree({ method: 'newest', ...props }),
     '10:Random': (props) => new GrowingTree({ method: 'random', ...props }),
     '0:Oldest': (props) => new GrowingTree({ method: 'oldest', ...props }),
     '0:Middle': (props) => new GrowingTree({ method: 'middle', ...props }),
   },
-  '10:Kruskals': {
+  '0:Kruskals': {
     '10': (props) => new Kruskals(props),
   },
-  '10:Prims': {
+  '0:Prims': {
     '10': (props) => new Prims(props),
   },
-  '00:Recursize Backtracker': {
+  '10:Recursize Backtracker': {
     '0': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
     '10:Bridge Builder': (props) =>
       new RecursiveBacktracker({
@@ -117,7 +117,7 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
         forcedBacktrack: 0.2,
         bridgeMinLength: 2,
         bridgeMaxLength: 16,
-        stepsAfterBridge: 80,
+        stepsAfterBridge: 1,
         ...props,
       }),
     '0:Parallel': (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
@@ -151,7 +151,7 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
         ...props,
       }),
   },
-  '10:Wilsons': {
+  '0:Wilsons': {
     '10': (props) => new Wilsons(props),
   },
 };

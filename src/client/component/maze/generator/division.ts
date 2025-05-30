@@ -98,13 +98,13 @@ export class Division extends MazeGenerator {
         const cell = frontier[index];
 
         const neighbors = this.maze
-          .neighbors(cell)
-          .filter((n) => region.subregions[n.x][n.y] === 'm');
+          .moves(cell)
+          .filter(({ move }) => region.subregions[move.x][move.y] === 'm');
 
         if (neighbors.length > 0) {
           const neighbor = neighbors[Math.floor(this.random() * neighbors.length)];
-          region.subregions[neighbor.x][neighbor.y] = region.subregions[cell.x][cell.y];
-          frontier.push(neighbor);
+          region.subregions[neighbor.move.x][neighbor.move.y] = region.subregions[cell.x][cell.y];
+          frontier.push(neighbor.move);
         } else {
           frontier.splice(index, 1);
         }
@@ -113,13 +113,13 @@ export class Division extends MazeGenerator {
       const boundary = region
         .cells('a')
         .flatMap((cell) =>
-          this.maze.neighbors(cell).filter((n) => region.subregions[n.x][n.y] === 'b'),
+          this.maze.moves(cell).filter(({ move }) => region.subregions[move.x][move.y] === 'b'),
         );
 
       boundary.splice(Math.floor(this.random() * boundary.length), 1);
 
       for (const cd of boundary) {
-        this.maze.addWall(cd, this.maze.opposite(cd));
+        this.maze.addWall(cd.move, this.maze.opposite(cd.move));
         yield;
       }
 

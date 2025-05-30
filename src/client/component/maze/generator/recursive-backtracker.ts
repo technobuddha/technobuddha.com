@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type CellDirection } from '../geometry/maze.ts';
+import { type CellDirection, type Move } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -90,49 +90,51 @@ export class RecursiveBacktracker extends MazeGenerator {
   public step(state: State): {
     current: CellDirection;
     prev: CellDirection;
-    next: CellDirection | undefined;
+    next: Move | undefined;
   } {
     const current = state.current!;
-    const prev = current;
+    let prev = current;
 
-    let next: CellDirection | undefined;
+    let next: Move | undefined;
 
     // if (state.stack.length > 0 && this.random() < this.forcedBacktrack) {
     //   next = undefined;
     // } else {
     switch (state.strategy) {
       case 'right-turn': {
-        next = this.maze
-          .rightTurn(current)
-          .map((d) => this.maze.move(current, d))
-          .filter((c) => c != null)
-          .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
+        const turns = this.maze.rightTurn(current);
+
+        [next] = this.maze
+          .moves(current)
+          .filter(({ move }) => this.visited[move.x][move.y] === false)
+          .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
         break;
       }
 
       case 'left-turn': {
-        next = this.maze
-          .leftTurn(current)
-          .map((d) => this.maze.move(current, d))
-          .filter((c) => c != null)
-          .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
+        const turns = this.maze.leftTurn(current);
+
+        [next] = this.maze
+          .moves(current)
+          .filter(({ move }) => this.visited[move.x][move.y] === false)
+          .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
         break;
       }
 
       case 'straight': {
-        next = this.maze
-          .straight(current, state.bias)
-          .map((d) => this.maze.move(current, d))
-          .filter((c) => c != null)
-          .find((c) => this.maze.inMaze(c) && this.visited[c.x][c.y] === false);
-
+        const turns = this.maze.straight(current, state.bias);
         state.bias = !state.bias;
+
+        [next] = this.maze
+          .moves(current)
+          .filter(({ move }) => this.visited[move.x][move.y] === false)
+          .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
         break;
       }
 
       case 'random': {
         next = this.randomPick(
-          this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
+          this.maze.moves(current).filter(({ move }) => this.visited[move.x][move.y] === false),
         );
         break;
       }
@@ -148,6 +150,9 @@ export class RecursiveBacktracker extends MazeGenerator {
           if (blueprint) {
             // eslint-disable-next-line @typescript-eslint/prefer-destructuring
             next = blueprint.next;
+            // eslint-disable-next-line @typescript-eslint/prefer-destructuring
+            prev = blueprint.prev;
+
             const { bridge } = blueprint;
             for (const span of bridge) {
               this.visited[span.x][span.y] = this.player;
@@ -156,7 +161,7 @@ export class RecursiveBacktracker extends MazeGenerator {
             state.bridge.random = this.stepsAfterBridge;
           } else {
             next = this.randomPick(
-              this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
+              this.maze.moves(current).filter(({ move }) => this.visited[move.x][move.y] === false),
             );
           }
         } else {
@@ -168,11 +173,13 @@ export class RecursiveBacktracker extends MazeGenerator {
             const [dir] = this.maze.straight(current, state.bias);
             next = this.randomPick(
               this.maze
-                .neighbors(current)
-                .filter((c) => this.visited[c.x][c.y] === false && c.direction !== dir),
+                .moves(current)
+                .filter(
+                  ({ move }) => this.visited[move.x][move.y] === false && move.direction !== dir,
+                ),
             );
             next ??= this.randomPick(
-              this.maze.neighbors(current).filter((c) => this.visited[c.x][c.y] === false),
+              this.maze.moves(current).filter(({ move }) => this.visited[move.x][move.y] === false),
             );
           }
         }
@@ -196,10 +203,12 @@ export class RecursiveBacktracker extends MazeGenerator {
             .filter((c) => this.visited[c.x][c.y] === 0 && !this.maze.nexus(c).bridge)
             .flatMap((c) =>
               this.maze
-                .neighbors(c)
-                .filter((n) => this.visited[n.x][n.y] !== 0 && !this.maze.nexus(n).bridge),
+                .moves(c)
+                .filter(
+                  ({ move }) => this.visited[move.x][move.y] !== 0 && !this.maze.nexus(move).bridge,
+                ),
             ),
-        );
+        )?.move;
 
         if (borderCell) {
           this.maze.removeWall(borderCell, this.maze.opposite(borderCell));
@@ -234,9 +243,9 @@ export class RecursiveBacktracker extends MazeGenerator {
           yield;
 
           this.state[this.player].stack.push(current);
-          this.state[this.player].current = next;
+          this.state[this.player].current = next.move;
 
-          this.visited[next.x][next.y] = this.player;
+          this.visited[next.move.x][next.move.y] = this.player;
 
           this.player = (this.player + 1) % this.parallel;
         } else {

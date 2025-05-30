@@ -6,7 +6,8 @@ export const matrix: Matrix = {
     pieces: 1,
     layouts: {
       0: [{ path: ['a'] }, { path: ['b'] }, { path: ['c'] }, { path: ['d'] }],
-      1: [{ path: ['d'] }, { path: ['b'] }],
+      //1: [{ path: ['d'] }, { path: ['b'] }],
+      1: [],
     },
   },
   directions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],

@@ -6,8 +6,8 @@ export const matrix: Matrix = {
     pieces: 2,
     layouts: {
       0: [
-        { path: ['b', 'a'] },
-        { path: ['b', 'c'] },
+        // { path: ['b', 'a'] },
+        // { path: ['b', 'c'] },
         { path: ['d', 'c'] },
         { path: ['d', 'e'] },
         { path: ['f', 'a'] },
@@ -17,8 +17,8 @@ export const matrix: Matrix = {
         { path: ['a', 'b'] },
         { path: ['a', 'f'] },
         { path: ['c', 'b'] },
-        { path: ['c', 'd'] },
-        { path: ['e', 'd'] },
+        // { path: ['c', 'd'] },
+        // { path: ['e', 'd'] },
         { path: ['e', 'f'] },
       ],
     },

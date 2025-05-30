@@ -76,23 +76,12 @@ export class ZetaMaze extends DotMaze {
   // }
 
   public override drawWalls(cell: Cell, color = this.wallColor): void {
-    const { walls, portals } = this.nexus(cell);
+    super.drawWalls(cell, color);
+    const { walls } = this.nexus(cell);
 
     for (const direction of this.directions) {
-      if (walls[direction] === true) {
-        if (portals[this.opposite({ ...cell, direction })]) {
-          const move = this.shift(cell, direction);
-          if (move && this.inMaze(move) && !this.nexus(move).walls[this.inverse(move)]) {
-            this.drawDoor({ ...cell, direction }, color);
-            this.drawWall({ ...cell, direction }, this.tunnelColor);
-            continue;
-          }
-        }
+      if (walls[direction] === undefined) {
         this.drawWall({ ...cell, direction }, color);
-      } else if (walls[direction] === undefined) {
-        this.drawWall({ ...cell, direction }, color);
-      } else {
-        this.drawDoor({ ...cell, direction }, color);
       }
     }
   }

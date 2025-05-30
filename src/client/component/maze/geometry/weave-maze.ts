@@ -42,16 +42,15 @@ export class WeaveMaze extends SquareMaze {
   public override drawFloor(cell: Cell, color = this.cellColor): void {
     if (this.drawing) {
       const { x1, x4, y1, y4 } = this.cellOffsets(cell);
-
       this.drawing.rect({ x: x1, y: y1 }, { x: x4, y: y4 }, color);
     }
   }
 
-  public override drawWall(cd: CellDirection, color = this.wallColor): void {
+  public override drawWall(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
-      const { x1, x2, x3, x4, y1, y2, y3, y4 } = this.cellOffsets(cd);
+      const { x1, x2, x3, x4, y1, y2, y3, y4 } = this.cellOffsets(cell);
 
-      switch (cd.direction) {
+      switch (cell.direction) {
         case 'n': {
           this.drawing.rect({ x: x2, y: y1 }, { x: x3, y: y2 }, color);
           break;
@@ -78,11 +77,74 @@ export class WeaveMaze extends SquareMaze {
     // no-op
   }
 
-  public override drawDoor(cd: CellDirection, color = this.wallColor): void {
+  public override drawDoor(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
-      const { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 } = this.cellOffsets(cd);
+      const { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 } = this.cellOffsets(cell);
 
-      switch (cd.direction) {
+      switch (cell.direction) {
+        case 'n': {
+          this.drawing.rect({ x: x1, y: y1 }, { x: x2, y: y0 }, color);
+          this.drawing.rect({ x: x3, y: y1 }, { x: x4, y: y0 }, color);
+          break;
+        }
+        case 's': {
+          this.drawing.rect({ x: x1, y: y4 }, { x: x2, y: y5 }, color);
+          this.drawing.rect({ x: x3, y: y4 }, { x: x4, y: y5 }, color);
+          break;
+        }
+        case 'e': {
+          this.drawing.rect({ x: x4, y: y1 }, { x: x5, y: y2 }, color);
+          this.drawing.rect({ x: x4, y: y3 }, { x: x5, y: y4 }, color);
+          break;
+        }
+        case 'w': {
+          this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y2 }, color);
+          this.drawing.rect({ x: x0, y: y3 }, { x: x1, y: y4 }, color);
+          break;
+        }
+
+        // no default
+      }
+    }
+  }
+
+  public override drawBridge(cell: CellDirection, color = this.wallColor): void {
+    if (this.drawing) {
+      super.drawBridge(cell, color);
+      const { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 } = this.cellOffsets(cell);
+
+      switch (cell.direction) {
+        case 'n': {
+          this.drawing.rect({ x: x1, y: y0 }, { x: x2, y: y1 }, this.wallColor);
+          this.drawing.rect({ x: x3, y: y0 }, { x: x4, y: y1 }, this.wallColor);
+          break;
+        }
+        case 's': {
+          this.drawing.rect({ x: x1, y: y4 }, { x: x2, y: y5 }, this.wallColor);
+          this.drawing.rect({ x: x3, y: y4 }, { x: x4, y: y5 }, this.wallColor);
+          break;
+        }
+        case 'e': {
+          this.drawing.rect({ x: x4, y: y1 }, { x: x5, y: y2 }, this.wallColor);
+          this.drawing.rect({ x: x4, y: y3 }, { x: x5, y: y4 }, this.wallColor);
+          break;
+        }
+        case 'w': {
+          this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y2 }, this.wallColor);
+          this.drawing.rect({ x: x0, y: y3 }, { x: x1, y: y4 }, this.wallColor);
+          break;
+        }
+
+        // no default
+      }
+    }
+  }
+
+  public override drawTunnel(cell: CellDirection, color = this.tunnelColor): void {
+    if (this.drawing) {
+      const { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 } = this.cellOffsets(cell);
+
+      switch (cell.direction) {
         case 'n': {
           this.drawing.rect({ x: x1, y: y1 }, { x: x2, y: y0 }, color);
           this.drawing.rect({ x: x3, y: y1 }, { x: x4, y: y0 }, color);

@@ -40,18 +40,19 @@ export class HuntAndKill extends MazeGenerator {
       this.visited[this.currentCell.x][this.currentCell.y] = true;
 
       const next = this.randomPick(
-        this.maze.neighbors(this.currentCell).filter((c) => !this.visited[c.x][c.y]),
+        this.maze.moves(this.currentCell).filter(({ move }) => !this.visited[move.x][move.y]),
       );
       if (next) {
         this.maze.removeWall(this.currentCell, next.direction);
-        this.currentCell = next;
+        this.currentCell = next.move;
         yield;
       } else {
         // hunt
 
         const target = hunt(
           this.maze.cellsInMaze(this.huntMethod).filter((c) => !this.visited[c.x][c.y]),
-          (c) => this.randomPick(this.maze.neighbors(c).filter((n) => this.visited[n.x][n.y])),
+          (c) =>
+            this.randomPick(this.maze.moves(c).filter(({ move }) => this.visited[move.x][move.y])),
         );
         if (target) {
           yield this.maze.removeWall(target.cell, target.hunted.direction);

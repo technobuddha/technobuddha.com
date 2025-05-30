@@ -9,7 +9,7 @@ import {
   type DrawingSizes,
   type Kind,
   type MazeProperties,
-  type Move,
+  type MoveOffset,
   type Pillar,
   type Wall,
 } from './maze.ts';
@@ -136,7 +136,7 @@ export class CircularMaze extends Maze {
     return this.zones[cell.y];
   }
 
-  public override resolveMove(cell: Cell, move: Move): Cell {
+  public override resolveMove(cell: Cell, move: MoveOffset): Cell {
     let { x, y } = cell;
 
     if (move.zone) {

@@ -43,7 +43,7 @@ export class FibonaccisRabbits extends MazeSolver {
         const next =
           this.randomPick(
             this.maze
-              .validMoves(rabbit.cell)
+              .moves(rabbit.cell, { wall: false })
               .filter(({ move }) => !this.maze.isSame(move, rabbit.tail))
               .map(({ move }) => move),
           ) ?? rabbit.tail;

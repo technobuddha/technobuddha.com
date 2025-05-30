@@ -108,7 +108,6 @@ export class SquareMaze extends Maze {
       }
     }
   }
-
   public override drawTunnel(cd: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
       const { x0, x1, x2, x3, y0, y1, y2, y3 } = this.cellOffsets(cd);

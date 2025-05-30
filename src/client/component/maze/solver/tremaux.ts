@@ -93,7 +93,7 @@ export class Tremaux extends MazeSolver {
       //   continue;
       // }
 
-      const moves = this.maze.validMoves(this.curr).map(({ move }) => move);
+      const moves = this.maze.moves(this.curr, { wall: false }).map(({ move }) => move);
 
       const pmi = moves.findIndex((c) => c.x === this.prev?.x && c.y === this.prev?.y);
       const prevMove = pmi >= 0 ? moves[pmi] : undefined;
@@ -124,6 +124,7 @@ export class Tremaux extends MazeSolver {
       } else {
         // 3. Pick any entrance with the fewest marks (zero if possible, else one).
         if (moves.length === 0) {
+          // eslint-disable-next-line no-debugger
           debugger;
           throw new Error('No moves found for tremaux');
         }
@@ -140,18 +141,17 @@ export class Tremaux extends MazeSolver {
 
     while (!this.maze.isSame(this.curr, exit)) {
       const [next] = this.maze
-        .validMoves(this.curr)
+        .moves(this.curr, { wall: false })
         .filter(
           ({ move }) =>
             !(move.x === this.prev?.x && move.y === this.prev?.y) &&
             this.marks[this.curr.x][this.curr.y][move.direction] === 1,
-        )
-        .map(({ move }) => move);
+        );
 
       if (next) {
         this.maze.solution.push({ ...this.curr, direction: next.direction });
         this.prev = this.curr;
-        this.curr = next;
+        this.curr = next.move;
       } else {
         throw new Error('No solution found for tremaux');
       }

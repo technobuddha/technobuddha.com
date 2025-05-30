@@ -16,14 +16,13 @@ export class RandomMouse extends MazeSolver {
       const next =
         this.randomPick(
           this.maze
-            .validMoves(mouse)
+            .moves(mouse, { wall: false })
             .filter(({ move }) => !this.maze.isSame(move, tail))
             .map(({ move }) => move),
         ) ?? tail;
 
       this.maze.drawCell(mouse);
-      this.maze.drawCell(next);
-      this.maze.drawAvatar(next);
+      this.maze.drawAvatar(this.maze.drawCell(next));
       tail = mouse;
       mouse = next;
       yield;

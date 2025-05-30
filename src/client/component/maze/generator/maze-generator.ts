@@ -1,7 +1,6 @@
 import { randomPick, randomShuffle } from '@technobuddha/library';
-import { groupBy, uniq } from 'lodash-es';
 
-import { type Cell, type CellDirection, type Maze } from '../geometry/maze.ts';
+import { type Cell, type Maze } from '../geometry/maze.ts';
 
 export type MazeGeneratorProperties = {
   maze: Maze;

@@ -68,12 +68,12 @@ export class WallWalking extends MazeSolver {
       const wall = this.maze.nexus(cell).walls;
 
       let dir: Direction | undefined;
-      const moves = this.maze.validMoves(cell).map(({ move }) => move);
+      const moves = this.maze.moves(cell, { wall: false });
 
       if (seekingWall) {
         const wallDirection = this.backward(cell).find((d) => wall[d]);
         if (wallDirection) {
-          cell.direction = this.maze.opposite(this.maze.move(cell, wallDirection)!);
+          cell.direction = this.maze.opposite(this.maze.move(cell, wallDirection));
           dir = this.forward(cell).find((d) => moves.find((m) => m.direction === d))!;
           seekingWall = false;
         } else {
@@ -83,7 +83,7 @@ export class WallWalking extends MazeSolver {
         dir = this.forward(cell).find((d) => moves.find((m) => m.direction === d))!;
       }
 
-      const next = this.maze.move(cell, dir)!;
+      const next = this.maze.move(cell, dir);
       this.maze.drawPath(this.maze.drawCell({ ...cell, direction: dir }), pathColor);
       this.maze.drawAvatar(this.maze.drawCell(next), avatarColor);
       yield;
@@ -100,7 +100,7 @@ export class WallWalking extends MazeSolver {
 
     do {
       this.maze.solution.push(cell);
-      const next = this.maze.move(cell, cell.direction)!;
+      const next = this.maze.move(cell, cell.direction);
       cell = { ...next, direction: cells[next.x][next.y].direction! };
     } while (!this.maze.isSame(cell, this.maze.exit));
   }

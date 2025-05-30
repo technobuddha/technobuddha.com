@@ -37,6 +37,9 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
   const [mazeNumber, setMazeNumber] = React.useState(0);
 
+  const maze = React.useRef<Maze>(undefined);
+  const [display, setDisplay] = React.useState<string>('');
+
   const [mazeName, setMazeName] = React.useState('');
   const [generatorName, setGeneratorName] = React.useState('');
   const [solverName, setSolverName] = React.useState('');
@@ -66,6 +69,21 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         canvas.height = height - 20;
         canvas.className = css.canvas;
         canvas.setAttribute('aria-label', 'A Maze being created and solved');
+        canvas.addEventListener('mousemove', (ev) => {
+          if (maze.current) {
+            const m = maze.current;
+            const { offsetX, offsetY } = ev;
+
+            const x = Math.floor((offsetX - m.leftOffset) / m.cellSize);
+            const y = Math.floor((offsetY - m.topOffset) / m.cellSize);
+
+            if (m.inMaze({ x, y })) {
+              //setDisplay(JSON.stringify(m.nexus({ x, y }), null, 2));
+            } else {
+              setDisplay('');
+            }
+          }
+        });
 
         frame.current.insertBefore(canvas, null);
         canvasMaze.current = canvas;
@@ -121,6 +139,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       m.reset();
       const g = generatorMaker({ maze: m });
       const s = solverMaker({ maze: m });
+      maze.current = m;
 
       setRunner((r) => {
         r?.abort();
@@ -309,6 +328,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
             </MenuItem>
           </Select>
         </fieldset>
+        <div className={css.display}>{display}</div>
         <div className={css.gap} />
         <div className={css.buttons}>
           <button className={css.button} type="button" onClick={handlePause}>

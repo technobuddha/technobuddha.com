@@ -60,7 +60,7 @@ export class Dijkstras extends MazeSolver {
         const distance = distances[cell.x][cell.y].distance + 1;
         const validMoves = this.randomShuffle(
           this.maze
-            .validMoves(cell)
+            .moves(cell, { wall: false })
             .filter(({ move }) => distances[move.x][move.y].distance > distance),
         );
 

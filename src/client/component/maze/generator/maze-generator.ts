@@ -1,29 +1,80 @@
-import { randomPick, randomShuffle } from '@technobuddha/library';
+import { create2DArray, randomPick, randomShuffle } from '@technobuddha/library';
 
-import { type Cell, type Maze } from '../geometry/maze.ts';
+import {
+  type Cell,
+  type CellDirection,
+  type Direction,
+  type Maze,
+  type Move,
+} from '../geometry/maze.ts';
+import { logger } from '../library/logger.ts';
+import { randomDraw } from '../library/random-draw.ts';
+
+export type Strategy = 'random' | 'right-turn' | 'left-turn' | 'straight' | 'bridge-builder';
+
+type PlayerState = {
+  current: CellDirection | undefined;
+  strategy: Strategy;
+  stack: CellDirection[];
+  bias: boolean;
+  bridge: {
+    random: number;
+  };
+};
 
 export type MazeGeneratorProperties = {
   maze: Maze;
   start?: Cell;
   speed?: number;
+  bridgeMinLength?: number;
+  bridgeMaxLength?: number;
+  stepsAfterBridge?: number;
   random?(this: void): number;
 };
 
 export abstract class MazeGenerator {
+  private readonly visited: (false | number)[][];
+  protected readonly state: PlayerState[] = [];
+  public player = 0;
+
   public maze: MazeGeneratorProperties['maze'];
+
+  public readonly bridgeMinPieces: number;
+  public readonly bridgeMaxPieces: number;
+  public readonly stepsAfterBridge: number;
+
+  public forced = 0;
+
   public random: Exclude<MazeGeneratorProperties['random'], undefined>;
   public readonly speed: number;
   public start: Cell;
-  public currentCell: Cell;
 
-  public constructor({ maze, start, speed = 5, random }: MazeGeneratorProperties) {
+  public constructor({
+    maze,
+    start,
+    speed = 5,
+    bridgeMinLength = 1,
+    bridgeMaxLength = 1,
+    stepsAfterBridge = 1,
+    random,
+  }: MazeGeneratorProperties) {
     this.maze = maze;
+
+    const pieces = this.maze.bridgePieces;
+    const min = Math.max(Math.ceil(bridgeMinLength / pieces), 0);
+    const max = Math.max(Math.ceil(bridgeMaxLength / pieces), 0);
+
+    this.bridgeMinPieces = min;
+    this.bridgeMaxPieces = Math.max(max, min);
+    this.stepsAfterBridge = stepsAfterBridge;
+
+    this.visited = create2DArray(this.maze.width, this.maze.height, false);
+
     this.start = start ?? this.maze.randomCell();
-    this.currentCell = this.start;
     this.speed = speed;
     this.random = random ?? Math.random;
   }
-
+  //#region Utility
   protected randomPick<T>(array: T[]): T | undefined {
     return randomPick(array, this.random);
   }
@@ -32,6 +83,68 @@ export abstract class MazeGenerator {
     return randomShuffle(array, this.random);
   }
 
+  protected randomDraw<T>(array: T[]): T | undefined {
+    return randomDraw(array, this.random);
+  }
+  //#endregion
+  //#region Player
+  protected createPlayer({
+    strategy = 'random',
+    start,
+  }: { strategy?: Strategy; start?: CellDirection | Cell } = {}): void {
+    const current =
+      start ?
+        'direction' in start ?
+          start
+        : this.maze.randomCellDirection(start)
+      : this.maze.randomCellDirection();
+
+    this.state.push({
+      current,
+      strategy,
+      stack: current ? [current] : [],
+      bias: true,
+      bridge: {
+        random: 1,
+      },
+    });
+  }
+  protected moveTo(cell?: CellDirection): void {
+    this.state[this.player].current = cell;
+  }
+  //#region Visitation
+  protected isVisited(cell: Cell): boolean {
+    return this.visited[cell.x][cell.y] !== false;
+  }
+
+  protected isVisitedByMe(cell: Cell, player?: number): boolean {
+    return this.visited[cell.x][cell.y] === (player ?? this.player);
+  }
+
+  protected visit(cell?: Cell): void {
+    const target = cell ?? this.state[this.player].current;
+
+    if (target) {
+      const player = this.visited[target.x][target.y];
+
+      if (player === false) {
+        this.visited[target.x][target.y] = this.player;
+      } else if (player === this.player) {
+        // no-op, already visited by this player
+      } else {
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        for (let i = 0; i < this.visited.length; ++i) {
+          for (let j = 0; j < this.visited[i].length; ++j) {
+            if (this.visited[i][j] === player) {
+              this.visited[i][j] = this.player;
+            }
+          }
+        }
+      }
+    }
+  }
+  //#endregion
+  //#region Run
   public *run(): Generator<void> {
     this.maze.hookPreGeneration?.(this);
     yield* this.generate();
@@ -39,4 +152,291 @@ export abstract class MazeGenerator {
   }
 
   public abstract generate(): Generator<void>;
+
+  protected step(): CellDirection | undefined {
+    const state = this.state[this.player];
+
+    if (state.current) {
+      // eslint-disable-next-line @typescript-eslint/prefer-destructuring
+      const current = state.current;
+      let next: Move | undefined;
+
+      if (state.stack.length > 0 && this.random() < this.forced) {
+        next = undefined;
+      } else {
+        switch (state.strategy) {
+          case 'right-turn': {
+            const turns = this.maze.rightTurn(current);
+
+            [next] = this.maze
+              .moves(current)
+              .filter(({ move }) => this.visited[move.x][move.y] === false)
+              .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
+            break;
+          }
+
+          case 'left-turn': {
+            const turns = this.maze.leftTurn(current);
+
+            [next] = this.maze
+              .moves(current)
+              .filter(({ move }) => this.visited[move.x][move.y] === false)
+              .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
+            break;
+          }
+
+          case 'straight': {
+            const turns = this.maze.straight(current, state.bias);
+            state.bias = !state.bias;
+
+            [next] = this.maze
+              .moves(current)
+              .filter(({ move }) => this.visited[move.x][move.y] === false)
+              .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
+            break;
+          }
+
+          case 'random': {
+            next = this.randomPick(
+              this.maze.moves(current).filter(({ move }) => this.visited[move.x][move.y] === false),
+            );
+            break;
+          }
+
+          case 'bridge-builder': {
+            if (state.bridge.random <= 0) {
+              const blueprint = this.buildBridge(current);
+              if (blueprint) {
+                // eslint-disable-next-line @typescript-eslint/prefer-destructuring
+                next = blueprint.next;
+
+                const { bridge } = blueprint;
+                for (const span of bridge) {
+                  this.visited[span.x][span.y] = this.player;
+                }
+
+                state.bridge.random = this.stepsAfterBridge;
+              } else {
+                next = this.randomPick(
+                  this.maze
+                    .moves(current)
+                    .filter(({ move }) => this.visited[move.x][move.y] === false),
+                );
+              }
+            } else {
+              state.bridge.random -= 1;
+
+              const [dir] = this.maze.straight(current, state.bias);
+              next = this.randomPick(
+                this.maze
+                  .moves(current)
+                  .filter(
+                    ({ move }) => this.visited[move.x][move.y] === false && move.direction !== dir,
+                  ),
+              );
+              next ??= this.randomPick(
+                this.maze
+                  .moves(current)
+                  .filter(({ move }) => this.visited[move.x][move.y] === false),
+              );
+            }
+
+            break;
+          }
+
+          // no default
+        }
+      }
+      return next?.move;
+    }
+    throw new Error(`No current cell defined for player ${this.player}.`);
+  }
+  //#endregion
+  //#region Bridge
+  protected buildBridge(
+    current: CellDirection,
+  ): { prev: CellDirection; bridge: CellDirection[]; next: Move } | null {
+    const layout = this.randomPick(
+      this.maze.bridges(current).filter(({ direction }) => {
+        if (direction in this.maze.nexus(current).walls) {
+          const cell = this.maze.traverse(current, direction);
+          return this.maze.inMaze(cell) && this.visited[cell.x][cell.y] === false;
+        }
+        return false;
+      }),
+    );
+    if (layout) {
+      //logger.log(`Building bridge at ${current.x},${current.y} with layout`, layout);
+
+      const { path, pieces: bridgePieces, connect } = layout;
+      const zone = this.maze.cellZone(current);
+
+      const bridge: CellDirection[] = [];
+      let probe: Cell = { ...current };
+      let index = 0;
+
+      bridgeBuilding: while (true) {
+        let direction = path[index++ % path.length];
+        if (!(direction in this.maze.nexus(probe).walls)) {
+          break;
+        }
+
+        const { next, tunnel } = this.maze.walk(probe, direction);
+        if (
+          !this.maze.inMaze(next) ||
+          this.isVisited(next) ||
+          this.maze.cellZone(next) !== zone ||
+          bridge.some((b) => this.maze.isSame(b, next))
+        ) {
+          break;
+        } else {
+          if (tunnel) {
+            for (const span of tunnel) {
+              const expected = this.maze.traverse(probe, direction);
+              if (!this.maze.isIdentical(span, expected)) {
+                logger.warn(
+                  `Tunnel (${span.x},${span.y}:${span.direction}) does not match (${expected.x},${expected.y}:${expected.direction})`,
+                );
+                break bridgeBuilding;
+              }
+              direction = path[index++ % path.length];
+              probe = expected;
+            }
+          }
+          bridge.push(next);
+          probe = next;
+        }
+      }
+
+      // while (bridge.length > 0) {
+      //   const end = bridge.at(-1)!;
+      //   if (
+      //     this.maze
+      //       .moves(end)
+      //       .filter(
+      //         ({ move }) =>
+      //           this.visited[move.x][move.y] === false &&
+      //           !this.maze.nexus(move).bridge &&
+      //           !bridge.some((b) => this.maze.isSame(move, b)),
+      //       ).length === 0
+      //   ) {
+      //     bridge.pop();
+      //   } else {
+      //     break;
+      //   }
+      // }
+
+      // 'next' is actually the last cell in the bridge
+      let pieces = Math.floor((bridge.length - 1) / bridgePieces);
+      if (pieces > this.bridgeMinPieces) {
+        if (pieces > this.bridgeMaxPieces) {
+          pieces = this.bridgeMaxPieces;
+        }
+
+        bridge.length = pieces * bridgePieces + 1;
+
+        const next = bridge.pop()!;
+        // logger.log(`Building bridge`, [...bridge], { ...next });
+
+        let prev = current;
+
+        const opath = new Set(path.map((p) => this.maze.opposite(p)));
+
+        const tunnels: Record<Direction, (CellDirection & { from: CellDirection })[]> = {};
+        const xBridge = [prev, ...bridge, next];
+
+        for (const span of bridge) {
+          for (const traversal of this.maze
+            .traversals(span)
+            .filter(
+              (t) =>
+                !path.includes(t.direction) &&
+                !opath.has(t.direction) &&
+                xBridge.every((x) => !this.maze.isSame(t.move, x)),
+            )) {
+            if (!(traversal.direction in tunnels)) {
+              tunnels[traversal.direction] = [];
+            }
+            tunnels[traversal.direction].push({ ...traversal.move, from: { ...span } });
+          }
+          prev = span;
+        }
+
+        // logger.log('tunnels)', { ...tunnels });
+
+        let keys: string[];
+        while ((keys = Object.keys(tunnels)).length > 0) {
+          const [key1] = keys;
+          const key2 = connect[key1];
+
+          if (tunnels[key1]?.length !== tunnels[key2]?.length) {
+            logger.warn(`Tunnel length mismatch for ${key1} and ${key2}`, { ...tunnels });
+          }
+
+          if (key2 in tunnels) {
+            for (let i = 0; i < tunnels[key1].length; i++) {
+              const t1 = tunnels[key1][i];
+              const t2 = tunnels[key2][i];
+
+              if (t2) {
+                const b1 = t1.from;
+                const b2 = t2.from;
+
+                // if (!this.maze.isSame(b1, b2)) {
+                //   logger.warn(`tunnel matching from ${b1.x},${b1.y} to ${b2.x},${b2.y}`);
+                // }
+
+                const tunnel1 = { x: t1.x, y: t1.y, direction: t1.direction };
+                const tunnel2 = { x: t2.x, y: t2.y, direction: t2.direction };
+
+                this.maze.nexus(b1).tunnels[this.maze.opposite(key1)] = tunnel2;
+                this.maze.nexus(b2).tunnels[this.maze.opposite(key2)] = tunnel1;
+              }
+            }
+          }
+          delete tunnels[key2];
+          delete tunnels[key1];
+        }
+
+        // logger.log(
+        //   'brige = ',
+        //   bridge.map((b) => this.maze.nexus(b)),
+        // );
+
+        for (const span of bridge) {
+          if (this.maze.nexus(span).bridge) {
+            logger.warn(`Bridge already exists at ${span.x},${span.y}`);
+          }
+          this.maze.nexus(span).bridge = true;
+          this.maze.removeWall(span, this.maze.opposite(span));
+        }
+
+        return { prev, bridge, next: { direction: next.direction, move: next } };
+      }
+    }
+    return null;
+  }
+  //#endregion
+  //#region Unreachables
+  protected fixUnreachables(): void {
+    while (true) {
+      const { unreachable } = this.maze.analyze({ x: 0, y: 0 });
+      if (unreachable.length === 0) {
+        break;
+      }
+
+      const [cell] = unreachable;
+      const hole = this.randomPick(this.maze.moves(cell, { wall: true }));
+      if (hole) {
+        logger.log(
+          `Fixing unreachable cell at ${cell.x},${cell.y} by removing wall ${hole.direction}`,
+        );
+        this.maze.removeWall(hole.move, this.maze.opposite(hole.move));
+      } else {
+        logger.warn(`Masking off unreachable cell at ${cell.x},${cell.y}`);
+        this.maze.nexus(cell).mask = true;
+      }
+    }
+  }
+  //#endregion
 }

@@ -12,10 +12,10 @@ export function portalPlugin(maze: Maze): void {
       }
 
       for (const move of maze.moves(cell1)) {
-        maze.nexus(cell2).portals[move.direction] = move;
+        maze.nexus(cell2).tunnels[move.direction] = move;
       }
       for (const move of maze.moves(cell2)) {
-        maze.nexus(cell1).portals[move.direction] = move;
+        maze.nexus(cell1).tunnels[move.direction] = move;
       }
 
       maze.nexus(cell1).bridge = true;

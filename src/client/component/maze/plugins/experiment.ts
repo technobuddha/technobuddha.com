@@ -60,10 +60,10 @@ export function experimentalPlugin(maze: Maze): void {
 
       if (enter && exit) {
         const exitCell = maze.move(exit, exit.direction)!;
-        maze.nexus(enter).portals[enter.direction] = { ...exitCell };
+        maze.nexus(enter).tunnels[enter.direction] = { ...exitCell };
 
         const enterCell = maze.move(enter, maze.opposite(enter))!;
-        maze.nexus(exit).portals[maze.opposite(exit)] = { ...enterCell };
+        maze.nexus(exit).tunnels[maze.opposite(exit)] = { ...enterCell };
       }
 
       for (cell of bridge) {
@@ -75,7 +75,7 @@ export function experimentalPlugin(maze: Maze): void {
             .at(0)!;
           const tunnelExit = maze.move(cell, moveDirection)!;
 
-          maze.nexus(cell).portals[maze.opposite(tunnelEntrance)] = tunnelExit;
+          maze.nexus(cell).tunnels[maze.opposite(tunnelEntrance)] = tunnelExit;
         }
 
         for (const neighbor of maze.moves(cell)) {
@@ -112,8 +112,8 @@ export function experimentalPlugin(maze: Maze): void {
     for (const bridge of bridges) {
       const enter = bridge.at(0)!;
       const exit = bridge.at(-1)!;
-      maze.nexus(enter).portals[enter.direction] = false;
-      maze.nexus(exit).portals[maze.opposite(exit)] = false;
+      maze.nexus(enter).tunnels[enter.direction] = false;
+      maze.nexus(exit).tunnels[maze.opposite(exit)] = false;
       for (const span of bridge) {
         for (const w of Object.keys(maze.initialWalls(span))) {
           maze.nexus(span).walls[w] = w !== span.direction && w !== maze.opposite(span);

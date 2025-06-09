@@ -4,21 +4,29 @@ import { type Matrix } from './maze.ts';
 export const matrix: Matrix = {
   bridge: {
     pieces: 1,
+    connect: {
+      a: 'e',
+      b: 'd',
+      c: 'f',
+      d: 'b',
+      e: 'a',
+      f: 'c',
+    },
     layouts: {
       0: [
-        { path: ['a'] },
-        { path: ['b'] },
+        { path: ['a', 'b'] },
+        { path: ['b', 'a'] },
         { path: ['c'] },
-        { path: ['d'] },
-        { path: ['e'] },
+        { path: ['d', 'e'] },
+        { path: ['e', 'd'] },
         { path: ['f'] },
       ],
       1: [
-        { path: ['a'] },
-        { path: ['b'] },
+        { path: ['a', 'b'] },
+        { path: ['b', 'a'] },
         { path: ['c'] },
-        { path: ['d'] },
-        { path: ['e'] },
+        { path: ['d', 'e'] },
+        { path: ['e', 'd'] },
         { path: ['f'] },
       ],
     },

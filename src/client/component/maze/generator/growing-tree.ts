@@ -1,5 +1,3 @@
-import { create2DArray } from '@technobuddha/library';
-
 import { type Cell } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
@@ -11,7 +9,6 @@ type GrowingTreeProperties = MazeGeneratorProperties & {
 };
 
 export class GrowingTree extends MazeGenerator {
-  private readonly visited: boolean[][];
   private readonly list: Cell[];
   private readonly method: Method | Record<Method, number>;
 
@@ -19,9 +16,11 @@ export class GrowingTree extends MazeGenerator {
     super(props);
 
     this.method = method;
-    this.visited = create2DArray(this.maze.width, this.maze.height, false);
     this.list = [this.start];
-    this.visited[this.start.x][this.start.y] = true;
+
+    this.player = 0;
+    this.createPlayer({ start: this.start });
+    this.visit(this.start);
   }
 
   private selectMethod(): Method {
@@ -62,16 +61,15 @@ export class GrowingTree extends MazeGenerator {
   public *generate(): Generator<void> {
     while (this.list.length > 0) {
       const index = this.selectCell(this.selectMethod());
-      this.currentCell = this.list[index];
+      const currentCell = this.list[index];
 
       const next = this.randomPick(
-        this.maze.moves(this.currentCell).filter(({ move }) => !this.visited[move.x][move.y]),
+        this.maze.moves(currentCell).filter(({ move }) => !this.isVisited(move)),
       );
 
       if (next) {
-        yield this.maze.removeWall(this.currentCell, next.direction);
-        this.visited[next.move.x][next.move.y] = true;
-
+        yield this.maze.removeWall(currentCell, next.direction);
+        this.visit(next.move);
         this.list.push(next.move);
       } else {
         this.list.splice(index, 1);

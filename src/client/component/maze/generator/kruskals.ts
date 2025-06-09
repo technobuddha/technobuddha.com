@@ -66,7 +66,8 @@ export class Kruskals extends MazeGenerator {
       allCells.flatMap((c) => this.maze.preferreds(c).map((direction) => ({ ...c, direction }))),
     );
 
-    this.currentCell = allCells.at(0)!;
+    this.player = 0;
+    this.createPlayer(this.maze.randomCellDirection());
   }
 
   private getCellIndex(cell: Cell): number {

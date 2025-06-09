@@ -4,7 +4,7 @@ export class Nexus {
   public readonly x: number;
   public readonly y: number;
   public readonly walls: Wall;
-  public readonly portals: Portal;
+  public readonly tunnels: Portal;
   public bridge: boolean;
   public mask: boolean;
   public distance: number;
@@ -13,7 +13,7 @@ export class Nexus {
     x,
     y,
     walls,
-    portals,
+    tunnels,
     bridge = false,
     mask = false,
     distance = Infinity,
@@ -21,7 +21,7 @@ export class Nexus {
     x: number;
     y: number;
     walls: Wall;
-    portals: Portal;
+    tunnels: Portal;
     bridge?: boolean;
     mask?: boolean;
     distance?: number;
@@ -29,7 +29,7 @@ export class Nexus {
     this.x = x;
     this.y = y;
     this.walls = walls;
-    this.portals = portals;
+    this.tunnels = tunnels;
     this.bridge = bridge;
     this.mask = mask;
     this.distance = distance;

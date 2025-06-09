@@ -1,67 +1,28 @@
-import { create2DArray } from '@technobuddha/library';
+import { type CellDirection } from '../geometry/maze.ts';
 
-import { type CellDirection, type Move } from '../geometry/maze.ts';
-
-import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
-
-type State = {
-  current: CellDirection | undefined;
-  strategy: Strategy;
-  stack: CellDirection[];
-  bias: boolean;
-  bridge: {
-    random: number;
-  };
-};
-
-type Strategy = 'random' | 'right-turn' | 'left-turn' | 'straight' | 'bridge-builder';
+import { MazeGenerator, type MazeGeneratorProperties, type Strategy } from './maze-generator.ts';
 
 export type RecursiveBacktrackerProperties = MazeGeneratorProperties & {
   parallel?: number;
   strategy?: Strategy[];
-  bridgeMinLength?: number;
-  bridgeMaxLength?: number;
-  stepsAfterBridge?: number;
-  forcedBacktrack?: number;
+  forced?: number;
 };
 
 export class RecursiveBacktracker extends MazeGenerator {
   private readonly parallel: number;
-  private readonly visited: (false | number)[][];
 
-  public readonly bridgeMinLength: number;
-  public readonly bridgeMaxLength: number;
-  public readonly stepsAfterBridge: number;
-  public readonly forcedBacktrack: number;
-  public player: number;
-  public state: State[];
-
-  public constructor({
-    parallel,
-    strategy,
-    bridgeMinLength = 1,
-    bridgeMaxLength = 1,
-    stepsAfterBridge = 1,
-    forcedBacktrack = 0,
-    ...props
-  }: RecursiveBacktrackerProperties) {
+  public constructor({ parallel, strategy, forced = 0, ...props }: RecursiveBacktrackerProperties) {
     super(props);
 
     this.parallel = parallel ?? strategy?.length ?? 1;
-    this.bridgeMinLength = bridgeMinLength;
-    this.bridgeMaxLength = bridgeMaxLength;
-    this.stepsAfterBridge = stepsAfterBridge;
-    this.forcedBacktrack = forcedBacktrack;
 
-    this.visited = create2DArray(this.maze.width, this.maze.height, false);
-    this.state = [];
+    this.forced = forced;
 
     const all = this.maze.cellsInMaze();
     for (let i = 0; i < this.parallel; ++i) {
-      const index = Math.floor(this.random() * all.length);
-      const randomCell = all[index];
+      const randomCell = this.randomDraw(all)!;
 
-      const current: CellDirection = {
+      const start: CellDirection = {
         ...randomCell,
         direction: this.maze.opposite({
           ...randomCell,
@@ -69,165 +30,36 @@ export class RecursiveBacktracker extends MazeGenerator {
         }),
       };
 
-      this.state.push({
-        current,
-        strategy: strategy?.[i] ?? 'random',
-        stack: [current],
-        bias: true,
-        bridge: {
-          random: 1,
-        },
-      });
-
-      this.visited[current.x][current.y] = i;
-
-      all.splice(index, 1);
+      this.createPlayer({ start, strategy: strategy?.[i] });
+      this.visit();
     }
 
     this.player = 0;
-  }
-
-  public step(state: State): {
-    current: CellDirection;
-    prev: CellDirection;
-    next: Move | undefined;
-  } {
-    const current = state.current!;
-    let prev = current;
-
-    let next: Move | undefined;
-
-    // if (state.stack.length > 0 && this.random() < this.forcedBacktrack) {
-    //   next = undefined;
-    // } else {
-    switch (state.strategy) {
-      case 'right-turn': {
-        const turns = this.maze.rightTurn(current);
-
-        [next] = this.maze
-          .moves(current)
-          .filter(({ move }) => this.visited[move.x][move.y] === false)
-          .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
-        break;
-      }
-
-      case 'left-turn': {
-        const turns = this.maze.leftTurn(current);
-
-        [next] = this.maze
-          .moves(current)
-          .filter(({ move }) => this.visited[move.x][move.y] === false)
-          .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
-        break;
-      }
-
-      case 'straight': {
-        const turns = this.maze.straight(current, state.bias);
-        state.bias = !state.bias;
-
-        [next] = this.maze
-          .moves(current)
-          .filter(({ move }) => this.visited[move.x][move.y] === false)
-          .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
-        break;
-      }
-
-      case 'random': {
-        next = this.randomPick(
-          this.maze.moves(current).filter(({ move }) => this.visited[move.x][move.y] === false),
-        );
-        break;
-      }
-
-      case 'bridge-builder': {
-        if (state.bridge.random <= 0) {
-          const blueprint = this.maze.blueprintBridge(
-            current,
-            this.visited,
-            this.bridgeMinLength,
-            this.bridgeMaxLength,
-          );
-          if (blueprint) {
-            // eslint-disable-next-line @typescript-eslint/prefer-destructuring
-            next = blueprint.next;
-            // eslint-disable-next-line @typescript-eslint/prefer-destructuring
-            prev = blueprint.prev;
-
-            const { bridge } = blueprint;
-            for (const span of bridge) {
-              this.visited[span.x][span.y] = this.player;
-            }
-
-            state.bridge.random = this.stepsAfterBridge;
-          } else {
-            next = this.randomPick(
-              this.maze.moves(current).filter(({ move }) => this.visited[move.x][move.y] === false),
-            );
-          }
-        } else {
-          state.bridge.random -= 1;
-
-          if (this.random() < this.forcedBacktrack) {
-            next = undefined;
-          } else {
-            const [dir] = this.maze.straight(current, state.bias);
-            next = this.randomPick(
-              this.maze
-                .moves(current)
-                .filter(
-                  ({ move }) => this.visited[move.x][move.y] === false && move.direction !== dir,
-                ),
-            );
-            next ??= this.randomPick(
-              this.maze.moves(current).filter(({ move }) => this.visited[move.x][move.y] === false),
-            );
-          }
-        }
-
-        break;
-      }
-
-      // no default
-    }
-    // }
-    return { current, next, prev };
   }
 
   public *generate(): Generator<void> {
     while (true) {
       // If all players are at the end of their stack, we need to join the segments
       if (this.state.every((s) => s.current === undefined)) {
+        this.player = 0;
+
         const borderCell = this.randomPick(
           this.maze
             .cellsInMaze()
-            .filter((c) => this.visited[c.x][c.y] === 0 && !this.maze.nexus(c).bridge)
+            .filter((c) => this.isVisitedByMe(c) && !this.maze.nexus(c).bridge)
             .flatMap((c) =>
               this.maze
                 .moves(c)
-                .filter(
-                  ({ move }) => this.visited[move.x][move.y] !== 0 && !this.maze.nexus(move).bridge,
-                ),
+                .filter(({ move }) => !this.isVisitedByMe(move) && !this.maze.nexus(move).bridge),
             ),
         )?.move;
 
         if (borderCell) {
           this.maze.removeWall(borderCell, this.maze.opposite(borderCell));
           yield;
-
-          const zone = this.visited[borderCell.x][borderCell.y];
-          if (zone === false) {
-            this.visited[borderCell.x][borderCell.y] = 0;
-          } else {
-            // eslint-disable-next-line @typescript-eslint/prefer-for-of
-            for (let i = 0; i < this.visited.length; ++i) {
-              for (let j = 0; j < this.visited[i].length; ++j) {
-                if (this.visited[i][j] === zone) {
-                  this.visited[i][j] = 0;
-                }
-              }
-            }
-          }
+          this.visit(borderCell);
         } else {
+          this.fixUnreachables();
           return;
         }
       } else {
@@ -236,16 +68,14 @@ export class RecursiveBacktracker extends MazeGenerator {
           this.player = (this.player + 1) % this.parallel;
         }
 
-        const { current, prev, next } = this.step(this.state[this.player]);
-
+        const next = this.step();
         if (next) {
-          this.maze.removeWall(prev, next.direction);
+          this.maze.removeWall(next, this.maze.opposite(next));
           yield;
 
-          this.state[this.player].stack.push(current);
-          this.state[this.player].current = next.move;
-
-          this.visited[next.move.x][next.move.y] = this.player;
+          this.state[this.player].stack.push(this.state[this.player].current!);
+          this.moveTo(next);
+          this.visit();
 
           this.player = (this.player + 1) % this.parallel;
         } else {

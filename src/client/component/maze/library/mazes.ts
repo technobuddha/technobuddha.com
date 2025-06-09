@@ -25,7 +25,6 @@ import {
   WedgeMaze,
   ZetaMaze,
 } from '../geometry/index.ts';
-import { WeaveMaze } from '../geometry/weave-maze.ts';
 import { experimentalPlugin } from '../plugins/experiment.ts';
 import { donutPlugin, ellipisePlugin, trianglePlugin } from '../plugins/index.ts';
 import { portalPlugin } from '../plugins/portal.ts';
@@ -45,22 +44,21 @@ import { RandomMouse } from '../solver/random-mouse.ts';
 import { type Choice } from './chooser.ts';
 
 export const squareMazes: Choice<MazeProperties, Maze> = {
-  '1': (props) => new SquareMaze({ showCoordinates: true, ...props }),
+  '1': (props) => new SquareMaze(props),
 };
 
 export const mazes: Choice<MazeProperties, Maze> = {
-  '0:Weave': (props) => new WeaveMaze({ ...props }),
   '0:Dot': {
     '10': (props) => new DotMaze(props),
     '0:=Zeta': (props) => new ZetaMaze(props),
   },
-  '10:Circle': {
-    '10': (props) => new CircularMaze({ showKind: true, ...props }),
-    '0:Find Center': (props) =>
+  '0:Circle': {
+    '10': (props) => new CircularMaze(props),
+    '10:Find Center': (props) =>
       new CircularMaze({ exit: { x: 0, y: 0 }, entrance: 'random edge', ...props }),
-    '0:Escape': (props) =>
+    '10:Escape': (props) =>
       new CircularMaze({ entrance: { x: 0, y: 0 }, exit: 'random edge', ...props }),
-    '0:Void': (props) => new CircularMaze({ centerRadius: 128, centerSegments: 16, ...props }),
+    '10:Void': (props) => new CircularMaze({ centerRadius: 128, centerSegments: 16, ...props }),
   },
   '0:Cubic': {
     '10': (props) => new CubicMaze(props),
@@ -68,18 +66,18 @@ export const mazes: Choice<MazeProperties, Maze> = {
   '0:Pentagon': {
     '10': (props) => new PentagonMaze(props),
   },
-  '0:Brick': (props) => new BrickMaze({ showCoordinates: false, ...props }),
-  '0:Square': squareMazes,
-  '0:Triangle': {
-    '10': (props) => new TriangleMaze({ showCoordinates: true, ...props }),
+  '00:Brick': (props) => new BrickMaze(props),
+  '10:Square': squareMazes,
+  '10:Triangle': {
+    '10': (props) => new TriangleMaze(props),
   },
-  '0:Hexagon': {
+  '10:Hexagon': {
     '10': (props) => new HexagonMaze(props),
   },
   '0:Octogon': {
-    '10': (props) => new OctogonMaze({ showCoordinates: false, ...props }),
+    '10': (props) => new OctogonMaze(props),
   },
-  '0:Wedge': (props) => new WedgeMaze({ showCoordinates: false, ...props }),
+  '0:Wedge': (props) => new WedgeMaze(props),
 };
 
 export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
@@ -110,14 +108,14 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
     '10': (props) => new Prims(props),
   },
   '10:Recursize Backtracker': {
-    '0': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
-    '10:Bridge Builder': (props) =>
+    '1': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
+    '0:Bridge Builder': (props) =>
       new RecursiveBacktracker({
         strategy: ['bridge-builder'],
-        forcedBacktrack: 0.2,
-        bridgeMinLength: 2,
-        bridgeMaxLength: 16,
-        stepsAfterBridge: 1,
+        forced: 0.25,
+        bridgeMinLength: 1,
+        bridgeMaxLength: 1,
+        stepsAfterBridge: 0,
         ...props,
       }),
     '0:Parallel': (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
@@ -162,11 +160,11 @@ export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
   },
   '10:Search': {
     '10:Random': (props) => new Search({ method: 'random', ...props }),
-    '10:Seek Exit': (props) => new Search({ method: 'seek', ...props }),
-    '10:Left Turn': (props) => new Search({ method: 'left-turn', ...props }),
-    '10:Right Turn': (props) => new Search({ method: 'right-turn', ...props }),
+    '00:Seek Exit': (props) => new Search({ method: 'seek', ...props }),
+    '00:Left Turn': (props) => new Search({ method: 'left-turn', ...props }),
+    '00:Right Turn': (props) => new Search({ method: 'right-turn', ...props }),
   },
-  '0:Fill': {
+  '10:Fill': {
     '10:Dead Ends': (props) => new Filler({ ...props, method: 'dead-end' }),
     '10:Cul-De-Sacs': (props) => new Filler({ ...props, method: 'cul-de-sac' }),
   },

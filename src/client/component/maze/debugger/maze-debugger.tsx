@@ -18,10 +18,8 @@ import {
   WedgeMaze,
   ZetaMaze,
 } from '../geometry/index.ts';
-import { WeaveMaze } from '../geometry/weave-maze.ts';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
-  weave: (props) => new WeaveMaze(props),
   circular: (props) => new CircularMaze(props),
   cubic: (props) => new CubicMaze(props),
   pentagon: (props) => new PentagonMaze(props),

@@ -6,15 +6,24 @@ export const matrix: Matrix = {
     pieces: 1,
     layouts: {
       0: [{ path: ['a'] }, { path: ['b'] }, { path: ['c'] }, { path: ['d'] }],
-      //1: [{ path: ['d'] }, { path: ['b'] }],
-      1: [],
+      1: [{ path: ['a'] }],
+      2: [{ path: ['a'] }],
+      3: [],
+      4: [],
+      5: [],
+      6: [],
     },
   },
   directions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
   pillars: ['ab', 'bc', 'cd', 'da', 'de', 'fb', 'bg', 'gd', 'bh', 'hd'],
   wall: {
     0: { a: true, b: true, c: true, d: true },
-    1: { e: true, f: true, b: true, c: true, d: true },
+    1: { a: true, b: true, g: true, d: true },
+    2: { a: true, b: true, h: true, d: true },
+    3: { e: true, f: true, b: true, c: true, d: true },
+    4: { e: true, f: true, b: true, g: true, d: true },
+    5: { e: true, f: true, b: true, h: true, d: true },
+    6: { e: true, f: true },
   },
   opposite: {
     a: 'c',
@@ -37,86 +46,68 @@ export const matrix: Matrix = {
     h: ['h', 'c', 'g', 'b', 'd', 'e', 'a', 'f'],
   },
   rightTurn: {
-    a: {
-      0: ['b', 'a', 'd', 'c', 'g', 'h'],
-      1: ['b', 'f', 'e', 'd', 'c', 'g', 'h'],
-    },
-    b: {
-      0: ['c', 'g', 'h', 'b', 'a', 'd'],
-      1: ['c', 'g', 'h', 'b', 'f', 'e', 'd'],
-    },
-    c: {
-      0: ['d', 'c', 'g', 'h', 'b', 'a'],
-      1: ['d', 'c', 'g', 'h', 'b', 'f', 'e'],
-    },
-    d: {
-      0: ['a', 'd', 'c', 'g', 'h', 'b'],
-      1: ['f', 'e', 'd', 'c', 'g', 'h', 'b'],
-    },
-    e: {
-      0: ['b', 'a', 'd', 'c', 'g'],
-      1: ['b', 'f', 'e', 'd', 'c', 'g'],
-    },
-    f: {
-      0: ['b', 'a', 'd', 'c', 'h'],
-      1: ['b', 'f', 'e', 'd', 'c', 'h'],
-    },
-    g: {
-      1: ['d', 'c', 'g', 'h', 'b', 'f', 'e'],
-    },
-    h: {
-      1: ['e', 'd', 'c', 'g', 'h', 'b', 'f'],
-    },
+    a: ['b', 'f', 'a', 'e', 'd', 'c'],
+    b: ['g', 'c', 'h', 'b', 'f', 'a', 'e', 'd'],
+    c: ['e', 'd', 'g', 'c', 'h', 'b', 'f', 'a'],
+    d: ['f', 'a', 'e', 'd', 'g', 'c', 'h', 'b'],
+    e: ['b', 'f', 'a', 'e', 'd', 'g'],
+    f: ['b', 'f', 'a', 'e', 'd', 'h'],
+    g: ['d', 'g', 'c', 'h', 'b', 'f', 'a', 'e'],
+    h: ['a', 'e', 'd', 'g', 'c', 'h', 'b', 'f'],
   },
   leftTurn: {
-    a: {
-      0: ['d', 'a', 'b', 'h', 'g', 'c'],
-      1: ['d', 'e', 'f', 'b', 'h', 'g', 'c'],
-    },
-    b: {
-      0: ['a', 'b', 'h', 'c', 'g', 'd'],
-      1: ['e', 'f', 'b', 'h', 'g', 'c', 'd'],
-    },
-    c: {
-      0: ['b', 'h', 'c', 'g', 'd', 'a'],
-      1: ['b', 'h', 'c', 'g', 'd', 'e', 'f'],
-    },
-    d: {
-      0: ['h', 'g', 'c', 'd', 'a', 'b'],
-      1: ['h', 'g', 'c', 'd', 'e', 'f', 'b'],
-    },
-    e: {
-      0: ['d', 'a', 'b', 'h', 'g', 'c'],
-      1: ['d', 'e', 'f', 'b', 'h', 'g', 'c'],
-    },
-    f: {
-      0: ['d', 'a', 'b', 'h', 'g', 'c'],
-      1: ['d', 'e', 'f', 'b', 'h', 'g', 'c'],
-    },
-    g: {
-      1: ['f', 'b', 'h', 'g', 'c', 'd', 'e'],
-    },
-    h: {
-      1: ['b', 'h', 'g', 'c', 'd', 'e', 'f'],
-    },
+    a: ['d', 'e', 'a', 'f', 'b', 'c'],
+    b: ['e', 'a', 'f', 'b', 'h', 'c', 'g', 'd'],
+    c: ['f', 'b', 'h', 'c', 'g', 'd', 'e', 'a'],
+    d: ['h', 'c', 'g', 'd', 'e', 'a', 'f', 'b'],
+    e: ['d', 'e', 'a', 'f', 'b', 'g'],
+    f: ['d', 'e', 'a', 'f', 'b', 'h'],
+    g: ['a', 'f', 'b', 'h', 'c', 'g', 'd', 'e'],
+    h: ['b', 'h', 'c', 'g', 'd', 'e', 'a', 'f'],
   },
   move: {
     0: {
       a: { x: +0, y: +1 },
       b: { x: +1, y: +0 },
       c: { x: +0, y: -1 },
-      g: { x: +0, y: -1, zone: 'down' },
-      h: { x: +0, y: -1, zone: 'down' },
       d: { x: -1, y: +0 },
     },
     1: {
+      a: { x: +0, y: +1 },
+      b: { x: +1, y: +0 },
+      g: { x: +0, y: -1, zone: 'down' },
+      d: { x: -1, y: +0 },
+    },
+    2: {
+      a: { x: +0, y: +1 },
+      b: { x: +1, y: +0 },
+      h: { x: +0, y: -1, zone: 'down' },
+      d: { x: -1, y: +0 },
+    },
+    3: {
       e: { x: +0, y: +1, zone: 'up' },
       f: { x: +1, y: +1, zone: 'up' },
       b: { x: +1, y: +0 },
       c: { x: +0, y: -1 },
+      d: { x: -1, y: +0 },
+    },
+    4: {
+      e: { x: +0, y: +1, zone: 'up' },
+      f: { x: +1, y: +1, zone: 'up' },
+      b: { x: +1, y: +0 },
       g: { x: +0, y: -1, zone: 'down' },
+      d: { x: -1, y: +0 },
+    },
+    5: {
+      e: { x: +0, y: +1, zone: 'up' },
+      f: { x: +1, y: +1, zone: 'up' },
+      b: { x: +1, y: +0 },
       h: { x: +0, y: -1, zone: 'down' },
       d: { x: -1, y: +0 },
+    },
+    6: {
+      e: { x: +0, y: +1, zone: 'up' },
+      f: { x: +1, y: +1, zone: 'up' },
     },
   },
   preferred: {

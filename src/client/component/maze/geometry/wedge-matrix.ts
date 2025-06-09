@@ -4,27 +4,12 @@ import { type Matrix } from './maze.ts';
 export const matrix: Matrix = {
   bridge: {
     pieces: 2,
+    connect: { a: 'f', c: 'e', e: 'c', f: 'a', h: 'j', i: 'k', j: 'h', k: 'i' },
     layouts: {
-      0: [
-        { path: ['a', 'g', 'j', 'd'] },
-        { path: ['b', 'f', 'l', 'h'] },
-        { path: ['c', 'l', 'i', 'd'] },
-      ],
-      1: [
-        { path: ['d', 'a', 'g', 'j'] },
-        { path: ['e', 'g', 'k', 'b'] },
-        { path: ['f', 'l', 'h', 'b'] },
-      ],
-      2: [
-        { path: ['g', 'j', 'd', 'a'] },
-        { path: ['h', 'b', 'f', 'l'] },
-        { path: ['i', 'd', 'c', 'l'] },
-      ],
-      3: [
-        { path: ['j', 'd', 'a', 'g'] },
-        { path: ['k', 'b', 'f', 'l'] },
-        { path: ['l', 'h', 'i', 'c'] },
-      ],
+      0: [{ path: ['a', 'g', 'j', 'd'] }, { path: ['c', 'l', 'i', 'd'] }],
+      1: [{ path: ['e', 'g', 'k', 'b'] }, { path: ['f', 'l', 'h', 'b'] }],
+      2: [{ path: ['h', 'b', 'f', 'l'] }, { path: ['i', 'd', 'c', 'l'] }],
+      3: [{ path: ['j', 'd', 'a', 'g'] }, { path: ['k', 'b', 'f', 'l'] }],
     },
   },
   directions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'],

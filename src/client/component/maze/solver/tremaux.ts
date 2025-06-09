@@ -121,13 +121,17 @@ export class Tremaux extends MazeSolver {
         //    unless it is marked twice. This rule will apply whenever you reach a dead end.
         this.moveTo(prevMove, avatarColor, markedColor, blockedColor);
         yield;
-      } else {
         // 3. Pick any entrance with the fewest marks (zero if possible, else one).
-        if (moves.length === 0) {
+      } else if (moves.length === 0) {
+        if (prevMove) {
+          this.moveTo(prevMove, avatarColor, markedColor, blockedColor);
+          yield;
+        } else {
           // eslint-disable-next-line no-debugger
           debugger;
           throw new Error('No moves found for tremaux');
         }
+      } else {
         const [next] = this.randomShuffle(moves).sort(
           (a, b) => marks[a.direction] - marks[b.direction],
         );

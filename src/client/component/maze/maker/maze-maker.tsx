@@ -9,12 +9,13 @@ import {
 } from 'react-icons/io5';
 import { useMeasure } from 'react-use';
 
-import { MenuItem, Select } from '#control';
+import { Checkbox, MenuItem, Select } from '#control';
 
 import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/maze-generator.ts';
 import { type Maze, type MazeProperties } from '../geometry/maze.ts';
 import { allChoices, chooser } from '../library/chooser.ts';
+import { logger } from '../library/logger.ts';
 import { generators, mazes, plugins, solvers } from '../library/mazes.ts';
 import { type MazeSolver, type MazeSolverProperties } from '../solver/maze-solver.ts';
 
@@ -38,9 +39,10 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const [mazeNumber, setMazeNumber] = React.useState(0);
 
   const maze = React.useRef<Maze>(undefined);
-  const [display, setDisplay] = React.useState<string>('');
 
   const [mazeName, setMazeName] = React.useState('');
+  const [showCoordinates, setShowCoordinates] = React.useState(false);
+
   const [generatorName, setGeneratorName] = React.useState('');
   const [solverName, setSolverName] = React.useState('');
   const [pluginName, setPluginName] = React.useState('');
@@ -69,21 +71,6 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         canvas.height = height - 20;
         canvas.className = css.canvas;
         canvas.setAttribute('aria-label', 'A Maze being created and solved');
-        canvas.addEventListener('mousemove', (ev) => {
-          if (maze.current) {
-            const m = maze.current;
-            const { offsetX, offsetY } = ev;
-
-            const x = Math.floor((offsetX - m.leftOffset) / m.cellSize);
-            const y = Math.floor((offsetY - m.topOffset) / m.cellSize);
-
-            if (m.inMaze({ x, y })) {
-              //setDisplay(JSON.stringify(m.nexus({ x, y }), null, 2));
-            } else {
-              setDisplay('');
-            }
-          }
-        });
 
         frame.current.insertBefore(canvas, null);
         canvasMaze.current = canvas;
@@ -135,7 +122,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       const { name: pName, value: plugin } = chooser(plugins);
       setPluginName(pName);
 
-      const m = mazeMaker({ plugin, drawing });
+      const m = mazeMaker({ plugin, drawing, showCoordinates });
       m.reset();
       const g = generatorMaker({ maze: m });
       const s = solverMaker({ maze: m });
@@ -158,6 +145,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     selectedMaze,
     selectedGenerator,
     selectedSolver,
+    showCoordinates,
     drawing,
     playGenerator,
     playSolver,
@@ -175,14 +163,19 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
 
       void runner.execute().then(() => {
         timer.current = setTimeout(() => {
+          // debugger;
           setMazeNumber((n) => n + 1);
-        }, 10000);
+        }, 15000);
       });
     }
   }, [runner]);
 
   const handleMazeChange = React.useCallback((value: string) => {
     setSelectedMaze(value === '(undefined)' ? undefined : value);
+  }, []);
+
+  const handleCoordinatesChange = React.useCallback((checked: boolean) => {
+    setShowCoordinates(checked);
   }, []);
 
   const handleGeneratorChange = React.useCallback((value: string) => {
@@ -214,6 +207,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   }, [runner]);
 
   const handleRefresh = React.useCallback(() => {
+    logger.clear();
     runner?.abort();
     setTimeout(() => {
       setMazeNumber((n) => n + 1);
@@ -257,6 +251,11 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
               </MenuItem>
             ))}
           </Select>
+          <Checkbox
+            label="Show Coordinates"
+            checked={showCoordinates}
+            onChange={handleCoordinatesChange}
+          />
         </fieldset>
         <fieldset>
           <legend>Generator</legend>
@@ -328,7 +327,6 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
             </MenuItem>
           </Select>
         </fieldset>
-        <div className={css.display}>{display}</div>
         <div className={css.gap} />
         <div className={css.buttons}>
           <button className={css.button} type="button" onClick={handlePause}>

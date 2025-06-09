@@ -26,7 +26,7 @@ export class CircularMaze extends Maze {
   public readonly zones: number[] = [];
 
   public constructor({
-    cellSize = 12,
+    cellSize = 16,
     wallSize = 2,
     centerRadius = 18,
     centerSegments = 1,
@@ -122,14 +122,27 @@ export class CircularMaze extends Maze {
   }
 
   public cellKind(cell: Cell): number {
-    const z0 = this.zones[cell.y];
-    const zn = cell.y === this.height - 1 ? z0 : this.zones[cell.y + 1];
-    /*
-     * Kind 0: Normal
-     * Kind 1: End of Zone
-     */
+    const z0 = this.cellZone(cell);
+    const zp = cell.y === 0 ? z0 : this.cellZone({ ...cell, y: cell.y - 1 });
+    const zn = cell.y === this.height - 1 ? z0 : this.cellZone({ ...cell, y: cell.y + 1 });
 
-    return z0 === zn ? 0 : 1;
+    if (z0 === 1) {
+      return 6;
+    }
+
+    if (z0 === zp && z0 === zn) {
+      return 0;
+    }
+
+    if (z0 === zp && z0 !== zn) {
+      return 3;
+    }
+
+    if (z0 !== zp && z0 === zn) {
+      return cell.x % 2 === 0 ? 1 : 2;
+    }
+
+    return cell.x % 2 === 0 ? 4 : 5;
   }
 
   public override cellZone(cell: Cell): number {

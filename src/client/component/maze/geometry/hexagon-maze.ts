@@ -14,13 +14,14 @@ import {
 } from './maze.ts';
 import { Maze } from './maze.ts';
 
+const SIN30 = Math.sin(Math.PI / 6);
 const COS30 = Math.cos(Math.PI / 6);
 const TAN30 = Math.tan(Math.PI / 6);
 const SIN60 = Math.sin(Math.PI / 3);
 
 export class HexagonMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 2, ...props }: MazeProperties) {
-    super({ cellSize, wallSize, ...props }, matrix);
+  public constructor({ cellSize = 28, wallSize = 2, gapSize = 2, ...props }: MazeProperties) {
+    super({ cellSize, wallSize, gapSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -46,224 +47,361 @@ export class HexagonMaze extends Maze {
     );
   }
 
-  protected offsets(_kind: Kind): Record<string, number> {
+  protected override offsets(_kind: Kind): Record<string, number> {
     const x0 = 0;
-    const x1 = x0 + (this.wallSize * TAN30) / 2;
-    const x2 = x0 + this.wallSize / COS30;
-    const x4 = x0 + this.cellSize * 0.25;
-    const x5 = x4 + this.wallSize * TAN30;
-    const x3 = x4 - (this.wallSize * TAN30) / 2;
-    const x7 = x0 + this.cellSize * 0.75;
-    const x6 = x7 - this.wallSize * TAN30;
-    const x8 = x7 + (this.wallSize * TAN30) / 2;
-    const xb = x0 + this.cellSize;
-    const xa = xb - (this.wallSize * TAN30) / 2;
-    const x9 = xb - this.wallSize / COS30;
+
+    const x1 = x0 + this.gapSize * TAN30 * SIN30;
+    const x2 = x0 + (this.gapSize + this.wallSize) * TAN30 * SIN30;
+    const x3 = x0 + this.gapSize / COS30;
+    const x4 = x3 + this.wallSize * TAN30 * SIN30;
+    const x5 = x3 + this.wallSize / COS30;
+    const x9 = x0 + this.cellSize * 0.25;
+    const x6 = x9 - (this.gapSize + this.wallSize) * TAN30 * SIN30;
+    const x8 = x9 - this.gapSize * TAN30 * SIN30;
+    const xa = x9 + (this.gapSize / COS30) * SIN30;
+    const xb = x9 + ((this.gapSize + this.wallSize) / COS30) * SIN30;
+    const x7 = xa - this.wallSize * TAN30 * SIN30;
+    const xm = x0 + this.cellSize;
+    const xn = xm - this.gapSize * TAN30 * SIN30;
+    const xl = xm - (this.gapSize + this.wallSize) * TAN30 * SIN30;
+    const xk = xm - this.gapSize / COS30;
+    const xj = xk - this.wallSize * TAN30 * SIN30;
+    const xi = xk - this.wallSize / COS30;
+    const xg = xm - this.cellSize * 0.25;
+    const xh = xg + (this.gapSize + this.wallSize) * TAN30 * SIN30;
+    const xe = xg + this.gapSize * TAN30 * SIN30;
+    const xd = xg - (this.gapSize / COS30) * SIN30;
+    const xc = xg - ((this.gapSize + this.wallSize) / COS30) * SIN30;
+    const xf = xd + this.wallSize * TAN30 * SIN30;
 
     const y0 = 0;
-    const y1 = y0 + this.wallSize / 2;
-    const y2 = y0 + this.wallSize;
-    const y4 = y0 + (this.cellSize * SIN60) / 2;
-    const y3 = y4 - this.wallSize / 2;
-    const y5 = y4 + this.wallSize / 2;
-    const y8 = y0 + this.cellSize * SIN60;
-    const y7 = y8 - this.wallSize / 2;
-    const y6 = y8 - this.wallSize;
+    const y1 = y0 + this.gapSize * TAN30 * COS30;
+    const y2 = y0 + this.gapSize;
+    const y3 = y0 + (this.gapSize + this.wallSize) * TAN30 * COS30;
 
-    return { x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xa, xb, y0, y1, y2, y3, y4, y5, y6, y7, y8 };
+    const y5 = y0 + this.gapSize + this.wallSize;
+    const y4 = y5 - this.wallSize * SIN30;
+
+    const y9 = y0 + this.cellSize * SIN60 * 0.5;
+    const y8 = y9 - this.gapSize * TAN30 * COS30;
+    const y6 = y9 - (this.gapSize + this.wallSize) * TAN30 * COS30;
+    const y7 = y9 - this.wallSize * TAN30 * COS30;
+
+    const ya = y9 + this.gapSize * TAN30 * COS30;
+    const yb = y9 + this.wallSize * TAN30 * COS30;
+    const yi = y0 + this.cellSize * SIN60;
+    const yh = yi - this.gapSize * TAN30 * COS30;
+    const yg = yi - this.gapSize;
+    const yf = yi - (this.gapSize + this.wallSize) * TAN30 * COS30;
+    const yd = yi - (this.gapSize + this.wallSize);
+    const ye = yd + this.wallSize * SIN30;
+    const yc = y9 + (this.gapSize + this.wallSize) * TAN30 * COS30;
+
+    // prettier-ignore
+    return {
+      x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xa, xb, xc, xd, xe, xf, xg, xh, xi, xj, xk, xl, xn, xm,
+      y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, ya, yb, yc, yd, ye, yf, yg, yh, yi,
+    };
   }
 
-  public drawFloor(cell: Cell, color = this.cellColor): void {
+  public override drawFloor(cell: Cell, color = this.cellColor): void {
     if (this.drawing) {
-      const { x0, x3, x8, xb, y0, y4, y8 } = this.cellOffsets(cell);
-
+      const { x0, x9, xg, xm, y0, y9, yi } = this.cellOffsets(cell);
       this.drawing.polygon(
         [
-          { x: x0, y: y4 },
-          { x: x3, y: y0 },
-          { x: x8, y: y0 },
-          { x: xb, y: y4 },
-          { x: x8, y: y8 },
-          { x: x3, y: y8 },
+          { x: x9, y: y0 },
+          { x: xg, y: y0 },
+          { x: xm, y: y9 },
+          { x: xg, y: yi },
+          { x: x9, y: yi },
+          { x: x0, y: y9 },
         ],
         color,
       );
     }
   }
 
-  public drawWall(cd: CellDirection, color = this.wallColor): void {
+  public override drawWall(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
-      switch (cd.direction) {
+      switch (cell.direction) {
         case 'a': {
-          const { x5, x6, y0, y2 } = this.cellOffsets(cd);
-
-          this.drawing.polygon(
-            [
-              { x: x5, y: y0 },
-              { x: x6, y: y0 },
-              { x: x6, y: y2 },
-              { x: x5, y: y2 },
-            ],
-            color,
-          );
+          const { xb, xc, y2, y5 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: xb, y: y2 }, { x: xc, y: y5 }, color);
           break;
         }
-        case 'b': {
-          const { x6, x8, x9, xa, y1, y2, y3, y4 } = this.cellOffsets(cd);
 
+        case 'b': {
+          const { xc, xf, xi, xj, y4, y5, y7, y9 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x6, y: y2 },
-              { x: x8, y: y1 },
-              { x: xa, y: y3 },
-              { x: x9, y: y4 },
+              { x: xf, y: y4 },
+              { x: xc, y: y5 },
+              { x: xi, y: y9 },
+              { x: xj, y: y7 },
             ],
             color,
           );
           break;
         }
         case 'c': {
-          const { x6, x8, x9, xa, y4, y5, y6, y7 } = this.cellOffsets(cd);
-
+          const { xc, xf, xi, xj, y9, yb, ye, yd } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x9, y: y4 },
-              { x: xa, y: y5 },
-              { x: x8, y: y7 },
-              { x: x6, y: y6 },
+              { x: xi, y: y9 },
+              { x: xj, y: yb },
+              { x: xf, y: ye },
+              { x: xc, y: yd },
             ],
             color,
           );
           break;
         }
         case 'd': {
-          const { x5, x6, y6, y8 } = this.cellOffsets(cd);
-
+          const { xb, xc, yd, yg } = this.cellOffsets(cell);
+          this.drawing.rect({ x: xb, y: yd }, { x: xc, y: yg }, color);
+          break;
+        }
+        case 'e': {
+          const { x4, x5, x7, xb, y9, yb, ye, yd } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x5, y: y6 },
-              { x: x6, y: y6 },
-              { x: x6, y: y8 },
-              { x: x5, y: y8 },
+              { x: x4, y: yb },
+              { x: x5, y: y9 },
+              { x: xb, y: yd },
+              { x: x7, y: ye },
             ],
             color,
           );
           break;
         }
-        case 'e': {
-          const { x1, x2, x3, x5, y4, y5, y6, y7 } = this.cellOffsets(cd);
 
+        case 'f': {
+          const { x4, x5, x7, xb, y4, y5, y7, y9 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x2, y: y4 },
-              { x: x1, y: y5 },
-              { x: x3, y: y7 },
-              { x: x5, y: y6 },
+              { x: x7, y: y4 },
+              { x: xb, y: y5 },
+              { x: x5, y: y9 },
+              { x: x4, y: y7 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        // no default
+      }
+    }
+  }
+
+  public override drawOutsideWall(_cd: CellDirection, _color = this.wallColor): void {
+    // no-op
+  }
+
+  public override drawDoor(cell: CellDirection, color = this.wallColor): void {
+    if (this.drawing) {
+      switch (cell.direction) {
+        case 'a': {
+          const { xa, xb, xc, xd, y0, y2 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: xa, y: y0 }, { x: xb, y: y2 }, color);
+          this.drawing.rect({ x: xc, y: y0 }, { x: xd, y: y2 }, color);
+          break;
+        }
+        case 'b': {
+          const { xd, xf, xe, xh, xl, xn, xj, xk, y1, y2, y3, y4, y6, y7, y8, y9 } =
+            this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: xe, y: y1 },
+              { x: xh, y: y3 },
+              { x: xf, y: y4 },
+              { x: xd, y: y2 },
+            ],
+            color,
+          );
+          this.drawing.polygon(
+            [
+              { x: xl, y: y6 },
+              { x: xn, y: y8 },
+              { x: xk, y: y9 },
+              { x: xj, y: y7 },
+            ],
+            color,
+          );
+          break;
+        }
+        case 'c': {
+          const { xf, xd, xe, xh, xj, xk, xl, xn, y9, ya, yb, yc, ye, yf, yg, yh } =
+            this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: xk, y: y9 },
+              { x: xn, y: ya },
+              { x: xl, y: yc },
+              { x: xj, y: yb },
+            ],
+            color,
+          );
+          this.drawing.polygon(
+            [
+              { x: xf, y: ye },
+              { x: xh, y: yf },
+              { x: xe, y: yh },
+              { x: xd, y: yg },
+            ],
+            color,
+          );
+          break;
+        }
+        case 'd': {
+          const { xa, xb, xc, xd, yg, yi } = this.cellOffsets(cell);
+          this.drawing.rect({ x: xa, y: yg }, { x: xb, y: yi }, color);
+          this.drawing.rect({ x: xc, y: yg }, { x: xd, y: yi }, color);
+          break;
+        }
+        case 'e': {
+          const { x1, x2, x3, x4, x6, x8, x7, xa, ya, y9, yb, yc, ye, yf, yg, yh } =
+            this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: x3, y: y9 },
+              { x: x4, y: yb },
+              { x: x2, y: yc },
+              { x: x1, y: ya },
+            ],
+            color,
+          );
+          this.drawing.polygon(
+            [
+              { x: x7, y: ye },
+              { x: x6, y: yf },
+              { x: x8, y: yh },
+              { x: xa, y: yg },
             ],
             color,
           );
           break;
         }
         case 'f': {
-          const { x1, x2, x3, x5, y1, y2, y3, y4 } = this.cellOffsets(cd);
-
+          const { x1, x2, x3, x4, x6, x8, x7, xa, y1, y2, y3, y4, y6, y7, y8, y9 } =
+            this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x2, y: y4 },
-              { x: x1, y: y3 },
-              { x: x3, y: y1 },
-              { x: x5, y: y2 },
+              { x: x8, y: y1 },
+              { x: xa, y: y2 },
+              { x: x7, y: y4 },
+              { x: x6, y: y3 },
+            ],
+            color,
+          );
+          this.drawing.polygon(
+            [
+              { x: x2, y: y6 },
+              { x: x4, y: y7 },
+              { x: x3, y: y9 },
+              { x: x1, y: y8 },
             ],
             color,
           );
           break;
         }
-
         // no default
       }
     }
   }
 
-  public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
+  public override drawBridge(cell: CellDirection, _color = this.wallColor): void {
+    if (this.drawing) {
+      super.drawBridge(cell, this.wallColor);
+      this.drawDoor(cell, this.wallColor);
+    }
+  }
+
+  public override drawTunnel(cell: CellDirection, color = this.tunnelColor): void {
+    this.drawDoor(cell, color);
+  }
+
+  public override drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       switch (pillar) {
         case 'ab': {
-          const { x6, x7, x8, y0, y1, y2 } = this.cellOffsets(cell);
-
+          const { xc, xd, xf, y2, y4, y5 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x6, y: y2 },
-              { x: x8, y: y1 },
-              { x: x7, y: y0 },
-              { x: x6, y: y0 },
+              { x: xc, y: y2 },
+              { x: xd, y: y2 },
+              { x: xf, y: y4 },
+              { x: xc, y: y5 },
             ],
             color,
           );
           break;
         }
+
         case 'bc': {
-          const { x9, xa, xb, y3, y4, y5 } = this.cellOffsets(cell);
-
+          const { xi, xj, xk, y7, y9, yb } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x9, y: y4 },
-              { x: xa, y: y3 },
-              { x: xb, y: y4 },
-              { x: xa, y: y5 },
+              { x: xi, y: y9 },
+              { x: xj, y: y7 },
+              { x: xk, y: y9 },
+              { x: xj, y: yb },
             ],
             color,
           );
           break;
         }
+
         case 'cd': {
-          const { x6, x7, x8, y6, y7, y8 } = this.cellOffsets(cell);
-
+          const { xc, xd, xf, yd, ye, yg } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x6, y: y6 },
-              { x: x7, y: y8 },
-              { x: x8, y: y7 },
-              { x: x6, y: y6 },
+              { x: xc, y: yd },
+              { x: xf, y: ye },
+              { x: xd, y: yg },
+              { x: xc, y: yg },
             ],
             color,
           );
           break;
         }
+
         case 'de': {
-          const { x3, x4, x5, y6, y7, y8 } = this.cellOffsets(cell);
-
+          const { x9, xa, xb, yd, ye, yg } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x5, y: y6 },
-              { x: x4, y: y8 },
-              { x: x3, y: y7 },
+              { x: xb, y: yd },
+              { x: xb, y: yg },
+              { x: xa, y: yg },
+              { x: x9, y: ye },
             ],
             color,
           );
           break;
         }
+
         case 'ef': {
-          const { x0, x1, x2, y3, y4, y5 } = this.cellOffsets(cell);
+          const { x3, x4, x5, yb, y7, y9 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x2, y: y4 },
-              { x: x1, y: y3 },
-              { x: x0, y: y4 },
-              { x: x1, y: y5 },
+              { x: x5, y: y9 },
+              { x: x4, y: yb },
+              { x: x3, y: y9 },
+              { x: x4, y: y7 },
             ],
             color,
           );
           break;
         }
-        case 'fa': {
-          const { x3, x4, x5, y0, y1, y2 } = this.cellOffsets(cell);
 
+        case 'fa': {
+          const { x7, xa, xb, y2, y4, y5 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x5, y: y2 },
-              { x: x5, y: y0 },
-              { x: x4, y: y0 },
-              { x: x3, y: y1 },
+              { x: xb, y: y2 },
+              { x: xa, y: y2 },
+              { x: x7, y: y4 },
+              { x: xb, y: y5 },
             ],
             color,
           );
@@ -275,19 +413,22 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = this.blockedColor): void {
-    if (this.drawing) {
-      const { x2, x5, x6, x9, y2, y4, y6 } = this.cellOffsets(cell);
+  public override drawOutsidePillar(_cell: Cell, _pillar: Pillar, _color = this.wallColor): void {
+    // no-op
+  }
 
-      this.drawing.line({ x: x2, y: y4 }, { x: x9, y: y4 }, color);
-      this.drawing.line({ x: x5, y: y2 }, { x: x6, y: y6 }, color);
-      this.drawing.line({ x: x6, y: y2 }, { x: x5, y: y6 }, color);
+  public override drawX(cell: Cell, color = this.blockedColor): void {
+    if (this.drawing) {
+      const { x5, xb, xc, xi, y5, y9, yd } = this.cellOffsets(cell);
+      this.drawing.line({ x: xb, y: y5 }, { x: xc, y: yd }, color);
+      this.drawing.line({ x: x5, y: y9 }, { x: xi, y: y9 }, color);
+      this.drawing.line({ x: xc, y: y5 }, { x: xb, y: yd }, color);
     }
   }
 
-  public getRect(cell: Cell): Rect {
-    const { x2, x9, y2, y6 } = this.cellOffsets(cell);
+  public override getRect(cell: Cell): Rect {
+    const { x5, xi, y5, yd } = this.cellOffsets(cell);
 
-    return { x: x2, y: y2, w: x9 - x2, h: y6 - y2 };
+    return { x: x5, y: y5, w: xi - x5, h: yd - y5 };
   }
 }

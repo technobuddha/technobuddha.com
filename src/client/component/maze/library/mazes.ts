@@ -68,13 +68,13 @@ export const mazes: Choice<MazeProperties, Maze> = {
   },
   '00:Brick': (props) => new BrickMaze(props),
   '10:Square': squareMazes,
-  '10:Triangle': {
+  '0:Triangle': {
     '10': (props) => new TriangleMaze(props),
   },
-  '10:Hexagon': {
+  '0:Hexagon': {
     '10': (props) => new HexagonMaze(props),
   },
-  '0:Octogon': {
+  '10:Octogon': {
     '10': (props) => new OctogonMaze(props),
   },
   '0:Wedge': (props) => new WedgeMaze(props),
@@ -108,7 +108,7 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
     '10': (props) => new Prims(props),
   },
   '10:Recursize Backtracker': {
-    '1': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
+    '10': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
     '0:Bridge Builder': (props) =>
       new RecursiveBacktracker({
         strategy: ['bridge-builder'],

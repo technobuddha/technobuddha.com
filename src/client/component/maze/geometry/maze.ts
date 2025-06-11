@@ -99,6 +99,7 @@ export type MazeProperties = {
   wrapHorizontal?: boolean;
   wrapVertical?: boolean;
 
+  backgroundColor?: string;
   cellColor?: string;
   wallColor?: string;
   maskColor?: string;
@@ -182,6 +183,7 @@ export abstract class Maze {
   protected drawing: MazeProperties['drawing'];
   //#endregion
   //#region Colors
+  public readonly backgroundColor: NonNullable<MazeProperties['backgroundColor']>;
   public readonly cellColor: NonNullable<MazeProperties['cellColor']>;
   public readonly wallColor: NonNullable<MazeProperties['wallColor']>;
   public readonly maskColor: NonNullable<MazeProperties['maskColor']>;
@@ -232,6 +234,7 @@ export abstract class Maze {
       wrapHorizontal = false,
       wrapVertical = false,
 
+      backgroundColor = 'oklch(0.20 0 0)',
       cellColor = 'oklch(0 0 0)',
       wallColor = 'oklch(0.6993 0 0)',
       maskColor = cellColor,
@@ -245,7 +248,7 @@ export abstract class Maze {
       blockedColor = 'oklch(0.6298 0.2145 27.83)',
       errorColor = 'oklch(0.8664 0.294827 142.4953)',
 
-      tunnelColor = wallColor, //'magenta', //'oklch(0.9544 0.0637 196.13)',
+      tunnelColor = wallColor,
       bridgeColor = 'oklch(0.9544 0.0637 196.13)',
       textColor = 'oklch(1 0 0)',
 
@@ -278,6 +281,7 @@ export abstract class Maze {
 
     this.drawing = drawing;
 
+    this.backgroundColor = backgroundColor;
     this.cellColor = cellColor;
     this.wallColor = wallColor;
     this.maskColor = maskColor;
@@ -695,7 +699,7 @@ export abstract class Maze {
 
   protected abstract drawingSize(): DrawingSizes;
 
-  public clear(color?: string): void {
+  public clear(color: string = this.backgroundColor): void {
     if (this.drawing) {
       this.drawing.clear(color, this.leftOffset, this.topOffset);
     }
@@ -707,20 +711,6 @@ export abstract class Maze {
 
       for (const cell of this.cellsInMaze()) {
         this.drawCell(cell);
-
-        for (const outside of this.adjacent(cell).filter((c) => !this.inMaze(c))) {
-          if (this.nexus(cell).walls[outside.direction]) {
-            this.drawOutsideWall({ ...outside, direction: this.opposite(outside) });
-          } else {
-            this.drawDoor({ ...outside, direction: this.opposite(outside) });
-          }
-
-          for (const pillar of this.pillars) {
-            if (pillar.includes(this.opposite(outside))) {
-              this.drawOutsidePillar(outside, pillar);
-            }
-          }
-        }
       }
 
       this.drawMasks();
@@ -1117,14 +1107,6 @@ export abstract class Maze {
 
   public drawDoor(_cell: CellDirection, _color: string = this.wallColor): void {
     // Most mazes don't have to draw a door, it just the lack of a wall.
-  }
-
-  public drawOutsideWall(cell: CellDirection, color = this.wallColor): void {
-    this.drawWall(cell, color);
-  }
-
-  public drawOutsidePillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
-    this.drawPillar(cell, pillar, color);
   }
 
   public drawPath(cell: CellDirection, color = this.pathColor): void {

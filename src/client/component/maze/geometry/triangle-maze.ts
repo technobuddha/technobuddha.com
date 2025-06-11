@@ -221,10 +221,6 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public override drawOutsideWall(_cd: CellDirection, _color = this.wallColor): void {
-    // no-op
-  }
-
   public override drawDoor(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
       switch (cell.direction) {
@@ -444,10 +440,6 @@ export class TriangleMaze extends Maze {
         // no default
       }
     }
-  }
-
-  public override drawOutsidePillar(_cell: Cell, _pillar: Pillar, _color?: string): void {
-    // no-op
   }
 
   public drawX(cell: Cell, color = this.blockedColor): void {

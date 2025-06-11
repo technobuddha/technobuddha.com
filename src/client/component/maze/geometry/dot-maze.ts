@@ -208,10 +208,6 @@ export class DotMaze extends Maze {
     }
   }
 
-  public override drawOutsideWall(_cell: CellDirection, _color = this.wallColor): void {}
-
-  public override drawOutsidePillar(_cell: Cell, _pillar: Pillar): void {}
-
   public drawIntersections(cell: Cell): void {
     if (this.drawing) {
       const { walls } = this.nexus(cell);

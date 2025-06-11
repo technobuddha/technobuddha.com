@@ -194,10 +194,6 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public override drawOutsideWall(_cd: CellDirection, _color = this.wallColor): void {
-    // no-op
-  }
-
   public override drawDoor(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
       switch (cell.direction) {
@@ -411,10 +407,6 @@ export class HexagonMaze extends Maze {
         // no default
       }
     }
-  }
-
-  public override drawOutsidePillar(_cell: Cell, _pillar: Pillar, _color = this.wallColor): void {
-    // no-op
   }
 
   public override drawX(cell: Cell, color = this.blockedColor): void {

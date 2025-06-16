@@ -1,11 +1,11 @@
 import React from 'react';
+import { Button, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { parseAsString, useQueryState } from 'nuqs';
 import {
-  IoFootsteps,
-  IoPause,
-  IoPlay,
-  IoPlayForward,
-  IoPlaySkipForward,
-  IoRefresh,
+  IoCaretBackCircleOutline,
+  IoCaretDownCircleOutline,
+  IoCaretForwardCircleOutline,
+  IoCaretUpCircleOutline,
 } from 'react-icons/io5';
 import { useMeasure } from 'react-use';
 
@@ -17,9 +17,13 @@ import { type Maze, type MazeProperties } from '../geometry/maze.ts';
 import { allChoices, chooser } from '../library/chooser.ts';
 import { logger } from '../library/logger.ts';
 import { generators, mazes, plugins, solvers } from '../library/mazes.ts';
+import { Human } from '../solver/human.ts';
 import { type MazeSolver, type MazeSolverProperties } from '../solver/maze-solver.ts';
 
+import { PlayControls } from './play-controls.tsx';
+import { PlayModeToggle } from './play-mode-toggle.tsx';
 import { type PlayMode, Runner } from './runner.ts';
+import { Section } from './section.tsx';
 
 import css from './maze-maker.module.css';
 
@@ -38,8 +42,6 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
   const [mazeNumber, setMazeNumber] = React.useState(0);
 
-  const maze = React.useRef<Maze>(undefined);
-
   const [mazeName, setMazeName] = React.useState('');
   const [showCoordinates, setShowCoordinates] = React.useState(false);
 
@@ -57,6 +59,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const [selectedSolver, setSelectedSolver] = React.useState<string>();
 
   const [runner, setRunner] = React.useState<Runner>();
+  const [runnerMode, setRunnerMode] = React.useState<PlayMode>();
 
   React.useEffect(() => {
     if (width > 0 && height > 0) {
@@ -81,6 +84,10 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       }
     }
   }, [width, height]);
+
+  const handleRunnerModeChange = React.useCallback((mode: PlayMode) => {
+    setRunnerMode(mode);
+  }, []);
 
   React.useEffect(() => {
     if (timer.current) {
@@ -110,7 +117,10 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       }
 
       let solverMaker: (props: MazeSolverProperties) => MazeSolver;
-      if (selectedSolver) {
+      if (selectedSolver === 'human') {
+        solverMaker = (props: MazeSolverProperties) => new Human(props);
+        setSolverName('Human');
+      } else if (selectedSolver) {
         solverMaker = solverChoices.find((gc) => gc.name === selectedSolver)!.value!;
         setSolverName(selectedSolver);
       } else {
@@ -119,21 +129,19 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         setSolverName(sName);
       }
 
-      const { name: pName, value: plugin } = chooser(plugins);
-      setPluginName(pName);
-
-      const m = mazeMaker({ plugin, drawing, showCoordinates });
-      m.reset();
-      const g = generatorMaker({ maze: m });
-      const s = solverMaker({ maze: m });
-      maze.current = m;
+      const { name: plugName, value: plugin } = chooser(plugins);
+      setPluginName(plugName);
 
       setRunner((r) => {
         r?.abort();
         return new Runner({
-          maze: m,
-          generator: g,
-          solver: s,
+          mazeMaker,
+          generatorMaker,
+          solverMaker,
+          plugin,
+          drawing,
+          showCoordinates,
+          onModeChange: handleRunnerModeChange,
           mode: {
             generate: playGenerator,
             solve: playSolver,
@@ -141,32 +149,43 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     selectedMaze,
     selectedGenerator,
     selectedSolver,
     showCoordinates,
     drawing,
-    playGenerator,
-    playSolver,
     mazeNumber,
+    handleRunnerModeChange,
   ]);
 
   const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   React.useEffect(() => {
-    if (runner) {
-      if (timer.current) {
-        clearTimeout(timer.current);
-        timer.current = undefined;
-      }
+    if (timer.current) {
+      clearTimeout(timer.current);
+      timer.current = undefined;
+    }
 
-      void runner.execute().then(() => {
-        timer.current = setTimeout(() => {
-          // debugger;
-          setMazeNumber((n) => n + 1);
-        }, 15000);
-      });
+    if (runner) {
+      void runner
+        .execute()
+        .then(() => {
+          if (timer.current) {
+            clearTimeout(timer.current);
+          }
+
+          timer.current = setTimeout(() => {
+            timer.current = undefined;
+            setMazeNumber((n) => n + 1);
+          }, 5000);
+        })
+        .catch(() => {
+          if (timer.current) {
+            clearTimeout(timer.current);
+          }
+        });
     }
   }, [runner]);
 
@@ -222,6 +241,52 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     setPlaySolver(value);
   }, []);
 
+  const [mode, setMode] = useQueryState('mode', parseAsString.withDefault('demo'));
+
+  React.useEffect(() => {
+    setSelectedMaze(undefined);
+    setSelectedGenerator(undefined);
+    setSelectedSolver(mode === 'game' ? 'human' : undefined);
+    setShowCoordinates(false);
+    setPlayGenerator('fast');
+    setPlaySolver('fast');
+  }, [mode]);
+
+  const handleModeChange = React.useCallback(
+    (_event: React.MouseEvent<HTMLElement>, newMode: 'demo' | 'game' | 'custom') => {
+      void setMode(newMode);
+    },
+    [setMode],
+  );
+
+  const handleBack = React.useCallback(() => {
+    const human = runner?.solver as Human;
+    if (human) {
+      human.dispatchEvent(new CustomEvent('keydown', { detail: 'ArrowDown' }));
+    }
+  }, [runner]);
+
+  const handleForward = React.useCallback(() => {
+    const human = runner?.solver as Human;
+    if (human) {
+      human.dispatchEvent(new CustomEvent('keydown', { detail: 'ArrowUp' }));
+    }
+  }, [runner]);
+
+  const handleLeft = React.useCallback(() => {
+    const human = runner?.solver as Human;
+    if (human) {
+      human.dispatchEvent(new CustomEvent('keydown', { detail: 'ArrowLeft' }));
+    }
+  }, [runner]);
+
+  const handleRight = React.useCallback(() => {
+    const human = runner?.solver as Human;
+    if (human) {
+      human.dispatchEvent(new CustomEvent('keydown', { detail: 'ArrowRight' }));
+    }
+  }, [runner]);
+
   return (
     <div className={css.mazeMaker}>
       <div ref={top} className={css.maze}>
@@ -239,115 +304,116 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         )}
       </div>
       <div className={css.panel}>
-        <fieldset>
-          <legend>Geometry</legend>
-          <Select label="Shape" value={selectedMaze ?? '(undefined)'} onChange={handleMazeChange}>
-            <MenuItem key="(undefined)" value="(undefined)">
-              (random)
-            </MenuItem>
-            {mazeChoices.map((m) => (
-              <MenuItem key={m.name} value={m.name}>
-                {m.name}
+        <ToggleButtonGroup
+          className={css.toggles}
+          color="primary"
+          value={mode}
+          exclusive
+          onChange={handleModeChange}
+        >
+          <ToggleButton value="demo">DEMO</ToggleButton>
+          <ToggleButton value="game">GAME</ToggleButton>
+          <ToggleButton value="custom">CUSTOM</ToggleButton>
+        </ToggleButtonGroup>
+        {(mode === 'custom' || mode === 'game') && (
+          <Section title="Geometry">
+            <Select label="Shape" value={selectedMaze ?? '(undefined)'} onChange={handleMazeChange}>
+              <MenuItem key="(undefined)" value="(undefined)">
+                (random)
               </MenuItem>
-            ))}
-          </Select>
-          <Checkbox
-            label="Show Coordinates"
-            checked={showCoordinates}
-            onChange={handleCoordinatesChange}
-          />
-        </fieldset>
-        <fieldset>
-          <legend>Generator</legend>
-          <Select
-            label="Algorthim"
-            value={selectedGenerator ?? '(undefined)'}
-            onChange={handleGeneratorChange}
-          >
-            <MenuItem key="(undefined)" value="(undefined)">
-              (random)
-            </MenuItem>
-            {generatorChoices.map((m) => (
-              <MenuItem key={m.name} value={m.name}>
-                {m.name}
+              {mazeChoices.map((m) => (
+                <MenuItem key={m.name} value={m.name}>
+                  {m.name}
+                </MenuItem>
+              ))}
+            </Select>
+            <Checkbox
+              label="Show Coordinates"
+              checked={showCoordinates}
+              onChange={handleCoordinatesChange}
+            />
+          </Section>
+        )}
+        {(mode === 'custom' || mode === 'game') && (
+          <Section title="Generator">
+            <Select
+              label="Algorthim"
+              value={selectedGenerator ?? '(undefined)'}
+              onChange={handleGeneratorChange}
+            >
+              <MenuItem key="(undefined)" value="(undefined)">
+                (random)
               </MenuItem>
-            ))}
-          </Select>
-          <Select<PlayMode>
-            label="Maze Generator Initial Speed"
-            value={playGenerator}
-            onChange={handlePlayGeneratorChange}
-          >
-            <MenuItem key="pause" value="pause">
-              <IoPause />
-            </MenuItem>
-            <MenuItem key="play" value="play">
-              <IoPlay />
-            </MenuItem>
-            <MenuItem key="fast" value="fast">
-              <IoPlayForward />
-            </MenuItem>
-            <MenuItem key="instant" value="instant">
-              <IoPlaySkipForward />
-            </MenuItem>
-          </Select>
-        </fieldset>
-        <fieldset>
-          <legend>Maze Solver</legend>
-          <Select
-            label="Algorthim"
-            value={selectedSolver ?? '(undefined)'}
-            onChange={handleSolverChange}
-          >
-            <MenuItem key="(undefined)" value="(undefined)">
-              (random)
-            </MenuItem>
-            {solverChoices.map((m) => (
-              <MenuItem key={m.name} value={m.name}>
-                {m.name}
+              {generatorChoices.map((m) => (
+                <MenuItem key={m.name} value={m.name}>
+                  {m.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </Section>
+        )}
+        {mode === 'custom' && (
+          <Section title="Solver">
+            <Select
+              label="Algorthim"
+              value={selectedSolver ?? '(undefined)'}
+              onChange={handleSolverChange}
+            >
+              <MenuItem key="(undefined)" value="(undefined)">
+                (random)
               </MenuItem>
-            ))}
-          </Select>
-          <Select
-            label="Maze Solver Initial Speed"
-            value={playSolver}
-            onChange={handlePlaySolverChange}
-          >
-            <MenuItem key="pause" value="pause">
-              <IoPause />
-            </MenuItem>
-            <MenuItem key="play" value="play">
-              <IoPlay />
-            </MenuItem>
-            <MenuItem key="fast" value="fast">
-              <IoPlayForward />
-            </MenuItem>
-            <MenuItem key="instant" value="instant">
-              <IoPlaySkipForward />
-            </MenuItem>
-          </Select>
-        </fieldset>
+              {solverChoices.map((m) => (
+                <MenuItem key={m.name} value={m.name}>
+                  {m.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </Section>
+        )}
         <div className={css.gap} />
-        <div className={css.buttons}>
-          <button className={css.button} type="button" onClick={handlePause}>
-            <IoPause />
-          </button>
-          <button className={css.button} type="button" onClick={handleStep}>
-            <IoFootsteps />
-          </button>
-          <button className={css.button} type="button" onClick={handlePlay}>
-            <IoPlay />
-          </button>
-          <button className={css.button} type="button" onClick={handleFast}>
-            <IoPlayForward />
-          </button>
-          <button className={css.button} type="button" onClick={handleInstant}>
-            <IoPlaySkipForward />
-          </button>
-          <button className={css.button} type="button" onClick={handleRefresh}>
-            <IoRefresh />
-          </button>
-        </div>
+        {mode === 'game' && (
+          <div>
+            <div style={{ textAlign: 'center' }}>
+              <Button variant="outlined" color="primary" onClick={handleForward}>
+                <IoCaretUpCircleOutline size={28} />
+              </Button>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <Button variant="outlined" color="primary" onClick={handleLeft}>
+                <IoCaretBackCircleOutline size={28} />
+              </Button>
+              <Button variant="outlined" color="primary" onClick={handleBack}>
+                <IoCaretDownCircleOutline size={28} />
+              </Button>
+              <Button variant="outlined" color="primary" onClick={handleRight}>
+                <IoCaretForwardCircleOutline size={28} />
+              </Button>
+            </div>
+          </div>
+        )}
+        {mode === 'custom' && (
+          <>
+            <PlayModeToggle
+              title="Maze Generator Initial Speed"
+              onChange={handlePlayGeneratorChange}
+              value={playGenerator}
+            />
+            <PlayModeToggle
+              title="Maze Solver Initial Speed"
+              onChange={handlePlaySolverChange}
+              value={playSolver}
+            />
+            <PlayControls
+              onPause={handlePause}
+              onStep={handleStep}
+              onPlay={handlePlay}
+              onFast={handleFast}
+              onInstant={handleInstant}
+              onRefresh={handleRefresh}
+              value={runnerMode ?? 'fast'}
+            />
+          </>
+        )}
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ import { matrix } from './octogon-matrix.ts';
 const { SQRT2, SQRT1_2 } = Math;
 
 export class OctogonMaze extends Maze {
-  public constructor({ cellSize = 42, wallSize = 5, gapSize = 2, ...props }: MazeProperties) {
+  public constructor({ cellSize = 42, wallSize = 1, gapSize = 2, ...props }: MazeProperties) {
     super({ cellSize, wallSize, gapSize, ...props }, matrix);
   }
 
@@ -653,7 +653,7 @@ export class OctogonMaze extends Maze {
     }
   }
 
-  public override drawTunnel(cell: CellDirection, color = this.tunnelColor): void {
+  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
     this.drawDoor(cell, color);
   }
 

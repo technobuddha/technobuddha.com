@@ -1,4 +1,6 @@
-import { type CellDirection } from '../geometry/maze.ts';
+import { create2DArray } from '@technobuddha/library';
+
+import { type Cell, type CellDirection } from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -10,6 +12,7 @@ type DeadEndProperties = MazeSolverProperties & {
 export class Filler extends MazeSolver {
   public markedColor: string;
   protected method: DeadEndProperties['method'];
+  private readonly deadEnds: boolean[][];
 
   public constructor({
     maze,
@@ -20,34 +23,46 @@ export class Filler extends MazeSolver {
     super({ maze, ...props });
     this.markedColor = blockedColor;
     this.method = method;
+
+    this.deadEnds = create2DArray(this.maze.width, this.maze.height, false);
   }
 
-  public *solve({ markedColor = this.markedColor, exit = this.maze.exit } = {}): Iterator<void> {
+  private isDeadEnd(cell: Cell, entrance: Cell, exit: Cell): boolean {
+    return (
+      !this.deadEnds[cell.x][cell.y] &&
+      !this.maze.isSame(cell, entrance) &&
+      !this.maze.isSame(cell, exit) &&
+      this.maze
+        .moves(cell, { wall: false })
+        .filter(
+          ({ move }) =>
+            !this.deadEnds[move.x][move.y] ||
+            this.maze.isSame(move, exit) ||
+            this.maze.isSame(move, entrance),
+        ).length === 1
+    );
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *solve({
+    markedColor = this.markedColor,
+    entrance = this.maze.entrance,
+    exit = this.maze.exit,
+  } = {}): AsyncIterator<void> {
     const walls = this.maze.backup();
 
     while (true) {
-      const deadEnds = this.randomShuffle(this.maze.deadEnds());
+      const deadEnds = this.randomShuffle(
+        this.maze.cellsInMaze().filter((cell) => this.isDeadEnd(cell, entrance, exit)),
+      );
       if (deadEnds.length === 0) {
         break;
       }
 
-      if (this.method === 'cul-de-sac') {
-        for (const deadEnd of deadEnds) {
-          for (let culdesac = deadEnd; this.maze.isDeadEnd(culdesac); ) {
-            const [{ move }] = this.maze.moves(culdesac, { wall: false });
-            this.maze.addWall(culdesac, move.direction, false);
-            this.maze.drawX(this.maze.drawCell(culdesac), markedColor);
-            yield;
-            culdesac = { x: move.x, y: move.y };
-          }
-        }
-      } else {
-        for (const deadEnd of deadEnds) {
-          const [{ move }] = this.maze.moves(deadEnd, { wall: false });
-          this.maze.addWall(deadEnd, move.direction, false);
-          this.maze.drawX(this.maze.drawCell(deadEnd), markedColor);
-          yield;
-        }
+      for (const deadEnd of deadEnds) {
+        this.deadEnds[deadEnd.x][deadEnd.y] = true;
+        this.maze.drawX(this.maze.drawCell(deadEnd), markedColor);
+        yield;
       }
     }
 
@@ -55,11 +70,15 @@ export class Filler extends MazeSolver {
       ...this.maze.entrance,
       direction: this.maze.opposite(this.maze.entrance),
     };
+
     const path: CellDirection[] = [cell];
     while (!this.maze.isSame(cell, exit)) {
       const moves = this.maze
         .moves(cell, { wall: false })
-        .filter(({ move }) => !path.some((p) => this.maze.isSame(p, move)));
+        .filter(
+          ({ move }) =>
+            !this.deadEnds[move.x][move.y] && !path.some((p) => this.maze.isSame(p, move)),
+        );
 
       if (moves.length > 1) {
         throw new Error('Multiple paths found');

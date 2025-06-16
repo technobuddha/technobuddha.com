@@ -35,13 +35,14 @@ export class Dijkstras extends MazeSolver {
     this.prunedColor = prunedColor;
   }
 
-  public *solve({
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *solve({
     avatarColor = this.avatarColor,
     scannedColor = this.scannedColor,
     prunedColor = this.prunedColor,
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  } = {}): Iterator<void> {
+  } = {}): AsyncIterator<void> {
     const queue: Cell[] = [];
     const distances = create2DArray<History>(this.maze.width, this.maze.height, () => ({
       distance: Infinity,

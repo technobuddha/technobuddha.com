@@ -30,9 +30,9 @@ export class MazeRunner {
       const step = this.generator.run();
 
       while (
-        await animate(() => {
+        await animate(async () => {
           for (let i = 0; i < this.generator!.speed; ++i) {
-            if (step.next().done) {
+            if ((await step.next()).done) {
               return false;
             }
           }
@@ -53,9 +53,9 @@ export class MazeRunner {
       const step = this.solver.solve();
 
       while (
-        await animate(() => {
+        await animate(async () => {
           for (let i = 0; i < this.solver!.speed; ++i) {
-            if (step.next().done) {
+            if ((await step.next()).done) {
               return false;
             }
           }

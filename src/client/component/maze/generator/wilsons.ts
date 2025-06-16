@@ -11,13 +11,13 @@ export class Wilsons extends MazeGenerator {
     this.unvisited = this.maze.cellsInMaze();
 
     this.player = 0;
-    this.createPlayer(this.maze.randomCellDirection());
+    this.createPlayer();
 
     this.markAsVisited(this.start);
   }
 
   private markAsVisited(cell: Cell): void {
-    this.visit(cell);
+    this.visit({ cell });
 
     const index = this.unvisited.findIndex((c) => c.x === cell.x && c.y === cell.y);
     if (index >= 0) {
@@ -25,7 +25,8 @@ export class Wilsons extends MazeGenerator {
     }
   }
 
-  public *generate(): Generator<void> {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *generate(): AsyncGenerator<void> {
     while (this.unvisited.length > 0) {
       let currentCell = this.randomPick(this.unvisited)!;
       let path: (Cell | CellDirection)[] = [currentCell];

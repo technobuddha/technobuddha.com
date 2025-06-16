@@ -7,7 +7,11 @@ export class DrunkardsWalk extends MazeSolver {
     super(props);
   }
 
-  public *solve({ entrance = this.maze.entrance, exit = this.maze.exit } = {}): Iterator<void> {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *solve({
+    entrance = this.maze.entrance,
+    exit = this.maze.exit,
+  } = {}): AsyncIterator<void> {
     let mouse = entrance;
 
     while (!this.maze.isSame(mouse, exit)) {

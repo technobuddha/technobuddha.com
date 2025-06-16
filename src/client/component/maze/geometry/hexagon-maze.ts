@@ -313,7 +313,7 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public override drawTunnel(cell: CellDirection, color = this.tunnelColor): void {
+  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
     this.drawDoor(cell, color);
   }
 

@@ -31,13 +31,15 @@ export class RecursiveBacktracker extends MazeGenerator {
       };
 
       this.createPlayer({ start, strategy: strategy?.[i] });
+      this.player = i;
       this.visit();
     }
 
     this.player = 0;
   }
 
-  public *generate(): Generator<void> {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *generate(): AsyncGenerator<void> {
     while (true) {
       // If all players are at the end of their stack, we need to join the segments
       if (this.state.every((s) => s.current === undefined)) {
@@ -57,7 +59,7 @@ export class RecursiveBacktracker extends MazeGenerator {
         if (borderCell) {
           this.maze.removeWall(borderCell, this.maze.opposite(borderCell));
           yield;
-          this.visit(borderCell);
+          this.visit({ cell: borderCell });
         } else {
           this.fixUnreachables();
           return;

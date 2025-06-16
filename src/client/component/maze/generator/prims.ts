@@ -11,11 +11,12 @@ export class Prims extends MazeGenerator {
     this.activeCells = [this.start];
 
     this.player = 0;
-    this.createPlayer(this.maze.randomCellDirection(this.start));
-    this.visit(this.start);
+    this.createPlayer({ start: this.start });
+    this.visit();
   }
 
-  public override *generate(): Generator<void> {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public override async *generate(): AsyncGenerator<void> {
     while (this.activeCells.length > 0) {
       const cellIndex = Math.floor(this.random() * this.activeCells.length);
       const currentCell = this.activeCells[cellIndex];
@@ -26,7 +27,7 @@ export class Prims extends MazeGenerator {
       if (next) {
         this.maze.removeWall(currentCell, next.direction);
         yield;
-        this.visit(next.move);
+        this.visit({ cell: next.move });
 
         this.activeCells.push(next.move);
       } else {

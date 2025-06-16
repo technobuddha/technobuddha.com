@@ -15,7 +15,7 @@ import {
 import { Maze } from './maze.ts';
 
 export class BrickMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 2, gapSize = 2, ...props }: MazeProperties) {
+  public constructor({ cellSize = 18, wallSize = 1, gapSize = 2, ...props }: MazeProperties) {
     super({ cellSize, wallSize, gapSize, ...props }, matrix);
   }
 
@@ -167,7 +167,7 @@ export class BrickMaze extends Maze {
     }
   }
 
-  public override drawTunnel(cell: CellDirection, color = this.tunnelColor): void {
+  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
     this.drawDoor(cell, color);
   }
 

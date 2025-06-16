@@ -17,7 +17,7 @@ import { matrix } from './wedge-matrix.ts';
 const { SQRT2, SQRT1_2 } = Math;
 
 export class WedgeMaze extends Maze {
-  public constructor({ cellSize = 32, wallSize = 2, gapSize = 2, ...props }: MazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 1, gapSize = 2, ...props }: MazeProperties) {
     super({ cellSize, wallSize, gapSize, ...props }, matrix);
   }
 
@@ -449,7 +449,7 @@ export class WedgeMaze extends Maze {
     }
   }
 
-  public override drawTunnel(cell: CellDirection, color = this.tunnelColor): void {
+  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
     this.drawDoor(cell, color);
   }
 
@@ -591,40 +591,38 @@ export class WedgeMaze extends Maze {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0: {
-          const { x1, x3, y1, y3 } = this.cellOffsets(cell);
-          this.drawing.line({ x: x1, y: y1 }, { x: (x1 + x3) / 2, y: (y1 + y3) / 2 }, color);
-          this.drawing.line({ x: x3, y: y1 }, { x: x1, y: (y1 + y3) / 2 }, color);
-          this.drawing.line({ x: x1, y: y3 }, { x: (x1 + x3) / 2, y: y1 }, color);
+          const { x2, x6, y2, y6 } = this.cellOffsets(cell);
+          this.drawing.line({ x: x2, y: y2 }, { x: (x2 + x6) / 2, y: (y2 + y6) / 2 }, color);
+          this.drawing.line({ x: x6, y: y2 }, { x: x2, y: (y2 + y6) / 2 }, color);
+          this.drawing.line({ x: x2, y: y6 }, { x: (x2 + x6) / 2, y: y2 }, color);
           break;
         }
 
         case 1: {
-          const { x2, x4, y2, y4 } = this.cellOffsets(cell);
-          this.drawing.line({ x: x2, y: y4 }, { x: x4, y: (y2 + y4) / 2 }, color);
-          this.drawing.line({ x: x4, y: y2 }, { x: (x2 + x4) / 2, y: y4 }, color);
-          this.drawing.line({ x: x4, y: y4 }, { x: (x2 + x4) / 2, y: (y2 + y4) / 2 }, color);
+          const { x7, xb, y7, yb } = this.cellOffsets(cell);
+          this.drawing.line({ x: x7, y: yb }, { x: xb, y: (y7 + yb) / 2 }, color);
+          this.drawing.line({ x: xb, y: yb }, { x: (x7 + xb) / 2, y: (y7 + yb) / 2 }, color);
+          this.drawing.line({ x: xb, y: y7 }, { x: (x7 + xb) / 2, y: yb }, color);
           break;
         }
 
         case 2: {
-          const { x1, x3, y2, y4 } = this.cellOffsets(cell);
-          this.drawing.line({ x: x1, y: y2 }, { x: (x1 + x3) / 2, y: y4 }, color);
-          this.drawing.line({ x: x3, y: y4 }, { x: x1, y: (y2 + y4) / 2 }, color);
-          this.drawing.line({ x: x1, y: y4 }, { x: (x1 + x3) / 2, y: (y2 + y4) / 2 }, color);
+          const { x2, x8, y7, yb } = this.cellOffsets(cell);
+          this.drawing.line({ x: x2, y: y7 }, { x: (x2 + x8) / 2, y: yb }, color);
+          this.drawing.line({ x: x2, y: yb }, { x: (x2 + x8) / 2, y: (y7 + yb) / 2 }, color);
+          this.drawing.line({ x: x8, y: yb }, { x: x2, y: (y7 + yb) / 2 }, color);
           break;
         }
 
         case 3: {
-          const { x2, x3, y1, y3 } = this.cellOffsets(cell);
-          this.drawing.line({ x: x2, y: y1 }, { x: x3, y: (y1 + y3) / 2 }, color);
-          this.drawing.line({ x: x3, y: y1 }, { x: (x2 + x3) / 2, y: (y1 + y3) / 2 }, color);
-          this.drawing.line({ x: x3, y: y3 }, { x: (x2 + x3) / 2, y: y1 }, color);
+          const { x7, xb, y2, y6 } = this.cellOffsets(cell);
+          this.drawing.line({ x: x7, y: y2 }, { x: xb, y: (y2 + y6) / 2 }, color);
+          this.drawing.line({ x: xb, y: y2 }, { x: (x7 + xb) / 2, y: (y2 + y6) / 2 }, color);
+          this.drawing.line({ x: xb, y: y6 }, { x: (x7 + xb) / 2, y: y2 }, color);
           break;
         }
 
-        default: {
-          throw new Error(`Kind not found: ${this.cellKind(cell)}`);
-        }
+        // no default
       }
     }
   }
@@ -660,6 +658,7 @@ export class WedgeMaze extends Maze {
         return { x: x7 + (xb - x7) * 0.5, y: y2, w: (xb - x7) * 0.5, h: (y6 - y2) * 0.5 };
       }
 
+      // no default
       default: {
         throw new Error(`Invalid kind: ${this.cellKind(cell)}`);
       }

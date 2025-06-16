@@ -37,12 +37,13 @@ export class WallWalking extends MazeSolver {
     }
   }
 
-  public *solve({
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *solve({
     entrance = this.maze.entrance,
     exit = this.maze.exit,
     avatarColor = this.avatarColor,
     pathColor = this.pathColor,
-  } = {}): Iterator<void> {
+  } = {}): AsyncIterator<void> {
     let seekingWall = true;
 
     let cell: CellDirection = {

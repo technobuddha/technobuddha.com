@@ -71,12 +71,13 @@ export class Search extends MazeSolver {
     }
   }
 
-  public *solve({
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *solve({
     pathColor = this.pathColor,
     avatarColor = this.avatarColor,
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  } = {}): Iterator<void> {
+  } = {}): AsyncIterator<void> {
     type CellParentDirection = Cell & { parent?: CellParentDirection; direction: Direction };
 
     let queue: CellParentDirection[] = [];

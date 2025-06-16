@@ -228,7 +228,7 @@ export class DotMaze extends Maze {
       );
 
       if (!walls.b && crossedB && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x6, y: y0 }, { x: x7, y: y1 }, this.tunnelColor);
+        this.drawing.line({ x: x6, y: y0 }, { x: x7, y: y1 }, this.bridgeColor);
       }
 
       // d
@@ -246,7 +246,7 @@ export class DotMaze extends Maze {
       );
 
       if (!walls.d && crossedD && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x6, y: y7 }, { x: x7, y: y6 }, this.tunnelColor);
+        this.drawing.line({ x: x6, y: y7 }, { x: x7, y: y6 }, this.bridgeColor);
       }
 
       // f
@@ -264,7 +264,7 @@ export class DotMaze extends Maze {
       );
 
       if (!walls.f && crossedF && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x0, y: y6 }, { x: x1, y: y7 }, this.tunnelColor);
+        this.drawing.line({ x: x0, y: y6 }, { x: x1, y: y7 }, this.bridgeColor);
       }
 
       // h
@@ -282,7 +282,7 @@ export class DotMaze extends Maze {
       );
 
       if (!walls.h && crossedH && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x0, y: y1 }, { x: x1, y: y0 }, this.tunnelColor);
+        this.drawing.line({ x: x0, y: y1 }, { x: x1, y: y0 }, this.bridgeColor);
       }
     }
   }

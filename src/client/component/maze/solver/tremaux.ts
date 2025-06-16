@@ -72,13 +72,14 @@ export class Tremaux extends MazeSolver {
     this.curr = next;
   }
 
-  public *solve({
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *solve({
     markedColor = this.pathColor,
     blockedColor = this.blockedColor,
     avatarColor = this.avatarColor,
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  } = {}): Iterator<void> {
+  } = {}): AsyncIterator<void> {
     this.curr = entrance;
     this.prev = undefined;
 

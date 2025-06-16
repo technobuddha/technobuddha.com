@@ -19,7 +19,8 @@ export class HuntAndKill extends MazeGenerator {
     this.player = 0;
   }
 
-  public *generate(): Generator<void> {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *generate(): AsyncGenerator<void> {
     while (true) {
       // kill
       this.visit();

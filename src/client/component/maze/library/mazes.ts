@@ -66,7 +66,7 @@ export const mazes: Choice<MazeProperties, Maze> = {
   '0:Pentagon': {
     '10': (props) => new PentagonMaze(props),
   },
-  '00:Brick': (props) => new BrickMaze(props),
+  '0:Brick': (props) => new BrickMaze(props),
   '10:Square': squareMazes,
   '0:Triangle': {
     '10': (props) => new TriangleMaze(props),
@@ -74,7 +74,7 @@ export const mazes: Choice<MazeProperties, Maze> = {
   '0:Hexagon': {
     '10': (props) => new HexagonMaze(props),
   },
-  '10:Octogon': {
+  '0:Octogon': {
     '10': (props) => new OctogonMaze(props),
   },
   '0:Wedge': (props) => new WedgeMaze(props),
@@ -108,8 +108,8 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
     '10': (props) => new Prims(props),
   },
   '10:Recursize Backtracker': {
-    '10': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
-    '0:Bridge Builder': (props) =>
+    '0': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
+    '10:Bridge Builder': (props) =>
       new RecursiveBacktracker({
         strategy: ['bridge-builder'],
         forced: 0.25,
@@ -166,7 +166,6 @@ export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
   },
   '10:Fill': {
     '10:Dead Ends': (props) => new Filler({ ...props, method: 'dead-end' }),
-    '10:Cul-De-Sacs': (props) => new Filler({ ...props, method: 'cul-de-sac' }),
   },
   '10': {
     '10:Follow the Right Wall': (props) => new WallWalking({ ...props, turn: 'right' }),
@@ -175,9 +174,9 @@ export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
   "10:Dijkstra's": {
     '10': (props) => new Dijkstras(props),
   },
-  "0:Drunkard's Walk": (props) => new DrunkardsWalk(props),
-  '0:Random Mouse': (props) => new RandomMouse({ ...props }),
-  "0:Fibonacci's Rabbits": (props) => new FibonaccisRabbits(props),
+  "00:Drunkard's Walk": (props) => new DrunkardsWalk(props),
+  '00:Random Mouse': (props) => new RandomMouse({ ...props }),
+  "00:Fibonacci's Rabbits": (props) => new FibonaccisRabbits(props),
 };
 
 export const plugins: Choice<Maze, void> = {

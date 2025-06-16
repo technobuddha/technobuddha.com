@@ -7,6 +7,7 @@ import {
   toCartesian,
   toPolar,
 } from '@technobuddha/library';
+import Color from 'colorjs.io';
 
 import { type Drawing, type Rect } from '../drawing/drawing.ts';
 import { type MazeGenerator } from '../generator/index.ts';
@@ -244,11 +245,11 @@ export abstract class Maze {
       scannedColor = 'oklch(0.5789 0.2344 0.51)',
       avatarColor = 'oklch(0.6611 0.115 213.72)',
       prunedColor = 'oklch(0.4446 0.1803 359.81)',
-      pathColor = 'oklch(0.8145 0.1672 83.88)',
       blockedColor = 'oklch(0.6298 0.2145 27.83)',
       errorColor = 'oklch(0.8664 0.294827 142.4953)',
 
-      tunnelColor = wallColor,
+      pathColor = 'oklch(0.8145 0.1672 83.88)',
+      tunnelColor = new Color(new Color(pathColor).darken(0.25)).toString(),
       bridgeColor = 'oklch(0.9544 0.0637 196.13)',
       textColor = 'oklch(1 0 0)',
 
@@ -725,13 +726,38 @@ export abstract class Maze {
     }
   }
 
+  public detectErrors(): void {
+    const { unreachable, loops } = this.analyze(this.entrance);
+
+    if (unreachable.length > 0) {
+      logger.error(`Unreachable cells: `, unreachable);
+      for (const cell of unreachable) {
+        this.drawCell(cell, this.errorColor);
+      }
+    }
+
+    if (loops.length > 0) {
+      for (const loop of loops) {
+        logger.error(
+          `Loop detected from {x: ${loop.cell.x}, y: ${loop.cell.y} :: ${loop.distance}} with ${loop.loops.map((l, i) => `{x: ${l.x}, y:${l.y} :: ${loop.distances[i]}}`).join(' ')}`,
+        );
+
+        this.drawX(loop.cell, this.errorColor);
+      }
+    }
+
+    if (loops.length > 0 || unreachable.length > 0) {
+      // eslint-disable-next-line no-debugger
+      debugger;
+    } else {
+      // eslint-disable-next-line no-console
+      console.log('NO ERRORS DETECTED');
+    }
+  }
+
   public drawDistances(point = this.entrance): void {
     if (this.drawing) {
-      const { maxDistance, distances, unreachable, loops } = this.analyze(point);
-
-      if (unreachable.length > 0) {
-        logger.error(`Unreachable cells: `, unreachable);
-      }
+      const { maxDistance, distances } = this.analyze(point);
 
       for (let x = 0; x < distances.length; ++x) {
         for (let y = 0; y < distances[x].length; ++y) {
@@ -791,16 +817,6 @@ export abstract class Maze {
       }
 
       this.drawMasks();
-
-      if (loops.length > 0) {
-        for (const loop of loops) {
-          logger.error(
-            `Loop detected from {x: ${loop.cell.x}, y: ${loop.cell.y} :: ${loop.distance}} with ${loop.loops.map((l, i) => `{x: ${l.x}, y:${l.y} :: ${loop.distances[i]}}`).join(' ')}`,
-          );
-
-          this.drawX(loop.cell, this.errorColor);
-        }
-      }
     }
   }
 
@@ -834,13 +850,10 @@ export abstract class Maze {
   }
 
   public isDeadEnd(cell: Cell): boolean {
-    const wall = this.nexus(cell).walls;
-    const dirs = Object.keys(wall);
-
     return (
       !this.isSame(cell, this.entrance) &&
       !this.isSame(cell, this.exit) &&
-      dirs.reduce((acc, dir) => acc + (wall[dir] ? 1 : 0), 0) === dirs.length - 1
+      this.moves(cell, { wall: false }).length === 1
     );
   }
 
@@ -1071,7 +1084,7 @@ export abstract class Maze {
       } else {
         const move = this.traverse(cell, direction);
         if (move && this.inMaze(move) && this.nexus(move).tunnels[direction]) {
-          this.drawTunnel({ ...cell, direction }, this.tunnelColor); //color);
+          this.drawTunnel({ ...cell, direction });
           continue;
         }
         this.drawDoor({ ...cell, direction }, color);
@@ -1122,15 +1135,83 @@ export abstract class Maze {
     }
   }
 
-  protected renderArrow(rect: Rect, angle: number, color: string): void {
+  public drawStar(cell: Cell, color = this.avatarColor): void {
     if (this.drawing) {
-      const coords: XY[] = [
+      const rect = this.cellRect(cell);
+      this.renderStar(rect, color);
+    }
+  }
+
+  protected renderArrow(rect: Rect, angle: number, color: string): void {
+    this.renderShape(
+      [
         { x: 1, y: 0 },
         { x: -1, y: 2 / 3 },
         { x: 0, y: 0 },
         { x: -1, y: -2 / 3 },
-      ];
+      ],
+      rect,
+      angle,
+      color,
+    );
+  }
 
+  protected renderStar(rect: Rect, color: string): void {
+    const { PI } = Math;
+    const r0 = 0.5;
+    const r1 = 1;
+
+    this.renderShape(
+      [
+        {
+          x: r1 * Math.cos((2 * PI * 0) / 5 + (5 * PI) / 10),
+          y: r1 * Math.sin((2 * PI * 0) / 5 + (5 * PI) / 10),
+        },
+        {
+          x: r0 * Math.cos((2 * PI * 0) / 5 + (7 * PI) / 10),
+          y: r0 * Math.sin((2 * PI * 0) / 5 + (7 * PI) / 10),
+        },
+        {
+          x: r1 * Math.cos((2 * PI * 1) / 5 + (5 * PI) / 10),
+          y: r1 * Math.sin((2 * PI * 1) / 5 + (5 * PI) / 10),
+        },
+        {
+          x: r0 * Math.cos((2 * PI * 1) / 5 + (7 * PI) / 10),
+          y: r0 * Math.sin((2 * PI * 1) / 5 + (7 * PI) / 10),
+        },
+        {
+          x: r1 * Math.cos((2 * PI * 2) / 5 + (5 * PI) / 10),
+          y: r1 * Math.sin((2 * PI * 2) / 5 + (5 * PI) / 10),
+        },
+        {
+          x: r0 * Math.cos((2 * PI * 2) / 5 + (7 * PI) / 10),
+          y: r0 * Math.sin((2 * PI * 2) / 5 + (7 * PI) / 10),
+        },
+        {
+          x: r1 * Math.cos((2 * PI * 3) / 5 + (5 * PI) / 10),
+          y: r1 * Math.sin((2 * PI * 3) / 5 + (5 * PI) / 10),
+        },
+        {
+          x: r0 * Math.cos((2 * PI * 3) / 5 + (7 * PI) / 10),
+          y: r0 * Math.sin((2 * PI * 3) / 5 + (7 * PI) / 10),
+        },
+        {
+          x: r1 * Math.cos((2 * PI * 4) / 5 + (5 * PI) / 10),
+          y: r1 * Math.sin((2 * PI * 4) / 5 + (5 * PI) / 10),
+        },
+        {
+          x: r0 * Math.cos((2 * PI * 4) / 5 + (7 * PI) / 10),
+          y: r0 * Math.sin((2 * PI * 4) / 5 + (7 * PI) / 10),
+        },
+      ],
+      rect,
+      0,
+      color,
+    );
+  }
+
+  protected renderShape(coords: XY[], rect: Rect, angle: number, color: string): void {
+    if (this.drawing) {
       // scale
       for (const c of coords) {
         c.x = (c.x * rect.w) / 2;

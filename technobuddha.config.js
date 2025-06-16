@@ -5,7 +5,8 @@ const config = {
   lint: {
     rules: {
       '@typescript-eslint/no-redundant-type-constituents': { rule: 'off' },
-      '@typescript-eslint/no-confusing-void-expression': { rule: 'off' }
+      '@typescript-eslint/no-confusing-void-expression': { rule: 'off' },
+      '@typescript-eslint/method-signature-style': { rule: 'off' },
     },
   },
   directories: {

@@ -74,7 +74,8 @@ export class Division extends MazeGenerator {
     this.threshold = threshold;
   }
 
-  public *generate(): Generator<void> {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *generate(): AsyncGenerator<void> {
     this.maze.removeInteriorWalls();
     this.maze.draw();
 

@@ -1,26 +1,39 @@
 import { animate } from '../drawing/animate.ts';
-import { type MazeGenerator } from '../generator/index.ts';
-import { type Maze } from '../geometry/index.ts';
-import { type MazeSolver } from '../solver/index.ts';
+import { type Drawing } from '../drawing/drawing.ts';
+import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
+import { type Maze, type MazeProperties } from '../geometry/index.ts';
+import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
 export type Phase = 'maze' | 'generate' | 'braid' | 'solve' | 'done';
-export type PlayMode = 'pause' | 'step' | 'play' | 'fast' | 'instant';
+export type PlayMode = 'pause' | 'step' | 'play' | 'fast' | 'instant' | 'refresh';
+
+type MazeMaker = (props: MazeProperties) => Maze;
+type GeneratorMaker = (props: MazeGeneratorProperties) => MazeGenerator;
+type SolverMaker = (props: MazeSolverProperties) => MazeSolver;
+type Plugin = (this: void, maze: Maze) => void;
 
 type RunnerProperties = {
-  maze: Maze;
-  generator: MazeGenerator;
-  solver: MazeSolver;
+  mazeMaker: MazeMaker;
+  generatorMaker: GeneratorMaker;
+  solverMaker: SolverMaker;
+  plugin?: Plugin;
+  drawing?: Drawing;
+  showCoordinates?: boolean;
+  onModeChange?: (this: void, mode: PlayMode) => void;
+
   mode?: { [P in Phase]?: PlayMode };
 };
 
 export class Runner extends EventTarget {
-  public maze: Maze | undefined = undefined;
-  public generator: MazeGenerator | undefined = undefined;
-  public solver: MazeSolver | undefined = undefined;
+  public readonly maze: Maze;
+  public readonly generator: MazeGenerator;
+  public readonly solver: MazeSolver;
+  public mode: PlayMode = 'pause';
 
-  private stepper: Iterator<void> | undefined = undefined;
+  private stepper: AsyncIterator<void> | undefined = undefined;
   private baseSpeed = 1;
   private speed = 1;
+  private readonly onModeChange: ((this: void, mode: PlayMode) => void) | undefined;
 
   private phase: Phase = 'maze';
   private playing = true;
@@ -28,18 +41,29 @@ export class Runner extends EventTarget {
   private delay = 0;
   public phasePlayMode: Record<Phase, PlayMode>;
 
-  public constructor({ maze, generator, solver, mode }: RunnerProperties) {
+  public constructor({
+    mazeMaker,
+    generatorMaker,
+    solverMaker,
+    drawing,
+    plugin,
+    showCoordinates = false,
+    onModeChange,
+    mode,
+  }: RunnerProperties) {
     super();
-    this.maze = maze;
-    this.generator = generator;
-    this.solver = solver;
+    this.maze = mazeMaker({ drawing, plugin, showCoordinates });
+    this.maze.reset();
+    this.generator = generatorMaker({ maze: this.maze });
+    this.solver = solverMaker({ maze: this.maze });
+    this.onModeChange = onModeChange;
 
     this.phasePlayMode = {
       maze: 'play',
       generate: 'fast',
       braid: 'fast',
       solve: 'fast',
-      done: 'play',
+      done: 'refresh',
       ...mode,
     };
   }
@@ -54,6 +78,9 @@ export class Runner extends EventTarget {
   }
 
   private setPlayMode(playMode: PlayMode): void {
+    this.onModeChange?.(playMode);
+    this.mode = playMode;
+
     switch (playMode) {
       case 'pause': {
         this.playing = false;
@@ -62,6 +89,7 @@ export class Runner extends EventTarget {
 
       case 'step': {
         this.playing = false;
+        this.setPlayMode('pause');
         break;
       }
 
@@ -82,6 +110,13 @@ export class Runner extends EventTarget {
       case 'instant': {
         this.playing = true;
         this.speed = Infinity;
+        this.delay = 0;
+        break;
+      }
+
+      case 'refresh': {
+        this.playing = true;
+        this.speed = this.baseSpeed;
         this.delay = 0;
         break;
       }
@@ -125,9 +160,9 @@ export class Runner extends EventTarget {
     if (!this.aborted) {
       if (this.stepper) {
         while (true) {
-          const done = await animate(() => {
+          const done = await animate(async () => {
             for (let i = 0; i < this.speed; ++i) {
-              if (this.stepper!.next().done) {
+              if ((await this.stepper!.next()).done) {
                 return true;
               }
               if (!this.playing) {
@@ -177,6 +212,7 @@ export class Runner extends EventTarget {
 
               if (done) {
                 this.maze.addTermini();
+                this.maze.detectErrors();
                 this.maze.draw();
 
                 this.switchPhase('braid');
@@ -209,7 +245,7 @@ export class Runner extends EventTarget {
 
           if (!this.playing) {
             if (this.aborted) {
-              return;
+              throw new Error('Aborted');
             }
             await this.waitForCommand();
           }
@@ -221,5 +257,7 @@ export class Runner extends EventTarget {
   public abort(): void {
     this.playing = false;
     this.aborted = true;
+
+    this.solver?.dispose();
   }
 }

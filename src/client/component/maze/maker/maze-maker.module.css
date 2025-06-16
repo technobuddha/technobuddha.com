@@ -48,6 +48,17 @@
     background: '#888888';
     padding: 1rem;
 
+    .toggles {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      margin-bottom: mui-spacing(1);
+
+      button {
+        flex: 1;
+      }
+    }
+
     .gap {
       flex-grow: 1;
     }

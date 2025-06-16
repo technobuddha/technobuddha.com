@@ -67,14 +67,15 @@ export class Kruskals extends MazeGenerator {
     );
 
     this.player = 0;
-    this.createPlayer(this.maze.randomCellDirection());
+    this.createPlayer();
   }
 
   private getCellIndex(cell: Cell): number {
     return cell.y * this.maze.width + cell.x;
   }
 
-  public *generate(): Generator<void> {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *generate(): AsyncGenerator<void> {
     while (this.preferreds.length > 0) {
       const preferred = this.preferreds.pop()!;
       const cell1 = { ...preferred };

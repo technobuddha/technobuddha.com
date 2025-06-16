@@ -121,21 +121,21 @@ export abstract class MazeGenerator {
     return this.visited[cell.x][cell.y] === (player ?? this.player);
   }
 
-  protected visit(cell?: Cell): void {
-    const target = cell ?? this.state[this.player].current;
+  protected visit({ cell, player = this.player }: { cell?: Cell; player?: number } = {}): void {
+    const target = cell ?? this.state[player].current;
 
     if (target) {
-      const player = this.visited[target.x][target.y];
+      const visitor = this.visited[target.x][target.y];
 
-      if (player === false) {
+      if (visitor === false) {
         this.visited[target.x][target.y] = this.player;
-      } else if (player === this.player) {
+      } else if (visitor === this.player) {
         // no-op, already visited by this player
       } else {
         // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let i = 0; i < this.visited.length; ++i) {
           for (let j = 0; j < this.visited[i].length; ++j) {
-            if (this.visited[i][j] === player) {
+            if (this.visited[i][j] === visitor) {
               this.visited[i][j] = this.player;
             }
           }
@@ -145,13 +145,13 @@ export abstract class MazeGenerator {
   }
   //#endregion
   //#region Run
-  public *run(): Generator<void> {
+  public async *run(): AsyncGenerator<void> {
     this.maze.hookPreGeneration?.(this);
     yield* this.generate();
     this.maze.hookPostGeneration?.(this);
   }
 
-  public abstract generate(): Generator<void>;
+  public abstract generate(): AsyncGenerator<void>;
 
   protected step(): CellDirection | undefined {
     const state = this.state[this.player];

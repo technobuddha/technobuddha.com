@@ -20,7 +20,7 @@ export class GrowingTree extends MazeGenerator {
 
     this.player = 0;
     this.createPlayer({ start: this.start });
-    this.visit(this.start);
+    this.visit();
   }
 
   private selectMethod(): Method {
@@ -58,7 +58,8 @@ export class GrowingTree extends MazeGenerator {
     }
   }
 
-  public *generate(): Generator<void> {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *generate(): AsyncGenerator<void> {
     while (this.list.length > 0) {
       const index = this.selectCell(this.selectMethod());
       const currentCell = this.list[index];
@@ -69,7 +70,7 @@ export class GrowingTree extends MazeGenerator {
 
       if (next) {
         yield this.maze.removeWall(currentCell, next.direction);
-        this.visit(next.move);
+        this.visit({ cell: next.move });
         this.list.push(next.move);
       } else {
         this.list.splice(index, 1);

@@ -4,22 +4,22 @@ import { type Cell, type CellDirection } from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
-type DeadEndProperties = MazeSolverProperties & {
-  blockedColor?: string;
-  method?: 'cul-de-sac' | 'dead-end';
+export type FillerProperties = MazeSolverProperties & {
+  readonly blockedColor?: string;
+  readonly method?: 'cul-de-sac' | 'dead-end';
 };
 
 export class Filler extends MazeSolver {
-  public markedColor: string;
-  protected method: DeadEndProperties['method'];
-  private readonly deadEnds: boolean[][];
+  protected readonly markedColor: string;
+  protected readonly method: FillerProperties['method'];
+  protected readonly deadEnds: boolean[][];
 
   public constructor({
     maze,
     blockedColor = maze.blockedColor,
     method = 'cul-de-sac',
     ...props
-  }: DeadEndProperties) {
+  }: FillerProperties) {
     super({ maze, ...props });
     this.markedColor = blockedColor;
     this.method = method;
@@ -43,7 +43,6 @@ export class Filler extends MazeSolver {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *solve({
     markedColor = this.markedColor,
     entrance = this.maze.entrance,
@@ -59,10 +58,28 @@ export class Filler extends MazeSolver {
         break;
       }
 
-      for (const deadEnd of deadEnds) {
-        this.deadEnds[deadEnd.x][deadEnd.y] = true;
-        this.maze.drawX(this.maze.drawCell(deadEnd), markedColor);
-        yield;
+      for (let deadEnd of deadEnds) {
+        if (this.method === 'dead-end') {
+          this.deadEnds[deadEnd.x][deadEnd.y] = true;
+          // this.maze.drawX(deadEnd, markedColor);
+          this.maze.drawCell(deadEnd, markedColor);
+          yield;
+        } else {
+          while (true) {
+            const moves = this.maze
+              .moves(deadEnd, { wall: false })
+              .filter(({ move }) => !this.deadEnds[move.x][move.y]);
+            if (moves.length === 1) {
+              this.deadEnds[deadEnd.x][deadEnd.y] = true;
+              // this.maze.drawX(deadEnd, markedColor);
+              this.maze.drawCell(deadEnd, markedColor);
+              deadEnd = moves[0].move;
+              yield;
+            } else {
+              break;
+            }
+          }
+        }
       }
     }
 

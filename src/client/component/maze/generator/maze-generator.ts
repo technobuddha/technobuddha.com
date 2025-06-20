@@ -389,8 +389,8 @@ export abstract class MazeGenerator {
                 const tunnel1 = { x: t1.x, y: t1.y, direction: t1.direction };
                 const tunnel2 = { x: t2.x, y: t2.y, direction: t2.direction };
 
-                this.maze.nexus(b1).tunnels[this.maze.opposite(key1)] = tunnel2;
-                this.maze.nexus(b2).tunnels[this.maze.opposite(key2)] = tunnel1;
+                this.maze.nexus(b1).tunnels[key1] = tunnel2;
+                this.maze.nexus(b2).tunnels[key2] = tunnel1;
               }
             }
           }

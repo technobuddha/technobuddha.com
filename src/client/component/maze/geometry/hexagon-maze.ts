@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/class-methods-use-this */
 import { modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
@@ -19,8 +18,15 @@ const COS30 = Math.cos(Math.PI / 6);
 const TAN30 = Math.tan(Math.PI / 6);
 const SIN60 = Math.sin(Math.PI / 3);
 
+export type HexagonMazeProperties = MazeProperties;
+
 export class HexagonMaze extends Maze {
-  public constructor({ cellSize = 28, wallSize = 2, gapSize = 2, ...props }: MazeProperties) {
+  public constructor({
+    cellSize = 28,
+    wallSize = 2,
+    gapSize = 2,
+    ...props
+  }: HexagonMazeProperties) {
     super({ cellSize, wallSize, gapSize, ...props }, matrix);
   }
 

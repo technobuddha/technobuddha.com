@@ -10,14 +10,37 @@ type Rabbit = {
   tail: Cell;
 };
 
-type FibonaccisRabbitsProperties = MazeSolverProperties;
+export type FibonaccisRabbitsProperties = MazeSolverProperties & {
+  readonly lifeSpan?: number;
+  readonly gestationPeriod?: number;
+  readonly populationLimit?: number;
+  readonly rabbitColor?: string;
+  readonly fluffleColor?: string;
+};
 
 export class FibonaccisRabbits extends MazeSolver {
-  public constructor(props: FibonaccisRabbitsProperties) {
+  protected readonly lifeSpan: NonNullable<FibonaccisRabbitsProperties['lifeSpan']>;
+  protected readonly gestationPeriod: NonNullable<FibonaccisRabbitsProperties['gestationPeriod']>;
+  protected readonly populationLimit: NonNullable<FibonaccisRabbitsProperties['populationLimit']>;
+  protected readonly rabbitColor: NonNullable<FibonaccisRabbitsProperties['rabbitColor']>;
+  protected readonly fluffleColor: NonNullable<FibonaccisRabbitsProperties['fluffleColor']>;
+
+  public constructor({
+    lifeSpan = 100,
+    gestationPeriod = 20,
+    populationLimit = 3,
+    rabbitColor = 'oklch(0.8677 0.0735 7.09)',
+    fluffleColor = 'oklch(0.628 0.2577 29.23)',
+    ...props
+  }: FibonaccisRabbitsProperties) {
     super(props);
+    this.lifeSpan = lifeSpan;
+    this.gestationPeriod = gestationPeriod;
+    this.populationLimit = populationLimit;
+    this.rabbitColor = rabbitColor;
+    this.fluffleColor = fluffleColor;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *solve({
     entrance = this.maze.entrance,
     exit = this.maze.exit,
@@ -32,9 +55,9 @@ export class FibonaccisRabbits extends MazeSolver {
       rabbits = [];
       for (const rabbit of currGeneration) {
         rabbit.age++;
-        if (rabbit.age <= 100) {
+        if (rabbit.age <= this.lifeSpan) {
           rabbits.push(rabbit);
-          if (rabbit.age % 20 === 0 && rabbit.age !== 20) {
+          if (rabbit.age % this.gestationPeriod === 0 && rabbit.age !== this.gestationPeriod) {
             currentCount[rabbit.cell.x][rabbit.cell.y]++;
             rabbits.push({ cell: { ...rabbit.cell }, age: 0, tail: { ...rabbit.cell } });
           }
@@ -63,7 +86,9 @@ export class FibonaccisRabbits extends MazeSolver {
         }
       }
 
-      for (const cell of this.maze.cellsInMaze().filter((c) => currentCount[c.x][c.y] > 3)) {
+      for (const cell of this.maze
+        .cellsInMaze()
+        .filter((c) => currentCount[c.x][c.y] > this.populationLimit)) {
         currentCount[cell.x][cell.y]--;
         rabbits.splice(
           rabbits.findIndex((r) => this.maze.isSame(cell, r.cell)),
@@ -76,11 +101,11 @@ export class FibonaccisRabbits extends MazeSolver {
           this.maze.drawCell(cell);
 
           if (currentCount[cell.x][cell.y] > 0) {
-            this.maze.drawAvatar(cell, currentCount[cell.x][cell.y] > 1 ? 'red' : 'pink');
+            this.maze.drawAvatar(
+              cell,
+              currentCount[cell.x][cell.y] > 1 ? this.fluffleColor : this.rabbitColor,
+            );
           }
-          // if (currentCount[cell.x][cell.y] > 1) {
-          //   this.maze.drawText(cell, currentCount[cell.x][cell.y].toString(), 'black');
-          // }
 
           lastCount[cell.x][cell.y] = currentCount[cell.x][cell.y];
         }

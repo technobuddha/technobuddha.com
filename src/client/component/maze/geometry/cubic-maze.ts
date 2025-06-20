@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
-/* eslint-disable @typescript-eslint/class-methods-use-this */
 
 import { modulo } from '@technobuddha/library';
 
@@ -16,8 +15,10 @@ import {
 } from './maze.ts';
 import { Maze } from './maze.ts';
 
+export type CubicMazeProperties = MazeProperties;
+
 export class CubicMaze extends Maze {
-  public constructor({ cellSize = 16, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 16, wallSize = 1, ...props }: CubicMazeProperties) {
     super({ cellSize, wallSize, ...props }, matrix);
   }
 

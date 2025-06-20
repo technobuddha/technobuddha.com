@@ -11,16 +11,16 @@ type History = {
   children?: number;
 };
 
-type DijkstrasProperties = MazeSolverProperties & {
-  scannedColor?: string;
-  prunedColor?: string;
-  avatarColor?: string;
+export type DijkstrasProperties = MazeSolverProperties & {
+  readonly scannedColor?: string;
+  readonly prunedColor?: string;
+  readonly avatarColor?: string;
 };
 
 export class Dijkstras extends MazeSolver {
-  public scannedColor: string;
-  public prunedColor: string;
-  public avatarColor: string;
+  public readonly scannedColor: string;
+  public readonly prunedColor: string;
+  public readonly avatarColor: string;
 
   public constructor({
     maze,
@@ -35,7 +35,6 @@ export class Dijkstras extends MazeSolver {
     this.prunedColor = prunedColor;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *solve({
     avatarColor = this.avatarColor,
     scannedColor = this.scannedColor,
@@ -51,52 +50,53 @@ export class Dijkstras extends MazeSolver {
 
     queue.unshift(entrance);
     this.maze.drawAvatar(this.maze.drawCell(entrance), avatarColor);
+    yield;
 
     while (queue.length > 0) {
       const cell = queue.pop()!;
 
       if (this.maze.isSame(cell, exit)) {
-        queue.length = 0;
-      } else {
-        const distance = distances[cell.x][cell.y].distance + 1;
-        const validMoves = this.randomShuffle(
-          this.maze
-            .moves(cell, { wall: false })
-            .filter(({ move }) => distances[move.x][move.y].distance > distance),
-        );
+        break;
+      }
 
-        distances[cell.x][cell.y].children = validMoves.length;
+      const distance = distances[cell.x][cell.y].distance + 1;
+      const validMoves = this.randomShuffle(
+        this.maze
+          .moves(cell, { wall: false })
+          .filter(({ move }) => distances[move.x][move.y].distance > distance),
+      );
 
-        if (validMoves.length > 0) {
-          this.maze.drawAvatar(this.maze.drawCell(cell), scannedColor);
-          for (const validMove of validMoves) {
-            distances[validMove.move.x][validMove.move.y] = {
-              parent: cell,
-              direction: validMove.direction,
-              distance,
-            };
-            // this.maze.drawCell(cell, scannedColor);
-            this.maze.drawAvatar(this.maze.drawCell(validMove.move), avatarColor);
-            yield;
-            queue.unshift(validMove.move);
-          }
-        } else {
-          let parent = cell;
-          while (true) {
-            distances[parent.x][parent.y].children =
-              (distances[parent.x][parent.y].children ?? 0) - 1;
+      distances[cell.x][cell.y].children = validMoves.length;
 
-            if (distances[parent.x][parent.y].children! <= 0) {
-              this.maze.drawCell(parent, prunedColor);
-              // yield;
-              parent = distances[parent.x][parent.y].parent!;
-            } else {
-              break;
-            }
-          }
-
+      if (validMoves.length > 0) {
+        this.maze.drawAvatar(this.maze.drawCell(cell), scannedColor);
+        for (const validMove of validMoves) {
+          distances[validMove.move.x][validMove.move.y] = {
+            parent: cell,
+            direction: validMove.direction,
+            distance,
+          };
+          // this.maze.drawCell(cell, scannedColor);
+          this.maze.drawAvatar(this.maze.drawCell(validMove.move), avatarColor);
           yield;
+          queue.unshift(validMove.move);
         }
+      } else {
+        let parent = cell;
+        while (true) {
+          distances[parent.x][parent.y].children =
+            (distances[parent.x][parent.y].children ?? 0) - 1;
+
+          if (distances[parent.x][parent.y].children! <= 0) {
+            this.maze.drawCell(parent, prunedColor);
+            // yield;
+            parent = distances[parent.x][parent.y].parent!;
+          } else {
+            break;
+          }
+        }
+
+        yield;
       }
     }
 

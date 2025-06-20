@@ -1,26 +1,27 @@
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
-type DrunkardsWalkProperties = MazeSolverProperties;
+export type DrunkardsWalkProperties = MazeSolverProperties;
 
 export class DrunkardsWalk extends MazeSolver {
   public constructor(props: DrunkardsWalkProperties) {
     super(props);
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *solve({
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): AsyncIterator<void> {
-    let mouse = entrance;
+    let drunkard = entrance;
 
-    while (!this.maze.isSame(mouse, exit)) {
-      const next = this.randomPick(this.maze.moves(mouse, { wall: false }).map(({ move }) => move));
+    while (!this.maze.isSame(drunkard, exit)) {
+      const next = this.randomPick(
+        this.maze.moves(drunkard, { wall: false }).map(({ move }) => move),
+      );
       if (next) {
-        this.maze.drawCell(mouse);
+        this.maze.drawCell(drunkard);
         this.maze.drawCell(next);
         this.maze.drawAvatar(next);
-        mouse = next;
+        drunkard = next;
         yield;
       }
     }

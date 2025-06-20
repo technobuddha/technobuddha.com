@@ -1,5 +1,4 @@
 /* eslint-disable unicorn/consistent-destructuring */
-/* eslint-disable @typescript-eslint/class-methods-use-this */
 import { modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
@@ -18,8 +17,15 @@ import { matrix } from './octogon-matrix.ts';
 
 const { SQRT2, SQRT1_2 } = Math;
 
+export type OctogonMazeProperties = MazeProperties;
+
 export class OctogonMaze extends Maze {
-  public constructor({ cellSize = 42, wallSize = 1, gapSize = 2, ...props }: MazeProperties) {
+  public constructor({
+    cellSize = 42,
+    wallSize = 1,
+    gapSize = 2,
+    ...props
+  }: OctogonMazeProperties) {
     super({ cellSize, wallSize, gapSize, ...props }, matrix);
   }
 

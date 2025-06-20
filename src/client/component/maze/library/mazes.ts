@@ -28,18 +28,18 @@ import {
 import { experimentalPlugin } from '../plugins/experiment.ts';
 import { donutPlugin, ellipisePlugin, trianglePlugin } from '../plugins/index.ts';
 import { portalPlugin } from '../plugins/portal.ts';
-import { DrunkardsWalk } from '../solver/drunkard.ts';
-import { FibonaccisRabbits } from '../solver/fibonaccis-rabbits.ts';
 import {
   Dijkstras,
+  DrunkardsWalk,
+  FibonaccisRabbits,
   Filler,
   type MazeSolver,
   type MazeSolverProperties,
+  RandomMouse,
   Search,
   Tremaux,
   WallWalking,
 } from '../solver/index.ts';
-import { RandomMouse } from '../solver/random-mouse.ts';
 
 import { type Choice } from './chooser.ts';
 
@@ -81,10 +81,10 @@ export const mazes: Choice<MazeProperties, Maze> = {
 };
 
 export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
-  '0:Division': {
+  '10:Division': {
     '10': (props) => new Division(props),
   },
-  '0:Hunt & Kill -': {
+  '10:Hunt & Kill -': {
     '10:Random': (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
     '10:Top Left': (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
     '10:Top Right': (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
@@ -95,31 +95,31 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
     '10:Right Top': (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
     '10:Right Bottom': (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
   },
-  '0:Growing Tree ': {
+  '10:Growing Tree ': {
     '10:Newest': (props) => new GrowingTree({ method: 'newest', ...props }),
     '10:Random': (props) => new GrowingTree({ method: 'random', ...props }),
     '0:Oldest': (props) => new GrowingTree({ method: 'oldest', ...props }),
     '0:Middle': (props) => new GrowingTree({ method: 'middle', ...props }),
   },
-  '0:Kruskals': {
+  '10:Kruskals': {
     '10': (props) => new Kruskals(props),
   },
-  '0:Prims': {
+  '10:Prims': {
     '10': (props) => new Prims(props),
   },
   '10:Recursize Backtracker': {
-    '0': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
+    '10': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
     '10:Bridge Builder': (props) =>
       new RecursiveBacktracker({
         strategy: ['bridge-builder'],
         forced: 0.25,
         bridgeMinLength: 1,
         bridgeMaxLength: 1,
-        stepsAfterBridge: 0,
+        stepsAfterBridge: 1,
         ...props,
       }),
-    '0:Parallel': (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
-    '0:Swirl': (props) =>
+    '10:Parallel': (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
+    '10:Swirl': (props) =>
       new RecursiveBacktracker({
         strategy: [
           'right-turn',
@@ -133,7 +133,7 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
         ],
         ...props,
       }),
-    '0:Whirpool': (props) =>
+    '10:Whirpool': (props) =>
       new RecursiveBacktracker({
         strategy: [
           'right-turn',
@@ -149,7 +149,7 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
         ...props,
       }),
   },
-  '0:Wilsons': {
+  '10:Wilsons': {
     '10': (props) => new Wilsons(props),
   },
 };
@@ -159,13 +159,15 @@ export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
     '10': (props) => new Tremaux(props),
   },
   '10:Search': {
-    '10:Random': (props) => new Search({ method: 'random', ...props }),
-    '00:Seek Exit': (props) => new Search({ method: 'seek', ...props }),
-    '00:Left Turn': (props) => new Search({ method: 'left-turn', ...props }),
-    '00:Right Turn': (props) => new Search({ method: 'right-turn', ...props }),
+    '10:Random': (props) => new Search({ approach: 'random', ...props }),
+    '10:Seek Exit': (props) => new Search({ approach: 'seek', ...props }),
+    '10:Left Turn': (props) => new Search({ approach: 'left-turn', ...props }),
+    '10:Right Turn': (props) => new Search({ approach: 'right-turn', ...props }),
+    '10:Straight': (props) => new Search({ approach: 'straight', ...props }),
   },
   '10:Fill': {
     '10:Dead Ends': (props) => new Filler({ ...props, method: 'dead-end' }),
+    '10:Cul-de-Sac': (props) => new Filler({ ...props, method: 'cul-de-sac' }),
   },
   '10': {
     '10:Follow the Right Wall': (props) => new WallWalking({ ...props, turn: 'right' }),

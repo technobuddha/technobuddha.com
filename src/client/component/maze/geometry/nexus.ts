@@ -1,5 +1,15 @@
 import { type Portal, type Wall } from './maze.ts';
 
+export type NexusProperties = {
+  x: number;
+  y: number;
+  walls: Wall;
+  tunnels: Portal;
+  bridge?: boolean;
+  mask?: boolean;
+  distance?: number;
+};
+
 export class Nexus {
   public readonly x: number;
   public readonly y: number;
@@ -17,15 +27,7 @@ export class Nexus {
     bridge = false,
     mask = false,
     distance = Infinity,
-  }: {
-    x: number;
-    y: number;
-    walls: Wall;
-    tunnels: Portal;
-    bridge?: boolean;
-    mask?: boolean;
-    distance?: number;
-  }) {
+  }: NexusProperties) {
     this.x = x;
     this.y = y;
     this.walls = walls;

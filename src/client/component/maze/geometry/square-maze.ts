@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/class-methods-use-this */
-
 import { type Rect } from '../drawing/drawing.ts';
 
 import {
@@ -13,9 +11,7 @@ import {
 import { Maze } from './maze.ts';
 import { matrix } from './square-matrix.ts';
 
-type SquareMazeProperties = MazeProperties & {
-  gapSize?: number;
-};
+type SquareMazeProperties = MazeProperties;
 
 export class SquareMaze extends Maze {
   public constructor({ cellSize = 24, wallSize = 2, gapSize = 2, ...props }: SquareMazeProperties) {

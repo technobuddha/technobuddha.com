@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
-type RandomMouseProperties = MazeSolverProperties;
+export type RandomMouseProperties = MazeSolverProperties;
 
 export class RandomMouse extends MazeSolver {
   public constructor(props: RandomMouseProperties) {
     super(props);
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *solve({
     entrance = this.maze.entrance,
     exit = this.maze.exit,

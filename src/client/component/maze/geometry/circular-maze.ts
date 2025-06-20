@@ -15,15 +15,15 @@ import {
 } from './maze.ts';
 import { Maze } from './maze.ts';
 
-type CircularMazeProperties = MazeProperties & {
-  centerRadius?: number;
-  centerSegments?: number;
+export type CircularMazeProperties = MazeProperties & {
+  readonly centerRadius?: number;
+  readonly centerSegments?: number;
 };
 
 export class CircularMaze extends Maze {
-  public readonly centerRadius: number;
-  public readonly centerSegments: number;
-  public readonly zones: number[] = [];
+  protected readonly centerRadius: number;
+  protected readonly centerSegments: number;
+  protected readonly zones: number[] = [];
 
   public constructor({
     cellSize = 16,
@@ -435,7 +435,6 @@ export class CircularMaze extends Maze {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public override drawMasks(): void {
     // Masks aren't disaplyed in the circular maze
   }

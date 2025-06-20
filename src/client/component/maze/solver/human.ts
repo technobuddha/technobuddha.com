@@ -1,33 +1,62 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
 import { create2DArray, modulo } from '@technobuddha/library';
 
-import { type Cell, type CellDirection, type Direction } from '../geometry/maze.ts';
+import {
+  type Cell,
+  type CellDirection,
+  type CellTunnel,
+  type Direction,
+} from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
-type HumanProperties = MazeSolverProperties;
-
-type CellTunnel = CellDirection & { tunnel: boolean };
+type Options = {
+  readonly finalDestination: boolean;
+  readonly markVisited: boolean;
+  readonly markDeadEnds: boolean;
+  readonly hideReverse: boolean;
+};
 
 type CellPath = CellDirection & {
-  branch: Direction;
-  path: CellTunnel[];
+  readonly branch: Direction;
+  readonly path: CellTunnel[];
+};
+export type HumanProperties = MazeSolverProperties & {
+  readonly options?: Partial<Options>;
 };
 
 export class Human extends MazeSolver {
-  private readonly keyHandler: (event: KeyboardEvent) => void;
-  private readonly visited: boolean[][];
-  private readonly deadEnd: boolean[][];
+  public options: Options;
 
-  public constructor(props: HumanProperties) {
+  protected readonly visited: boolean[][];
+  protected readonly deadEnd: boolean[][];
+
+  public constructor({ options, ...props }: HumanProperties) {
     super(props);
+
     this.visited = create2DArray(this.maze.width, this.maze.height, false);
     this.deadEnd = create2DArray(this.maze.width, this.maze.height, false);
 
-    this.keyHandler = (event: KeyboardEvent): void => {
+    this.options = {
+      finalDestination: true,
+      markVisited: true,
+      markDeadEnds: true,
+      hideReverse: true,
+      ...options,
+    };
+    this.keyHandler = this.intializeKeyboardHandler();
+  }
+
+  //#region Keyboard Handler
+  private readonly keyHandler: (event: KeyboardEvent) => void;
+
+  private intializeKeyboardHandler(): (event: KeyboardEvent) => void {
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const handler = (event: KeyboardEvent): void => {
       this.dispatchEvent(new CustomEvent('keydown', { detail: event.key }));
     };
-    document.addEventListener('keydown', this.keyHandler);
+    document.addEventListener('keydown', handler);
+    return handler;
   }
 
   private async captureKey(): Promise<string> {
@@ -50,7 +79,7 @@ export class Human extends MazeSolver {
       this.addEventListener('keydown', onKeyDown);
     });
   }
-
+  //#endregion
   private destinations(cell: Cell): CellPath[] {
     const moves: CellPath[] = this.maze.moves(cell, { wall: false }).map((move) => ({
       ...move.move,
@@ -82,7 +111,7 @@ export class Human extends MazeSolver {
           // dead end
           if (this.maze.isSame(move, this.maze.exit)) {
             paths.push(move);
-          } else if (this.random() < 1) {
+          } else if (this.options.markDeadEnds) {
             for (const p of move.path) {
               if (!p.tunnel) {
                 this.deadEnd[p.x][p.y] = true;
@@ -95,24 +124,21 @@ export class Human extends MazeSolver {
             if (!this.maze.isSame(move, this.maze.entrance)) {
               this.maze.drawX(this.maze.drawCell(move));
             }
-          } else {
+          } else if (!this.deadEnd[move.x][move.y]) {
             exploreTunnel();
             paths.push(move);
           }
           break;
         } else if (next.length === 1) {
           // single path
-          if (this.random() < 1) {
-            exploreTunnel();
-
+          exploreTunnel();
+          if (this.options.finalDestination) {
             prev = { x: move.x, y: move.y };
             move.path.push({ x: move.x, y: move.y, direction: move.direction, tunnel: false });
             move.x = next[0].move.x;
             move.y = next[0].move.y;
             move.direction = next[0].direction;
           } else {
-            exploreTunnel();
-
             paths.push(move);
             break;
           }
@@ -141,7 +167,7 @@ export class Human extends MazeSolver {
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): AsyncIterator<void> {
-    const history: CellDirection[] = [];
+    const history: CellTunnel[] = [];
     let human: CellDirection = entrance;
     let reverse = human;
     let destinations: CellPath[] = [];
@@ -159,10 +185,6 @@ export class Human extends MazeSolver {
 
       destinations = this.destinations(human);
 
-      if (this.random() < 1 && destinations.length > 1) {
-        destinations = destinations.filter((c) => !this.maze.isSame(c, reverse));
-      }
-
       const turns = this.maze.straight(
         this.maze.isSame(human, entrance) ?
           { ...entrance, direction: this.maze.opposite(entrance) }
@@ -171,7 +193,15 @@ export class Human extends MazeSolver {
       );
       bias = !bias;
 
-      destinations = destinations.sort((a, b) => turns.indexOf(a.branch) - turns.indexOf(b.branch));
+      if (this.options.hideReverse && destinations.length > 1) {
+        destinations = destinations.filter((c) => !this.maze.isSame(c, reverse));
+      }
+      destinations = destinations.sort(
+        (a, b) =>
+          (this.visited[a.x][a.y] ? 1 : 0) - (this.visited[b.x][b.y] ? 1 : 0) ||
+          turns.indexOf(a.branch) - turns.indexOf(b.branch),
+      );
+
       choice = 0;
 
       for (const move of destinations) {
@@ -216,14 +246,19 @@ export class Human extends MazeSolver {
           switch (key) {
             case 'ArrowUp':
             case ' ': {
-              history.push(human);
               // eslint-disable-next-line require-atomic-updates
               reverse = human;
               human = destinations[choice];
 
-              this.visited[human.x][human.y] = true;
               for (const path of destinations[choice].path) {
-                this.visited[path.x][path.y] = true;
+                history.push(path);
+                if (this.options.markVisited && !path.tunnel) {
+                  this.visited[path.x][path.y] = true;
+                }
+              }
+              history.push({ x: human.x, y: human.y, direction: human.direction, tunnel: false });
+              if (this.options.markVisited) {
+                this.visited[human.x][human.y] = true;
               }
               break makeChoice;
             }
@@ -249,6 +284,15 @@ export class Human extends MazeSolver {
           break;
         }
       }
+    }
+
+    this.maze.solution = [];
+    const solution = this.maze.flatten(history.filter((c) => !c.tunnel));
+
+    let prev = this.maze.entrance;
+    for (const cell of solution) {
+      this.maze.solution.push({ x: prev.x, y: prev.y, direction: cell.direction });
+      prev = cell;
     }
   }
 

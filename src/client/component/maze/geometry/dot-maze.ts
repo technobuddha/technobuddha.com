@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/class-methods-use-this */
 import { type Rect } from '../drawing/drawing.ts';
 
 import { matrix } from './dot-matrix.ts';
@@ -11,6 +10,8 @@ import {
   type MazeProperties,
   type Pillar,
 } from './maze.ts';
+
+export type DotMazeProperties = MazeProperties;
 
 export class DotMaze extends Maze {
   public constructor({ cellSize = 24, wallSize = 8, ...props }: MazeProperties) {

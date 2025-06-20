@@ -1,16 +1,18 @@
 import { create2DArray } from '@technobuddha/library';
 
 import { type CellDirection, type Direction } from '../geometry/maze.ts';
+import { darken } from '../library/darken.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
-type WallWalkingProperties = MazeSolverProperties & {
+export type WallWalkingProperties = MazeSolverProperties & {
   turn?: 'right' | 'left';
   avatarColor?: string;
   pathColor?: string;
 };
 
 export class WallWalking extends MazeSolver {
+  private readonly history: CellDirection[] = [];
   private readonly avatarColor: string;
   private readonly pathColor: string;
   private readonly forward: (cell: CellDirection) => Direction[];
@@ -37,21 +39,18 @@ export class WallWalking extends MazeSolver {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *solve({
     entrance = this.maze.entrance,
     exit = this.maze.exit,
     avatarColor = this.avatarColor,
     pathColor = this.pathColor,
   } = {}): AsyncIterator<void> {
+    const trail: CellDirection[] = [];
     let seekingWall = true;
 
     let cell: CellDirection = {
       ...entrance,
-      direction: this.maze.opposite({
-        ...entrance,
-        direction: this.randomPick(Object.keys(this.maze.nexus(entrance).walls))!,
-      }),
+      direction: this.maze.opposite(this.randomPick(Object.keys(this.maze.nexus(entrance).walls))!),
     };
 
     const cells: { visits: number; direction?: Direction }[][] = create2DArray(
@@ -66,12 +65,11 @@ export class WallWalking extends MazeSolver {
         throw new Error('Loop detected');
       }
 
-      const wall = this.maze.nexus(cell).walls;
-
       let dir: Direction | undefined;
       const moves = this.maze.moves(cell, { wall: false });
 
       if (seekingWall) {
+        const wall = this.maze.nexus(cell).walls;
         const wallDirection = this.backward(cell).find((d) => wall[d]);
         if (wallDirection) {
           cell.direction = this.maze.opposite(this.maze.move(cell, wallDirection));
@@ -84,25 +82,30 @@ export class WallWalking extends MazeSolver {
         dir = this.forward(cell).find((d) => moves.find((m) => m.direction === d))!;
       }
 
+      if (trail.length > 15) {
+        this.maze.drawCell(trail.shift()!);
+      }
+
+      trail.push(cell);
+      for (let i = 0; i < trail.length; i++) {
+        const t = trail[i];
+
+        this.maze.drawAvatar(
+          this.maze.drawCell(t),
+          darken(pathColor, 1 - (1.25 / trail.length) * (i + 1)),
+        );
+      }
+
       const next = this.maze.move(cell, dir);
-      this.maze.drawPath(this.maze.drawCell({ ...cell, direction: dir }), pathColor);
+
       this.maze.drawAvatar(this.maze.drawCell(next), avatarColor);
       yield;
+      this.history.push(next);
 
       cells[cell.x][cell.y].direction = dir;
       cell = next!;
     }
 
-    cell = {
-      x: entrance.x,
-      y: entrance.y,
-      direction: cells[entrance.x][entrance.y].direction!,
-    };
-
-    do {
-      this.maze.solution.push(cell);
-      const next = this.maze.move(cell, cell.direction);
-      cell = { ...next, direction: cells[next.x][next.y].direction! };
-    } while (!this.maze.isSame(cell, this.maze.exit));
+    this.maze.solution = this.maze.makePath(entrance, this.maze.flatten(this.history));
   }
 }

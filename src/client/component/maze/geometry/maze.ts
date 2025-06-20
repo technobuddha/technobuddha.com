@@ -7,10 +7,10 @@ import {
   toCartesian,
   toPolar,
 } from '@technobuddha/library';
-import Color from 'colorjs.io';
 
 import { type Drawing, type Rect } from '../drawing/drawing.ts';
 import { type MazeGenerator } from '../generator/index.ts';
+import { darken } from '../library/darken.ts';
 import { logger } from '../library/logger.ts';
 
 import { Nexus } from './nexus.ts';
@@ -31,6 +31,10 @@ export type Cell = {
 
 export type CellDirection = Cell & {
   direction: Direction;
+};
+
+export type CellTunnel = CellDirection & {
+  tunnel: boolean;
 };
 
 export type Move = {
@@ -61,81 +65,84 @@ export type Wall = Directional<true>;
 export type Portal = Directional<CellDirection>;
 
 export type CustomDrawingSize = {
-  width: number;
-  height: number;
-  actualWidth: number;
-  actualHeight: number;
+  readonly width: number;
+  readonly height: number;
+  readonly actualWidth: number;
+  readonly actualHeight: number;
 };
 
 export type DrawingSizes = {
-  groupWidth: number;
-  groupHeight: number;
-  verticalCellsPerGroup?: number;
-  horizontalCellsPerGroup?: number;
-  topPadding?: number;
-  leftPadding?: number;
-  bottomPadding?: number;
-  rightPadding?: number;
-  custom?(this: void, args: CustomDrawingSize): CustomDrawingSize;
+  readonly groupWidth: number;
+  readonly groupHeight: number;
+  readonly verticalCellsPerGroup?: number;
+  readonly horizontalCellsPerGroup?: number;
+  readonly topPadding?: number;
+  readonly leftPadding?: number;
+  readonly bottomPadding?: number;
+  readonly rightPadding?: number;
+  readonly custom?: (this: void, args: CustomDrawingSize) => CustomDrawingSize;
 };
 
 type ShowDistances = 'none' | 'greyscale' | 'primary' | 'color' | 'spectrum';
 
 type Loop = {
-  cell: Cell;
-  distance: number;
-  loops: Cell[];
-  distances: number[];
+  readonly cell: Cell;
+  readonly distance: number;
+  readonly loops: Cell[];
+  readonly distances: number[];
 };
 
 export type MazeProperties = {
-  drawing?: Drawing;
-  width?: number;
-  height?: number;
-  cellSize?: number;
-  wallSize?: number;
-  gapSize?: number;
-  entrance?: Cell | CellDirection | Location;
-  exit?: Cell | CellDirection | Location;
-  wrapHorizontal?: boolean;
-  wrapVertical?: boolean;
+  readonly drawing?: Drawing;
+  readonly width?: number;
+  readonly height?: number;
+  readonly cellSize?: number;
+  readonly wallSize?: number;
+  readonly gapSize?: number;
+  readonly entrance?: Cell | CellDirection | Location;
+  readonly exit?: Cell | CellDirection | Location;
+  readonly wrapHorizontal?: boolean;
+  readonly wrapVertical?: boolean;
 
-  backgroundColor?: string;
-  cellColor?: string;
-  wallColor?: string;
-  maskColor?: string;
-  entranceColor?: string;
-  exitColor?: string;
-  tunnelColor?: string;
-  solutionColor?: string;
-  scannedColor?: string;
-  avatarColor?: string;
-  prunedColor?: string;
-  pathColor?: string;
-  blockedColor?: string;
-  errorColor?: string;
-  bridgeColor?: string;
-  textColor?: string;
+  readonly backgroundColor?: string;
+  readonly cellColor?: string;
+  readonly wallColor?: string;
+  readonly maskColor?: string;
+  readonly entranceColor?: string;
+  readonly exitColor?: string;
+  readonly tunnelColor?: string;
+  readonly solutionColor?: string;
+  readonly solutionTunnelColor?: string;
+  readonly scannedColor?: string;
+  readonly avatarColor?: string;
+  readonly prunedColor?: string;
+  readonly pathColor?: string;
+  readonly blockedColor?: string;
+  readonly errorColor?: string;
+  readonly bridgeColor?: string;
+  readonly textColor?: string;
 
-  showDistances?: ShowDistances;
-  showCoordinates?: boolean;
-  showKind?: boolean;
+  readonly showDistances?: ShowDistances;
+  readonly showCoordinates?: boolean;
+  readonly showKind?: boolean;
 
-  random?(this: void): number;
-  plugin?(this: void, maze: Maze): void;
+  readonly braidFactor?: number;
+
+  readonly random?: (this: void) => number;
+  readonly plugin?: (this: void, maze: Maze) => void;
 };
 
 export type BridgeLayout = {
-  pieces: number;
-  direction: Direction;
-  path: Direction[];
-  connect: Record<Direction, Direction>;
+  readonly pieces: number;
+  readonly direction: Direction;
+  readonly path: Direction[];
+  readonly connect: Record<Direction, Direction>;
 };
 
 export type BridgeMatrix = {
-  pieces?: number;
-  connect?: Record<Direction, Direction>;
-  layouts: Record<Kind, { path: Direction[]; pieces?: number }[]>;
+  readonly pieces?: number;
+  readonly connect?: Record<Direction, Direction>;
+  readonly layouts: Record<Kind, { path: Direction[]; pieces?: number }[]>;
 };
 
 export type Matrix = {
@@ -180,6 +187,7 @@ export abstract class Maze {
   protected plugin: MazeProperties['plugin'];
   protected readonly requestedWidth: MazeProperties['width'];
   protected readonly requestedHeight: MazeProperties['height'];
+  protected readonly braidFactor: NonNullable<MazeProperties['braidFactor']>;
 
   protected drawing: MazeProperties['drawing'];
   //#endregion
@@ -192,6 +200,7 @@ export abstract class Maze {
   public readonly exitColor: NonNullable<MazeProperties['exitColor']>;
   public readonly tunnelColor: NonNullable<MazeProperties['tunnelColor']>;
   public readonly solutionColor: NonNullable<MazeProperties['solutionColor']>;
+  public readonly solutionTunnelColor: NonNullable<MazeProperties['solutionTunnelColor']>;
   public readonly scannedColor: NonNullable<MazeProperties['scannedColor']>;
   public readonly avatarColor: NonNullable<MazeProperties['avatarColor']>;
   public readonly prunedColor: NonNullable<MazeProperties['prunedColor']>;
@@ -242,6 +251,7 @@ export abstract class Maze {
       entranceColor = 'oklch(0.5198 0.176858 142.4953)',
       exitColor = 'oklch(0.628 0.2577 29.23)',
       solutionColor = 'oklch(0.6611 0.115 213.72)',
+      solutionTunnelColor = darken(solutionColor, 0.25),
       scannedColor = 'oklch(0.5789 0.2344 0.51)',
       avatarColor = 'oklch(0.6611 0.115 213.72)',
       prunedColor = 'oklch(0.4446 0.1803 359.81)',
@@ -249,13 +259,14 @@ export abstract class Maze {
       errorColor = 'oklch(0.8664 0.294827 142.4953)',
 
       pathColor = 'oklch(0.8145 0.1672 83.88)',
-      tunnelColor = new Color(new Color(pathColor).darken(0.25)).toString(),
+      tunnelColor = darken(pathColor, 0.25),
       bridgeColor = 'oklch(0.9544 0.0637 196.13)',
       textColor = 'oklch(1 0 0)',
 
       showDistances = 'none',
       showCoordinates = false,
       showKind = false,
+      braidFactor = 0,
 
       random = Math.random,
       plugin,
@@ -290,6 +301,7 @@ export abstract class Maze {
     this.exitColor = exitColor;
     this.tunnelColor = tunnelColor;
     this.solutionColor = solutionColor;
+    this.solutionTunnelColor = solutionTunnelColor;
     this.scannedColor = scannedColor;
     this.avatarColor = avatarColor;
     this.prunedColor = prunedColor;
@@ -313,6 +325,7 @@ export abstract class Maze {
     this.requestedWidth = requestedWidth;
     this.requestedHeight = requestedHeight;
     this.plugin = plugin;
+    this.braidFactor = braidFactor;
 
     this.reset();
   }
@@ -401,12 +414,7 @@ export abstract class Maze {
   }
 
   public initialTunnels(cell: Cell): Portal {
-    return Object.fromEntries(
-      Object.keys(this.initialWalls(cell)).map((d) => [
-        this.opposite({ ...cell, direction: d }),
-        false,
-      ]),
-    );
+    return Object.fromEntries(Object.keys(this.initialWalls(cell)).map((d) => [d, false]));
   }
   //#endregion
   //#region utility functions
@@ -626,10 +634,12 @@ export abstract class Maze {
     return { maxDistance, maxCell, distances, unreachable, loops };
   }
 
-  public braid(): void {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async *braid(): AsyncGenerator<void> {
     const deadEnds = this.deadEnds();
+    const target = deadEnds.length - Math.floor(this.braidFactor * deadEnds.length);
 
-    while (deadEnds.length > 0) {
+    while (deadEnds.length > target) {
       const index = Math.floor(this.random() * deadEnds.length);
       const cell = deadEnds[index];
 
@@ -638,6 +648,7 @@ export abstract class Maze {
       const move = this.randomPick(this.moves(cell, { wall: true }));
       if (move) {
         this.removeWall(cell, move.direction);
+        yield;
         const nindex = deadEnds.findIndex((c) => this.isSame(c, move.move));
         if (nindex >= 0) {
           deadEnds.splice(nindex, 1);
@@ -749,9 +760,6 @@ export abstract class Maze {
     if (loops.length > 0 || unreachable.length > 0) {
       // eslint-disable-next-line no-debugger
       debugger;
-    } else {
-      // eslint-disable-next-line no-console
-      console.log('NO ERRORS DETECTED');
     }
   }
 
@@ -820,14 +828,57 @@ export abstract class Maze {
     }
   }
 
+  public tunnelize(path: CellDirection[]): CellTunnel[] {
+    const tunnelPath: CellTunnel[] = [];
+
+    for (const cell of path) {
+      const { tunnel } = this.walk(cell, cell.direction);
+      if (tunnel) {
+        for (const span of tunnel) {
+          tunnelPath.push({ ...span, tunnel: true });
+        }
+      }
+      tunnelPath.push({ ...cell, tunnel: false });
+    }
+
+    return tunnelPath;
+  }
+
+  public flatten<T extends Cell = Cell>(path: T[]): T[] {
+    const flatPath: T[] = [];
+
+    for (let i = 0; i < path.length; ++i) {
+      const cell = path[i];
+
+      flatPath.push(cell);
+      const loop = path.findLastIndex((c) => this.isSame(c, cell));
+      if (loop > i) {
+        // If we find a loop, we skip the rest of the path
+        i = loop;
+      }
+    }
+
+    return flatPath;
+  }
+
+  public makePath(start: CellDirection, history: CellDirection[]): CellDirection[] {
+    const path: CellDirection[] = [];
+
+    let prev = start;
+    for (const cell of history) {
+      path.push({ ...prev, direction: cell.direction });
+      prev = cell;
+    }
+    return path;
+  }
+
   public drawSolution(color = this.solutionColor): void {
     if (this.drawing) {
       this.drawDistances();
 
-      for (const cell of this.solution) {
-        this.drawPath(cell, color);
+      for (const cell of this.tunnelize(this.solution)) {
+        this.drawPath(cell, cell.tunnel ? this.solutionTunnelColor : color);
       }
-
       this.drawPath(this.drawCell(this.exit), color);
     }
   }
@@ -841,7 +892,11 @@ export abstract class Maze {
     throw new Error(`No nexus for cell (${cell.x}, ${cell.y})`);
   }
 
-  public isSame(cell1: Cell | undefined | null, cell2: Cell | undefined | null): boolean {
+  public isSame(cell1: Cell | undefined | null, cell2: Cell | undefined | null): boolean;
+  public isSame(cell1: CellTunnel, cell2: CellTunnel): boolean {
+    if ('tunnel' in cell1 && 'tunnel' in cell2) {
+      return cell1.x === cell2.x && cell1.y === cell2.y && cell1.tunnel === cell2.tunnel;
+    }
     return cell1?.x === cell2?.x && cell1?.y === cell2?.y;
   }
 
@@ -941,7 +996,8 @@ export abstract class Maze {
 
     if (next) {
       while (true) {
-        const portal = this.inMaze(next) ? this.nexus(next).tunnels[direction] : false;
+        const portal =
+          this.inMaze(next) ? this.nexus(next).tunnels[this.opposite(direction)] : false;
         if (portal) {
           next = portal;
         } else {
@@ -973,7 +1029,8 @@ export abstract class Maze {
     const tunnel: CellDirection[] = [];
 
     while (true) {
-      const portal = this.inMaze(next) ? this.nexus(next).tunnels[next.direction] : false;
+      const portal =
+        this.inMaze(next) ? this.nexus(next).tunnels[this.opposite(next.direction)] : false;
       if (portal) {
         tunnel.push(next);
         next = { ...portal };

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/class-methods-use-this */
 import { modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
@@ -14,8 +13,10 @@ import {
 import { Maze } from './maze.ts';
 import { kindMatrix, matrix, offsetXMatrix, offsetYMatrix } from './pentagon-matrix.ts';
 
+export type PentagonMazeProperties = MazeProperties;
+
 export class PentagonMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 1, ...props }: MazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 1, ...props }: PentagonMazeProperties) {
     super({ cellSize, wallSize, ...props }, matrix);
   }
 

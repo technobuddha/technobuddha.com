@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/class-methods-use-this */
 import { modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
@@ -14,8 +13,10 @@ import {
 } from './maze.ts';
 import { Maze } from './maze.ts';
 
+export type BrickMazeProperties = MazeProperties;
+
 export class BrickMaze extends Maze {
-  public constructor({ cellSize = 18, wallSize = 1, gapSize = 2, ...props }: MazeProperties) {
+  public constructor({ cellSize = 18, wallSize = 1, gapSize = 2, ...props }: BrickMazeProperties) {
     super({ cellSize, wallSize, gapSize, ...props }, matrix);
   }
 

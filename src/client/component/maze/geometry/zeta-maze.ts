@@ -1,5 +1,7 @@
-import { DotMaze } from './dot-maze.ts';
+import { DotMaze, type DotMazeProperties } from './dot-maze.ts';
 import { type Cell } from './maze.ts';
+
+export type ZetaMazeProperties = DotMazeProperties;
 
 export class ZetaMaze extends DotMaze {
   public override reset(): void {

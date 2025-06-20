@@ -1,0 +1,6 @@
+.human-options {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 mui-spacing(3) mui-spacing(1) mui-spacing(3);
+}

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/class-methods-use-this */
 import { modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
@@ -16,8 +15,10 @@ import { matrix } from './wedge-matrix.ts';
 
 const { SQRT2, SQRT1_2 } = Math;
 
+export type WedgeMazeProperties = MazeProperties;
+
 export class WedgeMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 1, gapSize = 2, ...props }: MazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 1, gapSize = 2, ...props }: WedgeMazeProperties) {
     super({ cellSize, wallSize, gapSize, ...props }, matrix);
   }
 

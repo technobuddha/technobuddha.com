@@ -4,8 +4,8 @@ import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/i
 import { type Maze, type MazeProperties } from '../geometry/index.ts';
 import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
-export type Phase = 'maze' | 'generate' | 'braid' | 'solve' | 'done';
-export type PlayMode = 'pause' | 'step' | 'play' | 'fast' | 'instant' | 'refresh';
+import { type Phase } from './phase.ts';
+import { type PlayMode } from './play-mode.ts';
 
 type MazeMaker = (props: MazeProperties) => Maze;
 type GeneratorMaker = (props: MazeGeneratorProperties) => MazeGenerator;
@@ -19,27 +19,28 @@ type RunnerProperties = {
   plugin?: Plugin;
   drawing?: Drawing;
   showCoordinates?: boolean;
-  onModeChange?: (this: void, mode: PlayMode) => void;
 
   mode?: { [P in Phase]?: PlayMode };
 };
+
+let id = 0;
 
 export class Runner extends EventTarget {
   public readonly maze: Maze;
   public readonly generator: MazeGenerator;
   public readonly solver: MazeSolver;
   public mode: PlayMode = 'pause';
+  public phase: Phase = 'maze';
+  public readonly id: number;
+  public phasePlayMode: Record<Phase, PlayMode>;
 
   private stepper: AsyncIterator<void> | undefined = undefined;
   private baseSpeed = 1;
   private speed = 1;
-  private readonly onModeChange: ((this: void, mode: PlayMode) => void) | undefined;
-
-  private phase: Phase = 'maze';
   private playing = true;
   private aborted = false;
   private delay = 0;
-  public phasePlayMode: Record<Phase, PlayMode>;
+  private observationTimer: ReturnType<typeof setTimeout> | undefined = undefined;
 
   public constructor({
     mazeMaker,
@@ -48,37 +49,61 @@ export class Runner extends EventTarget {
     drawing,
     plugin,
     showCoordinates = false,
-    onModeChange,
     mode,
   }: RunnerProperties) {
     super();
+
+    this.id = id++;
+
     this.maze = mazeMaker({ drawing, plugin, showCoordinates });
     this.maze.reset();
     this.generator = generatorMaker({ maze: this.maze });
     this.solver = solverMaker({ maze: this.maze });
-    this.onModeChange = onModeChange;
 
     this.phasePlayMode = {
       maze: 'play',
       generate: 'fast',
       braid: 'fast',
       solve: 'fast',
-      done: 'refresh',
+      final: 'refresh',
+      observe: 'refresh',
+      exit: 'fast',
       ...mode,
     };
   }
 
   public setMode(playMode: PlayMode): void {
-    this.setPlayMode(playMode);
+    switch (playMode) {
+      case 'pause': {
+        this.setPlayMode('pause');
+        break;
+      }
 
-    if (playMode !== 'pause') {
-      const event = new CustomEvent('command', {});
-      this.dispatchEvent(event);
+      //@ts-expect-error fall-though is intended
+      case 'refresh': {
+        this.switchPhase('exit');
+      }
+
+      case 'step':
+      case 'play':
+      case 'fast':
+      case 'instant': {
+        this.setPlayMode(playMode);
+        this.dispatchEvent(new CustomEvent('command'));
+        break;
+      }
+
+      // no default
     }
   }
 
   private setPlayMode(playMode: PlayMode): void {
-    this.onModeChange?.(playMode);
+    if (this.observationTimer) {
+      clearTimeout(this.observationTimer);
+      this.observationTimer = undefined;
+    }
+
+    this.dispatchEvent(new CustomEvent('mode', { detail: playMode }));
     this.mode = playMode;
 
     switch (playMode) {
@@ -89,7 +114,6 @@ export class Runner extends EventTarget {
 
       case 'step': {
         this.playing = false;
-        this.setPlayMode('pause');
         break;
       }
 
@@ -115,9 +139,7 @@ export class Runner extends EventTarget {
       }
 
       case 'refresh': {
-        this.playing = true;
-        this.speed = this.baseSpeed;
-        this.delay = 0;
+        this.playing = false;
         break;
       }
 
@@ -137,7 +159,8 @@ export class Runner extends EventTarget {
           }
 
           case 'braid': {
-            this.stepper = undefined;
+            this.stepper = this.maze.braid();
+            this.baseSpeed = 1;
             break;
           }
 
@@ -151,6 +174,7 @@ export class Runner extends EventTarget {
         }
 
         this.phase = phase;
+        this.dispatchEvent(new CustomEvent('phase', { detail: phase }));
         this.setPlayMode(this.phasePlayMode[phase]);
       }
     }
@@ -215,14 +239,17 @@ export class Runner extends EventTarget {
                 this.maze.detectErrors();
                 this.maze.draw();
 
-                this.switchPhase('braid');
+                this.switchPhase('solve');
               }
               break;
             }
 
             case 'braid': {
-              // maze.braid();
-              this.switchPhase('solve');
+              const done = await this.run();
+
+              if (done) {
+                this.switchPhase('solve');
+              }
               break;
             }
 
@@ -230,23 +257,46 @@ export class Runner extends EventTarget {
               const done = await this.run();
 
               if (done) {
-                this.switchPhase('done');
+                this.switchPhase('final');
               }
               break;
             }
 
-            case 'done': {
+            case 'final': {
               this.maze.drawSolution();
+
+              this.switchPhase('observe');
+
+              if (this.phasePlayMode.observe !== 'pause') {
+                this.observationTimer = setTimeout(() => {
+                  this.switchPhase('exit');
+                  this.dispatchEvent(new CustomEvent('command', {}));
+                }, 15000);
+              }
+
+              break;
+            }
+
+            case 'observe': {
+              break;
+            }
+
+            case 'exit': {
               return;
             }
 
             // no default
           }
 
-          if (!this.playing) {
-            if (this.aborted) {
-              throw new Error('Aborted');
-            }
+          if (this.aborted) {
+            throw new Error('Aborted');
+          }
+
+          //@ts-expect-error 'phase' can change - false positive
+          if (this.phase !== 'exit' && this.phase !== 'final' && !this.playing) {
+            this.mode = 'pause';
+            this.dispatchEvent(new CustomEvent('mode', { detail: this.mode }));
+
             await this.waitForCommand();
           }
         }

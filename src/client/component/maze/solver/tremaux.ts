@@ -4,7 +4,7 @@ import { type Cell, type CellDirection, type Direction } from '../geometry/maze.
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
-type TremauxProperties = MazeSolverProperties & {
+export type TremauxProperties = MazeSolverProperties & {
   avatarColor?: string;
   pathColor?: string;
   blockedColor?: string;
@@ -72,7 +72,6 @@ export class Tremaux extends MazeSolver {
     this.curr = next;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *solve({
     markedColor = this.pathColor,
     blockedColor = this.blockedColor,

@@ -1,12 +1,6 @@
 import React from 'react';
-import { Button, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { parseAsString, useQueryState } from 'nuqs';
-import {
-  IoCaretBackCircleOutline,
-  IoCaretDownCircleOutline,
-  IoCaretForwardCircleOutline,
-  IoCaretUpCircleOutline,
-} from 'react-icons/io5';
 import { useMeasure } from 'react-use';
 
 import { Checkbox, MenuItem, Select } from '#control';
@@ -15,14 +9,15 @@ import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/maze-generator.ts';
 import { type Maze, type MazeProperties } from '../geometry/maze.ts';
 import { allChoices, chooser } from '../library/chooser.ts';
-import { logger } from '../library/logger.ts';
 import { generators, mazes, plugins, solvers } from '../library/mazes.ts';
 import { Human } from '../solver/human.ts';
 import { type MazeSolver, type MazeSolverProperties } from '../solver/maze-solver.ts';
 
-import { PlayControls } from './play-controls.tsx';
-import { PlayModeToggle } from './play-mode-toggle.tsx';
-import { type PlayMode, Runner } from './runner.ts';
+import { CustomControls } from './controls/custom-controls.tsx';
+import { GameControls } from './controls/game-controls.tsx';
+import { type Phase } from './phase.ts';
+import { type PlayMode } from './play-mode.tsx';
+import { Runner } from './runner.ts';
 import { Section } from './section.tsx';
 
 import css from './maze-maker.module.css';
@@ -49,8 +44,11 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const [solverName, setSolverName] = React.useState('');
   const [pluginName, setPluginName] = React.useState('');
 
-  const [playGenerator, setPlayGenerator] = React.useState<PlayMode>('fast');
-  const [playSolver, setPlaySolver] = React.useState<PlayMode>('fast');
+  const [phasePlayMode, setPhasePlayMode] = React.useState<{ [P in Phase]?: PlayMode }>({
+    generate: 'fast',
+    solve: 'fast',
+    observe: 'refresh',
+  });
 
   const [drawing, setDrawing] = React.useState<CanvasDrawing>();
 
@@ -59,7 +57,6 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const [selectedSolver, setSelectedSolver] = React.useState<string>();
 
   const [runner, setRunner] = React.useState<Runner>();
-  const [runnerMode, setRunnerMode] = React.useState<PlayMode>();
 
   React.useEffect(() => {
     if (width > 0 && height > 0) {
@@ -84,10 +81,6 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       }
     }
   }, [width, height]);
-
-  const handleRunnerModeChange = React.useCallback((mode: PlayMode) => {
-    setRunnerMode(mode);
-  }, []);
 
   React.useEffect(() => {
     if (timer.current) {
@@ -141,24 +134,12 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           plugin,
           drawing,
           showCoordinates,
-          onModeChange: handleRunnerModeChange,
-          mode: {
-            generate: playGenerator,
-            solve: playSolver,
-          },
+          mode: phasePlayMode,
         });
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    selectedMaze,
-    selectedGenerator,
-    selectedSolver,
-    showCoordinates,
-    drawing,
-    mazeNumber,
-    handleRunnerModeChange,
-  ]);
+  }, [selectedMaze, selectedGenerator, selectedSolver, showCoordinates, drawing, mazeNumber]);
 
   const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -172,20 +153,9 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       void runner
         .execute()
         .then(() => {
-          if (timer.current) {
-            clearTimeout(timer.current);
-          }
-
-          timer.current = setTimeout(() => {
-            timer.current = undefined;
-            setMazeNumber((n) => n + 1);
-          }, 5000);
+          setMazeNumber((n) => n + 1);
         })
-        .catch(() => {
-          if (timer.current) {
-            clearTimeout(timer.current);
-          }
-        });
+        .catch(() => {});
     }
   }, [runner]);
 
@@ -205,51 +175,31 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     setSelectedSolver(value === '(undefined)' ? undefined : value);
   }, []);
 
-  const handlePause = React.useCallback(() => {
-    runner?.setMode('pause');
-  }, [runner]);
-
-  const handleStep = React.useCallback(() => {
-    runner?.setMode('step');
-  }, [runner]);
-
-  const handlePlay = React.useCallback(() => {
-    runner?.setMode('play');
-  }, [runner]);
-
-  const handleFast = React.useCallback(() => {
-    runner?.setMode('fast');
-  }, [runner]);
-
-  const handleInstant = React.useCallback(() => {
-    runner?.setMode('instant');
-  }, [runner]);
-
-  const handleRefresh = React.useCallback(() => {
-    logger.clear();
-    runner?.abort();
-    setTimeout(() => {
-      setMazeNumber((n) => n + 1);
-    });
-  }, [runner]);
-
-  const handlePlayGeneratorChange = React.useCallback((value: PlayMode) => {
-    setPlayGenerator(value);
-  }, []);
-
-  const handlePlaySolverChange = React.useCallback((value: PlayMode) => {
-    setPlaySolver(value);
-  }, []);
+  const handlePhasePlayModeChange = React.useCallback(
+    (phase: Phase, value: PlayMode) => {
+      if (runner) {
+        runner.phasePlayMode[phase] = value;
+      }
+      setPhasePlayMode((prev) => ({ ...prev, [phase]: value }));
+    },
+    [runner],
+  );
 
   const [mode, setMode] = useQueryState('mode', parseAsString.withDefault('demo'));
 
   React.useEffect(() => {
-    setSelectedMaze(undefined);
-    setSelectedGenerator(undefined);
-    setSelectedSolver(mode === 'game' ? 'human' : undefined);
-    setShowCoordinates(false);
-    setPlayGenerator('fast');
-    setPlaySolver('fast');
+    // setSelectedMaze(undefined);
+    // setSelectedGenerator(undefined);
+    if (mode === 'game') {
+      setSelectedGenerator('human');
+    }
+    // setSelectedSolver(mode === 'game' ? 'human' : undefined);
+    // setShowCoordinates(false);
+    // setPhasePlayMode({
+    // generate: 'fast',
+    // solve: 'fast',
+    // observe: 'refresh',
+    // });
   }, [mode]);
 
   const handleModeChange = React.useCallback(
@@ -258,34 +208,6 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     },
     [setMode],
   );
-
-  const handleBack = React.useCallback(() => {
-    const human = runner?.solver as Human;
-    if (human) {
-      human.dispatchEvent(new CustomEvent('keydown', { detail: 'ArrowDown' }));
-    }
-  }, [runner]);
-
-  const handleForward = React.useCallback(() => {
-    const human = runner?.solver as Human;
-    if (human) {
-      human.dispatchEvent(new CustomEvent('keydown', { detail: 'ArrowUp' }));
-    }
-  }, [runner]);
-
-  const handleLeft = React.useCallback(() => {
-    const human = runner?.solver as Human;
-    if (human) {
-      human.dispatchEvent(new CustomEvent('keydown', { detail: 'ArrowLeft' }));
-    }
-  }, [runner]);
-
-  const handleRight = React.useCallback(() => {
-    const human = runner?.solver as Human;
-    if (human) {
-      human.dispatchEvent(new CustomEvent('keydown', { detail: 'ArrowRight' }));
-    }
-  }, [runner]);
 
   return (
     <div className={css.mazeMaker}>
@@ -371,48 +293,9 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           </Section>
         )}
         <div className={css.gap} />
-        {mode === 'game' && (
-          <div>
-            <div style={{ textAlign: 'center' }}>
-              <Button variant="outlined" color="primary" onClick={handleForward}>
-                <IoCaretUpCircleOutline size={28} />
-              </Button>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <Button variant="outlined" color="primary" onClick={handleLeft}>
-                <IoCaretBackCircleOutline size={28} />
-              </Button>
-              <Button variant="outlined" color="primary" onClick={handleBack}>
-                <IoCaretDownCircleOutline size={28} />
-              </Button>
-              <Button variant="outlined" color="primary" onClick={handleRight}>
-                <IoCaretForwardCircleOutline size={28} />
-              </Button>
-            </div>
-          </div>
-        )}
+        {mode === 'game' && <GameControls runner={runner} />}
         {mode === 'custom' && (
-          <>
-            <PlayModeToggle
-              title="Maze Generator Initial Speed"
-              onChange={handlePlayGeneratorChange}
-              value={playGenerator}
-            />
-            <PlayModeToggle
-              title="Maze Solver Initial Speed"
-              onChange={handlePlaySolverChange}
-              value={playSolver}
-            />
-            <PlayControls
-              onPause={handlePause}
-              onStep={handleStep}
-              onPlay={handlePlay}
-              onFast={handleFast}
-              onInstant={handleInstant}
-              onRefresh={handleRefresh}
-              value={runnerMode ?? 'fast'}
-            />
-          </>
+          <CustomControls runner={runner} onPhasePlayModeChange={handlePhasePlayModeChange} />
         )}
       </div>
     </div>

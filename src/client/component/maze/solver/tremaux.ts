@@ -78,7 +78,7 @@ export class Tremaux extends MazeSolver {
     avatarColor = this.avatarColor,
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  } = {}): AsyncIterator<void> {
+  } = {}): AsyncGenerator<void> {
     this.curr = entrance;
     this.prev = undefined;
 

@@ -74,7 +74,6 @@ export class Division extends MazeGenerator {
     this.threshold = threshold;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *generate(): AsyncGenerator<void> {
     this.maze.removeInteriorWalls();
     this.maze.draw();
@@ -99,7 +98,7 @@ export class Division extends MazeGenerator {
         const cell = frontier[index];
 
         const neighbors = this.maze
-          .moves(cell)
+          .moves(cell, { wall: 'all' })
           .filter(({ move }) => region.subregions[move.x][move.y] === 'm');
 
         if (neighbors.length > 0) {

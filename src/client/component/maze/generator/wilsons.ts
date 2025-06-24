@@ -25,14 +25,13 @@ export class Wilsons extends MazeGenerator {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *generate(): AsyncGenerator<void> {
     while (this.unvisited.length > 0) {
       let currentCell = this.randomPick(this.unvisited)!;
       let path: (Cell | CellDirection)[] = [currentCell];
 
       while (!this.isVisited(currentCell)) {
-        const { move } = this.randomPick(this.maze.moves(currentCell))!;
+        const { move } = this.randomPick(this.maze.moves(currentCell, { wall: 'all' }))!;
 
         let cellVisited = false;
         let cellPreviousIndex = -1;

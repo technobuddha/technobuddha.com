@@ -20,7 +20,7 @@ export class RecursiveBacktracker extends MazeGenerator {
 
     const all = this.maze.cellsInMaze();
     for (let i = 0; i < this.parallel; ++i) {
-      const randomCell = this.randomDraw(all)!;
+      const randomCell = this.randomPick(all)!;
 
       const start: CellDirection = {
         ...randomCell,
@@ -38,7 +38,6 @@ export class RecursiveBacktracker extends MazeGenerator {
     this.player = 0;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *generate(): AsyncGenerator<void> {
     while (true) {
       // If all players are at the end of their stack, we need to join the segments
@@ -51,7 +50,7 @@ export class RecursiveBacktracker extends MazeGenerator {
             .filter((c) => this.isVisitedByMe(c) && !this.maze.nexus(c).bridge)
             .flatMap((c) =>
               this.maze
-                .moves(c)
+                .moves(c, { wall: 'all' })
                 .filter(({ move }) => !this.isVisitedByMe(move) && !this.maze.nexus(move).bridge),
             ),
         )?.move;

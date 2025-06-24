@@ -44,7 +44,7 @@ export class FibonaccisRabbits extends MazeSolver {
   public async *solve({
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  } = {}): AsyncIterator<void> {
+  } = {}): AsyncGenerator<void> {
     const currentCount = create2DArray(this.maze.width, this.maze.height, 0);
     const lastCount = create2DArray(this.maze.width, this.maze.height, 0);
     let rabbits: Rabbit[] = [{ cell: entrance, age: 0, tail: entrance }];

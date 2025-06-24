@@ -18,7 +18,7 @@ const { SQRT2, SQRT1_2 } = Math;
 export type WedgeMazeProperties = MazeProperties;
 
 export class WedgeMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 1, gapSize = 2, ...props }: WedgeMazeProperties) {
+  public constructor({ cellSize = 32, wallSize = 1, gapSize = 2, ...props }: WedgeMazeProperties) {
     super({ cellSize, wallSize, gapSize, ...props }, matrix);
   }
 

@@ -8,7 +8,6 @@ import {
   type Move,
 } from '../geometry/maze.ts';
 import { logger } from '../library/logger.ts';
-import { randomDraw } from '../library/random-draw.ts';
 
 export type Strategy = 'random' | 'right-turn' | 'left-turn' | 'straight' | 'bridge-builder';
 
@@ -81,10 +80,6 @@ export abstract class MazeGenerator {
 
   protected randomShuffle<T>(array: T[]): T[] {
     return randomShuffle(array, this.random);
-  }
-
-  protected randomDraw<T>(array: T[]): T | undefined {
-    return randomDraw(array, this.random);
   }
   //#endregion
   //#region Player
@@ -169,7 +164,7 @@ export abstract class MazeGenerator {
             const turns = this.maze.rightTurn(current);
 
             [next] = this.maze
-              .moves(current)
+              .moves(current, { wall: 'all' })
               .filter(({ move }) => this.visited[move.x][move.y] === false)
               .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
             break;
@@ -179,7 +174,7 @@ export abstract class MazeGenerator {
             const turns = this.maze.leftTurn(current);
 
             [next] = this.maze
-              .moves(current)
+              .moves(current, { wall: 'all' })
               .filter(({ move }) => this.visited[move.x][move.y] === false)
               .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
             break;
@@ -190,7 +185,7 @@ export abstract class MazeGenerator {
             state.bias = !state.bias;
 
             [next] = this.maze
-              .moves(current)
+              .moves(current, { wall: 'all' })
               .filter(({ move }) => this.visited[move.x][move.y] === false)
               .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
             break;
@@ -198,7 +193,9 @@ export abstract class MazeGenerator {
 
           case 'random': {
             next = this.randomPick(
-              this.maze.moves(current).filter(({ move }) => this.visited[move.x][move.y] === false),
+              this.maze
+                .moves(current, { wall: 'all' })
+                .filter(({ move }) => this.visited[move.x][move.y] === false),
             );
             break;
           }
@@ -219,7 +216,7 @@ export abstract class MazeGenerator {
               } else {
                 next = this.randomPick(
                   this.maze
-                    .moves(current)
+                    .moves(current, { wall: 'all' })
                     .filter(({ move }) => this.visited[move.x][move.y] === false),
                 );
               }
@@ -229,14 +226,14 @@ export abstract class MazeGenerator {
               const [dir] = this.maze.straight(current, state.bias);
               next = this.randomPick(
                 this.maze
-                  .moves(current)
+                  .moves(current, { wall: 'all' })
                   .filter(
                     ({ move }) => this.visited[move.x][move.y] === false && move.direction !== dir,
                   ),
               );
               next ??= this.randomPick(
                 this.maze
-                  .moves(current)
+                  .moves(current, { wall: 'all' })
                   .filter(({ move }) => this.visited[move.x][move.y] === false),
               );
             }

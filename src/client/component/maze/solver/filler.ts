@@ -47,7 +47,7 @@ export class Filler extends MazeSolver {
     markedColor = this.markedColor,
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  } = {}): AsyncIterator<void> {
+  } = {}): AsyncGenerator<void> {
     const walls = this.maze.backup();
 
     while (true) {

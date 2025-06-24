@@ -11,7 +11,7 @@ export class RandomMouse extends MazeSolver {
   public async *solve({
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  } = {}): AsyncIterator<void> {
+  } = {}): AsyncGenerator<void> {
     let mouse = entrance;
     let tail = entrance;
 

@@ -41,7 +41,7 @@ export class Dijkstras extends MazeSolver {
     prunedColor = this.prunedColor,
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  } = {}): AsyncIterator<void> {
+  } = {}): AsyncGenerator<void> {
     const queue: Cell[] = [];
     const distances = create2DArray<History>(this.maze.width, this.maze.height, () => ({
       distance: Infinity,

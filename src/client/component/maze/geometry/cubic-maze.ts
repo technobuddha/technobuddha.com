@@ -18,7 +18,7 @@ import { Maze } from './maze.ts';
 export type CubicMazeProperties = MazeProperties;
 
 export class CubicMaze extends Maze {
-  public constructor({ cellSize = 16, wallSize = 1, ...props }: CubicMazeProperties) {
+  public constructor({ cellSize = 24, wallSize = 1, ...props }: CubicMazeProperties) {
     super({ cellSize, wallSize, ...props }, matrix);
   }
 

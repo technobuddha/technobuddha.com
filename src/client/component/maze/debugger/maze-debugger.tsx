@@ -221,7 +221,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
       }
 
       for (const cell of maze.cellsInMaze()) {
-        for (const move of maze.moves(cell)) {
+        for (const move of maze.moves(cell, { wall: 'all' })) {
           const back = maze.move(move.move, maze.opposite(move.move));
           if (back) {
             if (cell.x !== back.x || cell.y !== back.y) {

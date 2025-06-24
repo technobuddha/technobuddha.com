@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2DArray, manhattanDistance } from '@technobuddha/library';
 
 import { type Cell, type CellDirection, type Direction, type Move } from '../geometry/maze.ts';
 
@@ -6,10 +6,6 @@ import { type MazeSolverProperties } from './maze-solver.ts';
 import { MazeSolver } from './maze-solver.ts';
 
 type Approach = 'random' | 'seek' | 'left-turn' | 'right-turn' | 'straight';
-
-function manhattanDistance(a: Cell, b: Cell): number {
-  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
-}
 
 export type SearchProperties = MazeSolverProperties & {
   avatarColor?: string;
@@ -84,7 +80,7 @@ export class Search extends MazeSolver {
     avatarColor = this.avatarColor,
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  } = {}): AsyncIterator<void> {
+  } = {}): AsyncGenerator<void> {
     type CellParentDirection = Cell & { parent?: CellParentDirection; direction: Direction };
 
     let queue: CellParentDirection[] = [];

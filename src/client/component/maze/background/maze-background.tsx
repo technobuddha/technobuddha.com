@@ -7,8 +7,7 @@ import { useUserInterface } from '#context/user-interface';
 
 import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
 import { MazeFactory } from '../factory/maze-factory.ts';
-import { type Maze, type MazeProperties } from '../geometry/maze.ts';
-import { SquareMaze } from '../geometry/square-maze.ts';
+import { type Maze, type MazeProperties, SquareMaze } from '../geometry/index.ts';
 import { chooser } from '../library/chooser.ts';
 import { generators, solvers } from '../library/mazes.ts';
 
@@ -55,7 +54,13 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
       const drawing = new CanvasDrawing(canvasMaze.current);
       drawing.clear();
 
-      const factory = new MazeFactory({ drawing, maskColor, cellSize: 15 });
+      const factory = new MazeFactory({
+        drawing,
+        maskColor,
+        cellSize: 16,
+        gapSize: 0,
+        wallSize: 1,
+      });
 
       const selectedMaze = (props: MazeProperties): Maze => new SquareMaze(props);
       const { name: generatorName, value: selectedGenerator } = chooser(generators);

@@ -34,7 +34,7 @@ export class Runner extends EventTarget {
   public readonly id: number;
   public phasePlayMode: Record<Phase, PlayMode>;
 
-  private stepper: AsyncIterator<void> | undefined = undefined;
+  private stepper: AsyncGenerator<void> | undefined = undefined;
   private baseSpeed = 1;
   private speed = 1;
   private playing = true;
@@ -239,7 +239,7 @@ export class Runner extends EventTarget {
                 this.maze.detectErrors();
                 this.maze.draw();
 
-                this.switchPhase('solve');
+                this.switchPhase('braid');
               }
               break;
             }

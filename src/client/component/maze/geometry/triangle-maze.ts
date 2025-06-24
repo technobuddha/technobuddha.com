@@ -22,7 +22,7 @@ export type TriangleMazeProperties = MazeProperties;
 
 export class TriangleMaze extends Maze {
   public constructor({
-    cellSize = 32,
+    cellSize = 36,
     wallSize = 2,
     gapSize = 2,
     ...props

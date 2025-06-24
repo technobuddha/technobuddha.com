@@ -15,14 +15,13 @@ export class Prims extends MazeGenerator {
     this.visit();
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public override async *generate(): AsyncGenerator<void> {
     while (this.activeCells.length > 0) {
       const cellIndex = Math.floor(this.random() * this.activeCells.length);
       const currentCell = this.activeCells[cellIndex];
 
       const next = this.randomPick(
-        this.maze.moves(currentCell).filter(({ move }) => !this.isVisited(move)),
+        this.maze.moves(currentCell, { wall: 'all' }).filter(({ move }) => !this.isVisited(move)),
       );
       if (next) {
         this.maze.removeWall(currentCell, next.direction);

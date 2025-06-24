@@ -92,11 +92,11 @@ export const matrix: Matrix = {
     1: ['e', 'd', 'c'],
   },
   angle: {
-    a: 135,
-    b: 45,
+    a: 225,
+    b: 315,
     c: 0,
-    d: 315,
-    e: 225,
+    d: 45,
+    e: 135,
     f: 180,
   },
 };

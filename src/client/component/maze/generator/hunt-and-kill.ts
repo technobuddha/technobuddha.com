@@ -19,7 +19,6 @@ export class HuntAndKill extends MazeGenerator {
     this.player = 0;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *generate(): AsyncGenerator<void> {
     while (true) {
       // kill
@@ -37,7 +36,7 @@ export class HuntAndKill extends MazeGenerator {
         for (const cell of this.maze.cellsInMaze(this.huntMethod)) {
           if (!this.isVisited(cell)) {
             const hunted = this.randomPick(
-              this.maze.moves(cell).filter(({ move }) => this.isVisited(move)),
+              this.maze.moves(cell, { wall: 'all' }).filter(({ move }) => this.isVisited(move)),
             );
             if (hunted) {
               target = { ...cell, direction: hunted.direction };

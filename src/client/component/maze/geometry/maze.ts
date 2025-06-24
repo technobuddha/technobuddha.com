@@ -1,11 +1,12 @@
-/* eslint-disable @typescript-eslint/class-methods-use-this */
 import {
   create2DArray,
   modulo,
   randomPick,
   randomShuffle,
-  toCartesian,
-  toPolar,
+  rotate,
+  scale,
+  toRadians,
+  translate,
 } from '@technobuddha/library';
 
 import { type Drawing, type Rect } from '../drawing/drawing.ts';
@@ -541,12 +542,14 @@ export abstract class Maze {
   }
 
   public cellsOnEdge(order: AllOrder = 'top-left'): Cell[] {
-    return this.cellsInMaze(order).filter((cell) => this.moves(cell, { inMaze: false }).length > 0);
+    return this.cellsInMaze(order).filter(
+      (cell) => this.moves(cell, { wall: 'all', inMaze: false }).length > 0,
+    );
   }
 
   public cellsInterior(order: AllOrder = 'top-left'): Cell[] {
     return this.cellsInMaze(order).filter((cell) =>
-      this.moves(cell, { inMaze: 'all' }).every(({ move }) => this.inMaze(move)),
+      this.moves(cell, { wall: 'all', inMaze: 'all' }).every(({ move }) => this.inMaze(move)),
     );
   }
 
@@ -634,7 +637,6 @@ export abstract class Maze {
     return { maxDistance, maxCell, distances, unreachable, loops };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *braid(): AsyncGenerator<void> {
     const deadEnds = this.deadEnds();
     const target = deadEnds.length - Math.floor(this.braidFactor * deadEnds.length);
@@ -832,10 +834,12 @@ export abstract class Maze {
     const tunnelPath: CellTunnel[] = [];
 
     for (const cell of path) {
-      const { tunnel } = this.walk(cell, cell.direction);
-      if (tunnel) {
-        for (const span of tunnel) {
-          tunnelPath.push({ ...span, tunnel: true });
+      if (cell.direction !== '?') {
+        const { tunnel } = this.walk(cell, cell.direction);
+        if (tunnel) {
+          for (const span of tunnel) {
+            tunnelPath.push({ ...span, tunnel: true });
+          }
         }
       }
       tunnelPath.push({ ...cell, tunnel: false });
@@ -850,24 +854,36 @@ export abstract class Maze {
     for (let i = 0; i < path.length; ++i) {
       const cell = path[i];
 
-      flatPath.push(cell);
       const loop = path.findLastIndex((c) => this.isSame(c, cell));
       if (loop > i) {
         // If we find a loop, we skip the rest of the path
         i = loop;
+        flatPath.push(path[loop]);
+      } else {
+        flatPath.push(cell);
       }
     }
 
     return flatPath;
   }
 
-  public makePath(start: CellDirection, history: CellDirection[]): CellDirection[] {
+  public makePath(history: CellDirection[], start?: CellDirection): CellDirection[] {
     const path: CellDirection[] = [];
 
-    let prev = start;
-    for (const cell of history) {
-      path.push({ ...prev, direction: cell.direction });
-      prev = cell;
+    if (history.length > 0) {
+      if (start) {
+        let prev = start;
+        for (const cell of history) {
+          path.push({ ...prev, direction: cell.direction });
+          prev = cell;
+        }
+      } else {
+        let [prev, ...rest] = history;
+        for (const cell of rest) {
+          path.push({ ...prev, direction: cell.direction });
+          prev = cell;
+        }
+      }
     }
     return path;
   }
@@ -876,7 +892,8 @@ export abstract class Maze {
     if (this.drawing) {
       this.drawDistances();
 
-      for (const cell of this.tunnelize(this.solution)) {
+      const tunnel = this.tunnelize(this.solution);
+      for (const cell of tunnel) {
         this.drawPath(cell, cell.tunnel ? this.solutionTunnelColor : color);
       }
       this.drawPath(this.drawCell(this.exit), color);
@@ -1013,7 +1030,7 @@ export abstract class Maze {
 
   public moves(
     cell: Cell,
-    { wall = 'all', inMaze = true }: { wall?: boolean | 'all'; inMaze?: boolean | 'all' } = {},
+    { wall = false, inMaze = true }: { wall?: boolean | 'all'; inMaze?: boolean | 'all' } = {},
   ): Move[] {
     return Object.entries(this.nexus(cell).walls)
       .filter(([, w]) => wall === 'all' || w === wall)
@@ -1029,8 +1046,7 @@ export abstract class Maze {
     const tunnel: CellDirection[] = [];
 
     while (true) {
-      const portal =
-        this.inMaze(next) ? this.nexus(next).tunnels[this.opposite(next.direction)] : false;
+      const portal = this.inMaze(next) ? this.nexus(next).tunnels[next.direction] : false;
       if (portal) {
         tunnel.push(next);
         next = { ...portal };
@@ -1086,7 +1102,7 @@ export abstract class Maze {
   }
 
   public preferreds(cell: Cell): string[] {
-    return this.moves(cell)
+    return this.moves(cell, { wall: 'all' })
       .filter(({ direction }) => this.preferredMatrix[this.cellKind(cell)].includes(direction))
       .map(({ direction }) => direction);
   }
@@ -1269,23 +1285,11 @@ export abstract class Maze {
 
   protected renderShape(coords: XY[], rect: Rect, angle: number, color: string): void {
     if (this.drawing) {
-      // scale
-      for (const c of coords) {
-        c.x = (c.x * rect.w) / 2;
-        c.y = (c.y * rect.h) / 2;
-      }
-
-      // rotate
-      for (const c of coords) {
-        const pc = toPolar(c);
-        pc.angle += (angle / 180) * Math.PI;
-        const { x, y } = toCartesian(pc);
-        c.x = x;
-        c.y = y;
-      }
-
       this.drawing.polygon(
-        coords.map((c) => ({ x: rect.x + rect.w / 2 + c.x, y: rect.y + rect.h / 2 - c.y })),
+        translate(rotate(scale(coords, { x: rect.w / 2, y: rect.h / 2 }), toRadians(angle)), {
+          x: rect.x + rect.w / 2,
+          y: rect.y + rect.h / 2,
+        }),
         color,
       );
     }

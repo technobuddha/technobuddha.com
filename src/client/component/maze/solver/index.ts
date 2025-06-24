@@ -1,3 +1,4 @@
+export { Chain, type ChainProperties } from './chain.ts';
 export { Dijkstras, type DijkstrasProperties } from './dijkstras.ts';
 export { DrunkardsWalk, type DrunkardsWalkProperties } from './drunkards-walk.ts';
 export { FibonaccisRabbits, type FibonaccisRabbitsProperties } from './fibonaccis-rabbits.ts';

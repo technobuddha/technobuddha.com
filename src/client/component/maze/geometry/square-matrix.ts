@@ -48,5 +48,5 @@ export const matrix: Matrix = {
   preferred: {
     0: ['s', 'w'],
   },
-  angle: { n: 90, s: 270, e: 0, w: 180 },
+  angle: { n: 270, s: 90, e: 0, w: 180 },
 };

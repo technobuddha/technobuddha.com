@@ -15,7 +15,7 @@
     "url": "https://github.com/technobuddha/technobuddha.com/issues"
   },
   "homepage": "https://github.com/technobuddha/technobuddha.com#readme",
-  "packageManager": "yarn@4.7.0",
+  "packageManager": "yarn@4.9.2",
   "scripts": {
     "dev": "nodemon",
     "start": "NODE_ENV=production tsx src/server/server.ts",
@@ -85,7 +85,7 @@
     "@react-router/serve": "7.5.3",
     "@technobuddha/color": "0.3.2",
     "@technobuddha/datagrid": "1.2.12",
-    "@technobuddha/library": "1.9.4",
+    "@technobuddha/library": "1.9.9",
     "@technobuddha/react-hooks": "1.6.2",
     "@technobuddha/size": "1.9.8",
     "@types/browserslist-useragent": "3.0.7",
@@ -98,6 +98,7 @@
     "colorjs.io": "0.5.2",
     "comlink": "4.4.2",
     "cookie-parser": "1.4.7",
+    "eslint": "9.29.0",
     "express": "4.21.2",
     "history": "5.3.0",
     "http-proxy-middleware": "3.0.5",

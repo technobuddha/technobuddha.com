@@ -59,5 +59,5 @@ export abstract class MazeSolver extends EventTarget implements Disposable {
   }
   //#endregion
 
-  public abstract solve(args?: SolveArguments): AsyncIterator<void>;
+  public abstract solve(args?: SolveArguments): AsyncGenerator<void>;
 }

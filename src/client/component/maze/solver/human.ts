@@ -166,7 +166,7 @@ export class Human extends MazeSolver {
   public async *solve({
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  } = {}): AsyncIterator<void> {
+  } = {}): AsyncGenerator<void> {
     const history: CellTunnel[] = [];
     let human: CellDirection = entrance;
     let reverse = human;

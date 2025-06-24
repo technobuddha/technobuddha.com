@@ -10,7 +10,7 @@ export class DrunkardsWalk extends MazeSolver {
   public async *solve({
     entrance = this.maze.entrance,
     exit = this.maze.exit,
-  } = {}): AsyncIterator<void> {
+  } = {}): AsyncGenerator<void> {
     let drunkard = entrance;
 
     while (!this.maze.isSame(drunkard, exit)) {

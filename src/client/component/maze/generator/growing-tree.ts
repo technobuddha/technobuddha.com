@@ -58,14 +58,13 @@ export class GrowingTree extends MazeGenerator {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *generate(): AsyncGenerator<void> {
     while (this.list.length > 0) {
       const index = this.selectCell(this.selectMethod());
       const currentCell = this.list[index];
 
       const next = this.randomPick(
-        this.maze.moves(currentCell).filter(({ move }) => !this.isVisited(move)),
+        this.maze.moves(currentCell, { wall: 'all' }).filter(({ move }) => !this.isVisited(move)),
       );
 
       if (next) {

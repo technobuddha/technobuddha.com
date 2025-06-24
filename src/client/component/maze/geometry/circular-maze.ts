@@ -403,7 +403,7 @@ export class CircularMaze extends Maze {
           if (cell.direction === '?') {
             this.renderCircle(rect, color);
           } else {
-            const angle = cell.direction === 'e' ? 270 : 90;
+            const angle = cell.direction === 'e' ? 90 : 270;
             this.renderArrow(rect, angle, color);
           }
           break;
@@ -414,7 +414,7 @@ export class CircularMaze extends Maze {
           if (cell.direction === '?') {
             this.renderCircle(rect, color);
           } else {
-            const angle = this.angleMatrix[cell.direction] + (cell.x === 0 ? -90 : 90);
+            const angle = this.angleMatrix[cell.direction] + (cell.x === 0 ? 90 : -90);
             this.renderArrow(rect, angle, color);
           }
           break;
@@ -426,7 +426,7 @@ export class CircularMaze extends Maze {
             this.renderCircle(rect, color);
           } else {
             const angle =
-              this.angleMatrix[cell.direction] - (cell.x * (360 / cols) + 360 / cols / 2);
+              this.angleMatrix[cell.direction] + (cell.x * (360 / cols) + 360 / cols / 2);
             this.renderArrow(rect, angle, color);
           }
           break;

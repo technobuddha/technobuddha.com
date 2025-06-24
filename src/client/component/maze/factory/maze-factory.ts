@@ -15,6 +15,7 @@ export class MazeFactory {
   public cellSize: MazeSettings['cellSize'];
   public cellColor: MazeSettings['cellColor'];
   public wallSize: MazeSettings['wallSize'];
+  public gapSize: MazeSettings['gapSize'];
   public wallColor: MazeSettings['wallColor'];
   public entrance: MazeSettings['entrance'];
   public exit: MazeSettings['exit'];
@@ -31,6 +32,7 @@ export class MazeFactory {
     cellSize,
     cellColor,
     wallSize,
+    gapSize,
     wallColor,
     entrance,
     exit,
@@ -45,6 +47,7 @@ export class MazeFactory {
     this.cellSize = cellSize;
     this.cellColor = cellColor;
     this.wallSize = wallSize;
+    this.gapSize = gapSize;
     this.wallColor = wallColor;
     this.entrance = entrance;
     this.exit = exit;
@@ -66,6 +69,7 @@ export class MazeFactory {
       cellSize: this.cellSize,
       cellColor: this.cellColor,
       wallSize: this.wallSize,
+      gapSize: this.gapSize,
       wallColor: this.wallColor,
       entrance: this.entrance,
       exit: this.exit,
@@ -73,7 +77,7 @@ export class MazeFactory {
       solutionColor: this.solutionColor,
       plugin,
     });
-    maze.reset(); // TODO [2025-05-15]: Reset should not be needed here, but generator is accessing uninitialized things
+    maze.reset(); // TODO [2025-07-01]: Reset should not be needed here, but generator is accessing uninitialized things
 
     const generator = generatorMaker?.({ maze, start: this.start, random: this.random });
     const solver = solverMaker?.({

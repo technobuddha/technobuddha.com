@@ -100,7 +100,7 @@ export class Dijkstras extends MazeSolver {
       }
     }
 
-    let cell: CellDirection = { ...exit, direction: this.maze.opposite(exit) };
+    let cell: CellDirection = { ...exit, direction: this.maze.opposite(exit.direction) };
 
     let dist = distances[cell.x][cell.y];
     if (!dist || dist.distance === Infinity) {

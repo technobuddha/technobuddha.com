@@ -405,7 +405,7 @@ export abstract class MazeGenerator {
             logger.warn(`Bridge already exists at ${span.x},${span.y}`);
           }
           this.maze.nexus(span).bridge = true;
-          this.maze.removeWall(span, this.maze.opposite(span));
+          this.maze.removeWall(span, this.maze.opposite(span.direction));
         }
 
         return { prev, bridge, next: { direction: next.direction, move: next } };
@@ -428,7 +428,7 @@ export abstract class MazeGenerator {
         logger.log(
           `Fixing unreachable cell at ${cell.x},${cell.y} by removing wall ${hole.direction}`,
         );
-        this.maze.removeWall(hole.move, this.maze.opposite(hole.move));
+        this.maze.removeWall(hole.move, this.maze.opposite(hole.move.direction));
       } else {
         logger.warn(`Masking off unreachable cell at ${cell.x},${cell.y}`);
         this.maze.nexus(cell).mask = true;

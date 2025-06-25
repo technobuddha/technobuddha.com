@@ -85,7 +85,7 @@ export class Filler extends MazeSolver {
 
     let cell = {
       ...this.maze.entrance,
-      direction: this.maze.opposite(this.maze.entrance),
+      direction: this.maze.opposite(this.maze.entrance.direction),
     };
 
     const path: CellDirection[] = [cell];

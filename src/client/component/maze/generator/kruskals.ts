@@ -74,7 +74,6 @@ export class Kruskals extends MazeGenerator {
     return cell.y * this.maze.width + cell.x;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async *generate(): AsyncGenerator<void> {
     while (this.preferreds.length > 0) {
       const preferred = this.preferreds.pop()!;

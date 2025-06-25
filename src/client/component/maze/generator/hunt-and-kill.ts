@@ -28,7 +28,7 @@ export class HuntAndKill extends MazeGenerator {
 
       if (next) {
         this.moveTo(next);
-        this.maze.removeWall(next, this.maze.opposite(next));
+        this.maze.removeWall(next, this.maze.opposite(next.direction));
         yield;
       } else {
         // hunt

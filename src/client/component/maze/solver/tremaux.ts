@@ -55,7 +55,7 @@ export class Tremaux extends MazeSolver {
     blockedColor: string,
   ): void {
     this.marks[this.curr.x][this.curr.y][next.direction]++;
-    this.marks[next.x][next.y][this.maze.opposite(next)]++;
+    this.marks[next.x][next.y][this.maze.opposite(next.direction)]++;
 
     this.maze.drawCell(this.curr);
     for (const direction of Object.keys(this.marks[this.curr.x][this.curr.y])) {

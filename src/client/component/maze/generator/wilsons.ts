@@ -53,7 +53,7 @@ export class Wilsons extends MazeGenerator {
 
       for (const cell of path) {
         if ('direction' in cell) {
-          this.maze.removeWall(cell, this.maze.opposite(cell));
+          this.maze.removeWall(cell, this.maze.opposite(cell.direction));
           yield;
         }
         this.markAsVisited(cell);

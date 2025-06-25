@@ -437,9 +437,7 @@ export abstract class Maze {
     throw new Error(`"${direction}" is not a valid direction`);
   }
 
-  public opposite(cell: CellDirection | Direction): Direction {
-    const direction = typeof cell === 'string' ? cell : cell.direction;
-
+  public opposite(direction: Direction): Direction {
     if (direction === '?') {
       return '?';
     }
@@ -679,7 +677,7 @@ export abstract class Maze {
 
     const outsideEntrance = this.randomPick(this.adjacent(entrance).filter((c) => !this.inMaze(c)));
     if (outsideEntrance) {
-      this.entrance = { ...entrance, direction: this.opposite(outsideEntrance) };
+      this.entrance = { ...entrance, direction: this.opposite(outsideEntrance.direction) };
       this.nexus(this.entrance).walls[outsideEntrance.direction] = false;
     } else {
       this.entrance = {
@@ -952,7 +950,7 @@ export abstract class Maze {
 
       const cell2 = this.move(cell, direction);
       if (cell2 && this.inMaze(cell2)) {
-        const odirection = this.opposite(cell2);
+        const odirection = this.opposite(cell2.direction);
         if (!(odirection in this.nexus(cell2).walls)) {
           logger.error(`"${odirection}" oois not a valid wall cell (${cell2.x}, ${cell2.y})`);
         }
@@ -974,7 +972,7 @@ export abstract class Maze {
 
       const cell2 = this.move(cell, direction);
       if (cell2 && this.inMaze(cell2)) {
-        const odirection = this.opposite(cell2);
+        const odirection = this.opposite(cell2.direction);
         if (!(odirection in this.nexus(cell2).walls)) {
           logger.error(`"${odirection}" oois not a valid wall cell (${cell2.x}, ${cell2.y})`);
         }
@@ -1146,9 +1144,9 @@ export abstract class Maze {
 
     for (const direction of Object.keys(walls)) {
       if (walls[direction]) {
-        if (tunnels[this.opposite({ ...cell, direction })]) {
+        if (tunnels[this.opposite(direction)]) {
           const move = this.traverse(cell, direction);
-          if (move && this.inMaze(move) && !this.nexus(move).walls[this.opposite(move)]) {
+          if (move && this.inMaze(move) && !this.nexus(move).walls[this.opposite(move.direction)]) {
             this.drawBridge({ ...cell, direction }, this.bridgeColor); //color);
             continue;
           }

@@ -24,10 +24,9 @@ export class RecursiveBacktracker extends MazeGenerator {
 
       const start: CellDirection = {
         ...randomCell,
-        direction: this.maze.opposite({
-          ...randomCell,
-          direction: this.randomPick(Object.keys(this.maze.nexus(randomCell).walls))!,
-        }),
+        direction: this.maze.opposite(
+          this.randomPick(Object.keys(this.maze.nexus(randomCell).walls))!,
+        ),
       };
 
       this.createPlayer({ start, strategy: strategy?.[i] });
@@ -56,7 +55,7 @@ export class RecursiveBacktracker extends MazeGenerator {
         )?.move;
 
         if (borderCell) {
-          this.maze.removeWall(borderCell, this.maze.opposite(borderCell));
+          this.maze.removeWall(borderCell, this.maze.opposite(borderCell.direction));
           yield;
           this.visit({ cell: borderCell });
         } else {
@@ -71,7 +70,7 @@ export class RecursiveBacktracker extends MazeGenerator {
 
         const next = this.step();
         if (next) {
-          this.maze.removeWall(next, this.maze.opposite(next));
+          this.maze.removeWall(next, this.maze.opposite(next.direction));
           yield;
 
           this.state[this.player].stack.push(this.state[this.player].current!);

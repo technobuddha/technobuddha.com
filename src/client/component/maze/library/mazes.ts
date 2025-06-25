@@ -49,11 +49,11 @@ export const squareMazes: Choice<MazeProperties, Maze> = {
 };
 
 export const mazes: Choice<MazeProperties, Maze> = {
-  '1:Dot': {
+  '0:Dot': {
     '10': (props) => new DotMaze(props),
     '0:=Zeta': (props) => new ZetaMaze(props),
   },
-  '1:Circle': {
+  '0:Circle': {
     '10': (props) => new CircularMaze(props),
     '10:Find Center': (props) =>
       new CircularMaze({ exit: { x: 0, y: 0 }, entrance: 'random edge', ...props }),
@@ -61,31 +61,31 @@ export const mazes: Choice<MazeProperties, Maze> = {
       new CircularMaze({ entrance: { x: 0, y: 0 }, exit: 'random edge', ...props }),
     '10:Void': (props) => new CircularMaze({ centerRadius: 128, centerSegments: 16, ...props }),
   },
-  '1:Cubic': {
+  '0:Cubic': {
     '10': (props) => new CubicMaze(props),
   },
-  '1:Pentagon': {
+  '0:Pentagon': {
     '10': (props) => new PentagonMaze(props),
   },
-  '1:Brick': (props) => new BrickMaze(props),
+  '0:Brick': (props) => new BrickMaze(props),
   '1:Square': squareMazes,
-  '1:Triangle': {
+  '0:Triangle': {
     '10': (props) => new TriangleMaze(props),
   },
-  '1:Hexagon': {
+  '0:Hexagon': {
     '10': (props) => new HexagonMaze(props),
   },
-  '1:Octogon': {
+  '0:Octogon': {
     '10': (props) => new OctogonMaze(props),
   },
-  '1:Wedge': (props) => new WedgeMaze(props),
+  '0:Wedge': (props) => new WedgeMaze(props),
 };
 
 export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
-  '10:Division': {
+  '0:Division': {
     '10': (props) => new Division(props),
   },
-  '10:Hunt & Kill -': {
+  '0:Hunt & Kill -': {
     '10:Random': (props) => new HuntAndKill({ huntMethod: 'random', ...props }),
     '10:Top Left': (props) => new HuntAndKill({ huntMethod: 'top-left', ...props }),
     '10:Top Right': (props) => new HuntAndKill({ huntMethod: 'top-right', ...props }),
@@ -96,21 +96,21 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
     '10:Right Top': (props) => new HuntAndKill({ huntMethod: 'right-top', ...props }),
     '10:Right Bottom': (props) => new HuntAndKill({ huntMethod: 'right-bottom', ...props }),
   },
-  '10:Growing Tree ': {
+  '0:Growing Tree ': {
     '10:Newest': (props) => new GrowingTree({ method: 'newest', ...props }),
     '10:Random': (props) => new GrowingTree({ method: 'random', ...props }),
     '0:Oldest': (props) => new GrowingTree({ method: 'oldest', ...props }),
     '0:Middle': (props) => new GrowingTree({ method: 'middle', ...props }),
   },
-  '10:Kruskals': {
+  '0:Kruskals': {
     '10': (props) => new Kruskals(props),
   },
-  '10:Prims': {
+  '0:Prims': {
     '10': (props) => new Prims(props),
   },
   '10:Recursize Backtracker': {
     '10': (props) => new RecursiveBacktracker({ speed: 1, ...props }),
-    '10:Bridge Builder': (props) =>
+    '0:Bridge Builder': (props) =>
       new RecursiveBacktracker({
         strategy: ['bridge-builder'],
         forced: 0.25,
@@ -119,8 +119,8 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
         stepsAfterBridge: 1,
         ...props,
       }),
-    '10:Parallel': (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
-    '10:Swirl': (props) =>
+    '0:Parallel': (props) => new RecursiveBacktracker({ parallel: 2, ...props }),
+    '0:Swirl': (props) =>
       new RecursiveBacktracker({
         strategy: [
           'right-turn',
@@ -134,7 +134,7 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
         ],
         ...props,
       }),
-    '10:Whirpool': (props) =>
+    '0:Whirpool': (props) =>
       new RecursiveBacktracker({
         strategy: [
           'right-turn',
@@ -150,7 +150,7 @@ export const generators: Choice<MazeGeneratorProperties, MazeGenerator> = {
         ...props,
       }),
   },
-  '10:Wilsons': {
+  '0:Wilsons': {
     '10': (props) => new Wilsons(props),
   },
 };

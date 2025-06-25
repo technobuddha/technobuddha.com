@@ -119,7 +119,7 @@ export class Division extends MazeGenerator {
       boundary.splice(Math.floor(this.random() * boundary.length), 1);
 
       for (const cd of boundary) {
-        this.maze.addWall(cd.move, this.maze.opposite(cd.move));
+        this.maze.addWall(cd.move, this.maze.opposite(cd.move.direction));
         yield;
       }
 

@@ -187,7 +187,7 @@ export class Human extends MazeSolver {
 
       const turns = this.maze.straight(
         this.maze.isSame(human, entrance) ?
-          { ...entrance, direction: this.maze.opposite(entrance) }
+          { ...entrance, direction: this.maze.opposite(entrance.direction) }
         : human,
         bias,
       );

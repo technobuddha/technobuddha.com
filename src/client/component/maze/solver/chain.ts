@@ -150,7 +150,7 @@ export class Chain extends MazeSolver {
 
               this.moveTo({
                 ...this.chain[chainPos],
-                direction: this.maze.opposite(this.chain[chainPos]),
+                direction: this.maze.opposite(this.chain[chainPos].direction),
               });
               pos = chainPos;
               yield;

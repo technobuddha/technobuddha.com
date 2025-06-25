@@ -569,21 +569,21 @@ export class CubicMaze extends Maze {
       case 3:
       case 6: {
         const { x1, x2, y1, y2 } = this.cellOffsets(cell);
-        return { x: x1, y: y1, w: x2 - x1, h: y2 - y1 };
+        return { x: x1, y: y1, width: x2 - x1, height: y2 - y1 };
       }
 
       case 1:
       case 4:
       case 7: {
         const { x4, x7, y1, y2 } = this.cellOffsets(cell);
-        return { x: x4, y: y1, w: x7 - x4, h: y2 - y1 };
+        return { x: x4, y: y1, width: x7 - x4, height: y2 - y1 };
       }
 
       case 2:
       case 5:
       case 8: {
         const { x1, x2, y4, y7 } = this.cellOffsets(cell);
-        return { x: x1, y: y4, w: x2 - x1, h: y7 - y4 };
+        return { x: x1, y: y4, width: x2 - x1, height: y7 - y4 };
       }
 
       default: {

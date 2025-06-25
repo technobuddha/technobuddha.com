@@ -878,14 +878,14 @@ export class OctogonMaze extends Maze {
         return {
           x: (x6 + xe) / 2,
           y: (y6 + ye) / 2,
-          w: (xk + xp) / 2 - (x6 + xe) / 2,
-          h: (yk + yp) / 2 - (y6 + ye) / 2,
+          width: (xk + xp) / 2 - (x6 + xe) / 2,
+          height: (yk + yp) / 2 - (y6 + ye) / 2,
         };
       }
       case 1: {
         const { x5, xd, y5, yd } = this.cellOffsets(cell);
 
-        return { x: x5, y: y5, w: xd - x5, h: yd - y5 };
+        return { x: x5, y: y5, width: xd - x5, height: yd - y5 };
       }
 
       default: {

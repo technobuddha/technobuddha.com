@@ -1,5 +1,5 @@
 export type XY = { x: number; y: number };
-export type Rect = XY & { w: number; h: number };
+export type Rect = XY & { width: number; height: number };
 
 export abstract class Drawing {
   public readonly width: number;

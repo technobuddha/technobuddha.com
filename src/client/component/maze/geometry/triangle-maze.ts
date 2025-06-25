@@ -482,8 +482,8 @@ export class TriangleMaze extends Maze {
         return {
           x: x9 - side / 2,
           y: y8 - side,
-          w: side,
-          h: side,
+          width: side,
+          height: side,
         };
       }
 
@@ -494,8 +494,8 @@ export class TriangleMaze extends Maze {
         return {
           x: x9 - side / 2,
           y: y3,
-          w: side,
-          h: side,
+          width: side,
+          height: side,
         };
       }
     }

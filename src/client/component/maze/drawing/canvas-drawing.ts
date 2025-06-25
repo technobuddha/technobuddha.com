@@ -63,9 +63,10 @@ export class CanvasDrawing extends Drawing {
 
     const metrics = this.canvas.measureText(text);
 
-    const x = rect.x + (rect.w - metrics.width) / 2;
+    const x = rect.x + (rect.width - metrics.width) / 2;
     const y =
-      rect.y + (rect.h + (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)) / 2;
+      rect.y +
+      (rect.height + (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)) / 2;
     this.canvas.fillText(text, x, y);
   }
 

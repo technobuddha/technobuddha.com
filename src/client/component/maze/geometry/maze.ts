@@ -1286,10 +1286,13 @@ export abstract class Maze {
   protected renderShape(coords: XY[], rect: Rect, angle: number, color: string): void {
     if (this.drawing) {
       this.drawing.polygon(
-        translate(rotate(scale(coords, { x: rect.w / 2, y: rect.h / 2 }), toRadians(angle)), {
-          x: rect.x + rect.w / 2,
-          y: rect.y + rect.h / 2,
-        }),
+        translate(
+          rotate(scale(coords, { x: rect.width / 2, y: rect.height / 2 }), toRadians(angle)),
+          {
+            x: rect.x + rect.width / 2,
+            y: rect.y + rect.height / 2,
+          },
+        ),
         color,
       );
     }
@@ -1301,8 +1304,8 @@ export abstract class Maze {
       const rect = this.cellRect(cell);
 
       this.drawing.circle(
-        { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 },
-        Math.abs(rect.w) / 4,
+        { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 },
+        Math.abs(rect.width) / 4,
         color,
       );
     }
@@ -1311,8 +1314,8 @@ export abstract class Maze {
   protected renderCircle(rect: Rect, color: string): void {
     if (this.drawing) {
       this.drawing.circle(
-        { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 },
-        Math.abs(rect.w) / 4,
+        { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 },
+        Math.abs(rect.width) / 4,
         color,
       );
     }
@@ -1321,12 +1324,12 @@ export abstract class Maze {
   protected cellRect(cell: Cell): Rect {
     const rect = this.getRect(cell);
 
-    if (rect.w > rect.h) {
-      rect.x += (rect.w - rect.h) / 2;
-      rect.w = rect.h;
-    } else if (rect.h > rect.w) {
-      rect.y += (rect.h - rect.w) / 2;
-      rect.h = rect.w;
+    if (rect.width > rect.height) {
+      rect.x += (rect.width - rect.height) / 2;
+      rect.width = rect.height;
+    } else if (rect.height > rect.width) {
+      rect.y += (rect.height - rect.width) / 2;
+      rect.height = rect.width;
     }
 
     return rect;

@@ -633,7 +633,7 @@ export class WedgeMaze extends Maze {
       case 0: {
         const { x2, x6, y2, y6 } = this.cellOffsets(cell);
 
-        return { x: x2, y: y2, w: (x6 - x2) * 0.5, h: (y6 - y2) * 0.5 };
+        return { x: x2, y: y2, width: (x6 - x2) * 0.5, height: (y6 - y2) * 0.5 };
       }
 
       case 1: {
@@ -642,21 +642,21 @@ export class WedgeMaze extends Maze {
         return {
           x: x2 + (xb - x2) * 0.5,
           y: y2 + (yb - y2) * 0.5,
-          w: (xb - x2) * 0.5,
-          h: (yb - y2) * 0.5,
+          width: (xb - x2) * 0.5,
+          height: (yb - y2) * 0.5,
         };
       }
 
       case 2: {
         const { x2, x6, y7, yb } = this.cellOffsets(cell);
 
-        return { x: x2, y: y7 + (yb - y7) * 0.5, w: (x6 - x2) * 0.5, h: (yb - y7) * 0.5 };
+        return { x: x2, y: y7 + (yb - y7) * 0.5, width: (x6 - x2) * 0.5, height: (yb - y7) * 0.5 };
       }
 
       case 3: {
         const { x7, xb, y2, y6 } = this.cellOffsets(cell);
 
-        return { x: x7 + (xb - x7) * 0.5, y: y2, w: (xb - x7) * 0.5, h: (y6 - y2) * 0.5 };
+        return { x: x7 + (xb - x7) * 0.5, y: y2, width: (xb - x7) * 0.5, height: (y6 - y2) * 0.5 };
       }
 
       // no default

@@ -1,4 +1,4 @@
-import { modulo } from '@technobuddha/library';
+import { largestInscribedRectangle, modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';
 
@@ -112,15 +112,32 @@ export class HexagonMaze extends Maze {
 
   public override drawFloor(cell: Cell, color = this.cellColor): void {
     if (this.drawing) {
-      const { x0, x9, xg, xm, y0, y9, yi } = this.cellOffsets(cell);
+      const { x0, x2, xa, x9, xd, xe, xl, xm, y0, y2, y9, yh, yi } = this.cellOffsets(cell);
+
+      // First draw the complete hexagon including gaps (background)
+      // Use the outer gap coordinates: x0, x9, xe, xm, y0, y9, yi
       this.drawing.polygon(
         [
-          { x: x9, y: y0 },
-          { x: xg, y: y0 },
-          { x: xm, y: y9 },
-          { x: xg, y: yi },
-          { x: x9, y: yi },
-          { x: x0, y: y9 },
+          { x: x9, y: y0 }, // Top-left outer edge (including gap)
+          { x: xe, y: y0 }, // Top-right outer edge (including gap)
+          { x: xm, y: y9 }, // Right outer edge (including gap)
+          { x: xe, y: yi }, // Bottom-right outer edge (including gap)
+          { x: x9, y: yi }, // Bottom-left outer edge (including gap)
+          { x: x0, y: y9 }, // Left outer edge (including gap)
+        ],
+        this.backgroundColor,
+      );
+
+      // Then draw the hexagon without gaps (walls + interior)
+      // Use coordinates that exclude the gap areas
+      this.drawing.polygon(
+        [
+          { x: xa, y: y2 }, // Top-left edge (excluding gap)
+          { x: xd, y: y2 }, // Top-right edge (excluding gap)
+          { x: xl, y: y9 }, // Right edge (excluding gap)
+          { x: xd, y: yh }, // Bottom-right edge (excluding gap)
+          { x: xa, y: yh }, // Bottom-left edge (excluding gap)
+          { x: x2, y: y9 }, // Left edge (excluding gap)
         ],
         color,
       );
@@ -425,8 +442,22 @@ export class HexagonMaze extends Maze {
   }
 
   public override getRect(cell: Cell): Rect {
-    const { x5, xi, y5, yd } = this.cellOffsets(cell);
+    // Use the larger hexagon coordinates that include wall areas
+    // Based on the drawFloor method coordinates for maximum usable space
+    const { x0, x9, xg, xm, y0, y9, yi } = this.cellOffsets(cell);
 
-    return { x: x5, y: y5, w: xi - x5, h: yd - y5 };
+    // Create the full hexagon polygon using the same coordinates as drawFloor
+    // This includes the wall areas for a larger rectangle
+    const polygon = [
+      { x: x9, y: y0 }, // Top-left edge
+      { x: xg, y: y0 }, // Top-right edge
+      { x: xm, y: y9 }, // Right edge
+      { x: xg, y: yi }, // Bottom-right edge
+      { x: x9, y: yi }, // Bottom-left edge
+      { x: x0, y: y9 }, // Left edge
+    ];
+
+    // Use largestInscribedRectangle to find the optimal rectangle within the full hexagon
+    return largestInscribedRectangle(polygon);
   }
 }

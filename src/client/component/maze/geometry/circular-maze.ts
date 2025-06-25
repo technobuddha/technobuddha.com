@@ -382,8 +382,8 @@ export class CircularMaze extends Maze {
     return {
       x: cx + x - this.cellSize / 2,
       y: cy + y - this.cellSize / 2,
-      w: this.cellSize,
-      h: this.cellSize,
+      width: this.cellSize,
+      height: this.cellSize,
     };
   }
 
@@ -397,8 +397,8 @@ export class CircularMaze extends Maze {
           const rect = {
             x: cx - this.cellSize / 2,
             y: cy - this.cellSize / 2,
-            w: this.cellSize,
-            h: this.cellSize,
+            width: this.cellSize,
+            height: this.cellSize,
           };
           if (cell.direction === '?') {
             this.renderCircle(rect, color);

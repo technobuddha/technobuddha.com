@@ -1,3 +1,5 @@
+import { largestInscribedRectangle } from '@technobuddha/library';
+
 import { type Rect } from '../drawing/drawing.ts';
 
 import {
@@ -157,8 +159,17 @@ export class SquareMaze extends Maze {
   }
 
   public override getRect(cell: Cell): Rect {
-    const { x2, x3, y2, y3 } = this.cellOffsets(cell);
+    const { x1, x4, y1, y4 } = this.cellOffsets(cell);
 
-    return { x: x2, y: y2, w: x3 - x2, h: y3 - y2 };
+    // Create polygon points using actual cell interior coordinates
+    const polygon = [
+      { x: x1, y: y1 }, // Top-left
+      { x: x4, y: y1 }, // Top-right
+      { x: x4, y: y4 }, // Bottom-right
+      { x: x1, y: y4 }, // Bottom-left
+    ];
+
+    // Use largestInscribedRectangle to find the optimal rectangle
+    return largestInscribedRectangle(polygon);
   }
 }

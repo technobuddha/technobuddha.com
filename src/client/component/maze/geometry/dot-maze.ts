@@ -414,6 +414,6 @@ export class DotMaze extends Maze {
   public getRect(cell: Cell): Rect {
     const { x2, x5, y2, y5 } = this.cellOffsets(cell);
 
-    return { x: x2, y: y2, w: x5 - x2, h: y5 - y2 };
+    return { x: x2, y: y2, width: x5 - x2, height: y5 - y2 };
   }
 }

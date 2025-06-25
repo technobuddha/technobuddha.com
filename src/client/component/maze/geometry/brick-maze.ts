@@ -213,7 +213,7 @@ export class BrickMaze extends Maze {
   public getRect(cell: CellDirection): Rect {
     const { x2, x7, y2, y3 } = this.cellOffsets(cell);
 
-    return { x: x2, y: y2, w: x7 - x2, h: y3 - y2 };
+    return { x: x2, y: y2, width: x7 - x2, height: y3 - y2 };
   }
 
   public drawX(cell: Cell, color = this.blockedColor): void {

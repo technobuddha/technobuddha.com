@@ -881,6 +881,6 @@ export class PentagonMaze extends Maze {
   public override getRect(cell: Cell): Rect {
     const { x0, x8, y0, y8 } = this.cellOffsets(cell);
 
-    return { x: x0, y: y0, w: x8 - x0, h: y8 - y0 };
+    return { x: x0, y: y0, width: x8 - x0, height: y8 - y0 };
   }
 }

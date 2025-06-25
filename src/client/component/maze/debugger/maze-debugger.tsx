@@ -161,7 +161,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
         default: {
           maze.drawX(maze.drawCell({ x, y }), 'red');
-          const moves = maze.moves({ x, y });
+          const moves = maze.moves({ x, y }, { wall: 'all' });
           for (const move of moves) {
             switch (show) {
               case 'moves': {

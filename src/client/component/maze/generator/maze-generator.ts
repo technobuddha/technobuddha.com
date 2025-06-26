@@ -339,7 +339,8 @@ export abstract class MazeGenerator {
 
         const opath = new Set(path.map((p) => this.maze.opposite(p)));
 
-        const tunnels: Record<Direction, (CellDirection & { from: CellDirection })[]> = {};
+        const tunnels: { [direction in Direction]?: (CellDirection & { from: CellDirection })[] } =
+          {};
         const xBridge = [prev, ...bridge, next];
 
         for (const span of bridge) {
@@ -354,15 +355,15 @@ export abstract class MazeGenerator {
             if (!(traversal.direction in tunnels)) {
               tunnels[traversal.direction] = [];
             }
-            tunnels[traversal.direction].push({ ...traversal.move, from: { ...span } });
+            tunnels[traversal.direction]!.push({ ...traversal.move, from: { ...span } });
           }
           prev = span;
         }
 
         // logger.log('tunnels)', { ...tunnels });
 
-        let keys: string[];
-        while ((keys = Object.keys(tunnels)).length > 0) {
+        let keys: Direction[];
+        while ((keys = Object.keys(tunnels) as Direction[]).length > 0) {
           const [key1] = keys;
           const key2 = connect[key1];
 
@@ -371,9 +372,9 @@ export abstract class MazeGenerator {
           }
 
           if (key2 in tunnels) {
-            for (let i = 0; i < tunnels[key1].length; i++) {
-              const t1 = tunnels[key1][i];
-              const t2 = tunnels[key2][i];
+            for (let i = 0; i < tunnels[key1]!.length; i++) {
+              const t1 = tunnels[key1]![i];
+              const t2 = tunnels[key2]![i];
 
               if (t2) {
                 const b1 = t1.from;

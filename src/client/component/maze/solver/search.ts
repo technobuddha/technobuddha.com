@@ -89,7 +89,9 @@ export class Search extends MazeSolver {
     discovered[entrance.x][entrance.y] = true;
     queue.unshift({
       ...entrance,
-      direction: this.maze.opposite(this.randomPick(Object.keys(this.maze.nexus(entrance).walls))!),
+      direction: this.maze.opposite(
+        this.randomPick(Object.keys(this.maze.nexus(entrance).walls) as Direction[])!,
+      ),
     });
 
     let mode: 'forward' | 'backward' | 'solve' = 'forward';

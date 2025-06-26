@@ -1,4 +1,4 @@
-import { type CellDirection } from '../geometry/maze.ts';
+import { type CellDirection, type Direction } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties, type Strategy } from './maze-generator.ts';
 
@@ -25,7 +25,7 @@ export class RecursiveBacktracker extends MazeGenerator {
       const start: CellDirection = {
         ...randomCell,
         direction: this.maze.opposite(
-          this.randomPick(Object.keys(this.maze.nexus(randomCell).walls))!,
+          this.randomPick(Object.keys(this.maze.nexus(randomCell).walls) as Direction[])!,
         ),
       };
 

@@ -16,7 +16,61 @@ import { logger } from '../library/logger.ts';
 
 import { Nexus } from './nexus.ts';
 
-export type Direction = string;
+export type Direction =
+  | 'a'
+  | 'b'
+  | 'c'
+  | 'd'
+  | 'e'
+  | 'f'
+  | 'g'
+  | 'h'
+  | 'i'
+  | 'j'
+  | 'k'
+  | 'l'
+  | 'm'
+  | 'n'
+  | 'o'
+  | 'p'
+  | 'q'
+  | 'r'
+  | 's'
+  | 't'
+  | 'u'
+  | 'v'
+  | 'w'
+  | 'x'
+  | 'y'
+  | 'z'
+  | '?';
+export type Facing =
+  | 'A'
+  | 'B'
+  | 'C'
+  | 'D'
+  | 'E'
+  | 'F'
+  | 'G'
+  | 'H'
+  | 'I'
+  | 'J'
+  | 'K'
+  | 'L'
+  | 'M'
+  | 'N'
+  | 'O'
+  | 'P'
+  | 'Q'
+  | 'R'
+  | 'S'
+  | 'T'
+  | 'U'
+  | 'V'
+  | 'W'
+  | 'X'
+  | 'Y'
+  | 'Z';
 export type Pillar = `${Direction}${Direction}`;
 
 export type Kind = number;
@@ -61,7 +115,7 @@ export type AllOrder =
 type Zone = 'edge' | 'interior';
 type Location = `${AllOrder} ${Zone}`;
 
-export type Directional<T> = Record<Direction, T | false | undefined>;
+export type Directional<T> = { [direction in Direction]?: T | false | undefined };
 export type Wall = Directional<true>;
 export type Portal = Directional<CellDirection>;
 
@@ -415,7 +469,9 @@ export abstract class Maze {
   }
 
   public initialTunnels(cell: Cell): Portal {
-    return Object.fromEntries(Object.keys(this.initialWalls(cell)).map((d) => [d, false]));
+    return Object.fromEntries(
+      Object.keys(this.initialWalls(cell)).map((d) => [d as Direction, false]),
+    );
   }
   //#endregion
   //#region utility functions
@@ -472,10 +528,10 @@ export abstract class Maze {
     const straight = this.straightMatrix[cell.direction];
     if (straight) {
       const validDirections = straight.flatMap((dir) => {
-        const dirs = Array.from(dir).filter((d) => d in this.nexus(cell).walls);
+        const dirs = Array.from(dir).filter((d) => d in this.nexus(cell).walls) as Direction[];
         return bias ? dirs : dirs.reverse();
       });
-      return validDirections.filter((d) => d !== '');
+      return validDirections;
     }
 
     throw new Error(`"${cell.direction}" is not a valid direction`);
@@ -560,14 +616,14 @@ export abstract class Maze {
   }
 
   public randomCellDirection(cell = this.randomCell()): CellDirection {
-    const direction = this.randomPick(Object.keys(this.nexus(cell).walls))!;
+    const direction = this.randomPick(Object.keys(this.nexus(cell).walls) as Direction[])!;
     return { ...cell, direction };
   }
 
   public removeInteriorWalls(): void {
     for (const cell of this.cellsInMaze()) {
       const wall = this.nexus(cell).walls;
-      for (const direction of Object.keys(wall).filter((d) => wall[d])) {
+      for (const direction of (Object.keys(wall) as Direction[]).filter((d) => wall[d])) {
         const move = this.move(cell, direction);
         if (move && this.inMaze(move)) {
           wall[direction] = false;
@@ -1000,7 +1056,7 @@ export abstract class Maze {
     cell: Cell,
     { wall = 'all', inMaze = 'all' }: { wall?: boolean | 'all'; inMaze?: boolean | 'all' } = {},
   ): Move[] {
-    return Object.entries(this.nexus(cell).walls)
+    return (Object.entries(this.nexus(cell).walls) as [Direction, boolean][])
       .filter(([, w]) => wall === 'all' || w === wall)
       .map(([direction]) => ({ direction, move: this.traverse(cell, direction) }))
       .filter(({ move }) => inMaze === 'all' || this.inMaze(move) === inMaze);
@@ -1030,7 +1086,7 @@ export abstract class Maze {
     cell: Cell,
     { wall = false, inMaze = true }: { wall?: boolean | 'all'; inMaze?: boolean | 'all' } = {},
   ): Move[] {
-    return Object.entries(this.nexus(cell).walls)
+    return (Object.entries(this.nexus(cell).walls) as [Direction, boolean][])
       .filter(([, w]) => wall === 'all' || w === wall)
       .map(([direction]) => ({ direction, move: this.move(cell, direction) }))
       .filter(({ move }) => inMaze === 'all' || this.inMaze(move) === inMaze);
@@ -1084,7 +1140,7 @@ export abstract class Maze {
   }
 
   public adjacent(cell: Cell): CellDirection[] {
-    return Object.keys(this.nexus(cell).walls)
+    return (Object.keys(this.nexus(cell).walls) as Direction[])
       .map((direction) => this.move(cell, direction))
       .filter((c) => c != null);
   }
@@ -1094,12 +1150,12 @@ export abstract class Maze {
   }
 
   public directionTo(source: Cell, destination: Cell): Direction | undefined {
-    return Object.keys(this.nexus(source).walls).find((direction) =>
+    return (Object.keys(this.nexus(source).walls) as Direction[]).find((direction) =>
       this.isSame(destination, this.move(source, direction)),
     );
   }
 
-  public preferreds(cell: Cell): string[] {
+  public preferreds(cell: Cell): Direction[] {
     return this.moves(cell, { wall: 'all' })
       .filter(({ direction }) => this.preferredMatrix[this.cellKind(cell)].includes(direction))
       .map(({ direction }) => direction);
@@ -1142,7 +1198,7 @@ export abstract class Maze {
   public drawWalls(cell: Cell, color = this.wallColor): void {
     const { walls, tunnels } = this.nexus(cell);
 
-    for (const direction of Object.keys(walls)) {
+    for (const direction of Object.keys(walls) as Direction[]) {
       if (walls[direction]) {
         if (tunnels[this.opposite(direction)]) {
           const move = this.traverse(cell, direction);

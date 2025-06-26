@@ -31,10 +31,13 @@ export class Tremaux extends MazeSolver {
     this.pathColor = pathColor;
     this.blockedColor = blockedColor;
 
-    this.marks = create2DArray(this.maze.width, this.maze.height, (x, y) =>
-      Object.fromEntries(
-        Object.entries(this.maze.nexus({ x: x, y: y }).walls).map(([k]) => [k, 0]),
-      ),
+    this.marks = create2DArray(
+      this.maze.width,
+      this.maze.height,
+      (x, y) =>
+        Object.fromEntries(
+          Object.entries(this.maze.nexus({ x: x, y: y }).walls).map(([k]) => [k as Direction, 0]),
+        ) as Record<Direction, number>,
     );
     this.curr = this.maze.entrance;
   }
@@ -58,13 +61,13 @@ export class Tremaux extends MazeSolver {
     this.marks[next.x][next.y][this.maze.opposite(next.direction)]++;
 
     this.maze.drawCell(this.curr);
-    for (const direction of Object.keys(this.marks[this.curr.x][this.curr.y])) {
+    for (const direction of Object.keys(this.marks[this.curr.x][this.curr.y]) as Direction[]) {
       this.drawMark({ ...this.curr, direction }, markedColor, blockedColor);
     }
 
     this.maze.drawAvatar(this.maze.drawCell(next), avatarColor);
 
-    for (const direction of Object.keys(this.marks[next.x][next.y])) {
+    for (const direction of Object.keys(this.marks[next.x][next.y]) as Direction[]) {
       this.drawMark({ ...next, direction }, markedColor, blockedColor);
     }
 

@@ -6,12 +6,17 @@ import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts
 
 type SubRegion = 'a' | 'b' | 'm';
 
+type RegionProperties = {
+  width: number;
+  height: number;
+};
+
 class Region {
   private readonly width: number;
   private readonly height: number;
   public subregions: (SubRegion | null)[][];
 
-  public constructor({ width, height }: { width: number; height: number }) {
+  public constructor({ width, height }: RegionProperties) {
     this.width = width;
     this.height = height;
     this.subregions = create2DArray(width, height, null);
@@ -94,15 +99,15 @@ export class Division extends MazeGenerator {
       const frontier = [seedA, seedB];
 
       while (frontier.length > 0) {
-        const index = Math.floor(this.random() * frontier.length);
+        const index = this.randomNumber(frontier.length);
         const cell = frontier[index];
 
         const neighbors = this.maze
           .moves(cell, { wall: 'all' })
           .filter(({ move }) => region.subregions[move.x][move.y] === 'm');
 
-        if (neighbors.length > 0) {
-          const neighbor = neighbors[Math.floor(this.random() * neighbors.length)];
+        const neighbor = this.randomPick(neighbors);
+        if (neighbor) {
           region.subregions[neighbor.move.x][neighbor.move.y] = region.subregions[cell.x][cell.y];
           frontier.push(neighbor.move);
         } else {
@@ -116,10 +121,10 @@ export class Division extends MazeGenerator {
           this.maze.moves(cell).filter(({ move }) => region.subregions[move.x][move.y] === 'b'),
         );
 
-      boundary.splice(Math.floor(this.random() * boundary.length), 1);
+      boundary.splice(this.randomNumber(boundary.length), 1);
 
       for (const cd of boundary) {
-        this.maze.addWall(cd.move, this.maze.opposite(cd.move.direction));
+        this.maze.addWall(cd.move, this.maze.opposite(cd.move.facing));
         yield;
       }
 

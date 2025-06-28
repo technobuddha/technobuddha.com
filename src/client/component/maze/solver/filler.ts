@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellDirection } from '../geometry/maze.ts';
+import { type Cell, type CellFacing } from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -16,7 +16,7 @@ export class Filler extends MazeSolver {
 
   public constructor({
     maze,
-    blockedColor = maze.blockedColor,
+    blockedColor = maze.prunedColor,
     method = 'cul-de-sac',
     ...props
   }: FillerProperties) {
@@ -83,29 +83,29 @@ export class Filler extends MazeSolver {
       }
     }
 
-    let cell = {
-      ...this.maze.entrance,
-      direction: this.maze.opposite(this.maze.entrance.direction),
-    };
+    let cell: CellFacing = { ...this.maze.entrance };
+    let prev: CellFacing | undefined = undefined;
+    const path: CellFacing[] = [cell];
 
-    const path: CellDirection[] = [cell];
     while (!this.maze.isSame(cell, exit)) {
       const moves = this.maze
         .moves(cell, { wall: false })
-        .filter(
-          ({ move }) =>
-            !this.deadEnds[move.x][move.y] && !path.some((p) => this.maze.isSame(p, move)),
-        );
-
+        // eslint-disable-next-line @typescript-eslint/no-loop-func
+        .filter(({ move }) => !this.maze.isSame(prev, move) && !this.deadEnds[move.x][move.y]);
+      if (moves.length === 0) {
+        throw new Error('No path found');
+      }
       if (moves.length > 1) {
         throw new Error('Multiple paths found');
       }
 
       const [move] = moves;
-      this.maze.solution.push({ ...cell, direction: move.direction });
-      path.push(cell);
+      prev = cell;
       cell = move.move;
+      path.push(cell);
     }
+
+    this.maze.solution = this.maze.makePath(path);
 
     this.maze.restore(walls);
   }

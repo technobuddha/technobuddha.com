@@ -17,7 +17,7 @@ export class Prims extends MazeGenerator {
 
   public override async *generate(): AsyncGenerator<void> {
     while (this.activeCells.length > 0) {
-      const cellIndex = Math.floor(this.random() * this.activeCells.length);
+      const cellIndex = this.randomNumber(this.activeCells.length);
       const currentCell = this.activeCells[cellIndex];
 
       const next = this.randomPick(

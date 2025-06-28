@@ -233,6 +233,7 @@ export class CircularMaze extends Maze {
 
   public drawWall(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { cx, cy, r2, r3, a0, a6 } = this.cellOffsets(cell);
@@ -303,6 +304,7 @@ export class CircularMaze extends Maze {
 
   public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
         case 'ab':
         case 'fb': {
@@ -414,7 +416,7 @@ export class CircularMaze extends Maze {
           if (cell.direction === '?') {
             this.renderCircle(rect, color);
           } else {
-            const angle = this.angleMatrix[cell.direction] + (cell.x === 0 ? 90 : -90);
+            const angle = this.angleMatrix[cell.direction]! + (cell.x === 0 ? 90 : -90);
             this.renderArrow(rect, angle, color);
           }
           break;
@@ -426,7 +428,7 @@ export class CircularMaze extends Maze {
             this.renderCircle(rect, color);
           } else {
             const angle =
-              this.angleMatrix[cell.direction] + (cell.x * (360 / cols) + 360 / cols / 2);
+              this.angleMatrix[cell.direction]! + (cell.x * (360 / cols) + 360 / cols / 2);
             this.renderArrow(rect, angle, color);
           }
           break;

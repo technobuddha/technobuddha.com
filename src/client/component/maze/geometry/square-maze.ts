@@ -65,6 +65,7 @@ export class SquareMaze extends Maze {
     if (this.drawing) {
       const { x1, x2, x3, x4, y1, y2, y3, y4 } = this.cellOffsets(cell);
 
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'n': {
           this.drawing.rect({ x: x2, y: y1 }, { x: x3, y: y2 }, color);
@@ -92,6 +93,7 @@ export class SquareMaze extends Maze {
     if (this.drawing) {
       const { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 } = this.cellOffsets(cell);
 
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'n': {
           this.drawing.rect({ x: x1, y: y1 }, { x: x2, y: y0 }, color);

@@ -1,4 +1,4 @@
-import { type Cell, type CellDirection } from '../geometry/maze.ts';
+import { type Cell, type CellFacing } from '../geometry/maze.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -28,7 +28,7 @@ export class Wilsons extends MazeGenerator {
   public async *generate(): AsyncGenerator<void> {
     while (this.unvisited.length > 0) {
       let currentCell = this.randomPick(this.unvisited)!;
-      let path: (Cell | CellDirection)[] = [currentCell];
+      let path: (Cell | CellFacing)[] = [currentCell];
 
       while (!this.isVisited(currentCell)) {
         const { move } = this.randomPick(this.maze.moves(currentCell, { wall: 'all' }))!;
@@ -52,8 +52,8 @@ export class Wilsons extends MazeGenerator {
       }
 
       for (const cell of path) {
-        if ('direction' in cell) {
-          this.maze.removeWall(cell, this.maze.opposite(cell.direction));
+        if ('facing' in cell) {
+          this.maze.removeWall(cell, this.maze.opposite(cell.facing));
           yield;
         }
         this.markAsVisited(cell);

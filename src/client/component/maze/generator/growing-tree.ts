@@ -53,7 +53,7 @@ export class GrowingTree extends MazeGenerator {
       }
       case 'random':
       default: {
-        return Math.floor(this.random() * this.list.length);
+        return this.randomNumber(this.list.length);
       }
     }
   }
@@ -68,7 +68,9 @@ export class GrowingTree extends MazeGenerator {
       );
 
       if (next) {
-        yield this.maze.removeWall(currentCell, next.direction);
+        this.maze.removeWall(currentCell, next.direction);
+        yield;
+
         this.visit({ cell: next.move });
         this.list.push(next.move);
       } else {

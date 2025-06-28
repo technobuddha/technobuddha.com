@@ -74,6 +74,7 @@ export class BrickMaze extends Maze {
 
   public drawWall(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { x2, x3, y1, y2 } = this.cellOffsets(cell);
@@ -113,6 +114,7 @@ export class BrickMaze extends Maze {
 
   public override drawDoor(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { x1, x2, x3, x4, y0, y1 } = this.cellOffsets(cell);
@@ -174,6 +176,7 @@ export class BrickMaze extends Maze {
 
   public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
         case 'ab': {
           const { x3, x6, y1, y2 } = this.cellOffsets({ x, y });

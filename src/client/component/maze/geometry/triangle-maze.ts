@@ -153,6 +153,7 @@ export class TriangleMaze extends Maze {
 
   public drawWall(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { x5, xd, y1, y3 } = this.cellOffsets(cell);
@@ -229,6 +230,7 @@ export class TriangleMaze extends Maze {
 
   public override drawDoor(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { x2, x5, xd, xg, y0, y1 } = this.cellOffsets(cell);
@@ -358,6 +360,7 @@ export class TriangleMaze extends Maze {
 
   public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
         case 'bd': {
           const { xd, xe, xg, y7, y8, ya } = this.cellOffsets(cell);

@@ -286,6 +286,7 @@ export class OctogonMaze extends Maze {
 
   public drawWall(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { xf, xg, y2, y6 } = this.cellOffsets(cell);
@@ -431,6 +432,7 @@ export class OctogonMaze extends Maze {
 
   public override drawDoor(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { xd, xf, xg, xi, y0, y2 } = this.cellOffsets(cell);
@@ -665,6 +667,7 @@ export class OctogonMaze extends Maze {
 
   public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
         case 'ab': {
           const { xg, xh, xj, xk, xm, y2, y5, y6, y7 } = this.cellOffsets(cell);

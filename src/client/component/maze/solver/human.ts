@@ -3,9 +3,10 @@ import { create2DArray, modulo } from '@technobuddha/library';
 
 import {
   type Cell,
-  type CellDirection,
+  type CellFacing,
   type CellTunnel,
   type Direction,
+  type Facing,
 } from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
@@ -17,9 +18,12 @@ type Options = {
   readonly hideReverse: boolean;
 };
 
-type CellPath = CellDirection & {
+type CellPath = Cell & {
+  readonly direction: Direction;
+  readonly facing: Facing;
   readonly branch: Direction;
   readonly path: CellTunnel[];
+  readonly history: CellFacing[];
 };
 export type HumanProperties = MazeSolverProperties & {
   readonly options?: Partial<Options>;
@@ -80,78 +84,79 @@ export class Human extends MazeSolver {
     });
   }
   //#endregion
-  private destinations(cell: Cell): CellPath[] {
-    const moves: CellPath[] = this.maze.moves(cell, { wall: false }).map((move) => ({
+
+  private destinations(cell: CellFacing): CellPath[] {
+    type Destination = Cell & {
+      direction: Direction;
+      facing: Facing;
+      readonly branch: Direction;
+      readonly history: CellFacing[];
+    };
+
+    const toCellPath = (destination: Destination): CellPath => ({
+      ...destination,
+      path: this.maze.makePath(destination.history),
+    });
+
+    const destinations: Destination[] = this.maze.moves(cell, { wall: false }).map((move) => ({
       ...move.move,
       direction: move.direction,
       branch: move.direction,
-      path: [],
+      history: [move.move],
     }));
 
-    const paths: CellPath[] = [];
+    const cellPaths: CellPath[] = [];
 
-    for (const move of moves) {
+    for (const destination of destinations) {
       let prev = cell;
-
-      const exploreTunnel = (): void => {
-        const { tunnel } = this.maze.walk(prev, move.direction);
-        if (tunnel) {
-          for (const t of tunnel) {
-            move.path.push({ ...t, tunnel: true });
-          }
-        }
-      };
 
       while (true) {
         const next = this.maze
-          .moves(move, { wall: false })
+          .moves(destination, { wall: false })
           .filter(({ move: m }) => !this.deadEnd[m.x][m.y] && !this.maze.isSame(m, prev));
 
         if (next.length === 0) {
           // dead end
-          if (this.maze.isSame(move, this.maze.exit)) {
-            paths.push(move);
+          if (this.maze.isSame(destination, this.maze.exit)) {
+            cellPaths.push(toCellPath(destination));
           } else if (this.options.markDeadEnds) {
-            for (const p of move.path) {
-              if (!p.tunnel) {
-                this.deadEnd[p.x][p.y] = true;
-                if (!this.maze.isSame(p, this.maze.entrance)) {
-                  this.maze.drawX(this.maze.drawCell(p));
-                }
+            for (const h of destination.history) {
+              this.deadEnd[h.x][h.y] = true;
+              if (!this.maze.isSame(h, this.maze.entrance)) {
+                this.maze.drawX(this.maze.drawCell(h));
               }
             }
-            this.deadEnd[move.x][move.y] = true;
-            if (!this.maze.isSame(move, this.maze.entrance)) {
-              this.maze.drawX(this.maze.drawCell(move));
+
+            this.deadEnd[destination.x][destination.y] = true;
+            if (!this.maze.isSame(destination, this.maze.entrance)) {
+              this.maze.drawX(this.maze.drawCell(destination));
             }
-          } else if (!this.deadEnd[move.x][move.y]) {
-            exploreTunnel();
-            paths.push(move);
+          } else {
+            destination.history.push(destination);
           }
           break;
         } else if (next.length === 1) {
           // single path
-          exploreTunnel();
           if (this.options.finalDestination) {
-            prev = { x: move.x, y: move.y };
-            move.path.push({ x: move.x, y: move.y, direction: move.direction, tunnel: false });
-            move.x = next[0].move.x;
-            move.y = next[0].move.y;
-            move.direction = next[0].direction;
+            prev = { x: destination.x, y: destination.y, facing: destination.facing };
+            destination.history.push(next[0].move);
+            destination.x = next[0].move.x;
+            destination.y = next[0].move.y;
+            destination.facing = next[0].move.facing;
+            destination.direction = next[0].direction;
           } else {
-            paths.push(move);
+            cellPaths.push(toCellPath(destination));
             break;
           }
         } else {
-          exploreTunnel();
-
-          paths.push(move);
+          // destination.path.push(destination);
+          cellPaths.push(toCellPath(destination));
           break;
         }
       }
     }
 
-    return paths;
+    return cellPaths;
   }
 
   private restoreCell(cell: Cell): void {
@@ -167,8 +172,8 @@ export class Human extends MazeSolver {
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): AsyncGenerator<void> {
-    const history: CellTunnel[] = [];
-    let human: CellDirection = entrance;
+    const history: CellFacing[] = [entrance];
+    let human: CellFacing = entrance;
     let reverse = human;
     let destinations: CellPath[] = [];
     let choice = 0;
@@ -185,12 +190,7 @@ export class Human extends MazeSolver {
 
       destinations = this.destinations(human);
 
-      const turns = this.maze.straight(
-        this.maze.isSame(human, entrance) ?
-          { ...entrance, direction: this.maze.opposite(entrance.direction) }
-        : human,
-        bias,
-      );
+      const turns = this.maze.straight(this.maze.isSame(human, entrance) ? entrance : human, bias);
       bias = !bias;
 
       if (this.options.hideReverse && destinations.length > 1) {
@@ -208,25 +208,7 @@ export class Human extends MazeSolver {
         for (const subMove of move.path) {
           this.restoreCell(subMove);
         }
-      }
-
-      for (const move of destinations) {
-        let prev: CellTunnel | null = null;
-        for (const subMove of move.path) {
-          if (prev) {
-            this.maze.drawPath(
-              { ...prev, direction: subMove.direction },
-              prev.tunnel ? this.maze.tunnelColor : this.maze.pathColor,
-            );
-          }
-          prev = subMove;
-        }
-        if (prev) {
-          this.maze.drawPath(
-            { ...prev, direction: move.direction },
-            prev.tunnel ? this.maze.tunnelColor : this.maze.pathColor,
-          );
-        }
+        this.maze.drawPaths(move.path);
       }
 
       this.maze.drawStar(human, this.maze.avatarColor);
@@ -248,15 +230,16 @@ export class Human extends MazeSolver {
             case ' ': {
               // eslint-disable-next-line require-atomic-updates
               reverse = human;
-              human = destinations[choice];
+
+              const { x, y, facing } = destinations[choice];
+              human = { x, y, facing };
 
               for (const path of destinations[choice].path) {
-                history.push(path);
                 if (this.options.markVisited && !path.tunnel) {
                   this.visited[path.x][path.y] = true;
                 }
               }
-              history.push({ x: human.x, y: human.y, direction: human.direction, tunnel: false });
+              history.push(...destinations[choice].history);
               if (this.options.markVisited) {
                 this.visited[human.x][human.y] = true;
               }
@@ -286,14 +269,7 @@ export class Human extends MazeSolver {
       }
     }
 
-    this.maze.solution = [];
-    const solution = this.maze.flatten(history.filter((c) => !c.tunnel));
-
-    let prev = this.maze.entrance;
-    for (const cell of solution) {
-      this.maze.solution.push({ x: prev.x, y: prev.y, direction: cell.direction });
-      prev = cell;
-    }
+    this.maze.solution = this.maze.makePath(this.maze.flatten(history));
   }
 
   public override dispose(): void {

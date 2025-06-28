@@ -6,6 +6,7 @@ export { Filler, type FillerProperties } from './filler.ts';
 export { Human, type HumanProperties } from './human.ts';
 export { type MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 export { RandomMouse, type RandomMouseProperties } from './random-mouse.ts';
+export { Roboto, type RobotoProperties } from './roboto.ts';
 export { Search, type SearchProperties } from './search.ts';
 export { Tremaux, type TremauxProperties } from './tremaux.ts';
-export { WallWalking } from './wall-walking.ts';
+export { WallWalking, type WallWalkingProperties } from './wall-walking.ts';

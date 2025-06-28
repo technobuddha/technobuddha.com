@@ -191,7 +191,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     // setSelectedMaze(undefined);
     // setSelectedGenerator(undefined);
     if (mode === 'game') {
-      setSelectedGenerator('human');
+      setSelectedSolver('human');
     }
     // setSelectedSolver(mode === 'game' ? 'human' : undefined);
     // setShowCoordinates(false);

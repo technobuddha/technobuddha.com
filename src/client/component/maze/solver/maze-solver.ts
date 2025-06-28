@@ -1,43 +1,30 @@
-import { randomPick, randomShuffle } from '@technobuddha/library';
-
-import { type CellDirection, type Maze } from '../geometry/maze.ts';
+import { type CellFacing, type Maze } from '../geometry/maze.ts';
+import { Random, type RandomProperties } from '../random/random.ts';
 
 type Trash = AbortController;
 
-export type MazeSolverProperties = {
+export type MazeSolverProperties = RandomProperties & {
   readonly maze: Maze;
   readonly speed?: number;
-  readonly random?: (this: void) => number;
 };
 
 export type SolveArguments = {
   readonly color?: string;
-  readonly entrance?: CellDirection;
-  readonly exit?: CellDirection;
+  readonly entrance?: CellFacing;
+  readonly exit?: CellFacing;
 };
 
-export abstract class MazeSolver extends EventTarget implements Disposable {
+export abstract class MazeSolver extends Random implements Disposable {
   public readonly speed: NonNullable<MazeSolverProperties['speed']>;
   protected readonly maze: MazeSolverProperties['maze'];
-  protected readonly random: NonNullable<MazeSolverProperties['random']>;
   protected readonly trash = new Set<Trash>();
 
-  public constructor({ maze, speed = 1, random = Math.random }: MazeSolverProperties) {
-    super();
+  public constructor({ maze, speed = 1, random = maze.random, ...props }: MazeSolverProperties) {
+    super({ random, ...props });
     this.maze = maze;
     this.speed = speed;
-    this.random = random;
   }
 
-  //#region Random
-  protected randomPick<T>(array: T[]): T | undefined {
-    return randomPick(array, this.random);
-  }
-
-  protected randomShuffle<T>(array: T[]): T[] {
-    return randomShuffle(array, this.random);
-  }
-  //#endregion
   //#region Trash
   protected addTrash(controller: Trash): void {
     this.trash.add(controller);

@@ -204,6 +204,7 @@ export class CubicMaze extends Maze {
         case 0:
         case 3:
         case 6: {
+          // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
           switch (cell.direction) {
             case 'a': {
               const { x1, x2, y0, y1 } = this.cellOffsets(cell);
@@ -241,6 +242,7 @@ export class CubicMaze extends Maze {
         case 1:
         case 4:
         case 7: {
+          // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
           switch (cell.direction) {
             case 'e': {
               const { x4, x5, x9, xa, y0, y1 } = this.cellOffsets(cell);
@@ -310,6 +312,7 @@ export class CubicMaze extends Maze {
         case 2:
         case 5:
         case 8: {
+          // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
           switch (cell.direction) {
             case 'i': {
               const { x1, x2, y1, y2, y3, y4 } = this.cellOffsets(cell);
@@ -383,6 +386,7 @@ export class CubicMaze extends Maze {
 
   public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
         case 'ab': {
           const { x2, x3, y0, y1 } = this.cellOffsets(cell);

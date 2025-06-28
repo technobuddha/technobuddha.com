@@ -91,7 +91,7 @@ export class ZetaMaze extends DotMaze {
   private freezeWalls(): void {
     for (let x = 1; x < this.width; ++x) {
       for (let y = 1; y < this.height; ++y) {
-        if (this.random() < 0.5) {
+        if (this.randomChance(0.5)) {
           // remove walls on the \ diagonal
           delete this.nexus({ x: x, y: y }).walls.h;
           delete this.nexus({ x: x - 1, y: y - 1 }).walls.d;

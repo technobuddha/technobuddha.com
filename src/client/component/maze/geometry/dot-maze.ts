@@ -122,6 +122,7 @@ export class DotMaze extends Maze {
 
   public drawWall(cd: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cd.direction) {
         case 'a': {
           const { x3, x4, y0, y2 } = this.cellOffsets(cd);
@@ -290,6 +291,7 @@ export class DotMaze extends Maze {
 
   public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
         case 'ab': {
           const { x4, x6, y0, y2 } = this.cellOffsets(cell);

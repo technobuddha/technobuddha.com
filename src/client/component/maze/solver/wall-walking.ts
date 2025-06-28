@@ -21,7 +21,7 @@ export class WallWalking extends MazeSolver {
     super({ maze, ...props });
 
     this.avatarColor = avatarColor;
-    this.turn = turn ?? (this.random() < 0.5 ? 'left' : 'right');
+    this.turn = turn ?? (this.randomChance(0.5) ? 'left' : 'right');
   }
 
   public async *solve({
@@ -49,6 +49,6 @@ export class WallWalking extends MazeSolver {
       yield;
     }
 
-    this.maze.solution = this.maze.flatten(this.maze.makePath(robot.history));
+    this.maze.solution = this.maze.makePath(robot.path());
   }
 }

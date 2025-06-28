@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
 import { modulo } from '@technobuddha/library';
 
 import { type Rect } from '../drawing/drawing.ts';

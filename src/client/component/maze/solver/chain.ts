@@ -1,6 +1,6 @@
 import { CartesianSet, create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellDirection } from '../geometry/maze.ts';
+import { type Cell, type CellFacing, type CellTunnel } from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 import { BacktrackingRobot, type Robot, WallWalkingRobot } from './robot/index.ts';
@@ -18,9 +18,10 @@ export class Chain extends MazeSolver {
   private readonly pathColor: NonNullable<ChainProperties['avatarColor']>;
   private readonly chainColor: NonNullable<ChainProperties['avatarColor']>;
 
-  private current: CellDirection = this.maze.entrance;
-  private chain: CellDirection[] = [];
-  private path: CellDirection[] = [];
+  private current: CellFacing = this.maze.entrance;
+  private chain: CellFacing[] = [];
+  private history: CellFacing[] = [];
+  private path: CellTunnel[] = [];
   private readonly blocked: boolean[][];
   private readonly createRobot: (turn: 'right' | 'left', color: string) => Robot;
 
@@ -57,7 +58,7 @@ export class Chain extends MazeSolver {
             location: this.current,
             blocked: this.blocked,
             clearCell: this.restoreCell.bind(this),
-            turn,
+            program: turn === 'right' ? 'right-turn' : 'left-turn',
             color,
           });
   }
@@ -76,7 +77,7 @@ export class Chain extends MazeSolver {
     }
   }
 
-  private moveTo(cell: CellDirection): void {
+  private moveTo(cell: CellFacing): void {
     const location = this.current;
 
     this.current = cell;
@@ -89,7 +90,8 @@ export class Chain extends MazeSolver {
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): AsyncGenerator<void> {
-    let link: CellDirection = entrance;
+    let link: CellFacing = entrance;
+    this.chain = [link];
     while (!this.maze.isSame(link, exit)) {
       this.maze.drawAvatar(this.maze.drawCell(link), this.chainColor);
       const [{ move }] = this.maze
@@ -102,15 +104,12 @@ export class Chain extends MazeSolver {
       link = move;
       this.chain.push(link);
     }
-    this.chain.push(exit);
-
-    this.chain = this.maze.makePath(this.chain, entrance);
 
     let pos = 0;
 
     this.current = {
       ...entrance,
-      direction: this.maze.opposite(
+      facing: this.maze.opposite(
         this.randomPick(this.maze.moves(entrance).map((m) => m.direction))!,
       ),
     };
@@ -121,11 +120,14 @@ export class Chain extends MazeSolver {
         .moves(this.current, { wall: false })
         .filter(({ move }) => this.maze.isSame(move, nextLinkOfChain));
       if (moves.length > 0) {
-        const [{ move }] = moves;
+        const original = this.current;
 
-        this.path.push({ ...this.current, direction: move.direction });
-
-        this.moveTo(move);
+        const [next] = moves;
+        this.history.push(next.move);
+        this.path = this.maze.makePath(this.history);
+        this.moveTo(next.move);
+        this.restoreCell(this.current);
+        this.restoreCell(original);
         pos++;
         yield;
       } else {
@@ -140,7 +142,8 @@ export class Chain extends MazeSolver {
             if (chainPos > pos) {
               const redraw = new CartesianSet(this.path);
 
-              this.path = this.maze.flatten([...this.path, ...this.maze.makePath(robot.history)]);
+              this.history = this.maze.flatten([...this.history, ...robot.path()]);
+              this.path = this.maze.makePath(this.history);
 
               redraw.add(this.path);
 
@@ -148,10 +151,7 @@ export class Chain extends MazeSolver {
                 this.restoreCell(cell);
               }
 
-              this.moveTo({
-                ...this.chain[chainPos],
-                direction: this.maze.opposite(this.chain[chainPos].direction),
-              });
+              this.moveTo(this.chain[chainPos]);
               pos = chainPos;
               yield;
 
@@ -165,7 +165,8 @@ export class Chain extends MazeSolver {
         }
       }
     }
+    this.history.push(exit);
 
-    this.maze.solution = this.path;
+    this.maze.solution = this.maze.makePath(this.history);
   }
 }

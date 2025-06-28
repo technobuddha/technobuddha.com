@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
+import { type CellFacing } from '../geometry/maze.ts';
+
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 export type RandomMouseProperties = MazeSolverProperties;
@@ -12,10 +14,13 @@ export class RandomMouse extends MazeSolver {
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): AsyncGenerator<void> {
+    const history: CellFacing[] = [];
     let mouse = entrance;
     let tail = entrance;
 
     while (!this.maze.isSame(mouse, exit)) {
+      history.push(mouse);
+
       const next =
         this.randomPick(
           this.maze
@@ -30,5 +35,8 @@ export class RandomMouse extends MazeSolver {
       mouse = next;
       yield;
     }
+    history.push(mouse);
+
+    this.maze.solution = this.maze.makePath(this.maze.flatten(history));
   }
 }

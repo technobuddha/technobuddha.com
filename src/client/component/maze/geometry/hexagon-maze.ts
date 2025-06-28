@@ -146,6 +146,7 @@ export class HexagonMaze extends Maze {
 
   public override drawWall(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { xb, xc, y2, y5 } = this.cellOffsets(cell);
@@ -219,6 +220,7 @@ export class HexagonMaze extends Maze {
 
   public override drawDoor(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { xa, xb, xc, xd, y0, y2 } = this.cellOffsets(cell);
@@ -342,6 +344,7 @@ export class HexagonMaze extends Maze {
 
   public override drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
         case 'ab': {
           const { xc, xd, xf, y2, y4, y5 } = this.cellOffsets(cell);

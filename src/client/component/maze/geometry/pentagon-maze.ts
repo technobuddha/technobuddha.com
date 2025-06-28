@@ -230,6 +230,7 @@ export class PentagonMaze extends Maze {
     if (this.drawing) {
       switch (this.cellKind(cd)) {
         case 0: {
+          // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
           switch (cd.direction) {
             case 'a': {
               const { x2, x6, y0, y1 } = this.cellOffsets(cd);
@@ -312,6 +313,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 1: {
+          // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
           switch (cd.direction) {
             case 'f': {
               const { x1, x2, y0, y2 } = this.cellOffsets(cd);
@@ -394,6 +396,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 2: {
+          // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
           switch (cd.direction) {
             case 'k': {
               const { x6, x7, y0, y2 } = this.cellOffsets(cd);
@@ -477,6 +480,7 @@ export class PentagonMaze extends Maze {
         }
 
         case 3: {
+          // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
           switch (cd.direction) {
             case 'p': {
               const { x1, x2, x3, x4, y1, y2, y3, y5 } = this.cellOffsets(cd);
@@ -566,6 +570,7 @@ export class PentagonMaze extends Maze {
 
   public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
         case 'ab': {
           const { x6, x8, y0, y1 } = this.cellOffsets({ x, y });

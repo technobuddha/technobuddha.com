@@ -1,3 +1,5 @@
+import { type CellFacing } from '../geometry/maze.ts';
+
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 export type DrunkardsWalkProperties = MazeSolverProperties;
@@ -11,9 +13,12 @@ export class DrunkardsWalk extends MazeSolver {
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): AsyncGenerator<void> {
+    const history: CellFacing[] = [];
     let drunkard = entrance;
 
     while (!this.maze.isSame(drunkard, exit)) {
+      history.push(drunkard);
+
       const next = this.randomPick(
         this.maze.moves(drunkard, { wall: false }).map(({ move }) => move),
       );
@@ -25,5 +30,8 @@ export class DrunkardsWalk extends MazeSolver {
         yield;
       }
     }
+    history.push(exit);
+
+    this.maze.solution = this.maze.makePath(this.maze.flatten(history));
   }
 }

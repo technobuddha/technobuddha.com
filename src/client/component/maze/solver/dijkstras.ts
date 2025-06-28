@@ -1,12 +1,11 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellDirection, type Direction } from '../geometry/maze.ts';
+import { type CellFacing } from '../geometry/maze.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 type History = {
-  parent?: Cell;
-  direction?: Direction;
+  parent?: CellFacing;
   distance: number;
   children?: number;
 };
@@ -42,7 +41,7 @@ export class Dijkstras extends MazeSolver {
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): AsyncGenerator<void> {
-    const queue: Cell[] = [];
+    const queue: CellFacing[] = [];
     const distances = create2DArray<History>(this.maze.width, this.maze.height, () => ({
       distance: Infinity,
     }));
@@ -52,9 +51,8 @@ export class Dijkstras extends MazeSolver {
     this.maze.drawAvatar(this.maze.drawCell(entrance), avatarColor);
     yield;
 
-    while (queue.length > 0) {
-      const cell = queue.pop()!;
-
+    let cell = queue.pop();
+    while (cell) {
       if (this.maze.isSame(cell, exit)) {
         break;
       }
@@ -73,7 +71,6 @@ export class Dijkstras extends MazeSolver {
         for (const validMove of validMoves) {
           distances[validMove.move.x][validMove.move.y] = {
             parent: cell,
-            direction: validMove.direction,
             distance,
           };
           // this.maze.drawCell(cell, scannedColor);
@@ -98,29 +95,18 @@ export class Dijkstras extends MazeSolver {
 
         yield;
       }
+
+      cell = queue.pop()!;
     }
 
-    let cell: CellDirection = { ...exit, direction: this.maze.opposite(exit.direction) };
-
-    let dist = distances[cell.x][cell.y];
-    if (!dist || dist.distance === Infinity) {
-      throw new Error('No solution found');
-    } else {
-      for (;;) {
-        dist = distances[cell.x][cell.y];
-
-        this.maze.solution.push({ ...cell });
-        if (this.maze.isSame(cell, entrance)) {
-          break;
-        }
-        const next: CellDirection = { ...dist.parent!, direction: dist.direction! };
-
-        if (next) {
-          cell = next;
-        } else {
-          throw new Error('No solution found');
-        }
+    if (cell) {
+      const path: CellFacing[] = [cell];
+      for (let dist = distances[cell.x][cell.y]; dist.parent; dist = distances[cell.x][cell.y]) {
+        cell = dist.parent;
+        path.unshift(cell);
       }
+
+      this.maze.solution = this.maze.makePath(path);
     }
   }
 }

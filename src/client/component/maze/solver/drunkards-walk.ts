@@ -1,4 +1,4 @@
-import { type CellFacing } from '../geometry/maze.ts';
+import { type CellFacing } from '../geometry/index.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -20,7 +20,7 @@ export class DrunkardsWalk extends MazeSolver {
       history.push(drunkard);
 
       const next = this.randomPick(
-        this.maze.moves(drunkard, { wall: false }).map(({ move }) => move),
+        this.maze.moves(drunkard, { wall: false }).map(({ target }) => target),
       );
       if (next) {
         this.maze.drawCell(drunkard);

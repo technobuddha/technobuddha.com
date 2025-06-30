@@ -1,4 +1,4 @@
-import { type Cell, type CellDirection } from '../geometry/maze.ts';
+import { type Cell, type CellDirection } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 

@@ -7,7 +7,7 @@ import {
   type CellTunnel,
   type Direction,
   type Facing,
-} from '../geometry/maze.ts';
+} from '../geometry/index.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -99,10 +99,10 @@ export class Human extends MazeSolver {
     });
 
     const destinations: Destination[] = this.maze.moves(cell, { wall: false }).map((move) => ({
-      ...move.move,
+      ...move.target,
       direction: move.direction,
       branch: move.direction,
-      history: [move.move],
+      history: [move.target],
     }));
 
     const cellPaths: CellPath[] = [];
@@ -113,7 +113,7 @@ export class Human extends MazeSolver {
       while (true) {
         const next = this.maze
           .moves(destination, { wall: false })
-          .filter(({ move: m }) => !this.deadEnd[m.x][m.y] && !this.maze.isSame(m, prev));
+          .filter(({ target: m }) => !this.deadEnd[m.x][m.y] && !this.maze.isSame(m, prev));
 
         if (next.length === 0) {
           // dead end
@@ -139,10 +139,10 @@ export class Human extends MazeSolver {
           // single path
           if (this.options.finalDestination) {
             prev = { x: destination.x, y: destination.y, facing: destination.facing };
-            destination.history.push(next[0].move);
-            destination.x = next[0].move.x;
-            destination.y = next[0].move.y;
-            destination.facing = next[0].move.facing;
+            destination.history.push(next[0].target);
+            destination.x = next[0].target.x;
+            destination.y = next[0].target.y;
+            destination.facing = next[0].target.facing;
             destination.direction = next[0].direction;
           } else {
             cellPaths.push(toCellPath(destination));

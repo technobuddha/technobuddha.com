@@ -1,7 +1,7 @@
 import { animate } from '../drawing/animate.ts';
-import { type MazeGenerator } from '../generator/maze-generator.ts';
-import { type Maze } from '../geometry/maze.ts';
-import { type MazeSolver } from '../solver/maze-solver.ts';
+import { type MazeGenerator } from '../generator/index.ts';
+import { type Maze } from '../geometry/index.ts';
+import { type MazeSolver } from '../solver/index.ts';
 
 export class MazeRunner {
   private controller: AbortController | undefined = undefined;

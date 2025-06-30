@@ -1,8 +1,8 @@
 import { type Drawing } from '../drawing/drawing.ts';
-import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/maze-generator.ts';
-import { type Maze, type MazeProperties } from '../geometry/maze.ts';
+import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
+import { type Maze, type MazeProperties } from '../geometry/index.ts';
 import { MazeRunner } from '../runner/maze-runner.ts';
-import { type MazeSolver, type MazeSolverProperties } from '../solver/maze-solver.ts';
+import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
 export type MazeSettings = Partial<MazeProperties> &
   Partial<MazeGeneratorProperties> &

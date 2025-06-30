@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type CellFacing } from '../geometry/maze.ts';
+import { type CellFacing } from '../geometry/index.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -61,7 +61,7 @@ export class Dijkstras extends MazeSolver {
       const validMoves = this.randomShuffle(
         this.maze
           .moves(cell, { wall: false })
-          .filter(({ move }) => distances[move.x][move.y].distance > distance),
+          .filter(({ target }) => distances[target.x][target.y].distance > distance),
       );
 
       distances[cell.x][cell.y].children = validMoves.length;
@@ -69,14 +69,14 @@ export class Dijkstras extends MazeSolver {
       if (validMoves.length > 0) {
         this.maze.drawAvatar(this.maze.drawCell(cell), scannedColor);
         for (const validMove of validMoves) {
-          distances[validMove.move.x][validMove.move.y] = {
+          distances[validMove.target.x][validMove.target.y] = {
             parent: cell,
             distance,
           };
           // this.maze.drawCell(cell, scannedColor);
-          this.maze.drawAvatar(this.maze.drawCell(validMove.move), avatarColor);
+          this.maze.drawAvatar(this.maze.drawCell(validMove.target), avatarColor);
           yield;
-          queue.unshift(validMove.move);
+          queue.unshift(validMove.target);
         }
       } else {
         let parent = cell;

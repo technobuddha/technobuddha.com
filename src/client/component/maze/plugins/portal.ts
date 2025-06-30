@@ -1,4 +1,4 @@
-import { type Maze } from '../geometry/maze.ts';
+import { type Maze } from '../geometry/index.ts';
 
 export function portalPlugin(maze: Maze): void {
   maze.hookPreGeneration = () => {

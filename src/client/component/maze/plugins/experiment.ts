@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type CellDirection, type Maze } from '../geometry/maze.ts';
+import { type CellDirection, type Maze } from '../geometry/index.ts';
 
 const NUMBER_OF_BRIDGES = 150;
 const BRIDGE_LENGTH = 5;

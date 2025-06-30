@@ -1,5 +1,5 @@
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
-import { TremauxRobot } from './robot/tremaux-robot.ts';
+import { TremauxRobot } from './robot/index.ts';
 
 export type TremauxProperties = MazeSolverProperties & {
   avatarColor?: string;

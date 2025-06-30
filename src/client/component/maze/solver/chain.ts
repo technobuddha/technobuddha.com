@@ -1,6 +1,6 @@
 import { CartesianSet, create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellFacing, type CellTunnel } from '../geometry/maze.ts';
+import { type Cell, type CellFacing, type CellTunnel } from '../geometry/index.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 import { BacktrackingRobot, type Robot, WallWalkingRobot } from './robot/index.ts';
@@ -94,14 +94,14 @@ export class Chain extends MazeSolver {
     this.chain = [link];
     while (!this.maze.isSame(link, exit)) {
       this.maze.drawAvatar(this.maze.drawCell(link), this.chainColor);
-      const [{ move }] = this.maze
+      const [{ target }] = this.maze
         .moves(link, { wall: 'all' })
-        .filter(({ move }) => !this.chain.some((c) => this.maze.isSame(c, move)))
+        .filter(({ target }) => !this.chain.some((c) => this.maze.isSame(c, target)))
         .sort(
-          ({ move: a }, { move: b }) =>
+          ({ target: a }, { target: b }) =>
             Math.hypot(a.x - exit.x, a.y - exit.y) - Math.hypot(b.x - exit.x, b.y - exit.y),
         );
-      link = move;
+      link = target;
       this.chain.push(link);
     }
 
@@ -118,14 +118,14 @@ export class Chain extends MazeSolver {
       // We are attempting to follow the chain...
       const moves = this.maze
         .moves(this.current, { wall: false })
-        .filter(({ move }) => this.maze.isSame(move, nextLinkOfChain));
+        .filter(({ target }) => this.maze.isSame(target, nextLinkOfChain));
       if (moves.length > 0) {
         const original = this.current;
 
         const [next] = moves;
-        this.history.push(next.move);
+        this.history.push(next.target);
         this.path = this.maze.makePath(this.history);
-        this.moveTo(next.move);
+        this.moveTo(next.target);
         this.restoreCell(this.current);
         this.restoreCell(original);
         pos++;

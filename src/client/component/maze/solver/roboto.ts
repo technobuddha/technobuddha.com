@@ -1,8 +1,13 @@
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
-import { BacktrackingRobot, type BacktrackingRobotProperties } from './robot/backtracking-robot.ts';
-import { type Robot } from './robot/robot.ts';
-import { TremauxRobot, type TremauxRobotProperties } from './robot/tremaux-robot.ts';
-import { WallWalkingRobot, type WallWalkingRobotProperties } from './robot/wall-walking-robot.ts';
+import {
+  BacktrackingRobot,
+  type BacktrackingRobotProperties,
+  type Robot,
+  TremauxRobot,
+  type TremauxRobotProperties,
+  WallWalkingRobot,
+  type WallWalkingRobotProperties,
+} from './robot/index.ts';
 
 type TremauxRobo = Omit<TremauxRobotProperties, 'maze' | 'location'> & {
   algorithm: 'tremaux';
@@ -64,16 +69,31 @@ export class Roboto extends MazeSolver {
       }
     });
 
-    while (!robots.some((robot) => this.maze.isSame(robot.location, exit))) {
+    while (
+      robots.some((robot) => robot.active) &&
+      !robots.some((robot) => this.maze.isSame(robot.location, exit))
+    ) {
       for (const robot of robots) {
         robot.execute();
         yield;
       }
     }
 
-    const winner = robots.find((robot) => this.maze.isSame(robot.location, exit))!;
+    if (robots.every((robot) => !robot.active)) {
+      this.maze.sendMessage('All robots are stuck');
+    } else {
+      const winners = robots.filter((robot) => this.maze.isSame(robot.location, exit));
+      const [winner] = winners;
 
-    console.log(winner.name);
-    this.maze.solution = this.maze.makePath(winner.path());
+      if (robots.length > 1) {
+        if (winners.length === 1) {
+          this.maze.sendMessage(`Robot ${winner.name} wins`, winner.color);
+        } else if (winners.length > 1) {
+          this.maze.sendMessage(`Robots ${winners.map((r) => r.name).join(', ')} tie`);
+        }
+      }
+
+      this.maze.solution = this.maze.makePath(winner.path());
+    }
   }
 }

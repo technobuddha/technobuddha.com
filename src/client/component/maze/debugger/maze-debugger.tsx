@@ -165,12 +165,12 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
           for (const move of moves) {
             switch (show) {
               case 'moves': {
-                maze.drawText(maze.drawCell(move.move), move.direction, 'cyan');
+                maze.drawText(maze.drawCell(move.target), move.direction, 'cyan');
                 break;
               }
               case 'paths': {
                 maze.drawPath(
-                  maze.drawCell({ ...move.move, direction: maze.opposite(move.move) }),
+                  maze.drawCell({ ...move.target, direction: maze.opposite(move.target) }),
                   'cyan',
                 );
                 break;
@@ -222,11 +222,11 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
       for (const cell of maze.cellsInMaze()) {
         for (const move of maze.moves(cell, { wall: 'all' })) {
-          const back = maze.move(move.move, maze.opposite(move.move));
+          const back = maze.move(move.target, maze.opposite(move.target));
           if (back) {
             if (cell.x !== back.x || cell.y !== back.y) {
               err.push(
-                `{ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}} = { x: ${move.move.x}, y: ${move.move.y} } back = { x: ${back.x}, y: ${back.y}, ${maze.opposite(move.move)} }`,
+                `{ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}} = { x: ${move.target.x}, y: ${move.target.y} } back = { x: ${back.x}, y: ${back.y}, ${maze.opposite(move.target)} }`,
               );
             }
           } else {

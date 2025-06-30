@@ -1,4 +1,4 @@
-import { type Cell, type CellFacing } from '../geometry/maze.ts';
+import { type Cell, type CellFacing } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -31,12 +31,12 @@ export class Wilsons extends MazeGenerator {
       let path: (Cell | CellFacing)[] = [currentCell];
 
       while (!this.isVisited(currentCell)) {
-        const { move } = this.randomPick(this.maze.moves(currentCell, { wall: 'all' }))!;
+        const { target } = this.randomPick(this.maze.moves(currentCell, { wall: 'all' }))!;
 
         let cellVisited = false;
         let cellPreviousIndex = -1;
         for (const [index, pathCell] of path.entries()) {
-          if (this.maze.isSame(pathCell, move)) {
+          if (this.maze.isSame(pathCell, target)) {
             cellVisited = true;
             cellPreviousIndex = index;
           }
@@ -46,8 +46,8 @@ export class Wilsons extends MazeGenerator {
           currentCell = path[cellPreviousIndex];
           path = path.slice(0, cellPreviousIndex + 1);
         } else {
-          path.push(move);
-          currentCell = move;
+          path.push(target);
+          currentCell = target;
         }
       }
 

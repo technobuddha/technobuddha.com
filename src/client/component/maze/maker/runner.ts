@@ -236,7 +236,6 @@ export class Runner extends EventTarget {
 
               if (done) {
                 this.maze.addTermini();
-                this.maze.detectErrors();
                 this.maze.draw();
 
                 this.switchPhase('braid');
@@ -254,6 +253,7 @@ export class Runner extends EventTarget {
             }
 
             case 'solve': {
+              this.maze.detectErrors();
               const done = await this.run();
 
               if (done) {

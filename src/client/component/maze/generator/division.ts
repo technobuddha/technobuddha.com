@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell } from '../geometry/maze.ts';
+import { type Cell } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -104,12 +104,13 @@ export class Division extends MazeGenerator {
 
         const neighbors = this.maze
           .moves(cell, { wall: 'all' })
-          .filter(({ move }) => region.subregions[move.x][move.y] === 'm');
+          .filter(({ target }) => region.subregions[target.x][target.y] === 'm');
 
         const neighbor = this.randomPick(neighbors);
         if (neighbor) {
-          region.subregions[neighbor.move.x][neighbor.move.y] = region.subregions[cell.x][cell.y];
-          frontier.push(neighbor.move);
+          region.subregions[neighbor.target.x][neighbor.target.y] =
+            region.subregions[cell.x][cell.y];
+          frontier.push(neighbor.target);
         } else {
           frontier.splice(index, 1);
         }
@@ -118,13 +119,15 @@ export class Division extends MazeGenerator {
       const boundary = region
         .cells('a')
         .flatMap((cell) =>
-          this.maze.moves(cell).filter(({ move }) => region.subregions[move.x][move.y] === 'b'),
+          this.maze
+            .moves(cell)
+            .filter(({ target }) => region.subregions[target.x][target.y] === 'b'),
         );
 
       boundary.splice(this.randomNumber(boundary.length), 1);
 
       for (const cd of boundary) {
-        this.maze.addWall(cd.move, this.maze.opposite(cd.move.facing));
+        this.maze.addWall(cd.target, this.maze.opposite(cd.target.facing));
         yield;
       }
 

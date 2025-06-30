@@ -1,4 +1,4 @@
-import { type CellFacing, type Maze } from '../geometry/maze.ts';
+import { type CellFacing, type Maze } from '../geometry/index.ts';
 import { Random, type RandomProperties } from '../random/random.ts';
 
 type Trash = AbortController;

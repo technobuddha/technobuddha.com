@@ -6,15 +6,15 @@ import { useMeasure } from 'react-use';
 import { Checkbox, MenuItem, Select } from '#control';
 
 import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
-import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/maze-generator.ts';
-import { type Maze, type MazeProperties } from '../geometry/maze.ts';
+import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
+import { type Maze, type MazeProperties } from '../geometry/index.ts';
 import { allChoices, chooser } from '../library/chooser.ts';
 import { generators, mazes, plugins, solvers } from '../library/mazes.ts';
-import { Human } from '../solver/human.ts';
-import { type MazeSolver, type MazeSolverProperties } from '../solver/maze-solver.ts';
+import { Human, type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
 import { CustomControls } from './controls/custom-controls.tsx';
 import { GameControls } from './controls/game-controls.tsx';
+import { Messages } from './controls/messages.tsx';
 import { type Phase } from './phase.ts';
 import { type PlayMode } from './play-mode.tsx';
 import { Runner } from './runner.ts';
@@ -293,6 +293,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           </Section>
         )}
         <div className={css.gap} />
+        <Messages runner={runner} />
         {mode === 'game' && <GameControls runner={runner} />}
         {mode === 'custom' && (
           <CustomControls runner={runner} onPhasePlayModeChange={handlePhasePlayModeChange} />

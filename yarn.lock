@@ -2824,12 +2824,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/library@npm:1.9.12":
-  version: 1.9.12
-  resolution: "@technobuddha/library@npm:1.9.12"
+"@technobuddha/library@npm:1.9.14":
+  version: 1.9.14
+  resolution: "@technobuddha/library@npm:1.9.14"
   dependencies:
     lodash-es: "npm:4.17.21"
-  checksum: 10c0/5f2f98fe81a50877019e32a31b7f7496e32a44778e16504eb8434482c5ceda451c95d47978cbf39480db983f8a0fb22996fae1eb7692a50ed6e9ffbe96932ff0
+  checksum: 10c0/10102b5de694e6319cf9dbff9e2ddc80605ef1ab9fb66332482859a96a9047463f7ce807808dc4ba7cf4cf2efa6bfd6d88038ae19b959ac38f26139e97787dea
   languageName: node
   linkType: hard
 
@@ -12237,7 +12237,7 @@ __metadata:
     "@react-router/serve": "npm:7.5.3"
     "@technobuddha/color": "npm:0.3.2"
     "@technobuddha/datagrid": "npm:1.2.12"
-    "@technobuddha/library": "npm:1.9.12"
+    "@technobuddha/library": "npm:1.9.14"
     "@technobuddha/openapi": "link:../@technobuddha/openapi/"
     "@technobuddha/project": "npm:0.0.178"
     "@technobuddha/react-hooks": "npm:1.6.2"

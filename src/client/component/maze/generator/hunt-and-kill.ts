@@ -1,4 +1,4 @@
-import { type AllOrder, type CellDirection } from '../geometry/maze.ts';
+import { type AllOrder, type CellDirection } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
@@ -36,7 +36,7 @@ export class HuntAndKill extends MazeGenerator {
         for (const cell of this.maze.cellsInMaze(this.huntMethod)) {
           if (!this.isVisited(cell)) {
             const hunted = this.randomPick(
-              this.maze.moves(cell, { wall: 'all' }).filter(({ move }) => this.isVisited(move)),
+              this.maze.moves(cell, { wall: 'all' }).filter(({ target }) => this.isVisited(target)),
             );
             if (hunted) {
               target = { ...cell, direction: hunted.direction };

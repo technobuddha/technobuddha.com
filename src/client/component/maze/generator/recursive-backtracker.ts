@@ -1,4 +1,4 @@
-import { type CellFacing } from '../geometry/maze.ts';
+import { type CellFacing } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties, type Strategy } from './maze-generator.ts';
 
@@ -48,9 +48,11 @@ export class RecursiveBacktracker extends MazeGenerator {
             .flatMap((c) =>
               this.maze
                 .moves(c, { wall: 'all' })
-                .filter(({ move }) => !this.isVisitedByMe(move) && !this.maze.nexus(move).bridge),
+                .filter(
+                  ({ target }) => !this.isVisitedByMe(target) && !this.maze.nexus(target).bridge,
+                ),
             ),
-        )?.move;
+        )?.target;
 
         if (borderCell) {
           this.maze.removeWall(borderCell, this.maze.opposite(borderCell.facing));

@@ -182,7 +182,7 @@ export const matrix: Matrix = {
     Q: ['k', 'o', 'l', 'n', 'm'],
     R: ['b', 'c', 'a', 'd', 'e'],
     S: ['i', 'h', 'j', 'g', 'f'],
-    T: ['no', 'km', 'l'],
+    T: ['km', 'no', 'l'],
   },
   move: {
     0: {

@@ -1,7 +1,5 @@
-import { create2DArray } from '@technobuddha/library';
-
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
-import { WallWalkingRobot } from './robot/wall-walking-robot.ts';
+import { WallWalkingRobot } from './robot/index.ts';
 
 export type WallWalkingProperties = MazeSolverProperties & {
   turn?: 'right' | 'left';
@@ -37,14 +35,7 @@ export class WallWalking extends MazeSolver {
       trails: 15,
     });
 
-    const visits: number[][] = create2DArray(this.maze.width, this.maze.height, 0);
-
     while (!this.maze.isSame(robot.location, exit)) {
-      const v = ++visits[robot.location.x][robot.location.y];
-      if (v > Object.keys(this.maze.nexus(robot.location).walls).length) {
-        throw new Error('Loop detected');
-      }
-
       robot.execute();
       yield;
     }

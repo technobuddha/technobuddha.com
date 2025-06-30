@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
-import { type CellFacing } from '../geometry/maze.ts';
+import { type CellFacing } from '../geometry/index.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -25,8 +25,8 @@ export class RandomMouse extends MazeSolver {
         this.randomPick(
           this.maze
             .moves(mouse, { wall: false })
-            .filter(({ move }) => !this.maze.isSame(move, tail))
-            .map(({ move }) => move),
+            .filter(({ target }) => !this.maze.isSame(target, tail))
+            .map(({ target }) => target),
         ) ?? tail;
 
       this.maze.drawCell(mouse);

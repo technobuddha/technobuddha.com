@@ -4,8 +4,7 @@ import { darken } from '../library/darken.ts';
 
 import { type MazeSolverProperties } from './maze-solver.ts';
 import { MazeSolver } from './maze-solver.ts';
-import { BacktrackingRobot } from './robot/backtracking-robot.ts';
-import { type Program } from './robot/robot.ts';
+import { BacktrackingRobot, type Program } from './robot/index.ts';
 
 export type SearchProperties = MazeSolverProperties & {
   avatarColor?: string;

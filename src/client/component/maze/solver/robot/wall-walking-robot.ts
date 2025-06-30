@@ -1,4 +1,7 @@
+import { create2DArray } from '@technobuddha/library';
+
 import { Robot, type RobotProperties } from './robot.ts';
+import { RobotError } from './robot-error.ts';
 
 export type WallWalkingRobotProperties = RobotProperties & {
   turn: 'right' | 'left';
@@ -6,18 +9,26 @@ export type WallWalkingRobotProperties = RobotProperties & {
 };
 
 export class WallWalkingRobot extends Robot {
+  private readonly visits: number[][];
+
   public constructor({ maze, turn = 'right', ...props }: WallWalkingRobotProperties) {
     super({ maze, program: turn === 'right' ? 'right-turn' : 'left-turn', ...props });
+    this.visits = create2DArray(this.maze.width, this.maze.height, 0);
   }
 
-  public execute(): void {
+  public step(): void {
+    const v = ++this.visits[this.location.x][this.location.y];
+    if (v > Object.keys(this.maze.nexus(this.location).walls).length) {
+      throw new RobotError(`Robot ${this.name} is stuck in a loop.`, this.color);
+    }
+
     this.clearCell(this.location);
 
-    const next = this.decide(this.maze.moves(this.location, { wall: false }), this.location);
+    const next = this.decide(this.maze.moves(this.location, { wall: false }));
     if (next) {
-      this.moveTo(next.move);
+      this.moveTo(next.target);
     } else {
-      throw new Error(`WallWalkingRobot cannot move from ${this.location.x},${this.location.y}`);
+      throw new RobotError(`Robot ${this.name} cannot decide on a move`, this.color);
     }
   }
 

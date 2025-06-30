@@ -1,3 +1,4 @@
-export { BacktrackingRobot } from './backtracking-robot.ts';
-export { Robot } from './robot.ts';
-export { WallWalkingRobot } from './wall-walking-robot.ts';
+export * from './backtracking-robot.ts';
+export * from './robot.ts';
+export * from './tremaux-robot.ts';
+export * from './wall-walking-robot.ts';

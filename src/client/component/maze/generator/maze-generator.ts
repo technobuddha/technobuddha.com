@@ -6,7 +6,7 @@ import {
   type Direction,
   type Maze,
   type Move,
-} from '../geometry/maze.ts';
+} from '../geometry/index.ts';
 import { logger } from '../library/logger.ts';
 import { Random, type RandomProperties } from '../random/random.ts';
 
@@ -156,7 +156,7 @@ export abstract class MazeGenerator extends Random {
 
             [next] = this.maze
               .moves(current, { wall: 'all' })
-              .filter(({ move }) => this.visited[move.x][move.y] === false)
+              .filter(({ target }) => this.visited[target.x][target.y] === false)
               .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
             break;
           }
@@ -166,7 +166,7 @@ export abstract class MazeGenerator extends Random {
 
             [next] = this.maze
               .moves(current, { wall: 'all' })
-              .filter(({ move }) => this.visited[move.x][move.y] === false)
+              .filter(({ target }) => this.visited[target.x][target.y] === false)
               .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
             break;
           }
@@ -177,7 +177,7 @@ export abstract class MazeGenerator extends Random {
 
             [next] = this.maze
               .moves(current, { wall: 'all' })
-              .filter(({ move }) => this.visited[move.x][move.y] === false)
+              .filter(({ target }) => this.visited[target.x][target.y] === false)
               .sort((a, b) => turns.indexOf(a.direction) - turns.indexOf(b.direction));
             break;
           }
@@ -186,7 +186,7 @@ export abstract class MazeGenerator extends Random {
             next = this.randomPick(
               this.maze
                 .moves(current, { wall: 'all' })
-                .filter(({ move }) => this.visited[move.x][move.y] === false),
+                .filter(({ target }) => this.visited[target.x][target.y] === false),
             );
             break;
           }
@@ -208,7 +208,7 @@ export abstract class MazeGenerator extends Random {
                 next = this.randomPick(
                   this.maze
                     .moves(current, { wall: 'all' })
-                    .filter(({ move }) => this.visited[move.x][move.y] === false),
+                    .filter(({ target }) => this.visited[target.x][target.y] === false),
                 );
               }
             } else {
@@ -219,14 +219,14 @@ export abstract class MazeGenerator extends Random {
                 this.maze
                   .moves(current, { wall: 'all' })
                   .filter(
-                    ({ move, direction }) =>
-                      this.visited[move.x][move.y] === false && direction !== dir,
+                    ({ target, direction }) =>
+                      this.visited[target.x][target.y] === false && direction !== dir,
                   ),
               );
               next ??= this.randomPick(
                 this.maze
                   .moves(current, { wall: 'all' })
-                  .filter(({ move }) => this.visited[move.x][move.y] === false),
+                  .filter(({ target }) => this.visited[target.x][target.y] === false),
               );
             }
 
@@ -236,7 +236,7 @@ export abstract class MazeGenerator extends Random {
           // no default
         }
       }
-      return next?.move;
+      return next?.target;
     }
     throw new Error(`No current cell defined for player ${this.player}.`);
   }
@@ -341,12 +341,12 @@ export abstract class MazeGenerator extends Random {
               (t) =>
                 !path.includes(t.direction) &&
                 !opath.has(t.direction) &&
-                xBridge.every((x) => !this.maze.isSame(t.move, x)),
+                xBridge.every((x) => !this.maze.isSame(t.target, x)),
             )) {
             if (!(traversal.direction in tunnels)) {
               tunnels[traversal.direction] = [];
             }
-            tunnels[traversal.direction]!.push({ ...traversal.move, from: { ...span } });
+            tunnels[traversal.direction]!.push({ ...traversal.target, from: { ...span } });
           }
           prev = span;
         }
@@ -400,7 +400,7 @@ export abstract class MazeGenerator extends Random {
           this.maze.removeWall(span, this.maze.opposite(span.facing));
         }
 
-        return { prev, bridge, next: { direction: this.maze.opposite(next.facing), move: next } };
+        return { prev, bridge, next: { direction: this.maze.opposite(next.facing), target: next } };
       }
     }
     return null;
@@ -420,7 +420,7 @@ export abstract class MazeGenerator extends Random {
         logger.log(
           `Fixing unreachable cell at ${cell.x},${cell.y} by removing wall ${hole.direction}`,
         );
-        this.maze.removeWall(hole.move, hole.direction);
+        this.maze.removeWall(hole.target, hole.direction);
       } else {
         logger.warn(`Masking off unreachable cell at ${cell.x},${cell.y}`);
         this.maze.nexus(cell).mask = true;

@@ -1,8 +1,10 @@
 import { manhattanDistance } from '@technobuddha/library';
 
-import { type Cell, type CellFacing, type Maze, type Move } from '../../geometry/maze.ts';
+import { type Cell, type CellFacing, type Maze, type Move } from '../../geometry/index.ts';
 import { darken } from '../../library/darken.ts';
 import { Random, type RandomProperties } from '../../random/random.ts';
+
+import { RobotError } from './robot-error.ts';
 
 export type Program = 'random' | 'seek' | 'left-turn' | 'right-turn' | 'straight';
 
@@ -12,30 +14,34 @@ export type RobotProperties = RandomProperties & {
   location: CellFacing;
   program?: Program;
   trails?: number;
+  showPath?: boolean;
   clearCell?: (cell: Cell) => void;
   name?: string;
 };
 
 export abstract class Robot extends Random implements Disposable {
+  public active: boolean;
   public readonly color: string;
   public location: CellFacing;
   public readonly program: Program;
   public readonly name: string;
 
+  protected previous: CellFacing;
+  protected readonly history: CellFacing[];
   protected readonly trails: number;
   protected readonly trail: CellFacing[] = [];
-
+  protected readonly showPath: boolean;
   protected readonly start: CellFacing;
   protected readonly maze: Maze;
   protected readonly clearCell: (cell: Cell) => void;
-  protected readonly history: CellFacing[];
   protected bias = true;
 
   public constructor({
     maze,
     location = maze.entrance,
     color = maze.avatarColor,
-    trails = 12,
+    trails = 0,
+    showPath = false,
     program = 'random',
     random = maze.random,
     clearCell = (cell) => maze.drawCell(cell),
@@ -43,20 +49,42 @@ export abstract class Robot extends Random implements Disposable {
     ...props
   }: RobotProperties) {
     super({ random, ...props });
+    this.active = true;
+
     this.maze = maze;
-    this.color = color;
-    this.trails = trails;
-    this.location = location;
-    this.start = location;
+
     this.program = program;
-    this.clearCell = clearCell;
     this.name = name;
 
+    this.color = color;
+    this.trails = trails;
+    this.showPath = showPath;
+    this.clearCell = clearCell;
+
+    this.location = location;
+    this.previous = location;
+    this.start = location;
     this.history = [location];
   }
 
   protected moveTo(next: CellFacing): void {
-    this.location = next;
+    if (this.showPath) {
+      for (const cell of this.maze.makePath(this.path())) {
+        this.clearCell(cell);
+      }
+
+      this.history.push(this.location);
+      this.previous = this.location;
+      this.location = next;
+
+      for (const cell of this.maze.makePath(this.path())) {
+        this.maze.drawPath(cell);
+      }
+    } else {
+      this.history.push(this.location);
+      this.previous = this.location;
+      this.location = next;
+    }
 
     this.clearCell(this.location);
     this.maze.drawAvatar(this.location, this.color);
@@ -75,30 +103,28 @@ export abstract class Robot extends Random implements Disposable {
 
       this.trail.unshift(this.location);
     }
-
-    this.history.push(this.location);
   }
 
-  protected decide(moves: Move[], origin: CellFacing): Move | undefined {
+  protected decide(moves: Move[]): Move | undefined {
     if (moves.length === 0) {
       return undefined;
     }
 
     switch (this.program) {
       case 'random': {
-        return this.randomPick(moves)!;
+        return this.randomPick(moves);
       }
 
       case 'seek': {
         return moves.sort(
           (a, b) =>
-            manhattanDistance({ x: a.move.x, y: a.move.y }, this.maze.exit) -
-            manhattanDistance({ x: b.move.x, y: b.move.y }, this.maze.exit),
+            manhattanDistance({ x: a.target.x, y: a.target.y }, this.maze.exit) -
+            manhattanDistance({ x: b.target.x, y: b.target.y }, this.maze.exit),
         )[0];
       }
 
       case 'left-turn': {
-        for (const direction of this.maze.leftTurn(origin)) {
+        for (const direction of this.maze.leftTurn(this.location)) {
           const move = moves.find((m) => m.direction === direction);
           if (move) {
             return move;
@@ -108,7 +134,7 @@ export abstract class Robot extends Random implements Disposable {
       }
 
       case 'right-turn': {
-        for (const direction of this.maze.rightTurn(origin)) {
+        for (const direction of this.maze.rightTurn(this.location)) {
           const move = moves.find((m) => m.direction === direction);
           if (move) {
             return move;
@@ -119,7 +145,7 @@ export abstract class Robot extends Random implements Disposable {
 
       case 'straight': {
         this.bias = !this.bias;
-        for (const direction of this.maze.straight(origin, this.bias)) {
+        for (const direction of this.maze.straight(this.location, this.bias)) {
           const move = moves.find((m) => m.direction === direction);
           if (move) {
             return move;
@@ -134,14 +160,29 @@ export abstract class Robot extends Random implements Disposable {
     }
   }
 
-  public abstract execute(): void;
+  public execute(): void {
+    if (this.active) {
+      try {
+        this.step();
+      } catch (error) {
+        if (error instanceof RobotError) {
+          this.sendMessage(error.message, error.color);
+        } else {
+          this.sendMessage(`Robot ${this.name} encountered an error: ${error}`);
+        }
+        this.active = false;
+      }
+    }
+  }
 
-  protected previousLocation(): CellFacing | undefined {
-    return this.history.at(-2);
+  public abstract step(): void;
+
+  public override sendMessage(message: string, color?: string): void {
+    this.maze.sendMessage(message, color);
   }
 
   public path(): CellFacing[] {
-    return this.maze.flatten(this.history);
+    return this.maze.flatten([...this.history, this.location]);
   }
 
   //#region Disposable

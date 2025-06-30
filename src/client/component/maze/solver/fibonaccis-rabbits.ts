@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell } from '../geometry/maze.ts';
+import { type Cell } from '../geometry/index.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -71,8 +71,8 @@ export class FibonaccisRabbits extends MazeSolver {
           this.randomPick(
             this.maze
               .moves(rabbit.cell, { wall: false })
-              .filter(({ move }) => !this.maze.isSame(move, rabbit.tail))
-              .map(({ move }) => move),
+              .filter(({ target }) => !this.maze.isSame(target, rabbit.tail))
+              .map(({ target }) => target),
           ) ?? rabbit.tail;
 
         currentCount[rabbit.cell.x][rabbit.cell.y]--;

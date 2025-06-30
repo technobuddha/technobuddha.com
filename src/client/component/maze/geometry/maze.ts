@@ -53,7 +53,7 @@ export type CellTunnel = CellDirection & {
 
 export type Move = {
   direction: Direction;
-  move: CellFacing;
+  target: CellFacing;
 };
 
 export type Terminus = CellFacing;
@@ -582,7 +582,7 @@ export abstract class Maze extends Random {
 
   public cellsInterior(order: AllOrder = 'top-left'): Cell[] {
     return this.cellsInMaze(order).filter((cell) =>
-      this.moves(cell, { wall: 'all', inMaze: 'all' }).every(({ move }) => this.inMaze(move)),
+      this.moves(cell, { wall: 'all', inMaze: 'all' }).every(({ target }) => this.inMaze(target)),
     );
   }
 
@@ -645,8 +645,9 @@ export abstract class Maze extends Random {
       }
 
       const loopCells = this.moves(cell, { wall: false })
-        .filter(({ move }) => distances[move.x][move.y] < distance - 1)
-        .map(({ move }) => move);
+        .filter(({ target }) => distances[target.x][target.y] !== Infinity)
+        .filter(({ target }) => distances[target.x][target.y] !== distance)
+        .map(({ target }) => target);
       if (loopCells.length > 0) {
         loops.push({
           cell,
@@ -657,8 +658,8 @@ export abstract class Maze extends Random {
       }
 
       const moves = this.moves(cell, { wall: false })
-        .filter(({ move }) => distances[move.x][move.y] === Infinity)
-        .map(({ move }) => move);
+        .filter(({ target }) => distances[target.x][target.y] === Infinity)
+        .map(({ target }) => target);
       for (const next of moves) {
         distances[next.x][next.y] = distance + 1;
         queue.unshift(next);
@@ -684,7 +685,7 @@ export abstract class Maze extends Random {
       if (move) {
         this.removeWall(cell, move.direction);
         yield;
-        const nindex = deadEnds.findIndex((c) => this.isSame(c, move.move));
+        const nindex = deadEnds.findIndex((c) => this.isSame(c, move.target));
         if (nindex >= 0) {
           deadEnds.splice(nindex, 1);
         }
@@ -779,7 +780,7 @@ export abstract class Maze extends Random {
   }
 
   public detectErrors(): void {
-    const { unreachable, loops } = this.analyze(this.entrance);
+    const { unreachable } = this.analyze(this.entrance);
 
     if (unreachable.length > 0) {
       logger.error(`Unreachable cells: `, unreachable);
@@ -788,20 +789,20 @@ export abstract class Maze extends Random {
       }
     }
 
-    if (loops.length > 0) {
-      for (const loop of loops) {
-        logger.error(
-          `Loop detected from {x: ${loop.cell.x}, y: ${loop.cell.y} :: ${loop.distance}} with ${loop.loops.map((l, i) => `{x: ${l.x}, y:${l.y} :: ${loop.distances[i]}}`).join(' ')}`,
-        );
+    // if (loops.length > 0) {
+    //   for (const loop of loops) {
+    //     logger.error(
+    //       `Loop detected from {x: ${loop.cell.x}, y: ${loop.cell.y} :: ${loop.distance}} with ${loop.loops.map((l, i) => `{x: ${l.x}, y:${l.y} :: ${loop.distances[i]}}`).join(' ')}`,
+    //     );
 
-        this.drawX(loop.cell, this.errorColor);
-      }
-    }
+    //     this.drawX(loop.cell, this.errorColor);
+    //   }
+    // }
 
-    if (loops.length > 0 || unreachable.length > 0) {
-      // eslint-disable-next-line no-debugger
-      debugger;
-    }
+    // if (loops.length > 0 || unreachable.length > 0) {
+    //   // eslint-disable-next-line no-debugger
+    //   debugger;
+    // }
   }
 
   public drawDistances(point = this.entrance): void {
@@ -1026,8 +1027,8 @@ export abstract class Maze extends Random {
   ): Move[] {
     return (Object.entries(this.nexus(cell).walls) as [Direction, boolean][])
       .filter(([, w]) => wall === 'all' || w === wall)
-      .map(([direction]) => ({ direction, move: this.traverse(cell, direction) }))
-      .filter(({ move }) => inMaze === 'all' || this.inMaze(move) === inMaze);
+      .map(([direction]) => ({ direction, target: this.traverse(cell, direction) }))
+      .filter(({ target }) => inMaze === 'all' || this.inMaze(target) === inMaze);
   }
 
   public move(cell: Cell, direction: Direction): CellFacing {
@@ -1055,8 +1056,8 @@ export abstract class Maze extends Random {
   ): Move[] {
     return (Object.entries(this.nexus(cell).walls) as [Direction, boolean][])
       .filter(([, w]) => wall === 'all' || w === wall)
-      .map(([direction]) => ({ direction, move: this.move(cell, direction) }))
-      .filter(({ move }) => inMaze === 'all' || this.inMaze(move) === inMaze);
+      .map(([direction]) => ({ direction, target: this.move(cell, direction) }))
+      .filter(({ target }) => inMaze === 'all' || this.inMaze(target) === inMaze);
   }
 
   public walk(
@@ -1309,7 +1310,7 @@ export abstract class Maze extends Random {
 
   protected abstract offsets(kind: Kind): Record<string, number>;
   public abstract drawFloor(cell: Cell, color?: string): void;
-  public abstract drawWall(cd: CellDirection, color?: string): void;
+  public abstract drawWall(cell: CellDirection, color?: string): void;
   public abstract drawPillar(cell: Cell, pillar: Pillar, color?: string): void;
   public abstract drawX(cell: Cell, color?: string): void;
   public abstract getRect(cell: Cell): Rect;

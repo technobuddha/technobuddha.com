@@ -163,35 +163,61 @@ export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
     '10:Follow the right wall': (props) =>
       new Roboto({ robots: [{ algorithm: 'wall-walking', turn: 'right' }], ...props }),
     '10:Trémaux': (props) =>
-      new Roboto({ robots: [{ algorithm: 'tremaux', showMarks: true }], ...props }),
+      new Roboto({ robots: [{ algorithm: 'tremaux', showMarks: true, trails: 0 }], ...props }),
     '10:Backtracking': (props) =>
       new Roboto({
-        robots: [{ algorithm: 'backtracking', program: 'random', trails: 0 }],
-        ...props,
-      }),
-    '10:The great race': (props) =>
-      new Roboto({
         robots: [
-          { algorithm: 'wall-walking', turn: 'right', color: 'lime' },
-          { algorithm: 'wall-walking', turn: 'left', color: 'magenta' },
-          { algorithm: 'tremaux', color: 'blue', showMarks: false },
-          { algorithm: 'backtracking', color: 'red', program: 'random' },
+          {
+            algorithm: 'backtracking',
+            program: 'random',
+            showMarks: true,
+            showPath: true,
+            trails: 0,
+          },
         ],
         ...props,
       }),
-    '10:Backtracler tag': (props) =>
+    '10:The Great Race': (props) =>
       new Roboto({
         robots: [
-          { name: 'rando', algorithm: 'backtracking', program: 'random', color: 'lime' },
-          { name: 'south-paw', algorithm: 'backtracking', program: 'left-turn', color: 'magenta' },
-          { name: 'righty', algorithm: 'backtracking', program: 'right-turn', color: 'yellow' },
+          { name: 'rando', trails: 0, algorithm: 'backtracking', program: 'random', color: 'lime' },
           {
-            name: 'straight arrow',
+            name: 'left',
+            trails: 0,
+            algorithm: 'backtracking',
+            program: 'left-turn',
+            color: 'dodgerblue',
+          },
+          {
+            name: 'right',
+            trails: 0,
+            algorithm: 'backtracking',
+            program: 'right-turn',
+            color: 'red',
+          },
+          {
+            name: 'straight',
+            trails: 0,
             algorithm: 'backtracking',
             program: 'straight',
-            color: 'orange',
+            color: 'magenta',
           },
-          { name: 'seeker', algorithm: 'backtracking', program: 'seek', color: 'blue' },
+          {
+            name: 'seeker',
+            trails: 0,
+            algorithm: 'backtracking',
+            program: 'seek',
+            color: 'yellow',
+          },
+          { name: 'trémaux', trails: 0, algorithm: 'tremaux', color: 'orange', showMarks: false },
+          // {
+          //   name: 'wall-right',
+          //   trails: 0,
+          //   algorithm: 'wall-walking',
+          //   turn: 'right',
+          //   color: 'pink',
+          // },
+          // { name: 'wall-left', trails: 0, algorithm: 'wall-walking', turn: 'left', color: 'cyan' },
         ],
         ...props,
       }),
@@ -210,15 +236,15 @@ export const solvers: Choice<MazeSolverProperties, MazeSolver> = {
     '1:Dead Ends': (props) => new Filler({ ...props, method: 'dead-end' }),
     '1:Cul-de-Sac': (props) => new Filler({ ...props, method: 'cul-de-sac' }),
   },
-  '0': {
+  '1': {
     '1:Follow the Right Wall': (props) => new WallWalking({ ...props, turn: 'right' }),
     '1:Follow the Left Wall': (props) => new WallWalking({ ...props, turn: 'left' }),
   },
-  '0:Chain': {
+  '1:Chain': {
     '10:Wall-Walking': (props) => new Chain({ ...props, robot: 'wall-walking' }),
     '10:Backtracking': (props) => new Chain({ ...props, robot: 'backtracking' }),
   },
-  "0:Dijkstra's": {
+  "1:Dijkstra's": {
     '10': (props) => new Dijkstras(props),
   },
   "0:Drunkard's Walk": (props) => new DrunkardsWalk(props),

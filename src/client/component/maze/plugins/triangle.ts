@@ -1,4 +1,4 @@
-import { type Maze } from '../geometry/maze.ts';
+import { type Maze } from '../geometry/index.ts';
 
 export function trianglePlugin(maze: Maze): void {
   const a = { x: 0, y: maze.height - 1 };

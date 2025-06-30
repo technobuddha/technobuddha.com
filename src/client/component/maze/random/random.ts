@@ -27,4 +27,12 @@ export class Random extends EventTarget {
   public randomNumber(max: number, min = 0): number {
     return Math.floor(this.random() * (max - min)) + min;
   }
+
+  public sendMessage(message: string, color?: string): void {
+    this.dispatchEvent(
+      new CustomEvent('message', {
+        detail: { message, color },
+      }),
+    );
+  }
 }

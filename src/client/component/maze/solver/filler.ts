@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellFacing } from '../geometry/maze.ts';
+import { type Cell, type CellFacing } from '../geometry/index.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
@@ -35,10 +35,10 @@ export class Filler extends MazeSolver {
       this.maze
         .moves(cell, { wall: false })
         .filter(
-          ({ move }) =>
-            !this.deadEnds[move.x][move.y] ||
-            this.maze.isSame(move, exit) ||
-            this.maze.isSame(move, entrance),
+          ({ target }) =>
+            !this.deadEnds[target.x][target.y] ||
+            this.maze.isSame(target, exit) ||
+            this.maze.isSame(target, entrance),
         ).length === 1
     );
   }
@@ -68,12 +68,12 @@ export class Filler extends MazeSolver {
           while (true) {
             const moves = this.maze
               .moves(deadEnd, { wall: false })
-              .filter(({ move }) => !this.deadEnds[move.x][move.y]);
+              .filter(({ target }) => !this.deadEnds[target.x][target.y]);
             if (moves.length === 1) {
               this.deadEnds[deadEnd.x][deadEnd.y] = true;
               // this.maze.drawX(deadEnd, markedColor);
               this.maze.drawCell(deadEnd, markedColor);
-              deadEnd = moves[0].move;
+              deadEnd = moves[0].target;
               yield;
             } else {
               break;
@@ -88,10 +88,10 @@ export class Filler extends MazeSolver {
     const path: CellFacing[] = [cell];
 
     while (!this.maze.isSame(cell, exit)) {
-      const moves = this.maze
-        .moves(cell, { wall: false })
+      const moves = this.maze.moves(cell, { wall: false }).filter(
         // eslint-disable-next-line @typescript-eslint/no-loop-func
-        .filter(({ move }) => !this.maze.isSame(prev, move) && !this.deadEnds[move.x][move.y]);
+        ({ target }) => !this.maze.isSame(prev, target) && !this.deadEnds[target.x][target.y],
+      );
       if (moves.length === 0) {
         throw new Error('No path found');
       }
@@ -101,7 +101,7 @@ export class Filler extends MazeSolver {
 
       const [move] = moves;
       prev = cell;
-      cell = move.move;
+      cell = move.target;
       path.push(cell);
     }
 

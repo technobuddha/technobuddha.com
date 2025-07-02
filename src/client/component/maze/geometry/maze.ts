@@ -10,8 +10,10 @@ import {
 
 import { type Drawing, type Rect } from '../drawing/drawing.ts';
 import { type MazeGenerator } from '../generator/index.ts';
+import { alpha } from '../library/alpha.ts';
 import { darken } from '../library/darken.ts';
 import { logger } from '../library/logger.ts';
+import { lookAhead } from '../library/look-ahead.ts';
 import { Random, type RandomProperties } from '../random/random.ts';
 
 import { Nexus } from './nexus.ts';
@@ -159,17 +161,23 @@ export type MazeProperties = RandomProperties & {
   readonly plugin?: (this: void, maze: Maze) => void;
 };
 
-export type BridgeLayout = {
+export type Bridge = {
   readonly pieces: number;
   readonly direction: Direction;
   readonly path: Direction[];
   readonly connect: Partial<Record<Direction, Direction>>;
 };
 
+export type BridgeLayout = {
+  path: Direction[];
+  pieces?: number;
+  connect?: Partial<Record<Direction, Direction>>;
+};
+
 export type BridgeMatrix = {
   readonly pieces?: number;
-  readonly connect?: Partial<Record<Direction, Direction>>;
-  readonly layouts: Record<Kind, { path: Direction[]; pieces?: number }[]>;
+  readonly connect: Partial<Record<Direction, Direction>>;
+  readonly layouts: Record<Kind, BridgeLayout[]>;
 };
 
 export type Matrix = {
@@ -288,7 +296,8 @@ export abstract class Maze extends Random {
 
       pathColor = 'oklch(0.8145 0.1672 83.88)',
       tunnelColor = darken(pathColor, 0.25),
-      bridgeColor = 'oklch(0.9544 0.0637 196.13)',
+      //bridgeColor = 'oklch(0.9544 0.0637 196.13)',
+      bridgeColor = 'oklch(0.25 0 0)',
       textColor = 'oklch(1 0 0)',
 
       showDistances = 'none',
@@ -923,32 +932,29 @@ export abstract class Maze extends Random {
     const path: CellTunnel[] = [];
 
     if (history.length > 0) {
-      let [prev, ...rest] = history;
-      for (const cell of rest) {
-        // eslint-disable-next-line @typescript-eslint/no-loop-func
-        const direction = this.nexus(prev).wallDirections.find((d) =>
-          this.isSame(cell, this.move(prev, d)),
-        );
+      for (const [cell, next] of lookAhead(this.flatten(history))) {
+        const walk = this.walkTo(cell, next);
+        if (walk) {
+          const { direction, tunnel } = walk;
 
-        if (direction) {
-          const { tunnel } = this.walk(prev, direction);
-          if (tunnel) {
-            for (const span of tunnel) {
-              path.push({
-                x: prev.x,
-                y: prev.y,
-                direction: toDirection(span.facing),
-                tunnel: true,
-              });
-              prev = span;
+          path.push({ x: cell.x, y: cell.y, direction, tunnel: false });
+          if (tunnel.length > 0) {
+            for (const [tunnelCell, tunnelNext] of lookAhead(tunnel, next)) {
+              const traverse = this.traverseTo(tunnelCell, tunnelNext);
+              if (traverse) {
+                path.push({
+                  x: tunnelCell.x,
+                  y: tunnelCell.y,
+                  direction: traverse.direction,
+                  tunnel: true,
+                });
+              }
             }
           }
-
-          path.push({ x: prev.x, y: prev.y, direction: toDirection(cell.facing), tunnel: false });
-          prev = cell;
         }
       }
     }
+
     return path;
   }
 
@@ -1060,25 +1066,22 @@ export abstract class Maze extends Random {
       .filter(({ target }) => inMaze === 'all' || this.inMaze(target) === inMaze);
   }
 
-  public walk(
-    cell: Cell,
-    direction: Direction,
-  ): { next: CellFacing; tunnel: CellFacing[] | undefined } {
+  public walk(cell: Cell, direction: Direction): { target: CellFacing; tunnel: CellFacing[] } {
     const tunnel: CellFacing[] = [];
 
-    let next = this.traverse(cell, direction);
+    let target = this.traverse(cell, direction);
     while (true) {
       const portal =
-        this.inMaze(next) ? this.nexus(next).tunnels[this.opposite(next.facing)] : false;
+        this.inMaze(target) ? this.nexus(target).tunnels[this.opposite(target.facing)] : false;
       if (portal) {
-        tunnel.push(next);
-        next = { ...portal };
+        tunnel.push(target);
+        target = { ...portal };
       } else {
         break;
       }
     }
 
-    return { next, tunnel: tunnel.length > 0 ? tunnel : undefined };
+    return { target, tunnel };
   }
 
   public resolveMove(cell: Cell, move: MoveOffset): Cell {
@@ -1108,10 +1111,22 @@ export abstract class Maze extends Random {
     return { x, y };
   }
 
-  public directionTo(source: Cell, destination: Cell): Direction | undefined {
-    return (Object.keys(this.nexus(source).walls) as Direction[]).find((direction) =>
-      this.isSame(destination, this.move(source, direction)),
-    );
+  public walkTo(
+    source: Cell,
+    destination: Cell,
+  ): { direction: Direction; target: CellFacing; tunnel: CellFacing[] } | undefined {
+    return this.nexus(source)
+      .wallDirections.map((direction) => ({ direction, ...this.walk(source, direction) }))
+      .find(({ target }) => this.isSame(destination, target));
+  }
+
+  public traverseTo(
+    source: Cell,
+    destination: Cell,
+  ): { direction: Direction; target: CellFacing } | undefined {
+    return this.nexus(source)
+      .wallDirections.map((direction) => ({ direction, target: this.traverse(source, direction) }))
+      .find(({ target }) => this.isSame(destination, target));
   }
 
   public preferreds(cell: Cell): Direction[] {
@@ -1136,7 +1151,7 @@ export abstract class Maze extends Random {
       cell,
       this.isSame(cell, this.entrance) ? this.entranceColor
       : this.isSame(cell, this.exit) ? this.exitColor
-        // this.nexus(cell).bridge ? this.bridgeColor
+      : this.nexus(cell).bridge ? this.bridgeColor
       : cellColor,
     );
 
@@ -1226,7 +1241,7 @@ export abstract class Maze extends Random {
   public drawPaths(cells: CellTunnel[], color = this.pathColor): void {
     if (this.drawing) {
       for (const cell of cells) {
-        this.drawPath(cell, cell.tunnel ? darken(color, 0.5) : color);
+        this.drawPath(cell, cell.tunnel ? alpha(color, 0.75) : color);
       }
     }
   }
@@ -1357,16 +1372,14 @@ export abstract class Maze extends Random {
   }
   //#endregion
   //#region Bridge
-  public bridges(cell: Cell): BridgeLayout[] {
+  public bridges(cell: Cell): Bridge[] {
     const pieces = this.bridgeMatrix?.pieces ?? 1;
+    const connect = this.bridgeMatrix?.connect ?? {};
     return (this.bridgeMatrix?.layouts[this.cellKind(cell)] ?? []).map((layout) => ({
-      pieces,
-      ...layout,
-      // TODO [9.1.2]: this.bridgeMatrix?.connect ?? (this.oppositeMatrix.facing as unknown as Record<Facing, Facing>),
-      connect:
-        this.bridgeMatrix?.connect ??
-        (this.oppositeMatrix.direction as unknown as Record<Direction, Direction>),
       direction: layout.path[0],
+      pieces,
+      connect,
+      ...layout,
     }));
   }
   //#endregion

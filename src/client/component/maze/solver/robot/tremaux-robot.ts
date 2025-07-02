@@ -79,6 +79,11 @@ export class TremauxRobot extends Robot {
 
     const marks = this.marks[this.location.x][this.location.y];
 
+    // * When entering a new junction, pick any new path
+    // * When entering a previously explored junction via a new path turn around.
+    // * When entering a previously explored junction via a previousy explored path, pick a new path with the fewest number of marks.
+    // ** When able to pick between multiple paths, attempt to pick a path that shortens the distance between the current coordinates and the exit coordinates.
+
     if (moves.length > 0 && moves.every((m) => marks[m.direction] === 0)) {
       // 1. If only the entrance you just came from is marked, pick an arbitrary unmarked
       //    entrance, if any. This rule also applies if you're just starting in the middle

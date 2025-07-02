@@ -5,14 +5,14 @@ import { RobotError } from './robot-error.ts';
 
 export type WallWalkingRobotProperties = RobotProperties & {
   turn: 'right' | 'left';
-  color?: string;
 };
 
 export class WallWalkingRobot extends Robot {
   private readonly visits: number[][];
 
   public constructor({ maze, turn = 'right', ...props }: WallWalkingRobotProperties) {
-    super({ maze, program: turn === 'right' ? 'right-turn' : 'left-turn', ...props });
+    const program = turn === 'right' ? 'right-turn' : 'left-turn';
+    super({ maze, program, ...props });
     this.visits = create2DArray(this.maze.width, this.maze.height, 0);
   }
 

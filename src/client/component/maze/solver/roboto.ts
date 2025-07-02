@@ -2,6 +2,8 @@ import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 import {
   BacktrackingRobot,
   type BacktrackingRobotProperties,
+  RandomMouseRobot,
+  type RandomMouseRobotProperties,
   type Robot,
   TremauxRobot,
   type TremauxRobotProperties,
@@ -21,7 +23,11 @@ type BacktrackingRobo = Omit<BacktrackingRobotProperties, 'maze' | 'location'> &
   algorithm: 'backtracking';
 };
 
-type Robo = TremauxRobo | WallWalkingRobo | BacktrackingRobo;
+type RandomMouseRobo = Omit<RandomMouseRobotProperties, 'maze' | 'location'> & {
+  algorithm: 'random-mouse';
+};
+
+type Robo = TremauxRobo | WallWalkingRobo | BacktrackingRobo | RandomMouseRobo;
 
 export type RobotoProperties = MazeSolverProperties & {
   robots: Robo[];
@@ -59,6 +65,14 @@ export class Roboto extends MazeSolver {
 
         case 'backtracking': {
           return new BacktrackingRobot({
+            maze: this.maze,
+            location: entrance,
+            ...robo,
+          });
+        }
+
+        case 'random-mouse': {
+          return new RandomMouseRobot({
             maze: this.maze,
             location: entrance,
             ...robo,

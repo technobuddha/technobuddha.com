@@ -2,10 +2,12 @@ import { type Cell } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
+export type PrimsProperties = MazeGeneratorProperties;
+
 export class Prims extends MazeGenerator {
   public activeCells: Cell[];
 
-  public constructor(props: MazeGeneratorProperties) {
+  public constructor(props: PrimsProperties) {
     super(props);
 
     this.activeCells = [this.start];

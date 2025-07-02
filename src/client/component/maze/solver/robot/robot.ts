@@ -2,6 +2,7 @@ import { manhattanDistance } from '@technobuddha/library';
 
 import { type Cell, type CellFacing, type Maze, type Move } from '../../geometry/index.ts';
 import { darken } from '../../library/darken.ts';
+import { PathSet } from '../../library/path-set.ts';
 import { Random, type RandomProperties } from '../../random/random.ts';
 
 import { RobotError } from './robot-error.ts';
@@ -23,7 +24,7 @@ export abstract class Robot extends Random implements Disposable {
   public active: boolean;
   public readonly color: string;
   public location: CellFacing;
-  public readonly program: Program;
+  public program: Program;
   public readonly name: string;
 
   protected previous: CellFacing;
@@ -33,8 +34,9 @@ export abstract class Robot extends Random implements Disposable {
   protected readonly showPath: boolean;
   protected readonly start: CellFacing;
   protected readonly maze: Maze;
-  protected readonly clearCell: (cell: Cell) => void;
+  protected clearCell: (cell: Cell) => void;
   protected bias = true;
+  protected pathSet = new PathSet();
 
   public constructor({
     maze,
@@ -68,25 +70,25 @@ export abstract class Robot extends Random implements Disposable {
   }
 
   protected moveTo(next: CellFacing): void {
+    this.history.push({ ...this.location });
+    this.previous = this.location;
+    this.location = next;
+
     if (this.showPath) {
-      for (const cell of this.maze.makePath(this.path())) {
-        this.clearCell(cell);
+      const currentPathSet = new PathSet(this.maze.makePath(this.path()));
+
+      for (const path of this.pathSet.difference(currentPathSet)) {
+        this.clearCell(path);
       }
 
-      this.history.push(this.location);
-      this.previous = this.location;
-      this.location = next;
-
-      for (const cell of this.maze.makePath(this.path())) {
-        this.maze.drawPath(cell);
+      for (const path of currentPathSet.difference(this.pathSet)) {
+        this.maze.drawPath(path);
       }
+      this.pathSet = currentPathSet;
     } else {
-      this.history.push(this.location);
-      this.previous = this.location;
-      this.location = next;
+      this.clearCell(this.location);
     }
 
-    this.clearCell(this.location);
     this.maze.drawAvatar(this.location, this.color);
 
     if (this.trails > 0) {
@@ -182,12 +184,18 @@ export abstract class Robot extends Random implements Disposable {
   }
 
   public path(): CellFacing[] {
-    return this.maze.flatten([...this.history, this.location]);
+    return [...this.history, this.location];
   }
 
   //#region Disposable
   public dispose(): void {
-    //
+    if (this.trails > 0) {
+      for (const cell of this.trail) {
+        this.clearCell(cell);
+      }
+    } else {
+      this.clearCell(this.history.at(-1)!);
+    }
   }
 
   public [Symbol.dispose](): void {

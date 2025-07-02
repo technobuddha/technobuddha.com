@@ -2,10 +2,12 @@ import { type Cell, type CellFacing } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
+export type WilsonsProperties = MazeGeneratorProperties;
+
 export class Wilsons extends MazeGenerator {
   private readonly unvisited: Cell[];
 
-  public constructor(props: MazeGeneratorProperties) {
+  public constructor(props: WilsonsProperties) {
     super(props);
 
     this.unvisited = this.maze.cellsInMaze();

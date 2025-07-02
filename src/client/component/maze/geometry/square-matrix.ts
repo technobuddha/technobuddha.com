@@ -7,6 +7,7 @@ export const matrix: Matrix = {
     layouts: {
       0: [{ path: ['n'] }, { path: ['e'] }, { path: ['w'] }, { path: ['s'] }],
     },
+    connect: { n: 's', e: 'w', w: 'e', s: 'n' },
   },
   directions: ['n', 'e', 'w', 's'],
   pillars: ['ne', 'nw', 'se', 'sw'],

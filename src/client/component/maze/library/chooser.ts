@@ -1,71 +1,49 @@
-import { isFunction } from 'lodash';
+type Value<Props extends Record<string, unknown>> = {
+  title: string;
+  props: Props;
+};
 
-type WeightedKey = `${number}:${string}` | `${number}`;
-type Selection<A, B> = (...props: A[]) => B;
+type Selection<Props extends Record<string, unknown>> = Value<Props> & {
+  weight: number;
+};
 
-interface Choices<A, B> {
-  [key: WeightedKey]: Selection<A, B> | Choices<A, B>;
-}
+type Choice<Props extends Record<string, unknown>> = {
+  weight: number;
+  items: Selection<Props>[];
+};
 
-export type Choice<A, B> = Selection<A, B> | Choices<A, B>;
+export type Choices<Props extends Record<string, unknown> = Record<string, unknown>> = (
+  | Selection<Props>
+  | Choice<Props>
+)[];
 
-export function chooser<A, B>(
-  choose: Choice<A, B>,
-  seed: string[] = [],
-): { name: string; value?: Selection<A, B> } {
-  const name: string[] = seed;
+export function chooser<Props extends Record<string, unknown>>(
+  choices: Choices<Props>,
+): Value<Props> | undefined {
+  const totalWeight = choices.reduce((acc, choice) => acc + choice.weight, 0);
 
-  if (isFunction(choose)) {
-    return { name: name.join(' '), value: choose };
-  }
-
-  const choices = Object.keys(choose).map((c) => {
-    const [weight, description] = c.split(':');
-
-    return {
-      weight: Number.parseFloat(weight),
-      description: description as string | undefined,
-      choice: choose[c as WeightedKey],
-    };
-  });
-
-  if (choices.length > 0) {
-    const totalWeight = choices.reduce((acc, c) => acc + c.weight, 0);
-    if (totalWeight > 0) {
-      let index = Math.random() * totalWeight;
-      for (const { weight, description, choice } of choices) {
-        index -= weight;
-        if (index <= 0) {
-          if (description) {
-            if (description.startsWith('=')) {
-              name.length = 0;
-              name.push(description.slice(1));
-            } else {
-              name.push(description);
-            }
-          }
-          return chooser(choice, name);
-        }
+  let index = Math.random() * totalWeight;
+  for (const choice of choices) {
+    index -= choice.weight;
+    if (index <= 0) {
+      if ('items' in choice) {
+        return chooser(choice.items);
       }
-      return { name: name.join(' ') };
+      return choice;
     }
   }
-  return { name: name.join(' ') };
+
+  return undefined;
 }
 
-export function* allChoices<A, B>(
-  choose: Choice<A, B>,
-  seed: string[] = [],
-): Generator<{ name: string; value?: Selection<A, B> }> {
-  const name: string[] = seed;
-
-  if (isFunction(choose)) {
-    yield { name: name.join(' '), value: choose };
-  } else {
-    for (const [key, value] of Object.entries(choose).filter(
-      ([k]) => Number.parseFloat(k.split(':')[0]) > 0,
-    )) {
-      yield* allChoices(value, [...name, key.split(':')[1]]);
+export function* allChoices<Props extends Record<string, unknown>>(
+  choices: Choices<Props>,
+): Generator<Value<Props>> {
+  for (const choice of choices) {
+    if ('items' in choice) {
+      yield* allChoices(choice.items);
+    } else {
+      yield choice;
     }
   }
 }

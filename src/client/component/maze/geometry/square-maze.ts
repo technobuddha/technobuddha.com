@@ -13,7 +13,7 @@ import {
 import { Maze } from './maze.ts';
 import { matrix } from './square-matrix.ts';
 
-type SquareMazeProperties = MazeProperties;
+export type SquareMazeProperties = MazeProperties;
 
 export class SquareMaze extends Maze {
   public constructor({ cellSize = 24, wallSize = 2, gapSize = 2, ...props }: SquareMazeProperties) {

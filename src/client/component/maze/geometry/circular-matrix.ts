@@ -13,6 +13,7 @@ export const matrix: Matrix = {
       5: [],
       6: [],
     },
+    connect: { a: 'c', b: 'd', c: 'a', d: 'b', e: 'g', f: 'h', g: 'e', h: 'g' },
   },
   directions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
   pillars: ['ab', 'bc', 'cd', 'da', 'de', 'fb', 'bg', 'gd', 'bh', 'hd'],

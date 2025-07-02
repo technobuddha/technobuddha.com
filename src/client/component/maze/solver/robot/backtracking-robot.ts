@@ -16,6 +16,14 @@ export class BacktrackingRobot extends Robot {
     super({ maze, ...props });
     this.showMarks = showMarks;
     this.blocked = blocked ?? create2DArray(this.maze.width, this.maze.height, false);
+
+    const cc = this.clearCell;
+    this.clearCell = (cell) => {
+      cc(cell);
+      if (this.showMarks && this.blocked[cell.x][cell.y]) {
+        this.maze.drawX(cell);
+      }
+    };
   }
 
   public step(): void {

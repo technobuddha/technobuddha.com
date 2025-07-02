@@ -51,11 +51,13 @@ class DisjointSet {
   }
 }
 
+export type KruskalsProperties = MazeGeneratorProperties;
+
 export class Kruskals extends MazeGenerator {
   private readonly disjointSubsets: DisjointSet;
   private readonly preferreds: CellDirection[];
 
-  public constructor(props: MazeGeneratorProperties) {
+  public constructor(props: KruskalsProperties) {
     super(props);
 
     this.disjointSubsets = new DisjointSet(this.maze.width * this.maze.height);

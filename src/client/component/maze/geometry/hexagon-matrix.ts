@@ -22,6 +22,7 @@ export const matrix: Matrix = {
         { path: ['f'] },
       ],
     },
+    connect: { a: 'd', b: 'e', c: 'f', d: 'a', e: 'b', f: 'c' },
   },
   directions: ['a', 'b', 'c', 'd', 'e', 'f'],
   pillars: ['ab', 'bc', 'cd', 'de', 'ef', 'fa'],

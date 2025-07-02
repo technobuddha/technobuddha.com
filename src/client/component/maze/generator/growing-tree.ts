@@ -4,7 +4,7 @@ import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts
 
 export type Method = 'newest' | 'oldest' | 'middle' | 'random';
 
-type GrowingTreeProperties = MazeGeneratorProperties & {
+export type GrowingTreeProperties = MazeGeneratorProperties & {
   method?: Method | Record<Method, number>;
 };
 

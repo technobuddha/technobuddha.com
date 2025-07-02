@@ -1,58 +1,42 @@
-import { type CellTunnel, type Direction } from '../geometry/index.ts';
+import { type CellDirection, type Direction } from '../geometry/index.ts';
 
-type Path = Omit<CellTunnel, 'tunnel'>;
+type Path = CellDirection;
 
-export class PathSet implements ReadonlySetLike<Path> {
-  private readonly xaxis: Map<number, Map<number, Set<Direction>>> = new Map();
+const toString = (p: Path): string => `${p.x},${p.y},${p.direction}`;
+const toPath = (s: string): Path => {
+  const [x, y, direction] = s.split(',');
+  return { x: Number.parseInt(x), y: Number.parseInt(y), direction: direction as Direction };
+};
+
+export class PathSet {
+  private readonly set: Set<string> = new Set();
 
   /**
    * Creates a new `PathSet` optionally initialized with an array of paths.
    *
    * @param cartesian - Optional array of cartesian to initialize the set.
    */
-  public constructor(path?: Path[] | null) {
-    if (path) {
-      for (const { x, y, direction } of path) {
-        this.add({ x, y, direction });
+  public constructor(paths?: Path[] | null) {
+    if (paths) {
+      for (const path of paths) {
+        this.set.add(toString(path));
       }
     }
-  }
-
-  /**
-   * Gets the number of unique cartesian in the set.
-   */
-  public get size(): number {
-    let size = 0;
-    for (const yaxis of this.xaxis.values()) {
-      for (const set of yaxis.values()) {
-        size += set.size;
-      }
-    }
-    return size;
   }
 
   public readonly [Symbol.toStringTag] = 'PathSet';
 
   /**
-   * Adds one or more path to the set.
+   * Adds one or more paths to the set.
    *
    * @param value - A single coordinate or an array of cartesian to add.
    * @returns The set itself, for chaining.
    */
   public add(value: Path | Path[]): this {
-    const path = Array.isArray(value) ? value : [value];
+    const paths = Array.isArray(value) ? value : [value];
 
-    for (const { x, y, direction } of path) {
-      if (!this.xaxis.has(x)) {
-        this.xaxis.set(x, new Map());
-      }
-
-      const yaxis = this.xaxis.get(x)!;
-      if (!yaxis.has(y)) {
-        yaxis.set(y, new Set());
-      }
-
-      yaxis.get(y)!.add(direction);
+    for (const path of paths) {
+      this.set.add(toString(path));
     }
     return this;
   }
@@ -61,7 +45,7 @@ export class PathSet implements ReadonlySetLike<Path> {
    * Removes all paths from the set.
    */
   public clear(): void {
-    this.xaxis.clear();
+    this.set.clear();
   }
 
   /**
@@ -71,22 +55,7 @@ export class PathSet implements ReadonlySetLike<Path> {
    * @returns `true` if the coordinate was present and removed, `false` otherwise.
    */
   public delete(value: Path): boolean {
-    const { x, y, direction } = value;
-    const yaxis = this.xaxis.get(x);
-    if (yaxis) {
-      const set = yaxis.get(y);
-      if (set) {
-        const deleted = set.delete(direction);
-        if (set.size === 0) {
-          yaxis.delete(y);
-        }
-        if (yaxis.size === 0) {
-          this.xaxis.delete(x);
-        }
-        return deleted;
-      }
-    }
-    return false;
+    return this.set.delete(toString(value));
   }
 
   /**
@@ -135,14 +104,7 @@ export class PathSet implements ReadonlySetLike<Path> {
    * @returns `true` if the path exists in the set, `false` otherwise.
    */
   public has(path: Path): boolean {
-    const yaxis = this.xaxis.get(path.x);
-    if (yaxis) {
-      const set = yaxis.get(path.y);
-      if (set) {
-        return set.has(path.direction);
-      }
-    }
-    return false;
+    return this.set.has(toString(path));
   }
 
   /**
@@ -262,12 +224,8 @@ export class PathSet implements ReadonlySetLike<Path> {
    * @returns An iterator of `Path`.
    */
   public *values(): SetIterator<Path> {
-    for (const [x, yaxis] of this.xaxis.entries()) {
-      for (const [y, directionSet] of yaxis.entries()) {
-        for (const direction of directionSet) {
-          yield { x, y, direction };
-        }
-      }
+    for (const s of this.set) {
+      yield toPath(s);
     }
   }
 

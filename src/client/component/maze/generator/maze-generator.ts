@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2DArray, modulo } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -255,8 +255,6 @@ export abstract class MazeGenerator extends Random {
       }),
     );
     if (layout) {
-      //logger.log(`Building bridge at ${current.x},${current.y} with layout`, layout);
-
       const { path, pieces: bridgePieces, connect } = layout;
       const zone = this.maze.cellZone(current);
 
@@ -265,12 +263,12 @@ export abstract class MazeGenerator extends Random {
       let index = 0;
 
       bridgeBuilding: while (true) {
-        let direction = path[index++ % path.length];
+        let direction = path[modulo(index++, path.length)];
         if (!(direction in this.maze.nexus(probe).walls)) {
           break;
         }
 
-        const { next, tunnel } = this.maze.walk(probe, direction);
+        const { target: next, tunnel } = this.maze.walk(probe, direction);
         if (
           !this.maze.inMaze(next) ||
           this.isVisited(next) ||
@@ -279,7 +277,7 @@ export abstract class MazeGenerator extends Random {
         ) {
           break;
         } else {
-          if (tunnel) {
+          if (tunnel.length > 0) {
             for (const span of tunnel) {
               const expected = this.maze.traverse(probe, direction);
               if (!this.maze.isIdentical(span, expected)) {
@@ -288,7 +286,7 @@ export abstract class MazeGenerator extends Random {
                 );
                 break bridgeBuilding;
               }
-              direction = path[index++ % path.length];
+              direction = path[modulo(index++, path.length)];
               probe = expected;
             }
           }
@@ -325,12 +323,8 @@ export abstract class MazeGenerator extends Random {
         bridge.length = pieces * bridgePieces + 1;
 
         const next = bridge.pop()!;
-        // logger.log(`Building bridge`, [...bridge], { ...next });
-
         let prev = current;
-
         const opath = new Set(path);
-
         const tunnels: { [direction in Direction]?: (CellFacing & { from: CellFacing })[] } = {};
         const xBridge = [prev, ...bridge, next];
 
@@ -351,46 +345,37 @@ export abstract class MazeGenerator extends Random {
           prev = span;
         }
 
-        // logger.log('tunnels)', { ...tunnels });
-
         let keys: Direction[];
         while ((keys = Object.keys(tunnels) as Direction[]).length > 0) {
           const [key1] = keys;
-          const key2 = connect[key1]!;
+          const key2 = connect[key1];
 
-          if (tunnels[key1]?.length !== tunnels[key2]?.length) {
-            logger.warn(`Tunnel length mismatch for ${key1} and ${key2}`, { ...tunnels });
-          }
+          if (key2) {
+            if (tunnels[key1]?.length !== tunnels[key2]?.length) {
+              logger.warn(`Tunnel length mismatch for ${key1} and ${key2}`, { ...tunnels });
+            }
 
-          if (key2 in tunnels) {
-            for (let i = 0; i < tunnels[key1]!.length; i++) {
-              const t1 = tunnels[key1]![i];
-              const t2 = tunnels[key2]![i];
+            if (key2 in tunnels) {
+              for (let i = 0; i < tunnels[key1]!.length; i++) {
+                const t1 = tunnels[key1]![i];
+                const t2 = tunnels[key2]![i];
 
-              if (t2) {
-                const b1 = t1.from;
-                const b2 = t2.from;
+                if (t2) {
+                  const b1 = t1.from;
+                  const b2 = t2.from;
 
-                // if (!this.maze.isSame(b1, b2)) {
-                //   logger.warn(`tunnel matching from ${b1.x},${b1.y} to ${b2.x},${b2.y}`);
-                // }
+                  const tunnel1 = { x: t1.x, y: t1.y, facing: t1.facing };
+                  const tunnel2 = { x: t2.x, y: t2.y, facing: t2.facing };
 
-                const tunnel1 = { x: t1.x, y: t1.y, facing: t1.facing };
-                const tunnel2 = { x: t2.x, y: t2.y, facing: t2.facing };
-
-                this.maze.nexus(b1).tunnels[key1] = tunnel2;
-                this.maze.nexus(b2).tunnels[key2] = tunnel1;
+                  this.maze.nexus(b1).tunnels[key1] = tunnel2;
+                  this.maze.nexus(b2).tunnels[key2] = tunnel1;
+                }
               }
             }
+            delete tunnels[key2];
           }
-          delete tunnels[key2];
           delete tunnels[key1];
         }
-
-        // logger.log(
-        //   'brige = ',
-        //   bridge.map((b) => this.maze.nexus(b)),
-        // );
 
         for (const span of bridge) {
           if (this.maze.nexus(span).bridge) {
@@ -408,24 +393,23 @@ export abstract class MazeGenerator extends Random {
   //#endregion
   //#region Unreachables
   protected fixUnreachables(): void {
-    while (true) {
-      const { unreachable } = this.maze.analyze({ x: 0, y: 0 });
-      if (unreachable.length === 0) {
-        break;
-      }
-
-      const [cell] = unreachable;
-      const hole = this.randomPick(this.maze.moves(cell, { wall: true }));
-      if (hole) {
-        logger.log(
-          `Fixing unreachable cell at ${cell.x},${cell.y} by removing wall ${hole.direction}`,
-        );
-        this.maze.removeWall(hole.target, hole.direction);
-      } else {
-        logger.warn(`Masking off unreachable cell at ${cell.x},${cell.y}`);
-        this.maze.nexus(cell).mask = true;
-      }
-    }
+    // while (true) {
+    //   const { unreachable } = this.maze.analyze({ x: 0, y: 0 });
+    //   if (unreachable.length === 0) {
+    //     break;
+    //   }
+    //   const [cell] = unreachable;
+    //   const hole = this.randomPick(this.maze.moves(cell, { wall: true }));
+    //   if (hole) {
+    //     logger.log(
+    //       `Fixing unreachable cell at ${cell.x},${cell.y} by removing wall ${hole.direction}`,
+    //     );
+    //     this.maze.removeWall(hole.target, hole.direction);
+    //   } else {
+    //     logger.warn(`Masking off unreachable cell at ${cell.x},${cell.y}`);
+    //     this.maze.nexus(cell).mask = true;
+    //   }
+    // }
   }
   //#endregion
 }

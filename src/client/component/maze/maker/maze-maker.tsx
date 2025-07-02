@@ -9,7 +9,7 @@ import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
 import { type Maze, type MazeProperties } from '../geometry/index.ts';
 import { allChoices, chooser } from '../library/chooser.ts';
-import { generators, mazes, plugins, solvers } from '../library/mazes.ts';
+import { generators, mazes, solvers } from '../library/mazes.ts';
 import { Human, type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
 import { CustomControls } from './controls/custom-controls.tsx';
@@ -91,39 +91,63 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     if (drawing) {
       let mazeMaker: (props: MazeProperties) => Maze;
       if (selectedMaze) {
-        mazeMaker = mazeChoices.find((mc) => mc.name === selectedMaze)!.value!;
+        const {
+          props: { geometry: Geometry, ...args },
+        } = mazeChoices.find((choice) => choice.title === selectedMaze)!;
+        mazeMaker = (props) => new Geometry({ ...args, ...props });
         setMazeName(selectedMaze);
       } else {
-        const { name: mName, value } = chooser(mazes);
-        mazeMaker = value!;
-        setMazeName(mName);
+        const {
+          props: { geometry: Geometry, ...args },
+          title,
+        } = chooser(mazes)!;
+        mazeMaker = (props) => new Geometry({ ...args, ...props });
+        setMazeName(title);
       }
 
       let generatorMaker: (props: MazeGeneratorProperties) => MazeGenerator;
       if (selectedGenerator) {
-        generatorMaker = generatorChoices.find((gc) => gc.name === selectedGenerator)!.value!;
+        const {
+          props: { generator: Generator, ...args },
+        } = generatorChoices.find((choice) => choice.title === selectedGenerator)!;
+        generatorMaker = (props) => new Generator({ ...args, ...props });
         setGeneratorName(selectedGenerator);
       } else {
-        const { name: gName, value } = chooser(generators);
-        generatorMaker = value!;
-        setGeneratorName(gName);
+        const {
+          props: { generator: Generator, ...args },
+          title,
+        } = chooser(generators)!;
+        generatorMaker = (props) => new Generator({ ...args, ...props });
+        setGeneratorName(title);
       }
 
       let solverMaker: (props: MazeSolverProperties) => MazeSolver;
       if (selectedSolver === 'human') {
-        solverMaker = (props: MazeSolverProperties) => new Human(props);
+        solverMaker = (props) => new Human(props);
         setSolverName('Human');
       } else if (selectedSolver) {
-        solverMaker = solverChoices.find((gc) => gc.name === selectedSolver)!.value!;
+        const {
+          props: { solver: Solver, ...args },
+        } = solverChoices.find((choice) => choice.title === selectedSolver)!;
+        //@ts-expect-error detection screwup
+        solverMaker = (props) => new Solver({ ...args, ...props });
         setSolverName(selectedSolver);
       } else {
-        const { name: sName, value } = chooser(solvers);
-        solverMaker = value!;
-        setSolverName(sName);
+        const {
+          props: { solver: Solver, ...args },
+          title,
+        } = chooser(solvers)!;
+        //@ts-expect-error detection screwup
+        solverMaker = (props) => new Solver({ ...args, ...props });
+        setSolverName(title);
       }
 
-      const { name: plugName, value: plugin } = chooser(plugins);
-      setPluginName(plugName);
+      // const piChoice = chooser(plugins);
+      // if(piChoice) {
+      //   plugin
+      // }
+      // const { name: plugName, value: plugin } = chooser(plugins);
+      // setPluginName(plugName);
 
       setRunner((r) => {
         r?.abort();
@@ -131,7 +155,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           mazeMaker,
           generatorMaker,
           solverMaker,
-          plugin,
+          plugin: undefined,
           drawing,
           showCoordinates,
           mode: phasePlayMode,
@@ -243,11 +267,13 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
               <MenuItem key="(undefined)" value="(undefined)">
                 (random)
               </MenuItem>
-              {mazeChoices.map((m) => (
-                <MenuItem key={m.name} value={m.name}>
-                  {m.name}
-                </MenuItem>
-              ))}
+              {mazeChoices
+                .sort((a, b) => a.title.localeCompare(b.title))
+                .map((m) => (
+                  <MenuItem key={m.title} value={m.title}>
+                    {m.title}
+                  </MenuItem>
+                ))}
             </Select>
             <Checkbox
               label="Show Coordinates"
@@ -266,11 +292,13 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
               <MenuItem key="(undefined)" value="(undefined)">
                 (random)
               </MenuItem>
-              {generatorChoices.map((m) => (
-                <MenuItem key={m.name} value={m.name}>
-                  {m.name}
-                </MenuItem>
-              ))}
+              {generatorChoices
+                .sort((a, b) => a.title.localeCompare(b.title))
+                .map((m) => (
+                  <MenuItem key={m.title} value={m.title}>
+                    {m.title}
+                  </MenuItem>
+                ))}
             </Select>
           </Section>
         )}
@@ -284,11 +312,13 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
               <MenuItem key="(undefined)" value="(undefined)">
                 (random)
               </MenuItem>
-              {solverChoices.map((m) => (
-                <MenuItem key={m.name} value={m.name}>
-                  {m.name}
-                </MenuItem>
-              ))}
+              {solverChoices
+                .sort((a, b) => a.title.localeCompare(b.title))
+                .map((m) => (
+                  <MenuItem key={m.title} value={m.title}>
+                    {m.title}
+                  </MenuItem>
+                ))}
             </Select>
           </Section>
         )}

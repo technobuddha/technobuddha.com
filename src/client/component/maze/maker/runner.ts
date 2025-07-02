@@ -46,8 +46,8 @@ export class Runner extends EventTarget {
     mazeMaker,
     generatorMaker,
     solverMaker,
-    drawing,
     plugin,
+    drawing,
     showCoordinates = false,
     mode,
   }: RunnerProperties) {
@@ -235,7 +235,6 @@ export class Runner extends EventTarget {
               const done = await this.run();
 
               if (done) {
-                this.maze.addTermini();
                 this.maze.draw();
 
                 this.switchPhase('braid');
@@ -247,13 +246,15 @@ export class Runner extends EventTarget {
               const done = await this.run();
 
               if (done) {
+                this.maze.addTermini();
+                this.maze.detectErrors();
+                this.maze.draw();
                 this.switchPhase('solve');
               }
               break;
             }
 
             case 'solve': {
-              this.maze.detectErrors();
               const done = await this.run();
 
               if (done) {

@@ -2,7 +2,7 @@ import { type AllOrder, type CellDirection } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
-type HuntAndKillProperties = MazeGeneratorProperties & {
+export type HuntAndKillProperties = MazeGeneratorProperties & {
   huntMethod?: AllOrder;
 };
 

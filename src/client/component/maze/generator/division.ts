@@ -66,7 +66,7 @@ class Region {
   }
 }
 
-type DivisionProperties = MazeGeneratorProperties & {
+export type DivisionProperties = MazeGeneratorProperties & {
   threshold?: number;
 };
 

@@ -9,12 +9,12 @@ import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
 import { type Maze, type MazeProperties } from '../geometry/index.ts';
 import { allChoices, chooser } from '../library/chooser.ts';
-import { generators, mazes, solvers } from '../library/mazes.ts';
 import { Human, type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
 import { CustomControls } from './controls/custom-controls.tsx';
 import { GameControls } from './controls/game-controls.tsx';
 import { Messages } from './controls/messages.tsx';
+import { generators, mazes, solvers } from './mazes.ts';
 import { type Phase } from './phase.ts';
 import { type PlayMode } from './play-mode.tsx';
 import { Runner } from './runner.ts';
@@ -129,6 +129,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         const {
           props: { solver: Solver, ...args },
         } = solverChoices.find((choice) => choice.title === selectedSolver)!;
+        // TODO [2025-07-15]: Fix this type error
         //@ts-expect-error detection screwup
         solverMaker = (props) => new Solver({ ...args, ...props });
         setSolverName(selectedSolver);

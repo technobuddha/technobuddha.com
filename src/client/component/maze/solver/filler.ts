@@ -92,11 +92,9 @@ export class Filler extends MazeSolver {
         // eslint-disable-next-line @typescript-eslint/no-loop-func
         ({ target }) => !this.maze.isSame(prev, target) && !this.deadEnds[target.x][target.y],
       );
-      if (moves.length === 0) {
-        throw new Error('No path found');
-      }
-      if (moves.length > 1) {
-        throw new Error('Multiple paths found');
+      if (moves.length === 0 || moves.length > 1) {
+        this.maze.sendMessage(`filler ${this.method} no solution found`);
+        return;
       }
 
       const [move] = moves;

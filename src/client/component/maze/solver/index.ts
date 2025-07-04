@@ -5,8 +5,5 @@ export * from './fibonaccis-rabbits.ts';
 export * from './filler.ts';
 export * from './human.ts';
 export * from './maze-solver.ts';
-export * from './random-mouse.ts';
 export * from './roboto.ts';
 export * from './search.ts';
-export * from './tremaux.ts';
-export * from './wall-walking.ts';

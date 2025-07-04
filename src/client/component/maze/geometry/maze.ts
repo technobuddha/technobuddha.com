@@ -11,7 +11,6 @@ import {
 import { type Drawing, type Rect } from '../drawing/drawing.ts';
 import { type MazeGenerator } from '../generator/index.ts';
 import { alpha } from '../library/alpha.ts';
-import { darken } from '../library/darken.ts';
 import { logger } from '../library/logger.ts';
 import { lookAhead } from '../library/look-ahead.ts';
 import { Random, type RandomProperties } from '../random/random.ts';
@@ -56,6 +55,7 @@ export type CellTunnel = CellDirection & {
 export type Move = {
   direction: Direction;
   target: CellFacing;
+  tunnel?: CellFacing[];
 };
 
 export type Terminus = CellFacing;
@@ -142,7 +142,6 @@ export type MazeProperties = RandomProperties & {
   readonly exitColor?: string;
   readonly tunnelColor?: string;
   readonly solutionColor?: string;
-  readonly solutionTunnelColor?: string;
   readonly scannedColor?: string;
   readonly avatarColor?: string;
   readonly prunedColor?: string;
@@ -236,7 +235,6 @@ export abstract class Maze extends Random {
   public readonly exitColor: NonNullable<MazeProperties['exitColor']>;
   public readonly tunnelColor: NonNullable<MazeProperties['tunnelColor']>;
   public readonly solutionColor: NonNullable<MazeProperties['solutionColor']>;
-  public readonly solutionTunnelColor: NonNullable<MazeProperties['solutionTunnelColor']>;
   public readonly scannedColor: NonNullable<MazeProperties['scannedColor']>;
   public readonly avatarColor: NonNullable<MazeProperties['avatarColor']>;
   public readonly prunedColor: NonNullable<MazeProperties['prunedColor']>;
@@ -287,7 +285,6 @@ export abstract class Maze extends Random {
       entranceColor = 'oklch(0.5198 0.176858 142.4953)',
       exitColor = 'oklch(0.628 0.2577 29.23)',
       solutionColor = 'oklch(0.6611 0.115 213.72)',
-      solutionTunnelColor = darken(solutionColor, 0.25),
       scannedColor = 'oklch(0.5789 0.2344 0.51)',
       avatarColor = 'oklch(0.6611 0.115 213.72)',
       prunedColor = 'oklch(0.4446 0.1803 359.81)',
@@ -295,15 +292,14 @@ export abstract class Maze extends Random {
       errorColor = 'oklch(0.8664 0.294827 142.4953)',
 
       pathColor = 'oklch(0.8145 0.1672 83.88)',
-      tunnelColor = darken(pathColor, 0.25),
-      //bridgeColor = 'oklch(0.9544 0.0637 196.13)',
+      tunnelColor = 'oklch(0.9544 0.0637 196.13)',
       bridgeColor = 'oklch(0.25 0 0)',
       textColor = 'oklch(1 0 0)',
 
       showDistances = 'none',
       showCoordinates = false,
       showKind = false,
-      braidFactor = 0,
+      braidFactor = 1,
 
       plugin,
       ...props
@@ -339,7 +335,6 @@ export abstract class Maze extends Random {
     this.exitColor = exitColor;
     this.tunnelColor = tunnelColor;
     this.solutionColor = solutionColor;
-    this.solutionTunnelColor = solutionTunnelColor;
     this.scannedColor = scannedColor;
     this.avatarColor = avatarColor;
     this.prunedColor = prunedColor;
@@ -938,17 +933,15 @@ export abstract class Maze extends Random {
           const { direction, tunnel } = walk;
 
           path.push({ x: cell.x, y: cell.y, direction, tunnel: false });
-          if (tunnel.length > 0) {
+          if (tunnel) {
             for (const [tunnelCell, tunnelNext] of lookAhead(tunnel, next)) {
               const traverse = this.traverseTo(tunnelCell, tunnelNext);
-              if (traverse) {
-                path.push({
-                  x: tunnelCell.x,
-                  y: tunnelCell.y,
-                  direction: traverse.direction,
-                  tunnel: true,
-                });
-              }
+              path.push({
+                x: tunnelCell.x,
+                y: tunnelCell.y,
+                direction: traverse.direction,
+                tunnel: true,
+              });
             }
           }
         }
@@ -1037,36 +1030,35 @@ export abstract class Maze extends Random {
       .filter(({ target }) => inMaze === 'all' || this.inMaze(target) === inMaze);
   }
 
-  public move(cell: Cell, direction: Direction): CellFacing {
-    let next = this.traverse(cell, direction);
-
-    if (next) {
-      while (true) {
-        const portal =
-          this.inMaze(next) ? this.nexus(next).tunnels[this.opposite(next.facing)] : false;
-        if (portal) {
-          next = portal;
-        } else {
-          break;
-        }
+  public traverseTo(source: Cell, destination: Cell): { direction: Direction; target: CellFacing } {
+    return (
+      this.nexus(source)
+        .wallDirections.map((direction) => ({
+          direction,
+          target: this.traverse(source, direction),
+        }))
+        .find(({ target }) => this.isSame(destination, target)) ?? {
+        direction: '?',
+        target: { ...destination, facing: '!' },
       }
-
-      return next;
-    }
-
-    throw new Error(`No move for cell (${cell.x}, ${cell.y}) in direction "${direction}"`);
+    );
   }
+
+  public move(cell: Cell, direction: Direction): CellFacing {
+    return this.walk(cell, direction).target;
+  }
+
   public moves(
     cell: Cell,
     { wall = false, inMaze = true }: { wall?: boolean | 'all'; inMaze?: boolean | 'all' } = {},
   ): Move[] {
     return (Object.entries(this.nexus(cell).walls) as [Direction, boolean][])
       .filter(([, w]) => wall === 'all' || w === wall)
-      .map(([direction]) => ({ direction, target: this.move(cell, direction) }))
+      .map(([direction]) => ({ direction, ...this.walk(cell, direction) }))
       .filter(({ target }) => inMaze === 'all' || this.inMaze(target) === inMaze);
   }
 
-  public walk(cell: Cell, direction: Direction): { target: CellFacing; tunnel: CellFacing[] } {
+  public walk(cell: Cell, direction: Direction): { target: CellFacing; tunnel?: CellFacing[] } {
     const tunnel: CellFacing[] = [];
 
     let target = this.traverse(cell, direction);
@@ -1081,7 +1073,7 @@ export abstract class Maze extends Random {
       }
     }
 
-    return { target, tunnel };
+    return tunnel.length > 0 ? { target, tunnel } : { target };
   }
 
   public resolveMove(cell: Cell, move: MoveOffset): Cell {
@@ -1114,18 +1106,9 @@ export abstract class Maze extends Random {
   public walkTo(
     source: Cell,
     destination: Cell,
-  ): { direction: Direction; target: CellFacing; tunnel: CellFacing[] } | undefined {
+  ): { direction: Direction; target: CellFacing; tunnel?: CellFacing[] } | undefined {
     return this.nexus(source)
       .wallDirections.map((direction) => ({ direction, ...this.walk(source, direction) }))
-      .find(({ target }) => this.isSame(destination, target));
-  }
-
-  public traverseTo(
-    source: Cell,
-    destination: Cell,
-  ): { direction: Direction; target: CellFacing } | undefined {
-    return this.nexus(source)
-      .wallDirections.map((direction) => ({ direction, target: this.traverse(source, direction) }))
       .find(({ target }) => this.isSame(destination, target));
   }
 
@@ -1249,6 +1232,7 @@ export abstract class Maze extends Random {
   public drawStar(cell: Cell, color = this.avatarColor): void {
     if (this.drawing) {
       const rect = this.cellRect(cell);
+      this.drawCell(cell);
       this.renderStar(rect, color);
     }
   }

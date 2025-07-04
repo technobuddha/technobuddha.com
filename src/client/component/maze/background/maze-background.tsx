@@ -1,19 +1,22 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { toCapitalWordCase, toHumanCase } from '@technobuddha/library';
 import { Size } from '@technobuddha/size';
 
 import { useUserInterface } from '#context/user-interface';
 
 import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
 import { MazeFactory } from '../factory/maze-factory.ts';
-import { type Maze, type MazeProperties, SquareMaze } from '../geometry/index.ts';
+import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
+import { type Maze, type MazeProperties } from '../geometry/index.ts';
 import { chooser } from '../library/chooser.ts';
-import { generators, solvers } from '../library/mazes.ts';
+import { generators, solvers } from '../maker/mazes.ts';
+import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
+
+import { mazes } from './mazes.ts';
 
 import css from './maze-background.module.css';
 
-type MazeBackgroundProps = {
+export type MazeBackgroundProps = {
   readonly maskColor?: string;
   readonly children: React.ReactNode;
 };
@@ -62,9 +65,18 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         wallSize: 1,
       });
 
-      const selectedMaze = (props: MazeProperties): Maze => new SquareMaze(props);
-      const { name: generatorName, value: selectedGenerator } = chooser(generators);
-      const { name: solverName, value: selectedSolver } = chooser(solvers);
+      const {
+        props: { geometry: Geometry, ...mazeProps },
+        title: mazeName,
+      } = chooser(mazes)!;
+      const {
+        props: { generator: Generator, ...generatorProps },
+        title: generatorName,
+      } = chooser(generators)!;
+      const {
+        props: { solver: Solver, ...solverProps },
+        title: solverName,
+      } = chooser(solvers)!;
 
       const crect = canvasMaze.current.getBoundingClientRect();
       const rects = Array.from(grid.current.children).flatMap((child) =>
@@ -88,12 +100,23 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
 
       setFooter(
         <div id="maze" className={css.legend}>
+          <span>Geometry:</span>
+          <span>{mazeName}</span>
           <span>Generator:</span>
-          <span>{toCapitalWordCase(toHumanCase(generatorName))}</span>
+          <span>{generatorName}</span>
           <span>Solver:</span>
-          <span>{toCapitalWordCase(toHumanCase(solverName))}</span>
+          <span>{solverName}</span>
         </div>,
       );
+
+      const selectedMaze = (props: MazeProperties): Maze =>
+        new Geometry({ ...props, ...mazeProps });
+      const selectedGenerator = (props: MazeGeneratorProperties): MazeGenerator =>
+        new Generator({ ...props, ...generatorProps });
+      const selectedSolver = (props: MazeSolverProperties): MazeSolver =>
+        // TODO [2025-07-15]: Fix this type error
+        //@ts-expect-error detection screwup
+        new Solver({ ...props, ...solverProps });
 
       const runner = factory.create(selectedMaze, selectedGenerator, plugin, selectedSolver);
 

@@ -39,6 +39,7 @@ import {
   ZetaMaze,
   type ZetaMazeProperties,
 } from '../geometry/index.ts';
+import { type Choices } from '../library/chooser.ts';
 import { donutPlugin, ellipisePlugin, portalPlugin, trianglePlugin } from '../plugins/index.ts';
 import {
   Chain,
@@ -54,8 +55,6 @@ import {
   Roboto,
   type RobotoProperties,
 } from '../solver/index.ts';
-
-import { type Choices } from './chooser.ts';
 
 type PropsMazeGeometry =
   | ({ geometry: typeof BrickMaze } & BrickMazeProperties)
@@ -79,7 +78,7 @@ export const mazes: Choices<PropsMazeGeometry> = [
     },
   },
   {
-    weight: 0,
+    weight: 1,
     title: 'Zeta',
     props: {
       geometry: ZetaMaze,
@@ -358,7 +357,7 @@ export const generators: Choices<PropsMazeGenerator> = [
     ],
   },
   {
-    weight: 1,
+    weight: 0,
     title: 'Bridge Builder',
     props: {
       generator: RecursiveBacktracker,
@@ -470,7 +469,7 @@ export const solvers: Choices<PropsMazeSolver> = [
     ],
   },
   {
-    weight: 1,
+    weight: 0,
     title: 'Random Mouse',
     props: {
       solver: Roboto,
@@ -483,32 +482,53 @@ export const solvers: Choices<PropsMazeSolver> = [
     props: {
       solver: Roboto,
       robots: [
-        { name: 'rando', trails: 0, algorithm: 'backtracking', program: 'random', color: 'lime' },
+        { algorithm: 'backtracking', program: 'random', color: 'lime' },
         {
-          name: 'left',
           algorithm: 'backtracking',
           program: 'left-turn',
           color: 'dodgerblue',
         },
         {
-          name: 'right',
           algorithm: 'backtracking',
           program: 'right-turn',
           color: 'red',
         },
         {
-          name: 'straight',
           algorithm: 'backtracking',
           program: 'straight',
           color: 'magenta',
         },
         {
-          name: 'seeker',
           algorithm: 'backtracking',
           program: 'seek',
           color: 'yellow',
         },
-        { name: 'trémaux', algorithm: 'tremaux', color: 'orange', showMarks: false },
+        { algorithm: 'tremaux', program: 'random', color: 'lime', showMarks: false },
+        {
+          algorithm: 'tremaux',
+          program: 'left-turn',
+          color: 'dodgerblue',
+          showMarks: false,
+        },
+        {
+          algorithm: 'tremaux',
+          program: 'right-turn',
+          color: 'red',
+          showMarks: false,
+        },
+        {
+          algorithm: 'tremaux',
+          program: 'straight',
+          color: 'magenta',
+          showMarks: false,
+        },
+        {
+          algorithm: 'tremaux',
+          program: 'seek',
+          color: 'yellow',
+          showMarks: false,
+        },
+        // { algorithm: 'random-mouse', color: 'gray' },
         // {
         //   name: 'wall-right',
         //   trails: 0,
@@ -560,6 +580,14 @@ export const solvers: Choices<PropsMazeSolver> = [
           robot: 'backtracking',
         },
       },
+      {
+        weight: 1,
+        title: 'Chain (Tremaux)',
+        props: {
+          solver: Chain,
+          robot: 'tremaux',
+        },
+      },
     ],
   },
   {
@@ -570,14 +598,14 @@ export const solvers: Choices<PropsMazeSolver> = [
     },
   },
   {
-    weight: 1,
+    weight: 0,
     title: "Drunkard's Walk",
     props: {
       solver: DrunkardsWalk,
     },
   },
   {
-    weight: 1,
+    weight: 0,
     title: "Fibonacci's Rabbits",
     props: {
       solver: FibonaccisRabbits,

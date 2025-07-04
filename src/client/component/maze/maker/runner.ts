@@ -127,7 +127,7 @@ export class Runner extends EventTarget {
       case 'fast': {
         this.playing = true;
         this.speed = this.baseSpeed;
-        this.delay = 0;
+        this.delay = 1;
         break;
       }
 

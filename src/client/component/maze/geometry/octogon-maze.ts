@@ -47,6 +47,11 @@ export class OctogonMaze extends Maze {
     };
   }
 
+  // Don't render the last row of squares, the maze looks better
+  public override inMaze(cell: Cell): boolean {
+    return super.inMaze(cell) && !(cell.y === this.height - 1 && cell.x % 2 === 1);
+  }
+
   public cellKind(cell: Cell): number {
     return modulo(cell.x, 2);
   }

@@ -8,37 +8,26 @@ export type WallWalkingRobotProperties = RobotProperties & {
 };
 
 export class WallWalkingRobot extends Robot {
+  public algorithm = 'wall-walking';
   private readonly visits: number[][];
 
-  public constructor({ maze, turn = 'right', ...props }: WallWalkingRobotProperties) {
+  public constructor({ turn = 'right', ...props }: WallWalkingRobotProperties) {
     const program = turn === 'right' ? 'right-turn' : 'left-turn';
-    super({ maze, program, ...props });
+    super({ program, ...props });
     this.visits = create2DArray(this.maze.width, this.maze.height, 0);
   }
 
-  public step(): void {
+  public execute(): void {
     const v = ++this.visits[this.location.x][this.location.y];
     if (v > Object.keys(this.maze.nexus(this.location).walls).length) {
-      throw new RobotError(`Robot ${this.name} is stuck in a loop.`, this.color);
+      throw new RobotError(`${this.name} is stuck in a loop.`, this.color);
     }
-
-    this.clearCell(this.location);
 
     const next = this.decide(this.maze.moves(this.location, { wall: false }));
     if (next) {
       this.moveTo(next.target);
     } else {
-      throw new RobotError(`Robot ${this.name} cannot decide on a move`, this.color);
-    }
-  }
-
-  public override dispose(): void {
-    if (this.trails > 0) {
-      for (const cell of this.trail) {
-        this.clearCell(cell);
-      }
-    } else {
-      this.clearCell(this.history.at(-1)!);
+      throw new RobotError(`${this.name} cannot decide on a move`, this.color);
     }
   }
 }

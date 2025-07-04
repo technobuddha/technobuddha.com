@@ -2,18 +2,18 @@ import { CartesianSet, create2DArray } from '@technobuddha/library';
 
 import { type Cell, type CellFacing, type CellTunnel } from '../geometry/index.ts';
 
-import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
-import { BacktrackingRobot, type Robot, WallWalkingRobot } from './robot/index.ts';
+import { type Robot } from './robot/index.ts';
+import { Roboto, type RobotoProperties } from './roboto.ts';
 
-export type ChainProperties = MazeSolverProperties & {
+export type ChainProperties = Omit<RobotoProperties, 'robots'> & {
   turn?: 'right' | 'left';
-  robot?: 'wall-walking' | 'backtracking';
+  robot?: 'wall-walking' | 'backtracking' | 'tremaux';
   avatarColor?: string;
   pathColor?: string;
   chainColor?: string;
 };
 
-export class Chain extends MazeSolver {
+export class Chain extends Roboto {
   private readonly avatarColor: NonNullable<ChainProperties['avatarColor']>;
   private readonly pathColor: NonNullable<ChainProperties['avatarColor']>;
   private readonly chainColor: NonNullable<ChainProperties['avatarColor']>;
@@ -23,7 +23,7 @@ export class Chain extends MazeSolver {
   private history: CellFacing[] = [];
   private path: CellTunnel[] = [];
   private readonly blocked: boolean[][];
-  private readonly createRobot: (turn: 'right' | 'left', color: string) => Robot;
+  private readonly makeRobot: (turn: 'right' | 'left', color: string) => Robot;
 
   public constructor({
     maze,
@@ -33,7 +33,7 @@ export class Chain extends MazeSolver {
     chainColor = '#333333',
     ...props
   }: ChainProperties) {
-    super({ maze, ...props });
+    super({ maze, robots: [], ...props });
 
     this.avatarColor = avatarColor;
     this.pathColor = pathColor;
@@ -41,26 +41,41 @@ export class Chain extends MazeSolver {
 
     this.blocked = create2DArray(maze.width, maze.height, false);
 
-    this.createRobot =
+    this.makeRobot =
       robot === 'wall-walking' ?
         (turn: 'right' | 'left', color: string) =>
-          new WallWalkingRobot({
-            maze: this.maze,
-            location: this.current,
-            clearCell: this.restoreCell.bind(this),
-            trails: 5,
-            turn,
-            color,
-          })
+          this.createRobot(
+            {
+              algorithm: 'wall-walking',
+              turn,
+              program: turn === 'right' ? 'right-turn' : 'left-turn',
+              color,
+              clearCell: this.restoreCell.bind(this),
+            },
+            this.current,
+          )
+      : robot === 'backtracking' ?
+        (turn: 'right' | 'left', color: string) =>
+          this.createRobot(
+            {
+              algorithm: 'backtracking',
+              program: turn === 'right' ? 'right-turn' : 'left-turn',
+              color,
+              clearCell: this.restoreCell.bind(this),
+              blocked: this.blocked,
+            },
+            this.current,
+          )
       : (turn: 'right' | 'left', color: string) =>
-          new BacktrackingRobot({
-            maze: this.maze,
-            location: this.current,
-            blocked: this.blocked,
-            clearCell: this.restoreCell.bind(this),
-            program: turn === 'right' ? 'right-turn' : 'left-turn',
-            color,
-          });
+          this.createRobot(
+            {
+              algorithm: 'tremaux',
+              program: turn === 'right' ? 'right-turn' : 'left-turn',
+              color,
+              clearCell: this.restoreCell.bind(this),
+            },
+            this.current,
+          );
   }
 
   private restoreCell(cell: Cell): void {
@@ -74,6 +89,8 @@ export class Chain extends MazeSolver {
       this.maze.drawPath(this.maze.drawCell(pathCell), this.pathColor);
     } else if (this.chain.some((c) => this.maze.isSame(c, cell))) {
       this.maze.drawAvatar(cell, this.chainColor);
+    } else if (this.blocked[cell.x][cell.y]) {
+      this.maze.drawX(cell);
     }
   }
 
@@ -86,7 +103,7 @@ export class Chain extends MazeSolver {
     this.restoreCell(cell);
   }
 
-  public async *solve({
+  public override async *solve({
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): AsyncGenerator<void> {
@@ -113,8 +130,10 @@ export class Chain extends MazeSolver {
         this.randomPick(this.maze.moves(entrance).map((m) => m.direction))!,
       ),
     };
+
     while (!this.maze.isSame(this.current, exit)) {
       const nextLinkOfChain = this.chain[pos + 1];
+
       // We are attempting to follow the chain...
       const moves = this.maze
         .moves(this.current, { wall: false })
@@ -131,12 +150,20 @@ export class Chain extends MazeSolver {
         pos++;
         yield;
       } else {
-        using robotR = this.createRobot('right', 'lime');
-        using robotL = this.createRobot('left', 'magenta');
+        this.activateOneRobot(this.makeRobot('right', 'lime'));
+        this.activateOneRobot(this.makeRobot('left', 'magenta'));
 
         let searching = true;
         while (searching) {
-          for (const robot of [robotR, robotL]) {
+          this.runAllRobots();
+          yield;
+
+          if (this.robots.length === 0) {
+            this.maze.sendMessage('no solution found');
+            return;
+          }
+
+          for (const robot of this.robots) {
             const chainPos = this.chain.findIndex((c) => this.maze.isSame(c, robot.location));
 
             if (chainPos > pos) {
@@ -156,13 +183,11 @@ export class Chain extends MazeSolver {
               yield;
 
               searching = false;
-              break;
             }
-
-            robot.execute();
-            yield;
           }
         }
+
+        this.killAllRobots();
       }
     }
     this.history.push(exit);

@@ -5,8 +5,6 @@ import { darken } from '../../library/darken.ts';
 import { PathSet } from '../../library/path-set.ts';
 import { Random, type RandomProperties } from '../../random/random.ts';
 
-import { RobotError } from './robot-error.ts';
-
 export type Program = 'random' | 'seek' | 'left-turn' | 'right-turn' | 'straight';
 
 export type RobotProperties = RandomProperties & {
@@ -17,15 +15,12 @@ export type RobotProperties = RandomProperties & {
   trails?: number;
   showPath?: boolean;
   clearCell?: (cell: Cell) => void;
-  name?: string;
 };
 
 export abstract class Robot extends Random implements Disposable {
-  public active: boolean;
   public readonly color: string;
   public location: CellFacing;
   public program: Program;
-  public readonly name: string;
 
   protected previous: CellFacing;
   protected readonly history: CellFacing[];
@@ -35,6 +30,7 @@ export abstract class Robot extends Random implements Disposable {
   protected readonly start: CellFacing;
   protected readonly maze: Maze;
   protected clearCell: (cell: Cell) => void;
+  protected avatar: (cell: CellFacing, color: string) => void;
   protected bias = true;
   protected pathSet = new PathSet();
 
@@ -47,16 +43,12 @@ export abstract class Robot extends Random implements Disposable {
     program = 'random',
     random = maze.random,
     clearCell = (cell) => maze.drawCell(cell),
-    name = `Robot#${random()}`,
     ...props
   }: RobotProperties) {
     super({ random, ...props });
-    this.active = true;
-
     this.maze = maze;
 
     this.program = program;
-    this.name = name;
 
     this.color = color;
     this.trails = trails;
@@ -67,13 +59,17 @@ export abstract class Robot extends Random implements Disposable {
     this.previous = location;
     this.start = location;
     this.history = [location];
+
+    this.avatar = (cell, color) => this.maze.drawAvatar(cell, color);
   }
 
-  protected moveTo(next: CellFacing): void {
-    this.history.push({ ...this.location });
-    this.previous = this.location;
-    this.location = next;
+  public abstract algorithm: string;
 
+  public get name(): string {
+    return `${this.algorithm} ${this.program}`;
+  }
+
+  protected drawPath(): void {
     if (this.showPath) {
       const currentPathSet = new PathSet(this.maze.makePath(this.path()));
 
@@ -85,12 +81,10 @@ export abstract class Robot extends Random implements Disposable {
         this.maze.drawPath(path);
       }
       this.pathSet = currentPathSet;
-    } else {
-      this.clearCell(this.location);
     }
+  }
 
-    this.maze.drawAvatar(this.location, this.color);
-
+  protected drawTrails(): void {
     if (this.trails > 0) {
       while (this.trail.length > this.trails) {
         const cell = this.trail.pop()!;
@@ -100,11 +94,36 @@ export abstract class Robot extends Random implements Disposable {
       for (let i = 0; i < this.trail.length; i++) {
         const cell = this.trail[i];
         this.clearCell(cell);
-        this.maze.drawAvatar(cell, darken(this.color, (0.5 / this.trail.length) * (i + 1)));
+        this.avatar(cell, darken(this.color, (0.5 / this.trail.length) * (i + 1)));
       }
 
       this.trail.unshift(this.location);
     }
+  }
+
+  protected moveTo(next: CellFacing): void {
+    this.clearCell(this.location);
+
+    this.history.push({ ...this.location });
+    this.previous = this.location;
+    this.location = next;
+
+    this.avatar(this.location, this.color);
+    this.drawPath();
+    this.drawTrails();
+  }
+
+  protected backtrack(): void {
+    this.clearCell(this.location);
+
+    this.history.pop();
+    this.location = this.previous;
+    this.previous = this.history.at(-1) ?? this.start;
+
+    this.clearCell(this.location);
+    this.maze.drawAvatar(this.location, this.color);
+    this.drawPath();
+    this.drawTrails();
   }
 
   protected decide(moves: Move[]): Move | undefined {
@@ -162,22 +181,7 @@ export abstract class Robot extends Random implements Disposable {
     }
   }
 
-  public execute(): void {
-    if (this.active) {
-      try {
-        this.step();
-      } catch (error) {
-        if (error instanceof RobotError) {
-          this.sendMessage(error.message, error.color);
-        } else {
-          this.sendMessage(`Robot ${this.name} encountered an error: ${error}`);
-        }
-        this.active = false;
-      }
-    }
-  }
-
-  public abstract step(): void;
+  public abstract execute(): void;
 
   public override sendMessage(message: string, color?: string): void {
     this.maze.sendMessage(message, color);
@@ -194,7 +198,7 @@ export abstract class Robot extends Random implements Disposable {
         this.clearCell(cell);
       }
     } else {
-      this.clearCell(this.history.at(-1)!);
+      this.clearCell(this.location);
     }
   }
 

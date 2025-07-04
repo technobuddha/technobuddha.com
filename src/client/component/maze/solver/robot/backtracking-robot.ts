@@ -9,6 +9,7 @@ export type BacktrackingRobotProperties = RobotProperties & {
 };
 
 export class BacktrackingRobot extends Robot {
+  public algorithm = 'backtracking';
   private readonly blocked: boolean[][];
   private readonly showMarks: boolean;
 
@@ -26,7 +27,7 @@ export class BacktrackingRobot extends Robot {
     };
   }
 
-  public step(): void {
+  public execute(): void {
     this.clearCell(this.location);
 
     const moves = this.maze
@@ -43,23 +44,15 @@ export class BacktrackingRobot extends Robot {
         this.maze.drawX(this.location);
       }
       this.blocked[this.location.x][this.location.y] = true;
-      this.history.pop();
-      this.location = this.previous;
-      this.previous = this.history.at(-1) ?? this.start;
 
-      this.clearCell(this.location);
-      this.maze.drawAvatar(this.location, this.color);
+      this.backtrack();
     } else {
       const next = this.decide(moves);
       if (next) {
         this.moveTo(next.target);
       } else {
-        throw new RobotError(`Robot ${this.name} cannot decide on a move`, this.color);
+        throw new RobotError(`${this.name} cannot decide on a move`, this.color);
       }
     }
-  }
-
-  public override dispose(): void {
-    this.clearCell(this.location);
   }
 }

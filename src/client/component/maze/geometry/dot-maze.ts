@@ -4,6 +4,7 @@ import { matrix } from './dot-matrix.ts';
 import {
   type Cell,
   type CellDirection,
+  type Direction,
   type DrawingSizes,
   type Kind,
   Maze,
@@ -86,6 +87,38 @@ export class DotMaze extends Maze {
       y7,
       yz,
     };
+  }
+
+  public override removeWall(cell: Cell, direction: Direction): void {
+    super.removeWall(cell, direction);
+
+    const cells = [
+      { x: cell.x + 1, y: cell.y + 1 },
+      { x: cell.x - 1, y: cell.y + 1 },
+      { x: cell.x + 1, y: cell.y - 1 },
+      { x: cell.x - 1, y: cell.y - 1 },
+    ];
+    for (const c of cells) {
+      if (this.inMaze(c)) {
+        this.drawIntersections(c);
+      }
+    }
+  }
+
+  public override addWall(cell: Cell, direction: Direction): void {
+    super.addWall(cell, direction);
+
+    const cells = [
+      { x: cell.x + 1, y: cell.y + 1 },
+      { x: cell.x - 1, y: cell.y + 1 },
+      { x: cell.x + 1, y: cell.y - 1 },
+      { x: cell.x - 1, y: cell.y - 1 },
+    ];
+    for (const c of cells) {
+      if (this.inMaze(c)) {
+        this.drawIntersections(c);
+      }
+    }
   }
 
   public override drawCell<T extends Cell>(cell: T, color = this.cellColor): T {
@@ -210,7 +243,7 @@ export class DotMaze extends Maze {
     }
   }
 
-  public drawIntersections(cell: Cell): void {
+  public drawIntersections(cell: Cell, tunnels = true): void {
     if (this.drawing) {
       const { walls } = this.nexus(cell);
 
@@ -226,11 +259,11 @@ export class DotMaze extends Maze {
           { x: x7, y: y1 },
           { x: x7, y: y0 },
         ],
-        !walls.b || crossedB ? this.cellColor : this.wallColor,
+        walls.b === false || crossedB ? this.cellColor : this.wallColor,
       );
 
-      if (!walls.b && crossedB && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x6, y: y0 }, { x: x7, y: y1 }, this.bridgeColor);
+      if (tunnels && !walls.b && crossedB && (cell.x + cell.y) % 2 === 0) {
+        this.drawing.line({ x: x6, y: y0 }, { x: x7, y: y1 }, this.tunnelColor);
       }
 
       // d
@@ -244,11 +277,11 @@ export class DotMaze extends Maze {
           { x: x7, y: y7 },
           { x: x7, y: y6 },
         ],
-        !walls.d || crossedD ? this.cellColor : this.wallColor,
+        walls.d === false || crossedD ? this.cellColor : this.wallColor,
       );
 
-      if (!walls.d && crossedD && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x6, y: y7 }, { x: x7, y: y6 }, this.bridgeColor);
+      if (tunnels && !walls.d && crossedD && (cell.x + cell.y) % 2 === 0) {
+        this.drawing.line({ x: x6, y: y7 }, { x: x7, y: y6 }, this.tunnelColor);
       }
 
       // f
@@ -262,11 +295,11 @@ export class DotMaze extends Maze {
           { x: x1, y: y7 },
           { x: x0, y: y6 },
         ],
-        !walls.f || crossedF ? this.cellColor : this.wallColor,
+        walls.f === false || crossedF ? this.cellColor : this.wallColor,
       );
 
-      if (!walls.f && crossedF && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x0, y: y6 }, { x: x1, y: y7 }, this.bridgeColor);
+      if (tunnels && !walls.f && crossedF && (cell.x + cell.y) % 2 === 0) {
+        this.drawing.line({ x: x0, y: y6 }, { x: x1, y: y7 }, this.tunnelColor);
       }
 
       // h
@@ -280,11 +313,11 @@ export class DotMaze extends Maze {
           { x: x1, y: y0 },
           { x: x0, y: y0 },
         ],
-        !walls.h || crossedH ? this.cellColor : this.wallColor,
+        walls.h === false || crossedH ? this.cellColor : this.wallColor,
       );
 
-      if (!walls.h && crossedH && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x0, y: y1 }, { x: x1, y: y0 }, this.bridgeColor);
+      if (tunnels && !walls.h && crossedH && (cell.x + cell.y) % 2 === 0) {
+        this.drawing.line({ x: x0, y: y1 }, { x: x1, y: y0 }, this.tunnelColor);
       }
     }
   }

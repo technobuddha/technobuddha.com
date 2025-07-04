@@ -9,83 +9,19 @@ export class ZetaMaze extends DotMaze {
     this.freezeWalls();
   }
 
-  // public override removeWall(cell: Cell, direction: Direction): void {
-  //   super.removeWall(cell, direction);
-
-  //   switch (direction) {
-  //     case 'b': {
-  //       const c1 = this.move(cell, 'a');
-  //       const c2 = this.move(cell, 'c');
-
-  //       if (c1) {
-  //         delete this.nexus(c1).walls.d;
-  //         this.drawCell(c1);
-  //       }
-  //       if (c2) {
-  //         delete this.nexus(c2).walls.h;
-  //         this.drawCell(c2);
-  //       }
-  //       break;
-  //     }
-
-  //     case 'd': {
-  //       const c1 = this.move(cell, 'c');
-  //       const c2 = this.move(cell, 'e');
-
-  //       if (c1) {
-  //         delete this.nexus(c1).walls.f;
-  //         this.drawCell(c1);
-  //       }
-  //       if (c2) {
-  //         delete this.nexus(c2).walls.b;
-  //         this.drawCell(c2);
-  //       }
-  //       break;
-  //     }
-
-  //     case 'f': {
-  //       const c1 = this.move(cell, 'e');
-  //       const c2 = this.move(cell, 'g');
-
-  //       if (c1) {
-  //         delete this.nexus(c1).walls.h;
-  //         this.drawCell(c1);
-  //       }
-  //       if (c2) {
-  //         delete this.nexus(c2).walls.d;
-  //         this.drawCell(c2);
-  //       }
-  //       break;
-  //     }
-
-  //     case 'h': {
-  //       const c1 = this.move(cell, 'a');
-  //       const c2 = this.move(cell, 'g');
-
-  //       if (c1) {
-  //         delete this.nexus(c1).walls.f;
-  //         this.drawCell(c1);
-  //       }
-  //       if (c2) {
-  //         delete this.nexus(c2).walls.b;
-  //         this.drawCell(c2);
-  //       }
-  //       break;
-  //     }
-
-  //     // no default
-  //   }
-  // }
-
   public override drawWalls(cell: Cell, color = this.wallColor): void {
     super.drawWalls(cell, color);
     const { walls } = this.nexus(cell);
 
     for (const direction of this.directions) {
-      if (walls[direction] === undefined) {
+      if (!(direction in walls)) {
         this.drawWall({ ...cell, direction }, color);
       }
     }
+  }
+
+  public override drawIntersections(cell: Cell): void {
+    super.drawIntersections(cell, false);
   }
 
   private freezeWalls(): void {

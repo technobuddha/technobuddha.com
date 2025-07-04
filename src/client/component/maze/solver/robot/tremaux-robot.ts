@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell, type CellFacing, type Direction, type Move } from '../../geometry/index.ts';
+import { type Cell, type Direction, type Move } from '../../geometry/index.ts';
 import { darken } from '../../library/darken.ts';
 
 import { Robot, type RobotProperties } from './robot.ts';
@@ -13,6 +13,7 @@ export type TremauxRobotProperties = RobotProperties & {
 };
 
 export class TremauxRobot extends Robot {
+  public algorithm = 'trémaux';
   protected readonly showMarks: boolean = true;
   protected readonly markedColor: string;
   protected readonly blockedColor: string;
@@ -20,12 +21,13 @@ export class TremauxRobot extends Robot {
 
   public constructor({
     maze,
-    showMarks = true,
+    program = 'random',
+    showMarks = false,
     pathColor = maze.pathColor,
     blockedColor = maze.blockedColor,
     ...props
   }: TremauxRobotProperties) {
-    super({ maze, ...props });
+    super({ maze, program, ...props });
     this.showMarks = showMarks;
     this.markedColor = darken(pathColor, 0.15);
     this.blockedColor = darken(blockedColor, 0.15);
@@ -38,6 +40,8 @@ export class TremauxRobot extends Robot {
           Object.entries(this.maze.nexus({ x: x, y: y }).walls).map(([k]) => [k as Direction, 0]),
         ) as Record<Direction, number>,
     );
+
+    this.avatar = (cell, color) => this.maze.drawStar(cell, color);
   }
 
   private drawMark(cell: Cell, direction: Direction): void {
@@ -48,8 +52,14 @@ export class TremauxRobot extends Robot {
   }
 
   protected move(next: Move): void {
-    this.marks[this.location.x][this.location.y][next.direction]++;
-    this.marks[next.target.x][next.target.y][this.maze.opposite(next.target.facing)]++;
+    this.marks[this.location.x][this.location.y][next.direction] = Math.min(
+      this.marks[this.location.x][this.location.y][next.direction] + 1,
+      2,
+    );
+    this.marks[next.target.x][next.target.y][this.maze.opposite(next.target.facing)] = Math.min(
+      this.marks[next.target.x][next.target.y][this.maze.opposite(next.target.facing)] + 1,
+      2,
+    );
 
     this.clearCell(this.location);
     this.moveTo(next.target);
@@ -67,8 +77,11 @@ export class TremauxRobot extends Robot {
     }
   }
 
-  public step(): void {
+  public execute(): void {
     const moves = this.maze.moves(this.location, { wall: false });
+    if (moves.length === 0) {
+      throw new RobotError(`${this.name} cannot find a move`, this.color);
+    }
 
     const pmi = moves.findIndex(({ target }) => this.maze.isSame(target, this.previous));
     const prevMove = pmi >= 0 ? moves[pmi] : undefined;
@@ -79,63 +92,68 @@ export class TremauxRobot extends Robot {
 
     const marks = this.marks[this.location.x][this.location.y];
 
-    // * When entering a new junction, pick any new path
-    // * When entering a previously explored junction via a new path turn around.
-    // * When entering a previously explored junction via a previousy explored path, pick a new path with the fewest number of marks.
-    // ** When able to pick between multiple paths, attempt to pick a path that shortens the distance between the current coordinates and the exit coordinates.
-
     if (moves.length > 0 && moves.every((m) => marks[m.direction] === 0)) {
-      // 1. If only the entrance you just came from is marked, pick an arbitrary unmarked
-      //    entrance, if any. This rule also applies if you're just starting in the middle
-      //    of the maze and there are no marked entrances at all.
-      const next = this.randomPick(moves)!;
-      //           //this.marks[next.x][next.y]++;
-      this.move(next);
+      // * If only the entrance you just came from is marked, pick an arbitrary unmarked
+      // * entrance, if any. This rule also applies if you're just starting in the middle
+      // * of the maze and there are no marked entrances at all.
+      const next = this.decide(moves);
+      if (next) {
+        this.move(next);
+      } else {
+        throw new RobotError(`${this.name} cannot decide`, this.color);
+      }
     } else if (
       prevMove &&
       moves.every((m) => marks[m.direction] === 1) &&
       marks[prevMove.direction] < 2
     ) {
-      // 2. If all entrances are marked, go back through the entrance you just came from,
-      //    unless it is marked twice. This rule will apply whenever you reach a dead end.
+      // * If all entrances are marked, go back through the entrance you just came from,
+      // * unless it is marked twice. This rule will apply whenever you reach a dead end.
       this.move(prevMove);
-      // 3. Pick any entrance with the fewest marks (zero if possible, else one).
     } else if (moves.length === 0) {
       if (prevMove) {
         this.move(prevMove);
       } else {
-        throw new RobotError(`Robot ${this.name} cannot find a move`, this.color);
+        throw new RobotError(`${this.name} cannot find a move`, this.color);
       }
     } else {
-      const [next] = this.randomShuffle(moves).sort(
-        (a, b) => marks[a.direction] - marks[b.direction],
-      );
+      // * Pick any entrance with the fewest marks (zero if possible, else one).
+      const ranked = this.randomShuffle(
+        moves.map((move) => ({ ...move, marks: marks[move.direction] })),
+      ).sort((a, b) => a.marks - b.marks);
+      const best = ranked.filter((move) => move.marks === ranked[0].marks);
 
-      this.move(next);
-    }
-  }
-
-  public override path(): CellFacing[] {
-    let curr: CellFacing = this.start;
-    let prev: CellFacing | undefined = undefined;
-
-    const path: CellFacing[] = [curr];
-    while (!this.maze.isSame(curr, this.location)) {
-      const [next] = this.maze.moves(curr, { wall: false }).filter(
-        // eslint-disable-next-line @typescript-eslint/no-loop-func
-        (move) =>
-          !this.maze.isSame(move.target, prev) && this.marks[curr.x][curr.y][move.direction] === 1,
-      );
-
+      const next = this.decide(best);
       if (next) {
-        prev = curr;
-        curr = next.target;
-        path.push(curr);
+        this.move(next);
       } else {
-        throw new Error('No solution found for tremaux');
+        throw new RobotError(`${this.name} cannot decide`, this.color);
       }
     }
-
-    return path;
   }
+
+  // public override path(): CellFacing[] {
+  //   let curr: CellFacing = this.start;
+  //   let prev: CellFacing = this.start;
+
+  //   const path: CellFacing[] = [curr];
+  //   while (!this.maze.isSame(curr, this.location)) {
+  //     const moves = this.maze.moves(curr, { wall: false }).filter(
+  //       // eslint-disable-next-line @typescript-eslint/no-loop-func
+  //       (move) =>
+  //         !this.maze.isSame(move.target, prev) && this.marks[curr.x][curr.y][move.direction] === 1,
+  //     );
+
+  //     if (moves.length === 0 || moves.length > 1) {
+  //       throw new RobotError(`${this.name} can not find a solution`, this.color);
+  //     }
+
+  //     const [next] = moves;
+  //     prev = curr;
+  //     curr = next.target;
+  //     path.push(curr);
+  //   }
+
+  //   return path;
+  // }
 }

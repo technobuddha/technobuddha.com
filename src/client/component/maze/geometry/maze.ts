@@ -299,7 +299,7 @@ export abstract class Maze extends Random {
       showDistances = 'none',
       showCoordinates = false,
       showKind = false,
-      braidFactor = 1,
+      braidFactor = 0,
 
       plugin,
       ...props
@@ -921,6 +921,8 @@ export abstract class Maze extends Random {
       !this.nexus(cell).mask
     );
   }
+
+  protected abstract cellOffsets(cell: Cell): Record<string, number>;
   //#endregion
   //#region Path
   public makePath(history: CellFacing[]): CellTunnel[] {

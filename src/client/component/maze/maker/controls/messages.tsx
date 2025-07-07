@@ -1,4 +1,5 @@
 import React from 'react';
+import { IoTrash } from 'react-icons/io5';
 
 import { type Runner } from '../runner.ts';
 
@@ -24,6 +25,10 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
     }
   }, []);
 
+  const handleClear = React.useCallback(() => {
+    setMessages([]);
+  }, []);
+
   React.useEffect(() => {
     runner?.maze.addEventListener('message', handleMessage);
     return () => {
@@ -33,17 +38,22 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
 
   return (
     <div className={css.messages}>
-      {messages.map((message) => (
-        <div className={css.message} key={message.time}>
-          <div
-            className={css.color}
-            style={{
-              backgroundColor: message.color,
-            }}
-          />
-          <div>{message.message}</div>
-        </div>
-      ))}
+      <button type="button" onClick={handleClear}>
+        <IoTrash />
+      </button>
+      <div className={css.scroll}>
+        {messages.map((message) => (
+          <div className={css.message} key={message.time}>
+            <div
+              className={css.color}
+              style={{
+                backgroundColor: message.color,
+              }}
+            />
+            <div>{message.message}</div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

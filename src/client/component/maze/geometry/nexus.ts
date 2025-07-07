@@ -1,5 +1,7 @@
 import { type Direction, type Tunnels, type Wall } from './maze.ts';
 
+export type Offsets = Record<string, number>;
+
 export type NexusProperties = {
   x: number;
   y: number;

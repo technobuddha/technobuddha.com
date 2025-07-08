@@ -1,6 +1,4 @@
-import { modulo } from '@technobuddha/library';
-
-import { type Rect } from '../drawing/drawing.ts';
+import { modulo, type Rect } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -24,10 +22,10 @@ export class TriangleMaze extends Maze {
   public constructor({
     cellSize = 36,
     wallSize = 2,
-    gapSize = 2,
+    voidSize = 2,
     ...props
   }: TriangleMazeProperties) {
-    super({ cellSize, wallSize, gapSize, ...props }, matrix);
+    super({ cellSize, wallSize, voidSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -55,44 +53,44 @@ export class TriangleMaze extends Maze {
   protected offsets(kind: Kind): Record<string, number> {
     const c = this.cellSize;
     const w = this.wallSize;
-    const g = this.gapSize;
+    const v = this.voidSize;
 
     const x0 = 0;
-    const x1 = x0 + g * COS30;
-    const x2 = x1 + g * COS30;
+    const x1 = x0 + v * COS30;
+    const x2 = x1 + v * COS30;
     const x5 = x2 + (w / SIN30) * COS30;
     const x4 = x5 - w * COS30;
-    const x3 = x4 - g * COS30;
+    const x3 = x4 - v * COS30;
 
     const xi = x0 + c;
-    const xh = xi - g * COS30;
-    const xg = xh - g * COS30;
+    const xh = xi - v * COS30;
+    const xg = xh - v * COS30;
     const xd = xg - (w / SIN30) * COS30;
     const xe = xd + w * COS30;
-    const xf = xe + g * COS30;
+    const xf = xe + v * COS30;
 
     const x9 = (x0 + xi) / 2;
-    const x8 = x9 - g * COS30;
-    const xa = x9 + g * COS30;
+    const x8 = x9 - v * COS30;
+    const xa = x9 + v * COS30;
     const x7 = x9 - w * COS30;
     const xb = x9 + w * COS30;
-    const x6 = x7 - g * COS30;
-    const xc = xb + g * COS30;
+    const x6 = x7 - v * COS30;
+    const xc = xb + v * COS30;
 
     const y0 = 0;
-    const y2 = y0 + g / SIN30;
-    const y1 = y2 - g * SIN30;
+    const y2 = y0 + v / SIN30;
+    const y1 = y2 - v * SIN30;
 
     const y5 = y2 + w / SIN30;
     const y4 = y5 - w * SIN30;
-    const y3 = y4 - g * SIN30;
+    const y3 = y4 - v * SIN30;
 
     const yb = y0 + c * SIN60;
-    const ya = yb - g;
-    const y9 = ya - g * COS60;
+    const ya = yb - v;
+    const y9 = ya - v * COS60;
     const y8 = ya - w;
     const y7 = y8 - w * SIN30;
-    const y6 = y7 - g * SIN30;
+    const y6 = y7 - v * SIN30;
 
     const normalX = { x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xa, xb, xc, xd, xe, xf, xg, xh, xi };
     const normalY = { y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, ya, yb };
@@ -347,17 +345,6 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public override drawBridge(cell: CellDirection, _color = this.wallColor): void {
-    if (this.drawing) {
-      super.drawBridge(cell, this.wallColor);
-      this.drawDoor(cell, this.wallColor);
-    }
-  }
-
-  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
-    this.drawDoor(cell, color);
-  }
-
   public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
@@ -476,7 +463,7 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public getRect(cell: Cell): Rect {
+  protected getRect(cell: Cell): Rect {
     switch (this.cellKind(cell)) {
       case 0: {
         const { x5, x9, xd, y8 } = this.cellOffsets(cell);

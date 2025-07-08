@@ -1,3 +1,5 @@
+import { type Rect } from '@technobuddha/library';
+
 import { type Direction, type Tunnels, type Wall } from './maze.ts';
 
 export type Offsets = Record<string, number>;
@@ -10,6 +12,7 @@ export type NexusProperties = {
   bridge?: boolean;
   mask?: boolean;
   distance?: number;
+  rect: Rect;
 };
 
 export class Nexus {
@@ -20,6 +23,7 @@ export class Nexus {
   public bridge: boolean;
   public mask: boolean;
   public distance: number;
+  public rect: Rect;
 
   public constructor({
     x,
@@ -29,6 +33,7 @@ export class Nexus {
     bridge = false,
     mask = false,
     distance = Infinity,
+    rect,
   }: NexusProperties) {
     this.x = x;
     this.y = y;
@@ -37,6 +42,7 @@ export class Nexus {
     this.bridge = bridge;
     this.mask = mask;
     this.distance = distance;
+    this.rect = rect;
   }
 
   public get wallDirections(): Direction[] {

@@ -1,6 +1,4 @@
-import { largestInscribedRectangle, modulo } from '@technobuddha/library';
-
-import { type Rect } from '../drawing/drawing.ts';
+import { largestInscribedRectangle, modulo, type Rect } from '@technobuddha/library';
 
 import { matrix } from './hexagon-matrix.ts';
 import {
@@ -24,10 +22,10 @@ export class HexagonMaze extends Maze {
   public constructor({
     cellSize = 28,
     wallSize = 2,
-    gapSize = 2,
+    voidSize = 2,
     ...props
   }: HexagonMazeProperties) {
-    super({ cellSize, wallSize, gapSize, ...props }, matrix);
+    super({ cellSize, wallSize, voidSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -56,52 +54,52 @@ export class HexagonMaze extends Maze {
   protected override offsets(_kind: Kind): Record<string, number> {
     const x0 = 0;
 
-    const x1 = x0 + this.gapSize * TAN30 * SIN30;
-    const x2 = x0 + (this.gapSize + this.wallSize) * TAN30 * SIN30;
-    const x3 = x0 + this.gapSize / COS30;
+    const x1 = x0 + this.voidSize * TAN30 * SIN30;
+    const x2 = x0 + (this.voidSize + this.wallSize) * TAN30 * SIN30;
+    const x3 = x0 + this.voidSize / COS30;
     const x4 = x3 + this.wallSize * TAN30 * SIN30;
     const x5 = x3 + this.wallSize / COS30;
     const x9 = x0 + this.cellSize * 0.25;
-    const x6 = x9 - (this.gapSize + this.wallSize) * TAN30 * SIN30;
-    const x8 = x9 - this.gapSize * TAN30 * SIN30;
-    const xa = x9 + (this.gapSize / COS30) * SIN30;
-    const xb = x9 + ((this.gapSize + this.wallSize) / COS30) * SIN30;
+    const x6 = x9 - (this.voidSize + this.wallSize) * TAN30 * SIN30;
+    const x8 = x9 - this.voidSize * TAN30 * SIN30;
+    const xa = x9 + (this.voidSize / COS30) * SIN30;
+    const xb = x9 + ((this.voidSize + this.wallSize) / COS30) * SIN30;
     const x7 = xa - this.wallSize * TAN30 * SIN30;
     const xm = x0 + this.cellSize;
-    const xn = xm - this.gapSize * TAN30 * SIN30;
-    const xl = xm - (this.gapSize + this.wallSize) * TAN30 * SIN30;
-    const xk = xm - this.gapSize / COS30;
+    const xn = xm - this.voidSize * TAN30 * SIN30;
+    const xl = xm - (this.voidSize + this.wallSize) * TAN30 * SIN30;
+    const xk = xm - this.voidSize / COS30;
     const xj = xk - this.wallSize * TAN30 * SIN30;
     const xi = xk - this.wallSize / COS30;
     const xg = xm - this.cellSize * 0.25;
-    const xh = xg + (this.gapSize + this.wallSize) * TAN30 * SIN30;
-    const xe = xg + this.gapSize * TAN30 * SIN30;
-    const xd = xg - (this.gapSize / COS30) * SIN30;
-    const xc = xg - ((this.gapSize + this.wallSize) / COS30) * SIN30;
+    const xh = xg + (this.voidSize + this.wallSize) * TAN30 * SIN30;
+    const xe = xg + this.voidSize * TAN30 * SIN30;
+    const xd = xg - (this.voidSize / COS30) * SIN30;
+    const xc = xg - ((this.voidSize + this.wallSize) / COS30) * SIN30;
     const xf = xd + this.wallSize * TAN30 * SIN30;
 
     const y0 = 0;
-    const y1 = y0 + this.gapSize * TAN30 * COS30;
-    const y2 = y0 + this.gapSize;
-    const y3 = y0 + (this.gapSize + this.wallSize) * TAN30 * COS30;
+    const y1 = y0 + this.voidSize * TAN30 * COS30;
+    const y2 = y0 + this.voidSize;
+    const y3 = y0 + (this.voidSize + this.wallSize) * TAN30 * COS30;
 
-    const y5 = y0 + this.gapSize + this.wallSize;
+    const y5 = y0 + this.voidSize + this.wallSize;
     const y4 = y5 - this.wallSize * SIN30;
 
     const y9 = y0 + this.cellSize * SIN60 * 0.5;
-    const y8 = y9 - this.gapSize * TAN30 * COS30;
-    const y6 = y9 - (this.gapSize + this.wallSize) * TAN30 * COS30;
+    const y8 = y9 - this.voidSize * TAN30 * COS30;
+    const y6 = y9 - (this.voidSize + this.wallSize) * TAN30 * COS30;
     const y7 = y9 - this.wallSize * TAN30 * COS30;
 
-    const ya = y9 + this.gapSize * TAN30 * COS30;
+    const ya = y9 + this.voidSize * TAN30 * COS30;
     const yb = y9 + this.wallSize * TAN30 * COS30;
     const yi = y0 + this.cellSize * SIN60;
-    const yh = yi - this.gapSize * TAN30 * COS30;
-    const yg = yi - this.gapSize;
-    const yf = yi - (this.gapSize + this.wallSize) * TAN30 * COS30;
-    const yd = yi - (this.gapSize + this.wallSize);
+    const yh = yi - this.voidSize * TAN30 * COS30;
+    const yg = yi - this.voidSize;
+    const yf = yi - (this.voidSize + this.wallSize) * TAN30 * COS30;
+    const yd = yi - (this.voidSize + this.wallSize);
     const ye = yd + this.wallSize * SIN30;
-    const yc = y9 + (this.gapSize + this.wallSize) * TAN30 * COS30;
+    const yc = y9 + (this.voidSize + this.wallSize) * TAN30 * COS30;
 
     // prettier-ignore
     return {
@@ -115,29 +113,29 @@ export class HexagonMaze extends Maze {
       const { x0, x2, xa, x9, xd, xe, xl, xm, y0, y2, y9, yh, yi } = this.cellOffsets(cell);
 
       // First draw the complete hexagon including gaps (background)
-      // Use the outer gap coordinates: x0, x9, xe, xm, y0, y9, yi
+      // Use the outer void coordinates: x0, x9, xe, xm, y0, y9, yi
       this.drawing.polygon(
         [
-          { x: x9, y: y0 }, // Top-left outer edge (including gap)
-          { x: xe, y: y0 }, // Top-right outer edge (including gap)
-          { x: xm, y: y9 }, // Right outer edge (including gap)
-          { x: xe, y: yi }, // Bottom-right outer edge (including gap)
-          { x: x9, y: yi }, // Bottom-left outer edge (including gap)
-          { x: x0, y: y9 }, // Left outer edge (including gap)
+          { x: x9, y: y0 }, // Top-left outer edge (including void)
+          { x: xe, y: y0 }, // Top-right outer edge (including void)
+          { x: xm, y: y9 }, // Right outer edge (including void)
+          { x: xe, y: yi }, // Bottom-right outer edge (including void)
+          { x: x9, y: yi }, // Bottom-left outer edge (including void)
+          { x: x0, y: y9 }, // Left outer edge (including void)
         ],
         this.backgroundColor,
       );
 
       // Then draw the hexagon without gaps (walls + interior)
-      // Use coordinates that exclude the gap areas
+      // Use coordinates that exclude the void areas
       this.drawing.polygon(
         [
-          { x: xa, y: y2 }, // Top-left edge (excluding gap)
-          { x: xd, y: y2 }, // Top-right edge (excluding gap)
-          { x: xl, y: y9 }, // Right edge (excluding gap)
-          { x: xd, y: yh }, // Bottom-right edge (excluding gap)
-          { x: xa, y: yh }, // Bottom-left edge (excluding gap)
-          { x: x2, y: y9 }, // Left edge (excluding gap)
+          { x: xa, y: y2 }, // Top-left edge (excluding void)
+          { x: xd, y: y2 }, // Top-right edge (excluding void)
+          { x: xl, y: y9 }, // Right edge (excluding void)
+          { x: xd, y: yh }, // Bottom-right edge (excluding void)
+          { x: xa, y: yh }, // Bottom-left edge (excluding void)
+          { x: x2, y: y9 }, // Left edge (excluding void)
         ],
         color,
       );
@@ -331,17 +329,6 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public override drawBridge(cell: CellDirection, _color = this.wallColor): void {
-    if (this.drawing) {
-      super.drawBridge(cell, this.wallColor);
-      this.drawDoor(cell, this.wallColor);
-    }
-  }
-
-  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
-    this.drawDoor(cell, color);
-  }
-
   public override drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
@@ -444,7 +431,7 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public override getRect(cell: Cell): Rect {
+  protected getRect(cell: Cell): Rect {
     // Use the larger hexagon coordinates that include wall areas
     // Based on the drawFloor method coordinates for maximum usable space
     const { x0, x9, xg, xm, y0, y9, yi } = this.cellOffsets(cell);

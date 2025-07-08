@@ -1,7 +1,5 @@
 /* eslint-disable unicorn/consistent-destructuring */
-import { modulo } from '@technobuddha/library';
-
-import { type Rect } from '../drawing/drawing.ts';
+import { modulo, type Rect } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -23,10 +21,10 @@ export class OctogonMaze extends Maze {
   public constructor({
     cellSize = 42,
     wallSize = 1,
-    gapSize = 2,
+    voidSize = 2,
     ...props
   }: OctogonMazeProperties) {
-    super({ cellSize, wallSize, gapSize, ...props }, matrix);
+    super({ cellSize, wallSize, voidSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -38,8 +36,8 @@ export class OctogonMaze extends Maze {
       bottomPadding: this.cellSize * 0.25,
       custom({ width, height, actualWidth, actualHeight }: CustomDrawingSize): CustomDrawingSize {
         return {
-          width: width % 2 === 0 ? width - 1 : width,
-          height: height % 2 === 0 ? height - 1 : height,
+          width: modulo(width, 2) === 0 ? width - 1 : width,
+          height: modulo(height, 2) === 0 ? height - 1 : height,
           actualWidth,
           actualHeight,
         };
@@ -75,135 +73,135 @@ export class OctogonMaze extends Maze {
   }
 
   protected offsets(kind: Kind): Record<string, number> {
-    const g = this.gapSize;
+    const v = this.voidSize;
     const w = this.wallSize;
     const c = this.cellSize;
 
     // Calculate the size of a side of the octagon
     const ag = c / (1 + SQRT2);
-    const aw = (c - g * 2) / (1 + SQRT2);
-    const ai = (c - (g + w) * 2) / (1 + SQRT2);
+    const aw = (c - v * 2) / (1 + SQRT2);
+    const ai = (c - (v + w) * 2) / (1 + SQRT2);
 
     switch (kind) {
       case 0: {
         const x0 = 0;
-        const x1 = x0 + g * SQRT1_2;
-        const x2 = x0 + g;
-        const x3 = x1 + g * SQRT1_2;
-        const x4 = x0 + (g + w) * SQRT1_2;
-        const x5 = x4 + g * SQRT1_2;
+        const x1 = x0 + v * SQRT1_2;
+        const x2 = x0 + v;
+        const x3 = x1 + v * SQRT1_2;
+        const x4 = x0 + (v + w) * SQRT1_2;
+        const x5 = x4 + v * SQRT1_2;
         const x6 = x2 + w;
         const x7 = x5 + w * SQRT1_2;
         const xb = x0 + (c - ag) / 2;
-        const xa = xb - g * SQRT1_2;
+        const xa = xb - v * SQRT1_2;
         const x8 = xa - w * SQRT1_2;
-        const x9 = x8 + g * SQRT1_2;
-        const xd = xb + g;
+        const x9 = x8 + v * SQRT1_2;
+        const xd = xb + v;
         const xf = xd + w;
         const xc = x0 + (c - aw) / 2;
         const xe = x0 + (c - ai) / 2;
         const xv = x0 + c;
         const xk = xv - (c - ag) / 2;
-        const xl = xk + g * SQRT1_2;
+        const xl = xk + v * SQRT1_2;
         const xn = xl + w * SQRT1_2;
-        const xm = xn - g * SQRT1_2;
+        const xm = xn - v * SQRT1_2;
         const xj = xv - (c - aw) / 2;
-        const xi = xk - g;
+        const xi = xk - v;
         const xh = xv - (c - ai) / 2;
         const xg = xi - w;
-        const xu = xv - g * SQRT1_2;
-        const xt = xv - g;
-        const xs = xu - g * SQRT1_2;
+        const xu = xv - v * SQRT1_2;
+        const xt = xv - v;
+        const xs = xu - v * SQRT1_2;
         const xr = xu - w * SQRT1_2;
-        const xq = xr - g * SQRT1_2;
+        const xq = xr - v * SQRT1_2;
         const xp = xt - w;
         const xo = xq - w * SQRT1_2;
 
         const y0 = 0;
-        const y1 = y0 + g * SQRT1_2;
-        const y2 = y0 + g;
-        const y3 = y1 + g * SQRT1_2;
-        const y4 = y0 + (g + w) * SQRT1_2;
-        const y5 = y4 + g * SQRT1_2;
+        const y1 = y0 + v * SQRT1_2;
+        const y2 = y0 + v;
+        const y3 = y1 + v * SQRT1_2;
+        const y4 = y0 + (v + w) * SQRT1_2;
+        const y5 = y4 + v * SQRT1_2;
         const y6 = y2 + w;
         const y7 = y5 + w * SQRT1_2;
         const yb = y0 + (c - ag) / 2;
-        const ya = yb - g * SQRT1_2;
+        const ya = yb - v * SQRT1_2;
         const y8 = ya - w * SQRT1_2;
-        const y9 = y8 + g * SQRT1_2;
-        const yd = yb + g;
+        const y9 = y8 + v * SQRT1_2;
+        const yd = yb + v;
         const yf = yd + w;
         const yc = y0 + (c - aw) / 2;
         const ye = y0 + (c - ai) / 2;
         const yv = y0 + c;
         const yk = yv - (c - ag) / 2;
-        const yl = yk + g * SQRT1_2;
+        const yl = yk + v * SQRT1_2;
         const yn = yl + w * SQRT1_2;
-        const ym = yn - g * SQRT1_2;
+        const ym = yn - v * SQRT1_2;
         const yj = yv - (c - aw) / 2;
-        const yi = yk - g;
+        const yi = yk - v;
         const yh = yv - (c - ai) / 2;
         const yg = yi - w;
-        const yu = yv - g * SQRT1_2;
-        const yt = yv - g;
-        const ys = yu - g * SQRT1_2;
+        const yu = yv - v * SQRT1_2;
+        const yt = yv - v;
+        const ys = yu - v * SQRT1_2;
         const yr = yu - w * SQRT1_2;
-        const yq = yr - g * SQRT1_2;
+        const yq = yr - v * SQRT1_2;
         const yp = yt - w;
         const yo = yq - w * SQRT1_2;
 
         // prettier-ignore
         return {
-        x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xa, xb, xc, xd, xe, xf,
-        xg, xh, xi, xj, xk, xl, xm, xn, xo, xp, xq, xr, xs, xt, xu, xv,
-        y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, ya, yb, yc, yd, ye, yf,
-        yg, yh, yi, yj, yk, yl, ym, yn, yo, yp, yq, yr, ys, yt, yu, yv
+          x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xa, xb, xc, xd, xe, xf,
+          xg, xh, xi, xj, xk, xl, xm, xn, xo, xp, xq, xr, xs, xt, xu, xv,
+          y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, ya, yb, yc, yd, ye, yf,
+          yg, yh, yi, yj, yk, yl, ym, yn, yo, yp, yq, yr, ys, yt, yu, yv
       }
       }
 
       case 1: {
         const x0 = 0;
-        const x1 = x0 + g * SQRT1_2;
-        const x2 = x1 + g * SQRT1_2;
+        const x1 = x0 + v * SQRT1_2;
+        const x2 = x1 + v * SQRT1_2;
         const x3 = x1 + w * SQRT1_2;
         const x4 = x2 + w * SQRT1_2;
         const x5 = x4 + w * SQRT1_2;
 
         const x9 = x0 + ag * SQRT1_2;
-        const x8 = x9 - g * SQRT1_2;
+        const x8 = x9 - v * SQRT1_2;
         const x7 = x9 - w * SQRT1_2;
-        const x6 = x7 - g * SQRT1_2;
+        const x6 = x7 - v * SQRT1_2;
 
-        const xa = x9 + g * SQRT1_2;
+        const xa = x9 + v * SQRT1_2;
         const xb = x9 + w * SQRT1_2;
-        const xc = xb + g * SQRT1_2;
+        const xc = xb + v * SQRT1_2;
 
         const xi = x9 + ag * SQRT1_2;
-        const xh = xi - g * SQRT1_2;
-        const xg = xh - g * SQRT1_2;
+        const xh = xi - v * SQRT1_2;
+        const xg = xh - v * SQRT1_2;
         const xf = xh - w * SQRT1_2;
         const xe = xg - w * SQRT1_2;
         const xd = xe - w * SQRT1_2;
 
         const y0 = 0;
-        const y1 = y0 + g * SQRT1_2;
-        const y2 = y1 + g * SQRT1_2;
+        const y1 = y0 + v * SQRT1_2;
+        const y2 = y1 + v * SQRT1_2;
         const y3 = y1 + w * SQRT1_2;
         const y4 = y2 + w * SQRT1_2;
         const y5 = y4 + w * SQRT1_2;
 
         const y9 = y0 + ag * SQRT1_2;
-        const y8 = y9 - g * SQRT1_2;
+        const y8 = y9 - v * SQRT1_2;
         const y7 = y9 - w * SQRT1_2;
-        const y6 = y7 - g * SQRT1_2;
+        const y6 = y7 - v * SQRT1_2;
 
-        const ya = y9 + g * SQRT1_2;
+        const ya = y9 + v * SQRT1_2;
         const yb = y9 + w * SQRT1_2;
-        const yc = yb + g * SQRT1_2;
+        const yc = yb + v * SQRT1_2;
 
         const yi = y9 + ag * SQRT1_2;
-        const yh = yi - g * SQRT1_2;
-        const yg = yh - g * SQRT1_2;
+        const yh = yi - v * SQRT1_2;
+        const yg = yh - v * SQRT1_2;
         const yf = yh - w * SQRT1_2;
         const ye = yg - w * SQRT1_2;
         const yd = ye - w * SQRT1_2;
@@ -659,17 +657,6 @@ export class OctogonMaze extends Maze {
     }
   }
 
-  public override drawBridge(cell: CellDirection, _color = this.wallColor): void {
-    if (this.drawing) {
-      super.drawBridge(cell, this.wallColor);
-      this.drawDoor(cell, this.wallColor);
-    }
-  }
-
-  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
-    this.drawDoor(cell, color);
-  }
-
   public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
@@ -878,7 +865,7 @@ export class OctogonMaze extends Maze {
     }
   }
 
-  public getRect(cell: Cell): Rect {
+  protected getRect(cell: Cell): Rect {
     switch (this.cellKind(cell)) {
       case 0: {
         const { x6, xe, xk, xp, y6, ye, yk, yp } = this.cellOffsets(cell);

@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
-import { modulo } from '@technobuddha/library';
-
-import { type Rect } from '../drawing/drawing.ts';
+import { modulo, type Rect } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -19,8 +17,8 @@ const { SQRT2, SQRT1_2 } = Math;
 export type WedgeMazeProperties = MazeProperties;
 
 export class WedgeMaze extends Maze {
-  public constructor({ cellSize = 32, wallSize = 1, gapSize = 2, ...props }: WedgeMazeProperties) {
-    super({ cellSize, wallSize, gapSize, ...props }, matrix);
+  public constructor({ cellSize = 32, wallSize = 1, voidSize = 2, ...props }: WedgeMazeProperties) {
+    super({ cellSize, wallSize, voidSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -45,33 +43,33 @@ export class WedgeMaze extends Maze {
   }
 
   protected offsets(kind: Kind): Record<string, number> {
-    const g = this.gapSize;
+    const v = this.voidSize;
     const w = this.wallSize;
     const c = this.cellSize;
 
     const x0 = 0;
-    const x1 = x0 + g;
+    const x1 = x0 + v;
     const x2 = x1 + w;
-    const x3 = x2 + g * SQRT1_2;
+    const x3 = x2 + v * SQRT1_2;
     const x4 = x2 + w * SQRT1_2;
-    const x5 = x4 + g * SQRT1_2;
+    const x5 = x4 + v * SQRT1_2;
     const xd = x0 + c;
-    const xc = xd - (g + g * SQRT2);
+    const xc = xd - (v + v * SQRT2);
     const xa = xc - w;
-    const xb = xa + g * SQRT1_2;
+    const xb = xa + v * SQRT1_2;
     const x8 = xa - w * SQRT1_2;
     const x7 = xa - w * SQRT1_2;
     const x6 = x7 - w * SQRT1_2;
     const x9 = x6 + w;
 
     const y0 = 0;
-    const y1 = y0 + g;
+    const y1 = y0 + v;
     const y2 = y1 + w;
-    const y3 = y2 + g * SQRT1_2;
+    const y3 = y2 + v * SQRT1_2;
     const y4 = y2 + w * SQRT1_2;
     const y5 = y4 + w * SQRT1_2;
     const yd = y0 + c;
-    const yc = yd - (g + g * SQRT2);
+    const yc = yd - (v + v * SQRT2);
     const ya = yc - w;
     const yb = ya - w * SQRT1_2;
     const y8 = ya - w * SQRT1_2;
@@ -443,18 +441,6 @@ export class WedgeMaze extends Maze {
       }
     }
   }
-
-  public override drawBridge(cell: CellDirection, _color = this.wallColor): void {
-    if (this.drawing) {
-      super.drawBridge(cell, this.wallColor);
-      this.drawDoor(cell, this.wallColor);
-    }
-  }
-
-  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
-    this.drawDoor(cell, color);
-  }
-
   public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       switch (pillar) {
@@ -629,7 +615,7 @@ export class WedgeMaze extends Maze {
     }
   }
 
-  public getRect(cell: Cell): Rect {
+  protected getRect(cell: Cell): Rect {
     switch (this.cellKind(cell)) {
       case 0: {
         const { x2, x6, y2, y6 } = this.cellOffsets(cell);

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
-import { modulo } from '@technobuddha/library';
+import { largestInscribedRectangle, modulo, type Polygon, type Rect } from '@technobuddha/library';
 
-import { type Rect } from '../drawing/drawing.ts';
 import { alpha } from '../library/alpha.ts';
 
 import { matrix } from './brick-matrix.ts';
@@ -19,8 +18,8 @@ import { Maze } from './maze.ts';
 export type BrickMazeProperties = MazeProperties;
 
 export class BrickMaze extends Maze {
-  public constructor({ cellSize = 20, wallSize = 1, gapSize = 2, ...props }: BrickMazeProperties) {
-    super({ cellSize, wallSize, gapSize, ...props }, matrix);
+  public constructor({ cellSize = 20, wallSize = 1, voidSize = 2, ...props }: BrickMazeProperties) {
+    super({ cellSize, wallSize, voidSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -46,22 +45,22 @@ export class BrickMaze extends Maze {
 
   protected offsets(_kind: Kind): Record<string, number> {
     const x0 = 0;
-    const x1 = x0 + this.gapSize;
+    const x1 = x0 + this.voidSize;
     const x2 = x1 + this.wallSize;
     const cx = x0 + this.cellSize;
-    const x4 = cx - this.gapSize;
+    const x4 = cx - this.voidSize;
     const x3 = x4 - this.wallSize;
-    const x5 = cx + this.gapSize;
+    const x5 = cx + this.voidSize;
     const x6 = x5 + this.wallSize;
     const x9 = x0 + this.cellSize * 2;
-    const x8 = x9 - this.gapSize;
+    const x8 = x9 - this.voidSize;
     const x7 = x8 - this.wallSize;
 
     const y0 = 0;
-    const y1 = y0 + this.gapSize;
+    const y1 = y0 + this.voidSize;
     const y2 = y1 + this.wallSize;
     const y5 = y0 + this.cellSize;
-    const y4 = y5 - this.gapSize;
+    const y4 = y5 - this.voidSize;
     const y3 = y4 - this.wallSize;
 
     return { x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, y0, y1, y2, y3, y4, y5 };
@@ -164,17 +163,6 @@ export class BrickMaze extends Maze {
     }
   }
 
-  public override drawBridge(cell: CellDirection, _color = this.wallColor): void {
-    if (this.drawing) {
-      super.drawBridge(cell, this.wallColor);
-      this.drawDoor(cell, this.wallColor);
-    }
-  }
-
-  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
-    this.drawDoor(cell, color);
-  }
-
   public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       switch (pillar) {
@@ -213,10 +201,17 @@ export class BrickMaze extends Maze {
     }
   }
 
-  public getRect(cell: CellDirection): Rect {
+  protected getRect(cell: CellDirection): Rect {
     const { x2, x7, y2, y3 } = this.cellOffsets(cell);
 
-    return { x: x2, y: y2, width: x7 - x2, height: y3 - y2 };
+    const interior: Polygon = [
+      { x: x2, y: y2 },
+      { x: x7, y: y2 },
+      { x: x7, y: y3 },
+      { x: x2, y: y3 },
+    ];
+
+    return largestInscribedRectangle(interior, { squareOnly: true });
   }
 
   public drawX(cell: Cell, color = this.blockedColor): void {
@@ -233,7 +228,7 @@ export class BrickMaze extends Maze {
       let prev: CellTunnel | undefined = undefined;
       for (const cell of cells) {
         let kolor = color;
-        const rect = this.cellRect(cell);
+        const { rect } = this.nexus(cell);
 
         if (cell.direction === '?') {
           this.renderCircle(rect, kolor);

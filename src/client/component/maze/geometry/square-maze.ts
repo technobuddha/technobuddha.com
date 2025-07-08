@@ -1,6 +1,4 @@
-import { largestInscribedRectangle } from '@technobuddha/library';
-
-import { type Rect } from '../drawing/drawing.ts';
+import { largestInscribedRectangle, type Rect } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -16,8 +14,13 @@ import { matrix } from './square-matrix.ts';
 export type SquareMazeProperties = MazeProperties;
 
 export class SquareMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 2, gapSize = 2, ...props }: SquareMazeProperties) {
-    super({ cellSize, wallSize, gapSize, ...props }, matrix);
+  public constructor({
+    cellSize = 24,
+    wallSize = 2,
+    voidSize = 2,
+    ...props
+  }: SquareMazeProperties) {
+    super({ cellSize, wallSize, voidSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -37,17 +40,17 @@ export class SquareMaze extends Maze {
 
   protected override offsets(_kind: Kind): Record<string, number> {
     const x0 = 0;
-    const x1 = x0 + this.gapSize;
+    const x1 = x0 + this.voidSize;
     const x2 = x1 + this.wallSize;
     const x5 = x0 + this.cellSize;
-    const x4 = x5 - this.gapSize;
+    const x4 = x5 - this.voidSize;
     const x3 = x4 - this.wallSize;
 
     const y0 = 0;
-    const y1 = y0 + this.gapSize;
+    const y1 = y0 + this.voidSize;
     const y2 = y1 + this.wallSize;
     const y5 = y0 + this.cellSize;
-    const y4 = y5 - this.gapSize;
+    const y4 = y5 - this.voidSize;
     const y3 = y4 - this.wallSize;
 
     return { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 };
@@ -121,17 +124,6 @@ export class SquareMaze extends Maze {
     }
   }
 
-  public override drawBridge(cell: CellDirection, _color = this.wallColor): void {
-    if (this.drawing) {
-      super.drawBridge(cell, this.wallColor);
-      this.drawDoor(cell, this.wallColor);
-    }
-  }
-
-  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
-    this.drawDoor(cell, color);
-  }
-
   public override drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
     if (this.drawing) {
       const { x1, x2, x3, x4, y1, y2, y3, y4 } = this.cellOffsets({ x, y });
@@ -160,18 +152,16 @@ export class SquareMaze extends Maze {
     }
   }
 
-  public override getRect(cell: Cell): Rect {
+  protected getRect(cell: Cell): Rect {
     const { x1, x4, y1, y4 } = this.cellOffsets(cell);
 
-    // Create polygon points using actual cell interior coordinates
     const polygon = [
-      { x: x1, y: y1 }, // Top-left
-      { x: x4, y: y1 }, // Top-right
-      { x: x4, y: y4 }, // Bottom-right
-      { x: x1, y: y4 }, // Bottom-left
+      { x: x1, y: y1 },
+      { x: x4, y: y1 },
+      { x: x4, y: y4 },
+      { x: x1, y: y4 },
     ];
 
-    // Use largestInscribedRectangle to find the optimal rectangle
-    return largestInscribedRectangle(polygon);
+    return largestInscribedRectangle(polygon, { squareOnly: true });
   }
 }

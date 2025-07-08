@@ -15,7 +15,7 @@ export class MazeFactory {
   public cellSize: MazeSettings['cellSize'];
   public cellColor: MazeSettings['cellColor'];
   public wallSize: MazeSettings['wallSize'];
-  public gapSize: MazeSettings['gapSize'];
+  public voidSize: MazeSettings['voidSize'];
   public wallColor: MazeSettings['wallColor'];
   public entrance: MazeSettings['entrance'];
   public exit: MazeSettings['exit'];
@@ -32,7 +32,7 @@ export class MazeFactory {
     cellSize,
     cellColor,
     wallSize,
-    gapSize,
+    voidSize,
     wallColor,
     entrance,
     exit,
@@ -47,7 +47,7 @@ export class MazeFactory {
     this.cellSize = cellSize;
     this.cellColor = cellColor;
     this.wallSize = wallSize;
-    this.gapSize = gapSize;
+    this.voidSize = voidSize;
     this.wallColor = wallColor;
     this.entrance = entrance;
     this.exit = exit;
@@ -69,7 +69,7 @@ export class MazeFactory {
       cellSize: this.cellSize,
       cellColor: this.cellColor,
       wallSize: this.wallSize,
-      gapSize: this.gapSize,
+      voidSize: this.voidSize,
       wallColor: this.wallColor,
       entrance: this.entrance,
       exit: this.exit,

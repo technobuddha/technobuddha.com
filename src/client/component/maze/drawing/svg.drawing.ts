@@ -1,4 +1,6 @@
-import { Drawing, type Rect, type XY } from './drawing.ts';
+import { type Cartesian, type Rect } from '@technobuddha/library';
+
+import { Drawing } from './drawing.ts';
 
 function create(tag: string, attributes: Record<string, string | number> = {}): Element {
   const element = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -28,7 +30,7 @@ export class SVGDrawing extends Drawing {
     }
   }
 
-  public line(start: XY, finish: XY, color: string): void {
+  public line(start: Cartesian, finish: Cartesian, color: string): void {
     if (this.svg) {
       this.svg.append(
         create('line', { x1: start.x, y1: start.y, x2: finish.x, y2: finish.y, stroke: color }),
@@ -36,7 +38,7 @@ export class SVGDrawing extends Drawing {
     }
   }
 
-  public rect(start: XY, finish: XY, color: string): void {
+  public rect(start: Cartesian, finish: Cartesian, color: string): void {
     if (this.svg) {
       this.svg.append(
         create('rect', {
@@ -50,21 +52,19 @@ export class SVGDrawing extends Drawing {
     }
   }
 
-  public polygon(points: XY[], color: string): void {
+  public polygon(points: Cartesian[], color: string): void {
     const pointsString = points.map((point) => `${point.x},${point.y}`).join(' ');
     this.svg.append(create('polygon', { points: pointsString, fill: color }));
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public text(_rect: Rect, _text: string, _color: string): void {
     throw new Error('Method not implemented.');
   }
 
-  public circle(center: XY, radius: number, color = 'black'): void {
+  public circle(center: Cartesian, radius: number, color = 'black'): void {
     this.svg.append(create('circle', { cx: center.x, cy: center.y, r: radius, fill: color }));
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public arc(
     _cx: number,
     _cy: number,

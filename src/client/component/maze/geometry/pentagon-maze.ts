@@ -1,6 +1,4 @@
-import { modulo, toRadians } from '@technobuddha/library';
-
-import { type Rect } from '../drawing/drawing.ts';
+import { modulo, type Rect, toRadians } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -17,7 +15,7 @@ export type PentagonMazeProperties = MazeProperties;
 
 export class PentagonMaze extends Maze {
   public constructor({ cellSize = 28, wallSize = 2, ...props }: PentagonMazeProperties) {
-    super({ cellSize, wallSize, gapSize: 1, ...props }, matrix);
+    super({ cellSize, wallSize, voidSize: 1, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -50,56 +48,56 @@ export class PentagonMaze extends Maze {
 
   protected offsets(kind: Kind): Record<string, number> {
     const c = this.cellSize;
-    const g = this.gapSize;
+    const v = this.voidSize;
     const w = this.wallSize;
 
     const { SQRT1_2 } = Math;
     const COT225 = Math.sin(toRadians(22.5)) / Math.cos(toRadians(22.5));
 
     const x0 = 0;
-    const x1 = x0 + g;
+    const x1 = x0 + v;
 
     const x5 = x1 + w;
     const x6 = x5 + w * SQRT1_2;
-    const x4 = x5 - g * SQRT1_2;
+    const x4 = x5 - v * SQRT1_2;
     const x3 = x5 - w * SQRT1_2;
-    const x2 = x3 - g * SQRT1_2;
+    const x2 = x3 - v * SQRT1_2;
 
     const xa = x0 + c * 0.5;
-    const x9 = xa - g * SQRT1_2;
-    const xb = xa + g * SQRT1_2;
+    const x9 = xa - v * SQRT1_2;
+    const xb = xa + v * SQRT1_2;
     const x8 = xa - w * SQRT1_2;
     const xc = xa + w * SQRT1_2;
-    const xd = xc + g * SQRT1_2;
-    const x7 = x8 - g * SQRT1_2;
+    const xd = xc + v * SQRT1_2;
+    const x7 = x8 - v * SQRT1_2;
 
     const xk = x0 + c;
-    const xj = xk - g;
+    const xj = xk - v;
 
     const xf = xj - w;
-    const xg = xf + g * SQRT1_2;
+    const xg = xf + v * SQRT1_2;
     const xh = xf + w * SQRT1_2;
     const xe = xf - w * SQRT1_2;
-    const xi = xh + g * SQRT1_2;
+    const xi = xh + v * SQRT1_2;
 
     const y0 = 0;
-    const y1 = y0 + g;
+    const y1 = y0 + v;
     const y2 = y1 + w;
 
     const y7 = y0 + c;
-    const y5 = y7 - g;
+    const y5 = y7 - v;
     const y3 = y5 - w;
 
     const yh = y0 + c * 1.5;
 
-    const y6 = y7 - g * COT225;
+    const y6 = y7 - v * COT225;
     const y4 = y6 - w * COT225;
     const y8 = y4 + w * SQRT1_2;
-    const y9 = y8 + g * SQRT1_2;
+    const y9 = y8 + v * SQRT1_2;
     const ya = y8 + w * SQRT1_2;
     const yb = y9 + w * SQRT1_2;
-    const yg = yh - g * SQRT1_2;
-    const yf = yg - g * SQRT1_2;
+    const yg = yh - v * SQRT1_2;
+    const yf = yg - v * SQRT1_2;
     const ye = yg - w * SQRT1_2;
     const yd = yf - w * SQRT1_2;
     const yc = yd - w * SQRT1_2;
@@ -1081,17 +1079,6 @@ export class PentagonMaze extends Maze {
     }
   }
 
-  public override drawBridge(cell: CellDirection, _color = this.wallColor): void {
-    if (this.drawing) {
-      super.drawBridge(cell, this.wallColor);
-      this.drawDoor(cell, this.wallColor);
-    }
-  }
-
-  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
-    this.drawDoor(cell, color);
-  }
-
   public drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
@@ -1136,7 +1123,7 @@ export class PentagonMaze extends Maze {
     }
   }
 
-  public override getRect(cell: Cell): Rect {
+  protected getRect(cell: Cell): Rect {
     switch (this.cellKind(cell)) {
       case 0: {
         const { x5, xf, y2, y4 } = this.cellOffsets(cell);

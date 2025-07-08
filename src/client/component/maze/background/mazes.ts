@@ -10,7 +10,7 @@ export const mazes: Choices<PropsMazeGeometry> = [
       {
         weight: 1,
         title: 'Square',
-        props: { geometry: SquareMaze, cellSize: 24, wallSize: 2, gapSize: 2 },
+        props: { geometry: SquareMaze, cellSize: 24, wallSize: 2, voidSize: 2 },
       },
       {
         weight: 1,
@@ -19,7 +19,7 @@ export const mazes: Choices<PropsMazeGeometry> = [
           geometry: SquareMaze,
           cellSize: 12,
           wallSize: 1,
-          gapSize: 0,
+          voidSize: 0,
         },
       },
       {
@@ -29,7 +29,7 @@ export const mazes: Choices<PropsMazeGeometry> = [
           geometry: SquareMaze,
           cellSize: 32,
           wallSize: 1,
-          gapSize: 0,
+          voidSize: 0,
         },
       },
       {
@@ -39,7 +39,7 @@ export const mazes: Choices<PropsMazeGeometry> = [
           geometry: SquareMaze,
           cellSize: 20,
           wallSize: 5,
-          gapSize: 0,
+          voidSize: 0,
         },
       },
     ],

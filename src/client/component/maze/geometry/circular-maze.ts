@@ -1,6 +1,4 @@
-import { toCartesian, toRadians } from '@technobuddha/library';
-
-import { type Rect } from '../drawing/drawing.ts';
+import { type Rect, toCartesian, toRadians } from '@technobuddha/library';
 
 import { matrix } from './circular-matrix.ts';
 import {
@@ -37,7 +35,7 @@ export class CircularMaze extends Maze {
       {
         cellSize,
         wallSize,
-        gapSize: 1,
+        voidSize: 1,
         ...props,
         wrapHorizontal: false,
         wrapVertical: false,
@@ -199,10 +197,10 @@ export class CircularMaze extends Maze {
     const circum3 = r3 * 2 * Math.PI;
     const circum4 = r4 * 2 * Math.PI;
 
-    const g1 = (this.gapSize * 360) / circum1;
-    const g2 = (this.gapSize * 360) / circum2;
-    const g3 = (this.gapSize * 360) / circum3;
-    const g4 = (this.gapSize * 360) / circum4;
+    const g1 = (this.voidSize * 360) / circum1;
+    const g2 = (this.voidSize * 360) / circum2;
+    const g3 = (this.voidSize * 360) / circum3;
+    const g4 = (this.voidSize * 360) / circum4;
 
     const w2 = (this.wallSize * 360) / circum2;
     const w3 = (this.wallSize * 360) / circum3;
@@ -239,10 +237,10 @@ export class CircularMaze extends Maze {
     const cy = this.cellSize * this.height + this.centerRadius / 2;
 
     const r0 = this.centerRadius / 2;
-    const r1 = r0 + this.gapSize;
+    const r1 = r0 + this.voidSize;
     const r2 = r1 + this.wallSize;
     const r5 = r0 + this.cellSize;
-    const r4 = r5 - this.gapSize;
+    const r4 = r5 - this.voidSize;
     const r3 = r4 - this.wallSize;
 
     return { cx, cy, r0, r1, r2, r3, r4, r5 };
@@ -427,17 +425,6 @@ export class CircularMaze extends Maze {
     }
   }
 
-  public override drawBridge(cell: CellDirection, _color = this.wallColor): void {
-    if (this.drawing) {
-      super.drawBridge(cell, this.wallColor);
-      this.drawDoor(cell, this.wallColor);
-    }
-  }
-
-  public override drawTunnel(cell: CellDirection, color = this.wallColor): void {
-    this.drawDoor(cell, color);
-  }
-
   public drawX(cell: Cell, color = this.blockedColor): void {
     if (this.drawing) {
       if (this.zones[cell.y] === 1) {
@@ -474,12 +461,12 @@ export class CircularMaze extends Maze {
     }
   }
 
-  public getRect(cell: Cell): Rect {
+  protected getRect(cell: Cell): Rect {
     const { cx, cy, a4, ac, r2, r3 } = this.cellOffsets(cell);
 
     const { x, y } = toCartesian({ angle: toRadians((a4 + ac) / 2), radius: (r2 + r3) / 2 });
 
-    const c = this.cellSize - this.wallSize * 2 - this.gapSize * 2;
+    const c = this.cellSize - this.wallSize * 2 - this.voidSize * 2;
 
     return {
       x: cx + x - c / 2,
@@ -512,7 +499,7 @@ export class CircularMaze extends Maze {
         }
 
         case 2: {
-          const rect = this.cellRect(cell);
+          const { rect } = this.nexus(cell);
           if (cell.direction === '?') {
             this.renderCircle(rect, color);
           } else {
@@ -523,7 +510,7 @@ export class CircularMaze extends Maze {
         }
 
         default: {
-          const rect = this.cellRect(cell);
+          const { rect } = this.nexus(cell);
           if (cell.direction === '?') {
             this.renderCircle(rect, color);
           } else {

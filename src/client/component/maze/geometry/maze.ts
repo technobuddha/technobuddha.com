@@ -1,14 +1,17 @@
 import {
+  type Cartesian,
   create2DArray,
   modulo,
+  type Rect,
   rotate,
   scale,
   star,
   toRadians,
+  toSquare,
   translate,
 } from '@technobuddha/library';
 
-import { type Drawing, type Rect } from '../drawing/drawing.ts';
+import { type Drawing } from '../drawing/drawing.ts';
 import { type MazeGenerator } from '../generator/index.ts';
 import { alpha } from '../library/alpha.ts';
 import { logger } from '../library/logger.ts';
@@ -30,8 +33,6 @@ export type Facing =
 export type Pillar = `${Direction}${Direction}`;
 
 export type Kind = number;
-
-export type XY = { x: number; y: number };
 
 export type MoveOffset = { x: number; y: number; zone?: 'up' | 'down' };
 
@@ -128,7 +129,7 @@ export type MazeProperties = RandomProperties & {
   readonly height?: number;
   readonly cellSize?: number;
   readonly wallSize?: number;
-  readonly gapSize?: number;
+  readonly voidSize?: number;
   readonly entrance?: Cell | CellDirection | Location;
   readonly exit?: Cell | CellDirection | Location;
   readonly wrapHorizontal?: boolean;
@@ -212,7 +213,7 @@ export abstract class Maze extends Random {
   public height: NonNullable<MazeProperties['height']> = 25;
   public readonly wallSize: NonNullable<MazeProperties['wallSize']>;
   public readonly cellSize: NonNullable<MazeProperties['cellSize']>;
-  public readonly gapSize: NonNullable<MazeProperties['gapSize']>;
+  public readonly voidSize: NonNullable<MazeProperties['voidSize']>;
   public readonly showDistances: NonNullable<MazeProperties['showDistances']>;
   public readonly showCoordinates: NonNullable<MazeProperties['showCoordinates']>;
   public readonly showKind: NonNullable<MazeProperties['showKind']>;
@@ -272,7 +273,7 @@ export abstract class Maze extends Random {
       height: requestedHeight,
       cellSize = 21,
       wallSize = 1,
-      gapSize = 0,
+      voidSize = 0,
       entrance,
       exit,
       wrapHorizontal = false,
@@ -323,7 +324,7 @@ export abstract class Maze extends Random {
 
     this.cellSize = cellSize;
     this.wallSize = wallSize;
-    this.gapSize = gapSize;
+    this.voidSize = voidSize;
 
     this.drawing = drawing;
 
@@ -429,6 +430,7 @@ export abstract class Maze extends Random {
           y,
           walls: this.initialWalls({ x, y }),
           tunnels: this.initialTunnels({ x, y }),
+          rect: toSquare(this.getRect({ x, y })),
         }),
     );
   }
@@ -1164,7 +1166,7 @@ export abstract class Maze extends Random {
         if (tunnels[direction]) {
           const move = this.traverse(cell, direction);
           if (this.inMaze(move) && !this.nexus(move).walls[this.opposite(move.facing)]) {
-            this.drawBridge({ ...cell, direction }, this.bridgeColor); //color);
+            this.drawBridge({ ...cell, direction });
             continue;
           }
         }
@@ -1192,18 +1194,21 @@ export abstract class Maze extends Random {
 
   public drawText(cell: Cell, text: string, color = this.textColor): void {
     if (this.drawing) {
-      this.drawing.text(this.getRect(cell), text, color);
+      const { rect } = this.nexus(cell);
+
+      this.drawing.text(rect, text, color);
     }
   }
 
-  public drawBridge(cell: CellDirection, color = this.bridgeColor): void {
+  public drawBridge(cell: CellDirection, color = this.wallColor): void {
     if (this.drawing) {
       this.drawWall(cell, color);
+      this.drawDoor(cell, color);
     }
   }
 
-  public drawTunnel(_cell: CellDirection, _color = this.wallColor): void {
-    // Most don't draw a tunnel
+  public drawTunnel(cell: CellDirection, color = this.wallColor): void {
+    this.drawDoor(cell, color);
   }
 
   public drawDoor(_cell: CellDirection, _color: string = this.wallColor): void {
@@ -1212,7 +1217,7 @@ export abstract class Maze extends Random {
 
   public drawPath(cell: CellDirection, color = this.pathColor): void {
     if (this.drawing) {
-      const rect = this.cellRect(cell);
+      const { rect } = this.nexus(cell);
       if (cell.direction === '?') {
         this.renderCircle(rect, color);
       } else {
@@ -1233,7 +1238,7 @@ export abstract class Maze extends Random {
 
   public drawStar(cell: Cell, color = this.avatarColor): void {
     if (this.drawing) {
-      const rect = this.cellRect(cell);
+      const { rect } = this.nexus(cell);
       this.drawCell(cell);
       this.renderStar(rect, color);
     }
@@ -1257,7 +1262,7 @@ export abstract class Maze extends Random {
     this.renderShape(starShape, rect, 0, color);
   }
 
-  protected renderShape(coords: XY[], rect: Rect, angle: number, color: string): void {
+  protected renderShape(coords: Cartesian[], rect: Rect, angle: number, color: string): void {
     if (this.drawing) {
       this.drawing.polygon(
         translate(
@@ -1275,7 +1280,7 @@ export abstract class Maze extends Random {
   public drawAvatar(cell: Cell, color = this.avatarColor): void {
     if (this.drawing) {
       this.drawCell(cell);
-      const rect = this.cellRect(cell);
+      const { rect } = this.nexus(cell);
 
       this.drawing.circle(
         { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 },
@@ -1295,26 +1300,12 @@ export abstract class Maze extends Random {
     }
   }
 
-  protected cellRect(cell: Cell): Rect {
-    const rect = this.getRect(cell);
-
-    if (rect.width > rect.height) {
-      rect.x += (rect.width - rect.height) / 2;
-      rect.width = rect.height;
-    } else if (rect.height > rect.width) {
-      rect.y += (rect.height - rect.width) / 2;
-      rect.height = rect.width;
-    }
-
-    return rect;
-  }
-
   protected abstract offsets(kind: Kind): Record<string, number>;
   public abstract drawFloor(cell: Cell, color?: string): void;
   public abstract drawWall(cell: CellDirection, color?: string): void;
   public abstract drawPillar(cell: Cell, pillar: Pillar, color?: string): void;
   public abstract drawX(cell: Cell, color?: string): void;
-  public abstract getRect(cell: Cell): Rect;
+  protected abstract getRect(cell: Cell): Rect;
 
   protected translateOffsets(cell: Cell, x: number, y: number): Record<string, number> {
     return Object.fromEntries(

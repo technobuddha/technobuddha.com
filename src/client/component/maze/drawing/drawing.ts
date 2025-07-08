@@ -1,5 +1,4 @@
-export type XY = { x: number; y: number };
-export type Rect = XY & { width: number; height: number };
+import { type Cartesian, type Rect } from '@technobuddha/library';
 
 export abstract class Drawing {
   public readonly width: number;
@@ -12,15 +11,15 @@ export abstract class Drawing {
 
   public abstract clear(color?: string, originX?: number, originY?: number): void;
 
-  public abstract line(start: XY, finish: XY, color: string): void;
+  public abstract line(start: Cartesian, finish: Cartesian, color: string): void;
 
-  public abstract rect(start: XY, finish: XY, color: string): void;
+  public abstract rect(start: Cartesian, finish: Cartesian, color: string): void;
 
-  public abstract polygon(points: XY[], color: string): void;
+  public abstract polygon(points: Cartesian[], color: string): void;
 
   public abstract text(rect: Rect, text: string, color?: string): void;
 
-  public abstract circle(center: XY, radius: number, color?: string): void;
+  public abstract circle(center: Cartesian, radius: number, color?: string): void;
 
   public abstract arc(
     cx: number,

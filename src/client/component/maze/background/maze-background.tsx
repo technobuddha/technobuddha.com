@@ -61,7 +61,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         drawing,
         maskColor,
         cellSize: 16,
-        gapSize: 0,
+        voidSize: 0,
         wallSize: 1,
       });
 

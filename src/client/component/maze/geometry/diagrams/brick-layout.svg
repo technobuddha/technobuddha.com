@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Creator: CorelDRAW -->
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="8.75694in" height="5.00695in" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="8.75695in" height="5.00695in" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
 viewBox="0 0 766.79 438.43"
  xmlns:xlink="http://www.w3.org/1999/xlink"
  xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
@@ -49,8 +49,8 @@ viewBox="0 0 766.79 438.43"
   <g id="Layout">
    <g id="Brick">
     <polygon class="fil0 str0" points="219.21,109.76 0.3,109.76 0.3,0.3 219.21,0.3 "/>
-    <polygon class="fil1 str1" points="11.25,98.81 208.27,98.81 208.27,11.25 11.25,11.25 "/>
-    <polygon class="fil2 str1" points="197.32,22.2 22.19,22.2 22.19,87.87 197.32,87.87 "/>
+    <polygon class="fil1 str1" points="5.78,104.29 213.74,104.29 213.74,5.78 5.78,5.78 "/>
+    <polygon class="fil2 str1" points="191.85,27.67 27.67,27.67 27.67,82.39 191.85,82.39 "/>
     <text x="14.32" y="57.69"  class="fil3 fnt0">F</text>
     <text x="52.6" y="19.33"  class="fil3 fnt1">A</text>
     <text x="156.51" y="19.33"  class="fil3 fnt1">B</text>
@@ -63,33 +63,34 @@ viewBox="0 0 766.79 438.43"
     <text x="200.93" y="94.63"  class="fil3 fnt3">cd</text>
     <text x="108.05" y="94.63"  class="fil3 fnt3">de</text>
     <text x="15.07" y="94.65"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="131.65" y1="22.19" x2="131.65" y2= "0.3" />
-    <line class="fil4 str0" x1="87.87" y1="22.2" x2="87.87" y2= "0.3" />
-    <line class="fil4 str0" x1="87.87" y1="109.76" x2="87.87" y2= "87.87" />
-    <line class="fil4 str0" x1="131.65" y1="109.76" x2="131.65" y2= "87.87" />
-    <line class="fil4 str0" x1="98.81" y1="98.81" x2="98.81" y2= "109.76" />
-    <line class="fil4 str0" x1="98.81" y1="0.3" x2="98.81" y2= "11.25" />
-    <line class="fil4 str0" x1="197.32" y1="109.76" x2="197.32" y2= "87.67" />
-    <line class="fil4 str0" x1="197.32" y1="87.87" x2="219.21" y2= "87.87" />
-    <polyline class="fil4 str0" points="208.27,109.76 208.27,98.81 219.21,98.81 "/>
-    <polyline class="fil4 str0" points="219.21,11.25 208.47,11.25 208.47,0.3 "/>
-    <polyline class="fil4 str0" points="197.32,0.3 197.32,22.2 219.21,22.2 "/>
-    <line class="fil4 str0" x1="22.19" y1="87.87" x2="22.19" y2= "109.76" />
-    <polyline class="fil4 str0" points="22.19,0.3 22.19,22.2 0.3,22.2 "/>
-    <polyline class="fil4 str0" points="11.25,0.3 11.25,11.25 0.3,11.25 "/>
-    <line class="fil4 str0" x1="22.19" y1="87.87" x2="0.3" y2= "87.87" />
-    <line class="fil4 str0" x1="11.25" y1="98.81" x2="11.25" y2= "109.76" />
-    <line class="fil4 str0" x1="11.25" y1="98.81" x2="0.3" y2= "98.81" />
-    <line class="fil4 str0" x1="120.7" y1="0.3" x2="120.7" y2= "11.25" />
-    <line class="fil4 str0" x1="120.7" y1="98.81" x2="120.7" y2= "109.76" />
+    <line class="fil4 str0" x1="137.12" y1="27.9" x2="137.12" y2= "0.54" />
+    <line class="fil4 str0" x1="82.4" y1="27.67" x2="82.4" y2= "0.3" />
+    <line class="fil4 str0" x1="82.4" y1="109.76" x2="82.4" y2= "82.39" />
+    <line class="fil4 str0" x1="137.12" y1="109.76" x2="137.12" y2= "82.39" />
+    <line class="fil4 str0" x1="104.29" y1="104.29" x2="104.29" y2= "109.76" />
+    <line class="fil4 str0" x1="104.29" y1="0.3" x2="104.29" y2= "5.78" />
+    <line class="fil4 str0" x1="191.85" y1="109.76" x2="191.85" y2= "82.39" />
+    <line class="fil4 str0" x1="191.85" y1="82.39" x2="219.21" y2= "82.39" />
+    <line class="fil4 str0" x1="213.74" y1="104.29" x2="219.21" y2= "104.29" />
+    <line class="fil4 str0" x1="213.74" y1="109.76" x2="213.74" y2= "104.29" />
+    <polyline class="fil4 str0" points="219.21,5.78 213.84,5.78 213.84,0.3 "/>
+    <polyline class="fil4 str0" points="191.85,0.3 191.85,27.67 213.74,27.67 "/>
+    <line class="fil4 str0" x1="27.67" y1="82.39" x2="27.67" y2= "109.76" />
+    <polyline class="fil4 str0" points="27.67,0.3 27.67,27.67 0.3,27.67 "/>
+    <polyline class="fil4 str0" points="5.78,0.3 5.78,5.78 0.3,5.78 "/>
+    <line class="fil4 str0" x1="28.51" y1="82.39" x2="1.14" y2= "82.39" />
+    <line class="fil4 str0" x1="5.78" y1="104.29" x2="5.78" y2= "109.76" />
+    <line class="fil4 str0" x1="5.78" y1="104.29" x2="0.3" y2= "104.29" />
+    <line class="fil4 str0" x1="115.23" y1="0.3" x2="115.23" y2= "5.78" />
+    <line class="fil4 str0" x1="115.23" y1="104.29" x2="115.23" y2= "109.72" />
    </g>
-   <g id="Brick_62">
+   <g id="Brick_67">
     <polygon class="fil0 str0" points="438.12,109.76 219.21,109.76 219.21,0.3 438.12,0.3 "/>
-    <polygon class="fil1 str1" points="230.16,98.81 427.18,98.81 427.18,11.25 230.16,11.25 "/>
-    <polygon class="fil2 str1" points="416.23,22.2 241.1,22.2 241.1,87.87 416.23,87.87 "/>
+    <polygon class="fil1 str1" points="224.69,104.29 432.65,104.29 432.65,5.78 224.69,5.78 "/>
+    <polygon class="fil2 str1" points="410.76,27.67 246.58,27.67 246.58,82.39 410.76,82.39 "/>
     <text x="233.23" y="57.69"  class="fil3 fnt0">F</text>
     <text x="271.5" y="19.33"  class="fil3 fnt1">A</text>
-    <text x="375.41" y="19.33"  class="fil3 fnt1">B</text>
+    <text x="375.42" y="19.33"  class="fil3 fnt1">B</text>
     <text x="419.03" y="57.64"  class="fil3 fnt1">C</text>
     <text x="375.2" y="95.95"  class="fil3 fnt1">D</text>
     <text x="271.42" y="95.95"  class="fil3 fnt1">E</text>
@@ -99,30 +100,31 @@ viewBox="0 0 766.79 438.43"
     <text x="419.84" y="94.63"  class="fil3 fnt3">cd</text>
     <text x="326.96" y="94.63"  class="fil3 fnt3">de</text>
     <text x="233.98" y="94.65"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="350.56" y1="22.2" x2="350.56" y2= "0.3" />
-    <line class="fil4 str0" x1="306.78" y1="22.2" x2="306.78" y2= "0.3" />
-    <line class="fil4 str0" x1="306.78" y1="109.76" x2="306.78" y2= "87.87" />
-    <line class="fil4 str0" x1="350.56" y1="109.76" x2="350.56" y2= "87.87" />
-    <line class="fil4 str0" x1="317.72" y1="98.81" x2="317.72" y2= "109.76" />
-    <line class="fil4 str0" x1="317.72" y1="0.3" x2="317.72" y2= "11.25" />
-    <line class="fil4 str0" x1="416.23" y1="109.76" x2="416.23" y2= "87.67" />
-    <line class="fil4 str0" x1="416.23" y1="87.87" x2="438.12" y2= "87.87" />
-    <polyline class="fil4 str0" points="427.18,109.76 427.18,98.81 438.12,98.81 "/>
-    <polyline class="fil4 str0" points="438.12,11.25 427.38,11.25 427.38,0.3 "/>
-    <polyline class="fil4 str0" points="416.23,0.3 416.23,22.2 438.12,22.2 "/>
-    <line class="fil4 str0" x1="241.1" y1="87.87" x2="241.1" y2= "109.76" />
-    <polyline class="fil4 str0" points="241.1,0.3 241.1,22.2 219.21,22.2 "/>
-    <polyline class="fil4 str0" points="230.16,0.3 230.16,11.25 219.21,11.25 "/>
-    <line class="fil4 str0" x1="241.1" y1="87.87" x2="219.21" y2= "87.87" />
-    <line class="fil4 str0" x1="230.16" y1="98.81" x2="230.16" y2= "109.76" />
-    <line class="fil4 str0" x1="230.16" y1="98.81" x2="219.21" y2= "98.81" />
-    <line class="fil4 str0" x1="339.61" y1="0.3" x2="339.61" y2= "11.25" />
-    <line class="fil4 str0" x1="339.61" y1="98.81" x2="339.61" y2= "109.76" />
+    <line class="fil4 str0" x1="356.03" y1="27.9" x2="356.03" y2= "0.54" />
+    <line class="fil4 str0" x1="301.3" y1="27.67" x2="301.3" y2= "0.3" />
+    <line class="fil4 str0" x1="301.3" y1="109.76" x2="301.3" y2= "82.39" />
+    <line class="fil4 str0" x1="356.03" y1="109.76" x2="356.03" y2= "82.39" />
+    <line class="fil4 str0" x1="323.19" y1="104.29" x2="323.19" y2= "109.76" />
+    <line class="fil4 str0" x1="323.19" y1="0.3" x2="323.19" y2= "5.78" />
+    <line class="fil4 str0" x1="410.76" y1="109.76" x2="410.76" y2= "82.39" />
+    <line class="fil4 str0" x1="410.76" y1="82.39" x2="438.12" y2= "82.39" />
+    <line class="fil4 str0" x1="432.65" y1="104.29" x2="438.12" y2= "104.29" />
+    <line class="fil4 str0" x1="432.65" y1="109.76" x2="432.65" y2= "104.29" />
+    <polyline class="fil4 str0" points="438.12,5.78 432.75,5.78 432.75,0.3 "/>
+    <polyline class="fil4 str0" points="410.76,0.3 410.76,27.67 432.65,27.67 "/>
+    <line class="fil4 str0" x1="246.58" y1="82.39" x2="246.58" y2= "109.76" />
+    <polyline class="fil4 str0" points="246.58,0.3 246.58,27.67 219.21,27.67 "/>
+    <polyline class="fil4 str0" points="224.69,0.3 224.69,5.78 219.21,5.78 "/>
+    <line class="fil4 str0" x1="247.42" y1="82.39" x2="220.05" y2= "82.39" />
+    <line class="fil4 str0" x1="224.69" y1="104.29" x2="224.69" y2= "109.76" />
+    <line class="fil4 str0" x1="224.69" y1="104.29" x2="219.21" y2= "104.29" />
+    <line class="fil4 str0" x1="334.14" y1="0.3" x2="334.14" y2= "5.78" />
+    <line class="fil4 str0" x1="334.14" y1="104.29" x2="334.14" y2= "109.72" />
    </g>
-   <g id="Brick_63">
+   <g id="Brick_68">
     <polygon class="fil0 str0" points="657.03,109.76 438.12,109.76 438.12,0.3 657.03,0.3 "/>
-    <polygon class="fil1 str1" points="449.07,98.81 646.08,98.81 646.08,11.25 449.07,11.25 "/>
-    <polygon class="fil2 str1" points="635.14,22.2 460.01,22.2 460.01,87.87 635.14,87.87 "/>
+    <polygon class="fil1 str1" points="443.59,104.29 651.56,104.29 651.56,5.78 443.59,5.78 "/>
+    <polygon class="fil2 str1" points="629.67,27.67 465.49,27.67 465.49,82.39 629.67,82.39 "/>
     <text x="452.14" y="57.69"  class="fil3 fnt0">F</text>
     <text x="490.41" y="19.33"  class="fil3 fnt1">A</text>
     <text x="594.32" y="19.33"  class="fil3 fnt1">B</text>
@@ -135,30 +137,31 @@ viewBox="0 0 766.79 438.43"
     <text x="638.75" y="94.63"  class="fil3 fnt3">cd</text>
     <text x="545.87" y="94.63"  class="fil3 fnt3">de</text>
     <text x="452.89" y="94.65"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="569.47" y1="22.19" x2="569.47" y2= "0.3" />
-    <line class="fil4 str0" x1="525.68" y1="22.2" x2="525.68" y2= "0.3" />
-    <line class="fil4 str0" x1="525.68" y1="109.76" x2="525.68" y2= "87.87" />
-    <line class="fil4 str0" x1="569.47" y1="109.76" x2="569.47" y2= "87.87" />
-    <line class="fil4 str0" x1="536.63" y1="98.81" x2="536.63" y2= "109.76" />
-    <line class="fil4 str0" x1="536.63" y1="0.3" x2="536.63" y2= "11.25" />
-    <line class="fil4 str0" x1="635.14" y1="109.76" x2="635.14" y2= "87.67" />
-    <line class="fil4 str0" x1="635.14" y1="87.87" x2="657.03" y2= "87.87" />
-    <polyline class="fil4 str0" points="646.08,109.76 646.08,98.81 657.03,98.81 "/>
-    <polyline class="fil4 str0" points="657.03,11.25 646.29,11.25 646.29,0.3 "/>
-    <polyline class="fil4 str0" points="635.14,0.3 635.14,22.2 657.03,22.2 "/>
-    <line class="fil4 str0" x1="460.01" y1="87.87" x2="460.01" y2= "109.76" />
-    <polyline class="fil4 str0" points="460.01,0.3 460.01,22.2 438.12,22.2 "/>
-    <polyline class="fil4 str0" points="449.07,0.3 449.07,11.25 438.12,11.25 "/>
-    <line class="fil4 str0" x1="460.01" y1="87.87" x2="438.12" y2= "87.87" />
-    <line class="fil4 str0" x1="449.07" y1="98.81" x2="449.07" y2= "109.76" />
-    <line class="fil4 str0" x1="449.07" y1="98.81" x2="438.12" y2= "98.81" />
-    <line class="fil4 str0" x1="558.52" y1="0.3" x2="558.52" y2= "11.25" />
-    <line class="fil4 str0" x1="558.52" y1="98.81" x2="558.52" y2= "109.76" />
+    <line class="fil4 str0" x1="574.94" y1="27.9" x2="574.94" y2= "0.54" />
+    <line class="fil4 str0" x1="520.21" y1="27.67" x2="520.21" y2= "0.3" />
+    <line class="fil4 str0" x1="520.21" y1="109.76" x2="520.21" y2= "82.39" />
+    <line class="fil4 str0" x1="574.94" y1="109.76" x2="574.94" y2= "82.39" />
+    <line class="fil4 str0" x1="542.1" y1="104.29" x2="542.1" y2= "109.76" />
+    <line class="fil4 str0" x1="542.1" y1="0.3" x2="542.1" y2= "5.78" />
+    <line class="fil4 str0" x1="629.67" y1="109.76" x2="629.67" y2= "82.39" />
+    <line class="fil4 str0" x1="629.67" y1="82.39" x2="657.03" y2= "82.39" />
+    <line class="fil4 str0" x1="651.56" y1="104.29" x2="657.03" y2= "104.29" />
+    <line class="fil4 str0" x1="651.56" y1="109.76" x2="651.56" y2= "104.29" />
+    <polyline class="fil4 str0" points="657.03,5.78 651.66,5.78 651.66,0.3 "/>
+    <polyline class="fil4 str0" points="629.67,0.3 629.67,27.67 651.56,27.67 "/>
+    <line class="fil4 str0" x1="465.49" y1="82.39" x2="465.49" y2= "109.76" />
+    <polyline class="fil4 str0" points="465.49,0.3 465.49,27.67 438.12,27.67 "/>
+    <polyline class="fil4 str0" points="443.59,0.3 443.59,5.78 438.12,5.78 "/>
+    <line class="fil4 str0" x1="466.32" y1="82.39" x2="438.96" y2= "82.39" />
+    <line class="fil4 str0" x1="443.59" y1="104.29" x2="443.59" y2= "109.76" />
+    <line class="fil4 str0" x1="443.59" y1="104.29" x2="438.12" y2= "104.29" />
+    <line class="fil4 str0" x1="553.05" y1="0.3" x2="553.05" y2= "5.78" />
+    <line class="fil4 str0" x1="553.05" y1="104.29" x2="553.05" y2= "109.72" />
    </g>
-   <g id="Brick_64">
+   <g id="Brick_69">
     <polygon class="fil0 str0" points="328.67,219.21 109.76,219.21 109.76,109.76 328.67,109.76 "/>
-    <polygon class="fil1 str1" points="120.7,208.27 317.72,208.27 317.72,120.7 120.7,120.7 "/>
-    <polygon class="fil2 str1" points="306.78,131.65 131.65,131.65 131.65,197.32 306.78,197.32 "/>
+    <polygon class="fil1 str1" points="115.23,213.74 323.19,213.74 323.19,115.23 115.23,115.23 "/>
+    <polygon class="fil2 str1" points="301.3,137.12 137.12,137.12 137.12,191.85 301.3,191.85 "/>
     <text x="123.78" y="167.14"  class="fil3 fnt0">F</text>
     <text x="162.05" y="128.79"  class="fil3 fnt1">A</text>
     <text x="265.96" y="128.79"  class="fil3 fnt1">B</text>
@@ -171,102 +174,105 @@ viewBox="0 0 766.79 438.43"
     <text x="310.38" y="204.08"  class="fil3 fnt3">cd</text>
     <text x="217.51" y="204.08"  class="fil3 fnt3">de</text>
     <text x="124.53" y="204.1"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="241.1" y1="131.65" x2="241.1" y2= "109.76" />
-    <line class="fil4 str0" x1="197.32" y1="131.65" x2="197.32" y2= "109.76" />
-    <line class="fil4 str0" x1="197.32" y1="219.21" x2="197.32" y2= "197.32" />
-    <line class="fil4 str0" x1="241.1" y1="219.21" x2="241.1" y2= "197.32" />
-    <line class="fil4 str0" x1="208.27" y1="208.27" x2="208.27" y2= "219.21" />
-    <line class="fil4 str0" x1="208.27" y1="109.76" x2="208.27" y2= "120.7" />
-    <line class="fil4 str0" x1="306.78" y1="219.21" x2="306.78" y2= "197.12" />
-    <line class="fil4 str0" x1="306.78" y1="197.32" x2="328.67" y2= "197.32" />
-    <polyline class="fil4 str0" points="317.72,219.21 317.72,208.27 328.67,208.27 "/>
-    <polyline class="fil4 str0" points="328.67,120.7 317.93,120.7 317.93,109.76 "/>
-    <polyline class="fil4 str0" points="306.78,109.76 306.78,131.65 328.67,131.65 "/>
-    <line class="fil4 str0" x1="131.65" y1="197.32" x2="131.65" y2= "219.21" />
-    <polyline class="fil4 str0" points="131.65,109.76 131.65,131.65 109.76,131.65 "/>
-    <polyline class="fil4 str0" points="120.7,109.76 120.7,120.7 109.76,120.7 "/>
-    <line class="fil4 str0" x1="131.65" y1="197.32" x2="109.76" y2= "197.32" />
-    <line class="fil4 str0" x1="120.7" y1="208.27" x2="120.7" y2= "219.21" />
-    <line class="fil4 str0" x1="120.7" y1="208.27" x2="109.76" y2= "208.27" />
-    <line class="fil4 str0" x1="230.16" y1="109.76" x2="230.16" y2= "120.7" />
-    <line class="fil4 str0" x1="230.16" y1="208.27" x2="230.16" y2= "219.21" />
+    <line class="fil4 str0" x1="246.58" y1="137.36" x2="246.58" y2= "110" />
+    <line class="fil4 str0" x1="191.85" y1="137.12" x2="191.85" y2= "109.76" />
+    <line class="fil4 str0" x1="191.85" y1="219.21" x2="191.85" y2= "191.85" />
+    <line class="fil4 str0" x1="246.58" y1="219.21" x2="246.58" y2= "191.85" />
+    <line class="fil4 str0" x1="213.74" y1="213.74" x2="213.74" y2= "219.21" />
+    <line class="fil4 str0" x1="213.74" y1="109.76" x2="213.74" y2= "115.23" />
+    <line class="fil4 str0" x1="301.3" y1="219.21" x2="301.3" y2= "191.85" />
+    <line class="fil4 str0" x1="301.3" y1="191.85" x2="328.67" y2= "191.85" />
+    <line class="fil4 str0" x1="323.19" y1="213.74" x2="328.67" y2= "213.74" />
+    <line class="fil4 str0" x1="323.19" y1="219.21" x2="323.19" y2= "213.74" />
+    <polyline class="fil4 str0" points="328.67,115.23 323.3,115.23 323.3,109.76 "/>
+    <polyline class="fil4 str0" points="301.3,109.76 301.3,137.12 323.19,137.12 "/>
+    <line class="fil4 str0" x1="137.12" y1="191.85" x2="137.12" y2= "219.21" />
+    <polyline class="fil4 str0" points="137.12,109.76 137.12,137.12 109.76,137.12 "/>
+    <polyline class="fil4 str0" points="115.23,109.76 115.23,115.23 109.76,115.23 "/>
+    <line class="fil4 str0" x1="137.96" y1="191.85" x2="110.6" y2= "191.85" />
+    <line class="fil4 str0" x1="115.23" y1="213.74" x2="115.23" y2= "219.21" />
+    <line class="fil4 str0" x1="115.23" y1="213.74" x2="109.76" y2= "213.74" />
+    <line class="fil4 str0" x1="224.69" y1="109.76" x2="224.69" y2= "115.23" />
+    <line class="fil4 str0" x1="224.69" y1="213.74" x2="224.69" y2= "219.17" />
    </g>
-   <g id="Brick_65">
+   <g id="Brick_70">
     <polygon class="fil0 str0" points="547.58,219.21 328.67,219.21 328.67,109.76 547.58,109.76 "/>
-    <polygon class="fil1 str1" points="339.61,208.27 536.63,208.27 536.63,120.7 339.61,120.7 "/>
-    <polygon class="fil2 str1" points="525.68,131.65 350.56,131.65 350.56,197.32 525.68,197.32 "/>
+    <polygon class="fil1 str1" points="334.14,213.74 542.1,213.74 542.1,115.23 334.14,115.23 "/>
+    <polygon class="fil2 str1" points="520.21,137.12 356.03,137.12 356.03,191.85 520.21,191.85 "/>
     <text x="342.69" y="167.14"  class="fil3 fnt0">F</text>
     <text x="380.96" y="128.79"  class="fil3 fnt1">A</text>
     <text x="484.87" y="128.79"  class="fil3 fnt1">B</text>
     <text x="528.49" y="167.1"  class="fil3 fnt1">C</text>
     <text x="484.65" y="205.41"  class="fil3 fnt1">D</text>
     <text x="380.87" y="205.41"  class="fil3 fnt1">E</text>
-    <text x="436.41" y="127.29"  class="fil3 fnt2">ab</text>
+    <text x="436.41" y="127.28"  class="fil3 fnt2">ab</text>
     <text x="343.62" y="127.48"  class="fil3 fnt3">fa</text>
     <text x="529.13" y="127.46"  class="fil3 fnt3">bc</text>
     <text x="529.29" y="204.08"  class="fil3 fnt3">cd</text>
     <text x="436.42" y="204.08"  class="fil3 fnt3">de</text>
     <text x="343.43" y="204.1"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="460.01" y1="131.65" x2="460.01" y2= "109.76" />
-    <line class="fil4 str0" x1="416.23" y1="131.65" x2="416.23" y2= "109.76" />
-    <line class="fil4 str0" x1="416.23" y1="219.21" x2="416.23" y2= "197.32" />
-    <line class="fil4 str0" x1="460.01" y1="219.21" x2="460.01" y2= "197.32" />
-    <line class="fil4 str0" x1="427.18" y1="208.27" x2="427.18" y2= "219.21" />
-    <line class="fil4 str0" x1="427.18" y1="109.76" x2="427.18" y2= "120.7" />
-    <line class="fil4 str0" x1="525.68" y1="219.21" x2="525.68" y2= "197.12" />
-    <line class="fil4 str0" x1="525.68" y1="197.32" x2="547.58" y2= "197.32" />
-    <polyline class="fil4 str0" points="536.63,219.21 536.63,208.27 547.58,208.27 "/>
-    <polyline class="fil4 str0" points="547.58,120.7 536.83,120.7 536.83,109.76 "/>
-    <polyline class="fil4 str0" points="525.68,109.76 525.68,131.65 547.58,131.65 "/>
-    <line class="fil4 str0" x1="350.56" y1="197.32" x2="350.56" y2= "219.21" />
-    <polyline class="fil4 str0" points="350.56,109.76 350.56,131.65 328.67,131.65 "/>
-    <polyline class="fil4 str0" points="339.61,109.76 339.61,120.7 328.67,120.7 "/>
-    <line class="fil4 str0" x1="350.56" y1="197.32" x2="328.67" y2= "197.32" />
-    <line class="fil4 str0" x1="339.61" y1="208.27" x2="339.61" y2= "219.21" />
-    <line class="fil4 str0" x1="339.61" y1="208.27" x2="328.67" y2= "208.27" />
-    <line class="fil4 str0" x1="449.07" y1="109.76" x2="449.07" y2= "120.7" />
-    <line class="fil4 str0" x1="449.07" y1="208.27" x2="449.07" y2= "219.21" />
+    <line class="fil4 str0" x1="465.49" y1="137.36" x2="465.49" y2= "109.99" />
+    <line class="fil4 str0" x1="410.76" y1="137.12" x2="410.76" y2= "109.76" />
+    <line class="fil4 str0" x1="410.76" y1="219.21" x2="410.76" y2= "191.85" />
+    <line class="fil4 str0" x1="465.49" y1="219.21" x2="465.49" y2= "191.85" />
+    <line class="fil4 str0" x1="432.65" y1="213.74" x2="432.65" y2= "219.21" />
+    <line class="fil4 str0" x1="432.65" y1="109.76" x2="432.65" y2= "115.23" />
+    <line class="fil4 str0" x1="520.21" y1="219.21" x2="520.21" y2= "191.85" />
+    <line class="fil4 str0" x1="520.21" y1="191.85" x2="547.58" y2= "191.85" />
+    <line class="fil4 str0" x1="542.1" y1="213.74" x2="547.58" y2= "213.74" />
+    <line class="fil4 str0" x1="542.1" y1="219.21" x2="542.1" y2= "213.74" />
+    <polyline class="fil4 str0" points="547.58,115.23 542.21,115.23 542.21,109.76 "/>
+    <polyline class="fil4 str0" points="520.21,109.76 520.21,137.12 542.1,137.12 "/>
+    <line class="fil4 str0" x1="356.03" y1="191.85" x2="356.03" y2= "219.21" />
+    <polyline class="fil4 str0" points="356.03,109.76 356.03,137.12 328.67,137.12 "/>
+    <polyline class="fil4 str0" points="334.14,109.76 334.14,115.23 328.67,115.23 "/>
+    <line class="fil4 str0" x1="356.87" y1="191.85" x2="329.51" y2= "191.85" />
+    <line class="fil4 str0" x1="334.14" y1="213.74" x2="334.14" y2= "219.21" />
+    <line class="fil4 str0" x1="334.14" y1="213.74" x2="328.67" y2= "213.74" />
+    <line class="fil4 str0" x1="443.59" y1="109.76" x2="443.59" y2= "115.23" />
+    <line class="fil4 str0" x1="443.6" y1="213.74" x2="443.6" y2= "219.17" />
    </g>
-   <g id="Brick_66">
+   <g id="Brick_71">
     <polygon class="fil0 str0" points="766.48,219.21 547.58,219.21 547.58,109.76 766.48,109.76 "/>
-    <polygon class="fil1 str1" points="558.52,208.27 755.54,208.27 755.54,120.7 558.52,120.7 "/>
-    <polygon class="fil2 str1" points="744.59,131.65 569.47,131.65 569.47,197.32 744.59,197.32 "/>
+    <polygon class="fil1 str1" points="553.05,213.74 761.01,213.74 761.01,115.23 553.05,115.23 "/>
+    <polygon class="fil2 str1" points="739.12,137.12 574.94,137.12 574.94,191.85 739.12,191.85 "/>
     <text x="561.59" y="167.14"  class="fil3 fnt0">F</text>
     <text x="599.87" y="128.79"  class="fil3 fnt1">A</text>
     <text x="703.78" y="128.79"  class="fil3 fnt1">B</text>
-    <text x="747.39" y="167.1"  class="fil3 fnt1">C</text>
+    <text x="747.4" y="167.1"  class="fil3 fnt1">C</text>
     <text x="703.56" y="205.41"  class="fil3 fnt1">D</text>
     <text x="599.78" y="205.41"  class="fil3 fnt1">E</text>
     <text x="655.32" y="127.29"  class="fil3 fnt2">ab</text>
     <text x="562.53" y="127.48"  class="fil3 fnt3">fa</text>
     <text x="748.04" y="127.46"  class="fil3 fnt3">bc</text>
     <text x="748.2" y="204.08"  class="fil3 fnt3">cd</text>
-    <text x="655.32" y="204.08"  class="fil3 fnt3">de</text>
+    <text x="655.33" y="204.08"  class="fil3 fnt3">de</text>
     <text x="562.34" y="204.1"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="678.92" y1="131.65" x2="678.92" y2= "109.76" />
-    <line class="fil4 str0" x1="635.14" y1="131.65" x2="635.14" y2= "109.76" />
-    <line class="fil4 str0" x1="635.14" y1="219.21" x2="635.14" y2= "197.32" />
-    <line class="fil4 str0" x1="678.92" y1="219.21" x2="678.92" y2= "197.32" />
-    <line class="fil4 str0" x1="646.08" y1="208.27" x2="646.08" y2= "219.21" />
-    <line class="fil4 str0" x1="646.08" y1="109.76" x2="646.08" y2= "120.7" />
-    <line class="fil4 str0" x1="744.59" y1="219.21" x2="744.59" y2= "197.12" />
-    <line class="fil4 str0" x1="744.59" y1="197.32" x2="766.48" y2= "197.32" />
-    <polyline class="fil4 str0" points="755.54,219.21 755.54,208.27 766.48,208.27 "/>
-    <polyline class="fil4 str0" points="766.48,120.7 755.74,120.7 755.74,109.76 "/>
-    <polyline class="fil4 str0" points="744.59,109.76 744.59,131.65 766.48,131.65 "/>
-    <line class="fil4 str0" x1="569.47" y1="197.32" x2="569.47" y2= "219.21" />
-    <polyline class="fil4 str0" points="569.47,109.76 569.47,131.65 547.58,131.65 "/>
-    <polyline class="fil4 str0" points="558.52,109.76 558.52,120.7 547.58,120.7 "/>
-    <line class="fil4 str0" x1="569.47" y1="197.32" x2="547.58" y2= "197.32" />
-    <line class="fil4 str0" x1="558.52" y1="208.27" x2="558.52" y2= "219.21" />
-    <line class="fil4 str0" x1="558.52" y1="208.27" x2="547.58" y2= "208.27" />
-    <line class="fil4 str0" x1="667.97" y1="109.76" x2="667.97" y2= "120.7" />
-    <line class="fil4 str0" x1="667.97" y1="208.27" x2="667.97" y2= "219.21" />
+    <line class="fil4 str0" x1="684.39" y1="137.36" x2="684.39" y2= "110" />
+    <line class="fil4 str0" x1="629.67" y1="137.12" x2="629.67" y2= "109.76" />
+    <line class="fil4 str0" x1="629.67" y1="219.21" x2="629.67" y2= "191.85" />
+    <line class="fil4 str0" x1="684.39" y1="219.21" x2="684.39" y2= "191.85" />
+    <line class="fil4 str0" x1="651.56" y1="213.74" x2="651.56" y2= "219.21" />
+    <line class="fil4 str0" x1="651.56" y1="109.76" x2="651.56" y2= "115.23" />
+    <line class="fil4 str0" x1="739.12" y1="219.21" x2="739.12" y2= "191.85" />
+    <line class="fil4 str0" x1="739.12" y1="191.85" x2="766.48" y2= "191.85" />
+    <line class="fil4 str0" x1="761.01" y1="213.74" x2="766.48" y2= "213.74" />
+    <line class="fil4 str0" x1="761.01" y1="219.21" x2="761.01" y2= "213.74" />
+    <polyline class="fil4 str0" points="766.48,115.23 761.11,115.23 761.11,109.76 "/>
+    <polyline class="fil4 str0" points="739.12,109.76 739.12,137.12 761.01,137.12 "/>
+    <line class="fil4 str0" x1="574.94" y1="191.85" x2="574.94" y2= "219.21" />
+    <polyline class="fil4 str0" points="574.94,109.76 574.94,137.12 547.58,137.12 "/>
+    <polyline class="fil4 str0" points="553.05,109.76 553.05,115.23 547.58,115.23 "/>
+    <line class="fil4 str0" x1="575.78" y1="191.85" x2="548.41" y2= "191.85" />
+    <line class="fil4 str0" x1="553.05" y1="213.74" x2="553.05" y2= "219.21" />
+    <line class="fil4 str0" x1="553.05" y1="213.74" x2="547.58" y2= "213.74" />
+    <line class="fil4 str0" x1="662.5" y1="109.76" x2="662.5" y2= "115.23" />
+    <line class="fil4 str0" x1="662.5" y1="213.74" x2="662.5" y2= "219.17" />
    </g>
-   <g id="Brick_67">
+   <g id="Brick_72">
     <polygon class="fil0 str0" points="219.21,328.67 0.3,328.67 0.3,219.21 219.21,219.21 "/>
-    <polygon class="fil1 str1" points="11.25,317.72 208.27,317.72 208.27,230.16 11.25,230.16 "/>
-    <polygon class="fil2 str1" points="197.32,241.1 22.19,241.1 22.19,306.78 197.32,306.78 "/>
+    <polygon class="fil1 str1" points="5.78,323.19 213.74,323.19 213.74,224.69 5.78,224.69 "/>
+    <polygon class="fil2 str1" points="191.85,246.58 27.67,246.58 27.67,301.3 191.85,301.3 "/>
     <text x="14.32" y="276.6"  class="fil3 fnt0">F</text>
     <text x="52.6" y="238.24"  class="fil3 fnt1">A</text>
     <text x="156.51" y="238.24"  class="fil3 fnt1">B</text>
@@ -276,36 +282,37 @@ viewBox="0 0 766.79 438.43"
     <text x="108.05" y="236.74"  class="fil3 fnt2">ab</text>
     <text x="15.26" y="236.94"  class="fil3 fnt3">fa</text>
     <text x="200.77" y="236.92"  class="fil3 fnt3">bc</text>
-    <text x="200.93" y="313.53"  class="fil3 fnt3">cd</text>
-    <text x="108.05" y="313.53"  class="fil3 fnt3">de</text>
+    <text x="200.93" y="313.54"  class="fil3 fnt3">cd</text>
+    <text x="108.05" y="313.54"  class="fil3 fnt3">de</text>
     <text x="15.07" y="313.56"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="131.65" y1="241.1" x2="131.65" y2= "219.21" />
-    <line class="fil4 str0" x1="87.87" y1="241.1" x2="87.87" y2= "219.21" />
-    <line class="fil4 str0" x1="87.87" y1="328.67" x2="87.87" y2= "306.78" />
-    <line class="fil4 str0" x1="131.65" y1="328.67" x2="131.65" y2= "306.78" />
-    <line class="fil4 str0" x1="98.81" y1="317.72" x2="98.81" y2= "328.67" />
-    <line class="fil4 str0" x1="98.81" y1="219.21" x2="98.81" y2= "230.16" />
-    <line class="fil4 str0" x1="197.32" y1="328.67" x2="197.32" y2= "306.58" />
-    <line class="fil4 str0" x1="197.32" y1="306.78" x2="219.21" y2= "306.78" />
-    <polyline class="fil4 str0" points="208.27,328.67 208.27,317.72 219.21,317.72 "/>
-    <polyline class="fil4 str0" points="219.21,230.16 208.47,230.16 208.47,219.21 "/>
-    <polyline class="fil4 str0" points="197.32,219.21 197.32,241.1 219.21,241.1 "/>
-    <line class="fil4 str0" x1="22.19" y1="306.78" x2="22.19" y2= "328.67" />
-    <polyline class="fil4 str0" points="22.19,219.21 22.19,241.1 0.3,241.1 "/>
-    <polyline class="fil4 str0" points="11.25,219.21 11.25,230.16 0.3,230.16 "/>
-    <line class="fil4 str0" x1="22.19" y1="306.78" x2="0.3" y2= "306.78" />
-    <line class="fil4 str0" x1="11.25" y1="317.72" x2="11.25" y2= "328.67" />
-    <line class="fil4 str0" x1="11.25" y1="317.72" x2="0.3" y2= "317.72" />
-    <line class="fil4 str0" x1="120.7" y1="219.21" x2="120.7" y2= "230.16" />
-    <line class="fil4 str0" x1="120.7" y1="317.72" x2="120.7" y2= "328.67" />
+    <line class="fil4 str0" x1="137.12" y1="246.81" x2="137.12" y2= "219.45" />
+    <line class="fil4 str0" x1="82.4" y1="246.58" x2="82.4" y2= "219.21" />
+    <line class="fil4 str0" x1="82.4" y1="328.67" x2="82.4" y2= "301.3" />
+    <line class="fil4 str0" x1="137.12" y1="328.67" x2="137.12" y2= "301.3" />
+    <line class="fil4 str0" x1="104.29" y1="323.19" x2="104.29" y2= "328.67" />
+    <line class="fil4 str0" x1="104.29" y1="219.21" x2="104.29" y2= "224.69" />
+    <line class="fil4 str0" x1="191.85" y1="328.67" x2="191.85" y2= "301.3" />
+    <line class="fil4 str0" x1="191.85" y1="301.3" x2="219.21" y2= "301.3" />
+    <line class="fil4 str0" x1="213.74" y1="323.19" x2="219.21" y2= "323.19" />
+    <line class="fil4 str0" x1="213.74" y1="328.67" x2="213.74" y2= "323.19" />
+    <polyline class="fil4 str0" points="219.21,224.69 213.84,224.69 213.84,219.21 "/>
+    <polyline class="fil4 str0" points="191.85,219.21 191.85,246.58 213.74,246.58 "/>
+    <line class="fil4 str0" x1="27.67" y1="301.3" x2="27.67" y2= "328.67" />
+    <polyline class="fil4 str0" points="27.67,219.21 27.67,246.58 0.3,246.58 "/>
+    <polyline class="fil4 str0" points="5.78,219.21 5.78,224.69 0.3,224.69 "/>
+    <line class="fil4 str0" x1="28.51" y1="301.3" x2="1.14" y2= "301.3" />
+    <line class="fil4 str0" x1="5.78" y1="323.19" x2="5.78" y2= "328.67" />
+    <line class="fil4 str0" x1="5.78" y1="323.19" x2="0.3" y2= "323.19" />
+    <line class="fil4 str0" x1="115.23" y1="219.21" x2="115.23" y2= "224.69" />
+    <line class="fil4 str0" x1="115.23" y1="323.19" x2="115.23" y2= "328.63" />
    </g>
-   <g id="Brick_68">
+   <g id="Brick_73">
     <polygon class="fil0 str0" points="438.12,328.67 219.21,328.67 219.21,219.21 438.12,219.21 "/>
-    <polygon class="fil1 str1" points="230.16,317.72 427.18,317.72 427.18,230.16 230.16,230.16 "/>
-    <polygon class="fil2 str1" points="416.23,241.1 241.1,241.1 241.1,306.78 416.23,306.78 "/>
+    <polygon class="fil1 str1" points="224.69,323.19 432.65,323.19 432.65,224.69 224.69,224.69 "/>
+    <polygon class="fil2 str1" points="410.76,246.58 246.58,246.58 246.58,301.3 410.76,301.3 "/>
     <text x="233.23" y="276.6"  class="fil3 fnt0">F</text>
     <text x="271.5" y="238.24"  class="fil3 fnt1">A</text>
-    <text x="375.41" y="238.24"  class="fil3 fnt1">B</text>
+    <text x="375.42" y="238.24"  class="fil3 fnt1">B</text>
     <text x="419.03" y="276.55"  class="fil3 fnt1">C</text>
     <text x="375.2" y="314.86"  class="fil3 fnt1">D</text>
     <text x="271.42" y="314.86"  class="fil3 fnt1">E</text>
@@ -315,30 +322,31 @@ viewBox="0 0 766.79 438.43"
     <text x="419.84" y="313.53"  class="fil3 fnt3">cd</text>
     <text x="326.96" y="313.53"  class="fil3 fnt3">de</text>
     <text x="233.98" y="313.56"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="350.56" y1="241.1" x2="350.56" y2= "219.21" />
-    <line class="fil4 str0" x1="306.78" y1="241.1" x2="306.78" y2= "219.21" />
-    <line class="fil4 str0" x1="306.78" y1="328.67" x2="306.78" y2= "306.78" />
-    <line class="fil4 str0" x1="350.56" y1="328.67" x2="350.56" y2= "306.78" />
-    <line class="fil4 str0" x1="317.72" y1="317.72" x2="317.72" y2= "328.67" />
-    <line class="fil4 str0" x1="317.72" y1="219.21" x2="317.72" y2= "230.16" />
-    <line class="fil4 str0" x1="416.23" y1="328.67" x2="416.23" y2= "306.58" />
-    <line class="fil4 str0" x1="416.23" y1="306.78" x2="438.12" y2= "306.78" />
-    <polyline class="fil4 str0" points="427.18,328.67 427.18,317.72 438.12,317.72 "/>
-    <polyline class="fil4 str0" points="438.12,230.16 427.38,230.16 427.38,219.21 "/>
-    <polyline class="fil4 str0" points="416.23,219.21 416.23,241.1 438.12,241.1 "/>
-    <line class="fil4 str0" x1="241.1" y1="306.78" x2="241.1" y2= "328.67" />
-    <polyline class="fil4 str0" points="241.1,219.21 241.1,241.1 219.21,241.1 "/>
-    <polyline class="fil4 str0" points="230.16,219.21 230.16,230.16 219.21,230.16 "/>
-    <line class="fil4 str0" x1="241.1" y1="306.78" x2="219.21" y2= "306.78" />
-    <line class="fil4 str0" x1="230.16" y1="317.72" x2="230.16" y2= "328.67" />
-    <line class="fil4 str0" x1="230.16" y1="317.72" x2="219.21" y2= "317.72" />
-    <line class="fil4 str0" x1="339.61" y1="219.21" x2="339.61" y2= "230.16" />
-    <line class="fil4 str0" x1="339.61" y1="317.72" x2="339.61" y2= "328.67" />
+    <line class="fil4 str0" x1="356.03" y1="246.81" x2="356.03" y2= "219.45" />
+    <line class="fil4 str0" x1="301.3" y1="246.58" x2="301.3" y2= "219.21" />
+    <line class="fil4 str0" x1="301.3" y1="328.67" x2="301.3" y2= "301.3" />
+    <line class="fil4 str0" x1="356.03" y1="328.67" x2="356.03" y2= "301.3" />
+    <line class="fil4 str0" x1="323.19" y1="323.19" x2="323.19" y2= "328.67" />
+    <line class="fil4 str0" x1="323.19" y1="219.21" x2="323.19" y2= "224.69" />
+    <line class="fil4 str0" x1="410.76" y1="328.67" x2="410.76" y2= "301.3" />
+    <line class="fil4 str0" x1="410.76" y1="301.3" x2="438.12" y2= "301.3" />
+    <line class="fil4 str0" x1="432.65" y1="323.19" x2="438.12" y2= "323.19" />
+    <line class="fil4 str0" x1="432.65" y1="328.67" x2="432.65" y2= "323.19" />
+    <polyline class="fil4 str0" points="438.12,224.69 432.75,224.69 432.75,219.21 "/>
+    <polyline class="fil4 str0" points="410.76,219.21 410.76,246.58 432.65,246.58 "/>
+    <line class="fil4 str0" x1="246.58" y1="301.3" x2="246.58" y2= "328.67" />
+    <polyline class="fil4 str0" points="246.58,219.21 246.58,246.58 219.21,246.58 "/>
+    <polyline class="fil4 str0" points="224.69,219.21 224.69,224.69 219.21,224.69 "/>
+    <line class="fil4 str0" x1="247.42" y1="301.3" x2="220.05" y2= "301.3" />
+    <line class="fil4 str0" x1="224.69" y1="323.19" x2="224.69" y2= "328.67" />
+    <line class="fil4 str0" x1="224.69" y1="323.19" x2="219.21" y2= "323.19" />
+    <line class="fil4 str0" x1="334.14" y1="219.21" x2="334.14" y2= "224.69" />
+    <line class="fil4 str0" x1="334.14" y1="323.19" x2="334.14" y2= "328.63" />
    </g>
-   <g id="Brick_69">
+   <g id="Brick_74">
     <polygon class="fil0 str0" points="657.03,328.67 438.12,328.67 438.12,219.21 657.03,219.21 "/>
-    <polygon class="fil1 str1" points="449.07,317.72 646.08,317.72 646.08,230.16 449.07,230.16 "/>
-    <polygon class="fil2 str1" points="635.14,241.1 460.01,241.1 460.01,306.78 635.14,306.78 "/>
+    <polygon class="fil1 str1" points="443.59,323.19 651.56,323.19 651.56,224.69 443.59,224.69 "/>
+    <polygon class="fil2 str1" points="629.67,246.58 465.49,246.58 465.49,301.3 629.67,301.3 "/>
     <text x="452.14" y="276.6"  class="fil3 fnt0">F</text>
     <text x="490.41" y="238.24"  class="fil3 fnt1">A</text>
     <text x="594.32" y="238.24"  class="fil3 fnt1">B</text>
@@ -348,33 +356,34 @@ viewBox="0 0 766.79 438.43"
     <text x="545.86" y="236.74"  class="fil3 fnt2">ab</text>
     <text x="453.08" y="236.94"  class="fil3 fnt3">fa</text>
     <text x="638.58" y="236.92"  class="fil3 fnt3">bc</text>
-    <text x="638.75" y="313.53"  class="fil3 fnt3">cd</text>
-    <text x="545.87" y="313.53"  class="fil3 fnt3">de</text>
+    <text x="638.75" y="313.54"  class="fil3 fnt3">cd</text>
+    <text x="545.87" y="313.54"  class="fil3 fnt3">de</text>
     <text x="452.89" y="313.56"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="569.47" y1="241.1" x2="569.47" y2= "219.21" />
-    <line class="fil4 str0" x1="525.68" y1="241.1" x2="525.68" y2= "219.21" />
-    <line class="fil4 str0" x1="525.68" y1="328.67" x2="525.68" y2= "306.78" />
-    <line class="fil4 str0" x1="569.47" y1="328.67" x2="569.47" y2= "306.78" />
-    <line class="fil4 str0" x1="536.63" y1="317.72" x2="536.63" y2= "328.67" />
-    <line class="fil4 str0" x1="536.63" y1="219.21" x2="536.63" y2= "230.16" />
-    <line class="fil4 str0" x1="635.14" y1="328.67" x2="635.14" y2= "306.58" />
-    <line class="fil4 str0" x1="635.14" y1="306.78" x2="657.03" y2= "306.78" />
-    <polyline class="fil4 str0" points="646.08,328.67 646.08,317.72 657.03,317.72 "/>
-    <polyline class="fil4 str0" points="657.03,230.16 646.29,230.16 646.29,219.21 "/>
-    <polyline class="fil4 str0" points="635.14,219.21 635.14,241.1 657.03,241.1 "/>
-    <line class="fil4 str0" x1="460.01" y1="306.78" x2="460.01" y2= "328.67" />
-    <polyline class="fil4 str0" points="460.01,219.21 460.01,241.1 438.12,241.1 "/>
-    <polyline class="fil4 str0" points="449.07,219.21 449.07,230.16 438.12,230.16 "/>
-    <line class="fil4 str0" x1="460.01" y1="306.78" x2="438.12" y2= "306.78" />
-    <line class="fil4 str0" x1="449.07" y1="317.72" x2="449.07" y2= "328.67" />
-    <line class="fil4 str0" x1="449.07" y1="317.72" x2="438.12" y2= "317.72" />
-    <line class="fil4 str0" x1="558.52" y1="219.21" x2="558.52" y2= "230.16" />
-    <line class="fil4 str0" x1="558.52" y1="317.72" x2="558.52" y2= "328.67" />
+    <line class="fil4 str0" x1="574.94" y1="246.81" x2="574.94" y2= "219.45" />
+    <line class="fil4 str0" x1="520.21" y1="246.58" x2="520.21" y2= "219.21" />
+    <line class="fil4 str0" x1="520.21" y1="328.67" x2="520.21" y2= "301.3" />
+    <line class="fil4 str0" x1="574.94" y1="328.67" x2="574.94" y2= "301.3" />
+    <line class="fil4 str0" x1="542.1" y1="323.19" x2="542.1" y2= "328.67" />
+    <line class="fil4 str0" x1="542.1" y1="219.21" x2="542.1" y2= "224.69" />
+    <line class="fil4 str0" x1="629.67" y1="328.67" x2="629.67" y2= "301.3" />
+    <line class="fil4 str0" x1="629.67" y1="301.3" x2="657.03" y2= "301.3" />
+    <line class="fil4 str0" x1="651.56" y1="323.19" x2="657.03" y2= "323.19" />
+    <line class="fil4 str0" x1="651.56" y1="328.67" x2="651.56" y2= "323.19" />
+    <polyline class="fil4 str0" points="657.03,224.69 651.66,224.69 651.66,219.21 "/>
+    <polyline class="fil4 str0" points="629.67,219.21 629.67,246.58 651.56,246.58 "/>
+    <line class="fil4 str0" x1="465.49" y1="301.3" x2="465.49" y2= "328.67" />
+    <polyline class="fil4 str0" points="465.49,219.21 465.49,246.58 438.12,246.58 "/>
+    <polyline class="fil4 str0" points="443.59,219.21 443.59,224.69 438.12,224.69 "/>
+    <line class="fil4 str0" x1="466.32" y1="301.3" x2="438.96" y2= "301.3" />
+    <line class="fil4 str0" x1="443.59" y1="323.19" x2="443.59" y2= "328.67" />
+    <line class="fil4 str0" x1="443.59" y1="323.19" x2="438.12" y2= "323.19" />
+    <line class="fil4 str0" x1="553.05" y1="219.21" x2="553.05" y2= "224.69" />
+    <line class="fil4 str0" x1="553.05" y1="323.19" x2="553.05" y2= "328.63" />
    </g>
-   <g id="Brick_70">
+   <g id="Brick_75">
     <polygon class="fil0 str0" points="328.67,438.12 109.76,438.12 109.76,328.67 328.67,328.67 "/>
-    <polygon class="fil1 str1" points="120.7,427.18 317.72,427.18 317.72,339.61 120.7,339.61 "/>
-    <polygon class="fil2 str1" points="306.78,350.56 131.65,350.56 131.65,416.23 306.78,416.23 "/>
+    <polygon class="fil1 str1" points="115.23,432.65 323.19,432.65 323.19,334.14 115.23,334.14 "/>
+    <polygon class="fil2 str1" points="301.3,356.03 137.12,356.03 137.12,410.76 301.3,410.76 "/>
     <text x="123.78" y="386.05"  class="fil3 fnt0">F</text>
     <text x="162.05" y="347.7"  class="fil3 fnt1">A</text>
     <text x="265.96" y="347.7"  class="fil3 fnt1">B</text>
@@ -387,30 +396,31 @@ viewBox="0 0 766.79 438.43"
     <text x="310.38" y="422.99"  class="fil3 fnt3">cd</text>
     <text x="217.51" y="422.99"  class="fil3 fnt3">de</text>
     <text x="124.53" y="423.01"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="241.1" y1="350.56" x2="241.1" y2= "328.67" />
-    <line class="fil4 str0" x1="197.32" y1="350.56" x2="197.32" y2= "328.67" />
-    <line class="fil4 str0" x1="197.32" y1="438.12" x2="197.32" y2= "416.23" />
-    <line class="fil4 str0" x1="241.1" y1="438.12" x2="241.1" y2= "416.23" />
-    <line class="fil4 str0" x1="208.27" y1="427.18" x2="208.27" y2= "438.12" />
-    <line class="fil4 str0" x1="208.27" y1="328.67" x2="208.27" y2= "339.61" />
-    <line class="fil4 str0" x1="306.78" y1="438.12" x2="306.78" y2= "416.03" />
-    <line class="fil4 str0" x1="306.78" y1="416.23" x2="328.67" y2= "416.23" />
-    <polyline class="fil4 str0" points="317.72,438.12 317.72,427.18 328.67,427.18 "/>
-    <polyline class="fil4 str0" points="328.67,339.61 317.93,339.61 317.93,328.67 "/>
-    <polyline class="fil4 str0" points="306.78,328.67 306.78,350.56 328.67,350.56 "/>
-    <line class="fil4 str0" x1="131.65" y1="416.23" x2="131.65" y2= "438.12" />
-    <polyline class="fil4 str0" points="131.65,328.67 131.65,350.56 109.76,350.56 "/>
-    <polyline class="fil4 str0" points="120.7,328.67 120.7,339.61 109.76,339.61 "/>
-    <line class="fil4 str0" x1="131.65" y1="416.23" x2="109.76" y2= "416.23" />
-    <line class="fil4 str0" x1="120.7" y1="427.18" x2="120.7" y2= "438.12" />
-    <line class="fil4 str0" x1="120.7" y1="427.18" x2="109.76" y2= "427.18" />
-    <line class="fil4 str0" x1="230.16" y1="328.67" x2="230.16" y2= "339.61" />
-    <line class="fil4 str0" x1="230.16" y1="427.18" x2="230.16" y2= "438.12" />
+    <line class="fil4 str0" x1="246.58" y1="356.27" x2="246.58" y2= "328.9" />
+    <line class="fil4 str0" x1="191.85" y1="356.03" x2="191.85" y2= "328.67" />
+    <line class="fil4 str0" x1="191.85" y1="438.12" x2="191.85" y2= "410.76" />
+    <line class="fil4 str0" x1="246.58" y1="438.12" x2="246.58" y2= "410.76" />
+    <line class="fil4 str0" x1="213.74" y1="432.65" x2="213.74" y2= "438.12" />
+    <line class="fil4 str0" x1="213.74" y1="328.67" x2="213.74" y2= "334.14" />
+    <line class="fil4 str0" x1="301.3" y1="438.12" x2="301.3" y2= "410.76" />
+    <line class="fil4 str0" x1="301.3" y1="410.76" x2="328.67" y2= "410.76" />
+    <line class="fil4 str0" x1="323.19" y1="432.65" x2="328.67" y2= "432.65" />
+    <line class="fil4 str0" x1="323.19" y1="438.12" x2="323.19" y2= "432.65" />
+    <polyline class="fil4 str0" points="328.67,334.14 323.3,334.14 323.3,328.67 "/>
+    <polyline class="fil4 str0" points="301.3,328.67 301.3,356.03 323.19,356.03 "/>
+    <line class="fil4 str0" x1="137.12" y1="410.76" x2="137.12" y2= "438.12" />
+    <polyline class="fil4 str0" points="137.12,328.67 137.12,356.03 109.76,356.03 "/>
+    <polyline class="fil4 str0" points="115.23,328.67 115.23,334.14 109.76,334.14 "/>
+    <line class="fil4 str0" x1="137.96" y1="410.76" x2="110.6" y2= "410.76" />
+    <line class="fil4 str0" x1="115.23" y1="432.65" x2="115.23" y2= "438.12" />
+    <line class="fil4 str0" x1="115.23" y1="432.65" x2="109.76" y2= "432.65" />
+    <line class="fil4 str0" x1="224.69" y1="328.67" x2="224.69" y2= "334.14" />
+    <line class="fil4 str0" x1="224.69" y1="432.65" x2="224.69" y2= "438.08" />
    </g>
-   <g id="Brick_71">
+   <g id="Brick_76">
     <polygon class="fil0 str0" points="547.58,438.12 328.67,438.12 328.67,328.67 547.58,328.67 "/>
-    <polygon class="fil1 str1" points="339.61,427.18 536.63,427.18 536.63,339.61 339.61,339.61 "/>
-    <polygon class="fil2 str1" points="525.68,350.56 350.56,350.56 350.56,416.23 525.68,416.23 "/>
+    <polygon class="fil1 str1" points="334.14,432.65 542.1,432.65 542.1,334.14 334.14,334.14 "/>
+    <polygon class="fil2 str1" points="520.21,356.03 356.03,356.03 356.03,410.76 520.21,410.76 "/>
     <text x="342.69" y="386.05"  class="fil3 fnt0">F</text>
     <text x="380.96" y="347.7"  class="fil3 fnt1">A</text>
     <text x="484.87" y="347.7"  class="fil3 fnt1">B</text>
@@ -423,61 +433,63 @@ viewBox="0 0 766.79 438.43"
     <text x="529.29" y="422.99"  class="fil3 fnt3">cd</text>
     <text x="436.42" y="422.99"  class="fil3 fnt3">de</text>
     <text x="343.43" y="423.01"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="460.01" y1="350.56" x2="460.01" y2= "328.67" />
-    <line class="fil4 str0" x1="416.23" y1="350.56" x2="416.23" y2= "328.67" />
-    <line class="fil4 str0" x1="416.23" y1="438.12" x2="416.23" y2= "416.23" />
-    <line class="fil4 str0" x1="460.01" y1="438.12" x2="460.01" y2= "416.23" />
-    <line class="fil4 str0" x1="427.18" y1="427.18" x2="427.18" y2= "438.12" />
-    <line class="fil4 str0" x1="427.18" y1="328.67" x2="427.18" y2= "339.61" />
-    <line class="fil4 str0" x1="525.68" y1="438.12" x2="525.68" y2= "416.03" />
-    <line class="fil4 str0" x1="525.68" y1="416.23" x2="547.58" y2= "416.23" />
-    <polyline class="fil4 str0" points="536.63,438.12 536.63,427.18 547.58,427.18 "/>
-    <polyline class="fil4 str0" points="547.58,339.61 536.83,339.61 536.83,328.67 "/>
-    <polyline class="fil4 str0" points="525.68,328.67 525.68,350.56 547.58,350.56 "/>
-    <line class="fil4 str0" x1="350.56" y1="416.23" x2="350.56" y2= "438.12" />
-    <polyline class="fil4 str0" points="350.56,328.67 350.56,350.56 328.67,350.56 "/>
-    <polyline class="fil4 str0" points="339.61,328.67 339.61,339.61 328.67,339.61 "/>
-    <line class="fil4 str0" x1="350.56" y1="416.23" x2="328.67" y2= "416.23" />
-    <line class="fil4 str0" x1="339.61" y1="427.18" x2="339.61" y2= "438.12" />
-    <line class="fil4 str0" x1="339.61" y1="427.18" x2="328.67" y2= "427.18" />
-    <line class="fil4 str0" x1="449.07" y1="328.67" x2="449.07" y2= "339.61" />
-    <line class="fil4 str0" x1="449.07" y1="427.18" x2="449.07" y2= "438.12" />
+    <line class="fil4 str0" x1="465.49" y1="356.27" x2="465.49" y2= "328.9" />
+    <line class="fil4 str0" x1="410.76" y1="356.03" x2="410.76" y2= "328.67" />
+    <line class="fil4 str0" x1="410.76" y1="438.12" x2="410.76" y2= "410.76" />
+    <line class="fil4 str0" x1="465.49" y1="438.12" x2="465.49" y2= "410.76" />
+    <line class="fil4 str0" x1="432.65" y1="432.65" x2="432.65" y2= "438.12" />
+    <line class="fil4 str0" x1="432.65" y1="328.67" x2="432.65" y2= "334.14" />
+    <line class="fil4 str0" x1="520.21" y1="438.12" x2="520.21" y2= "410.76" />
+    <line class="fil4 str0" x1="520.21" y1="410.76" x2="547.58" y2= "410.76" />
+    <line class="fil4 str0" x1="542.1" y1="432.65" x2="547.58" y2= "432.65" />
+    <line class="fil4 str0" x1="542.1" y1="438.12" x2="542.1" y2= "432.65" />
+    <polyline class="fil4 str0" points="547.58,334.14 542.21,334.14 542.21,328.67 "/>
+    <polyline class="fil4 str0" points="520.21,328.67 520.21,356.03 542.1,356.03 "/>
+    <line class="fil4 str0" x1="356.03" y1="410.76" x2="356.03" y2= "438.12" />
+    <polyline class="fil4 str0" points="356.03,328.67 356.03,356.03 328.67,356.03 "/>
+    <polyline class="fil4 str0" points="334.14,328.67 334.14,334.14 328.67,334.14 "/>
+    <line class="fil4 str0" x1="356.87" y1="410.76" x2="329.51" y2= "410.76" />
+    <line class="fil4 str0" x1="334.14" y1="432.65" x2="334.14" y2= "438.12" />
+    <line class="fil4 str0" x1="334.14" y1="432.65" x2="328.67" y2= "432.65" />
+    <line class="fil4 str0" x1="443.59" y1="328.67" x2="443.59" y2= "334.14" />
+    <line class="fil4 str0" x1="443.6" y1="432.65" x2="443.6" y2= "438.08" />
    </g>
-   <g id="Brick_72">
+   <g id="Brick_77">
     <polygon class="fil0 str0" points="766.48,438.12 547.58,438.12 547.58,328.67 766.48,328.67 "/>
-    <polygon class="fil1 str1" points="558.52,427.18 755.54,427.18 755.54,339.61 558.52,339.61 "/>
-    <polygon class="fil2 str1" points="744.59,350.56 569.47,350.56 569.47,416.23 744.59,416.23 "/>
+    <polygon class="fil1 str1" points="553.05,432.65 761.01,432.65 761.01,334.14 553.05,334.14 "/>
+    <polygon class="fil2 str1" points="739.12,356.03 574.94,356.03 574.94,410.76 739.12,410.76 "/>
     <text x="561.59" y="386.05"  class="fil3 fnt0">F</text>
     <text x="599.87" y="347.7"  class="fil3 fnt1">A</text>
     <text x="703.78" y="347.7"  class="fil3 fnt1">B</text>
-    <text x="747.39" y="386.01"  class="fil3 fnt1">C</text>
+    <text x="747.4" y="386.01"  class="fil3 fnt1">C</text>
     <text x="703.56" y="424.32"  class="fil3 fnt1">D</text>
     <text x="599.78" y="424.32"  class="fil3 fnt1">E</text>
     <text x="655.32" y="346.19"  class="fil3 fnt2">ab</text>
     <text x="562.53" y="346.39"  class="fil3 fnt3">fa</text>
     <text x="748.04" y="346.37"  class="fil3 fnt3">bc</text>
     <text x="748.2" y="422.99"  class="fil3 fnt3">cd</text>
-    <text x="655.32" y="422.99"  class="fil3 fnt3">de</text>
+    <text x="655.33" y="422.99"  class="fil3 fnt3">de</text>
     <text x="562.34" y="423.01"  class="fil3 fnt3">ef</text>
-    <line class="fil4 str0" x1="678.92" y1="350.56" x2="678.92" y2= "328.67" />
-    <line class="fil4 str0" x1="635.14" y1="350.56" x2="635.14" y2= "328.67" />
-    <line class="fil4 str0" x1="635.14" y1="438.12" x2="635.14" y2= "416.23" />
-    <line class="fil4 str0" x1="678.92" y1="438.12" x2="678.92" y2= "416.23" />
-    <line class="fil4 str0" x1="646.08" y1="427.18" x2="646.08" y2= "438.12" />
-    <line class="fil4 str0" x1="646.08" y1="328.67" x2="646.08" y2= "339.61" />
-    <line class="fil4 str0" x1="744.59" y1="438.12" x2="744.59" y2= "416.03" />
-    <line class="fil4 str0" x1="744.59" y1="416.23" x2="766.48" y2= "416.23" />
-    <polyline class="fil4 str0" points="755.54,438.12 755.54,427.18 766.48,427.18 "/>
-    <polyline class="fil4 str0" points="766.48,339.61 755.74,339.61 755.74,328.67 "/>
-    <polyline class="fil4 str0" points="744.59,328.67 744.59,350.56 766.48,350.56 "/>
-    <line class="fil4 str0" x1="569.47" y1="416.23" x2="569.47" y2= "438.12" />
-    <polyline class="fil4 str0" points="569.47,328.67 569.47,350.56 547.58,350.56 "/>
-    <polyline class="fil4 str0" points="558.52,328.67 558.52,339.61 547.58,339.61 "/>
-    <line class="fil4 str0" x1="569.47" y1="416.23" x2="547.58" y2= "416.23" />
-    <line class="fil4 str0" x1="558.52" y1="427.18" x2="558.52" y2= "438.12" />
-    <line class="fil4 str0" x1="558.52" y1="427.18" x2="547.58" y2= "427.18" />
-    <line class="fil4 str0" x1="667.97" y1="328.67" x2="667.97" y2= "339.61" />
-    <line class="fil4 str0" x1="667.97" y1="427.18" x2="667.97" y2= "438.12" />
+    <line class="fil4 str0" x1="684.39" y1="356.27" x2="684.39" y2= "328.9" />
+    <line class="fil4 str0" x1="629.67" y1="356.03" x2="629.67" y2= "328.67" />
+    <line class="fil4 str0" x1="629.67" y1="438.12" x2="629.67" y2= "410.76" />
+    <line class="fil4 str0" x1="684.39" y1="438.12" x2="684.39" y2= "410.76" />
+    <line class="fil4 str0" x1="651.56" y1="432.65" x2="651.56" y2= "438.12" />
+    <line class="fil4 str0" x1="651.56" y1="328.67" x2="651.56" y2= "334.14" />
+    <line class="fil4 str0" x1="739.12" y1="438.12" x2="739.12" y2= "410.76" />
+    <line class="fil4 str0" x1="739.12" y1="410.76" x2="766.48" y2= "410.76" />
+    <line class="fil4 str0" x1="761.01" y1="432.65" x2="766.48" y2= "432.65" />
+    <line class="fil4 str0" x1="761.01" y1="438.12" x2="761.01" y2= "432.65" />
+    <polyline class="fil4 str0" points="766.48,334.14 761.11,334.14 761.11,328.67 "/>
+    <polyline class="fil4 str0" points="739.12,328.67 739.12,356.03 761.01,356.03 "/>
+    <line class="fil4 str0" x1="574.94" y1="410.76" x2="574.94" y2= "438.12" />
+    <polyline class="fil4 str0" points="574.94,328.67 574.94,356.03 547.58,356.03 "/>
+    <polyline class="fil4 str0" points="553.05,328.67 553.05,334.14 547.58,334.14 "/>
+    <line class="fil4 str0" x1="575.78" y1="410.76" x2="548.41" y2= "410.76" />
+    <line class="fil4 str0" x1="553.05" y1="432.65" x2="553.05" y2= "438.12" />
+    <line class="fil4 str0" x1="553.05" y1="432.65" x2="547.58" y2= "432.65" />
+    <line class="fil4 str0" x1="662.5" y1="328.67" x2="662.5" y2= "334.14" />
+    <line class="fil4 str0" x1="662.5" y1="432.65" x2="662.5" y2= "438.08" />
    </g>
   </g>
  </g>

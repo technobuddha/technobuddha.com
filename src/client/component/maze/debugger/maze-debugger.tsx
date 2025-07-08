@@ -8,11 +8,13 @@ import {
   BrickMaze,
   CircularMaze,
   CubicMaze,
+  type Direction,
   HexagonMaze,
   type Maze,
   type MazeProperties,
   OctogonMaze,
   PentagonMaze,
+  type Pillar,
   SquareMaze,
   TriangleMaze,
   WedgeMaze,
@@ -43,8 +45,8 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
   const [show, setShow] = React.useState('moves');
   const [x, setX] = React.useState(0);
   const [y, setY] = React.useState(0);
-  const [wall, setWall] = React.useState('a');
-  const [pillar, setPillar] = React.useState('ab');
+  const [wall, setWall] = React.useState<Direction>('a');
+  const [pillar, setPillar] = React.useState<Pillar>('ab');
   const [maze, setMaze] = React.useState<Maze>();
   const [errors, setErrors] = React.useState<string[]>([]);
   const [cellSize, setCellSize] = React.useState<number>();
@@ -71,11 +73,11 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
   }, []);
 
   const handleWallChange = React.useCallback((value: string): void => {
-    setWall(value);
+    setWall(value as Direction);
   }, []);
 
   const handlePillarChange = React.useCallback((value: string): void => {
-    setPillar(value);
+    setPillar(value as Pillar);
   }, []);
 
   const handleRemoveWalls = React.useCallback(() => {
@@ -170,7 +172,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
               }
               case 'paths': {
                 maze.drawPath(
-                  maze.drawCell({ ...move.target, direction: maze.opposite(move.target) }),
+                  maze.drawCell({ ...move.target, direction: maze.opposite(move.target.facing) }),
                   'cyan',
                 );
                 break;
@@ -190,19 +192,19 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
     if (maze) {
       for (const cell of maze.cellsInMaze()) {
-        for (const direction of Object.keys(maze.nexus(cell).walls)) {
+        for (const direction of Object.keys(maze.nexus(cell).walls) as Direction[]) {
           const move = maze.move(cell, direction);
           if (maze.inMaze(move)) {
-            const back = maze.move(move, maze.opposite(move));
+            const back = maze.move(move, maze.opposite(move.facing));
             if (back) {
               if (cell.x !== back.x || cell.y !== back.y) {
                 err.push(
-                  `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move)} }; back = { x: ${back.x}, y: ${back.y}}`,
+                  `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move.facing)} }; back = { x: ${back.x}, y: ${back.y}}`,
                 );
               }
             } else {
               err.push(
-                `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move)} }; back = NULL`,
+                `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move.facing)} }; back = NULL`,
               );
             }
 
@@ -213,7 +215,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
             if (rt.some((t, i) => t !== ltr.at(i))) {
               err.push(
-                `{ x: ${move.x}, y: ${move.y}, direction: ${move.direction}}: rt[${rt.join(',')}] != lt[${lt.join(';')} --- ${ltr.join(',')}]`,
+                `{ x: ${move.x}, y: ${move.y}, facing: ${move.facing}}: rt[${rt.join(',')}] != lt[${lt.join(';')} --- ${ltr.join(',')}]`,
               );
             }
           }
@@ -222,11 +224,11 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
       for (const cell of maze.cellsInMaze()) {
         for (const move of maze.moves(cell, { wall: 'all' })) {
-          const back = maze.move(move.target, maze.opposite(move.target));
+          const back = maze.move(move.target, maze.opposite(move.target.facing));
           if (back) {
             if (cell.x !== back.x || cell.y !== back.y) {
               err.push(
-                `{ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}} = { x: ${move.target.x}, y: ${move.target.y} } back = { x: ${back.x}, y: ${back.y}, ${maze.opposite(move.target)} }`,
+                `{ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}} = { x: ${move.target.x}, y: ${move.target.y} } back = { x: ${back.x}, y: ${back.y}, ${maze.opposite(move.target.facing)} }`,
               );
             }
           } else {

@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/consistent-destructuring */
-import { modulo, type Rect } from '@technobuddha/library';
+import { type Cartesian, modulo, type Rect } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -32,8 +32,6 @@ export class OctogonMaze extends Maze {
       groupWidth: this.cellSize,
       horizontalCellsPerGroup: 2,
       groupHeight: this.cellSize,
-      rightPadding: this.cellSize * 0.25,
-      bottomPadding: this.cellSize * 0.25,
       custom({ width, height, actualWidth, actualHeight }: CustomDrawingSize): CustomDrawingSize {
         return {
           width: modulo(width, 2) === 0 ? width - 1 : width,
@@ -54,20 +52,23 @@ export class OctogonMaze extends Maze {
     return modulo(cell.x, 2);
   }
 
-  protected cellOffsets(cell: Cell): Record<string, number> {
+  protected cellOrigin(cell: Cell): Cartesian {
     switch (this.cellKind(cell)) {
       case 0: {
-        return this.translateOffsets(cell, cell.x * this.cellSize * 0.5, cell.y * this.cellSize);
+        return { x: cell.x * this.cellSize * 0.5, y: cell.y * this.cellSize };
+      }
+
+      case 1: {
+        const ao = this.cellSize / (1 + Math.SQRT2);
+
+        return {
+          x: ((cell.x - 1) * this.cellSize) / 2 + this.cellSize - Math.sqrt((ao * ao) / 2),
+          y: cell.y * this.cellSize + this.cellSize - Math.sqrt((ao * ao) / 2),
+        };
       }
 
       default: {
-        const ao = this.cellSize / (1 + Math.SQRT2);
-
-        return this.translateOffsets(
-          cell,
-          ((cell.x - 1) * this.cellSize) / 2 + this.cellSize - Math.sqrt((ao * ao) / 2),
-          cell.y * this.cellSize + this.cellSize - Math.sqrt((ao * ao) / 2),
-        );
+        throw new Error(`Unknown cell kind: ${this.cellKind(cell)}`);
       }
     }
   }
@@ -440,6 +441,7 @@ export class OctogonMaze extends Maze {
         case 'a': {
           const { xd, xf, xg, xi, y0, y2 } = this.cellOffsets(cell);
           this.drawing.rect({ x: xd, y: y0 }, { x: xf, y: y2 }, color);
+          this.drawing.rect({ x: xf, y: y0 }, { x: xg, y: y2 }, this.cellColor);
           this.drawing.rect({ x: xg, y: y0 }, { x: xi, y: y2 }, color);
           break;
         }
@@ -457,6 +459,15 @@ export class OctogonMaze extends Maze {
           );
           this.drawing.polygon(
             [
+              { x: xn, y: y4 },
+              { x: xr, y: y8 },
+              { x: xq, y: y9 },
+              { x: xm, y: y5 },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
               { x: xr, y: y8 },
               { x: xu, y: ya },
               { x: xs, y: yb },
@@ -469,6 +480,7 @@ export class OctogonMaze extends Maze {
         case 'c': {
           const { xt, xv, yd, yf, yg, yi } = this.cellOffsets(cell);
           this.drawing.rect({ x: xt, y: yd }, { x: xv, y: yf }, color);
+          this.drawing.rect({ x: xt, y: yf }, { x: xv, y: yg }, this.cellColor);
           this.drawing.rect({ x: xt, y: yg }, { x: xv, y: yi }, color);
           break;
         }
@@ -486,6 +498,15 @@ export class OctogonMaze extends Maze {
           );
           this.drawing.polygon(
             [
+              { x: xm, y: yq },
+              { x: xq, y: ym },
+              { x: xr, y: yn },
+              { x: xn, y: yr },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
               { x: xq, y: ym },
               { x: xs, y: yk },
               { x: xu, y: yl },
@@ -498,6 +519,7 @@ export class OctogonMaze extends Maze {
         case 'e': {
           const { xd, xf, xg, xi, yt, yv } = this.cellOffsets(cell);
           this.drawing.rect({ x: xd, y: yt }, { x: xf, y: yv }, color);
+          this.drawing.rect({ x: xf, y: yt }, { x: xg, y: yv }, this.cellColor);
           this.drawing.rect({ x: xg, y: yt }, { x: xi, y: yv }, color);
           break;
         }
@@ -515,6 +537,15 @@ export class OctogonMaze extends Maze {
           );
           this.drawing.polygon(
             [
+              { x: x5, y: ym },
+              { x: x9, y: yq },
+              { x: x8, y: yr },
+              { x: x4, y: yn },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
               { x: x9, y: yq },
               { x: xb, y: ys },
               { x: xa, y: yu },
@@ -528,6 +559,7 @@ export class OctogonMaze extends Maze {
         case 'g': {
           const { x0, x2, yd, yf, yg, yi } = this.cellOffsets(cell);
           this.drawing.rect({ x: x0, y: yd }, { x: x2, y: yf }, color);
+          this.drawing.rect({ x: x0, y: yf }, { x: x2, y: yg }, this.cellColor);
           this.drawing.rect({ x: x0, y: yg }, { x: x2, y: yi }, color);
           break;
         }
@@ -543,6 +575,15 @@ export class OctogonMaze extends Maze {
               { x: x3, y: yb },
             ],
             color,
+          );
+          this.drawing.polygon(
+            [
+              { x: x4, y: y8 },
+              { x: x8, y: y4 },
+              { x: x9, y: y5 },
+              { x: x5, y: y9 },
+            ],
+            this.cellColor,
           );
           this.drawing.polygon(
             [
@@ -570,6 +611,15 @@ export class OctogonMaze extends Maze {
           );
           this.drawing.polygon(
             [
+              { x: xc, y: y3 },
+              { x: xf, y: y6 },
+              { x: xe, y: y7 },
+              { x: xb, y: y4 },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
               { x: xf, y: y6 },
               { x: xh, y: y8 },
               { x: xg, y: y9 },
@@ -591,6 +641,15 @@ export class OctogonMaze extends Maze {
               { x: xa, y: yh },
             ],
             color,
+          );
+          this.drawing.polygon(
+            [
+              { x: xb, y: ye },
+              { x: xe, y: yb },
+              { x: xf, y: yc },
+              { x: xc, y: yf },
+            ],
+            this.cellColor,
           );
           this.drawing.polygon(
             [
@@ -618,6 +677,15 @@ export class OctogonMaze extends Maze {
           );
           this.drawing.polygon(
             [
+              { x: x4, y: yb },
+              { x: x7, y: ye },
+              { x: x6, y: yf },
+              { x: x3, y: yc },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
               { x: x7, y: ye },
               { x: x9, y: yg },
               { x: x8, y: yh },
@@ -639,6 +707,15 @@ export class OctogonMaze extends Maze {
               { x: x2, y: y9 },
             ],
             color,
+          );
+          this.drawing.polygon(
+            [
+              { x: x3, y: y6 },
+              { x: x6, y: y3 },
+              { x: x7, y: y4 },
+              { x: x4, y: y7 },
+            ],
+            this.cellColor,
           );
           this.drawing.polygon(
             [

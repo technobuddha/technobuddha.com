@@ -1,4 +1,4 @@
-import { modulo, type Rect } from '@technobuddha/library';
+import { type Cartesian, modulo, type Rect } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -42,12 +42,11 @@ export class TriangleMaze extends Maze {
     return modulo(cell.x + cell.y, 2);
   }
 
-  protected cellOffsets(cell: Cell): Record<string, number> {
-    return this.translateOffsets(
-      cell,
-      cell.x * this.cellSize * 0.5,
-      cell.y * this.cellSize * SIN60,
-    );
+  protected cellOrigin(cell: Cell): Cartesian {
+    return {
+      x: cell.x * this.cellSize * 0.5,
+      y: cell.y * this.cellSize * SIN60,
+    };
   }
 
   protected offsets(kind: Kind): Record<string, number> {
@@ -119,12 +118,20 @@ export class TriangleMaze extends Maze {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0: {
-          const { x0, x9, xi, y0, yb } = this.cellOffsets(cell);
+          const { x0, x2, x9, xg, xi, y0, y2, ya, yb } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
               { x: x0, y: yb },
               { x: x9, y: y0 },
               { x: xi, y: yb },
+            ],
+            this.backgroundColor,
+          );
+          this.drawing.polygon(
+            [
+              { x: x2, y: ya },
+              { x: xg, y: ya },
+              { x: x9, y: y2 },
             ],
             color,
           );
@@ -132,12 +139,20 @@ export class TriangleMaze extends Maze {
         }
 
         case 1: {
-          const { x0, x9, xi, y0, yb } = this.cellOffsets(cell);
+          const { x0, x1, x9, xg, xi, y0, y1, yb, y9 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
               { x: x0, y: y0 },
               { x: xi, y: y0 },
               { x: x9, y: yb },
+            ],
+            this.backgroundColor,
+          );
+          this.drawing.polygon(
+            [
+              { x: x1, y: y1 },
+              { x: xg, y: y1 },
+              { x: x9, y: y9 },
             ],
             color,
           );
@@ -233,6 +248,7 @@ export class TriangleMaze extends Maze {
         case 'a': {
           const { x2, x5, xd, xg, y0, y1 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x2, y: y0 }, { x: x5, y: y1 }, color);
+          this.drawing.rect({ x: x5, y: y0 }, { x: xd, y: y1 }, this.cellColor);
           this.drawing.rect({ x: xd, y: y0 }, { x: xg, y: y1 }, color);
           break;
         }
@@ -251,6 +267,15 @@ export class TriangleMaze extends Maze {
           );
           this.drawing.polygon(
             [
+              { x: xe, y: y7 },
+              { x: xf, y: y6 },
+              { x: xc, y: y3 },
+              { x: xb, y: y4 },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
               { x: xf, y: y6 },
               { x: xh, y: y9 },
               { x: xg, y: ya },
@@ -262,7 +287,7 @@ export class TriangleMaze extends Maze {
         }
 
         case 'c': {
-          const { x9, xa, xb, xc, xe, xf, xg, xi, y1, y2, y4, y5, y7, y8, y9, ya } =
+          const { x9, xa, xb, xc, xe, xf, xg, xh, y1, y2, y4, y5, y7, y8, y9, ya } =
             this.cellOffsets(cell);
           this.drawing.polygon(
             [
@@ -276,9 +301,18 @@ export class TriangleMaze extends Maze {
           this.drawing.polygon(
             [
               { x: xe, y: y4 },
-              { x: xg, y: y1 },
-              { x: xi, y: y2 },
               { x: xf, y: y5 },
+              { x: xc, y: y8 },
+              { x: xb, y: y7 },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
+              { x: xf, y: y5 },
+              { x: xh, y: y2 },
+              { x: xg, y: y1 },
+              { x: xe, y: y4 },
             ],
             color,
           );
@@ -288,6 +322,7 @@ export class TriangleMaze extends Maze {
         case 'd': {
           const { x2, x5, xd, xg, ya, yb } = this.cellOffsets(cell);
           this.drawing.rect({ x: x2, y: ya }, { x: x5, y: yb }, color);
+          this.drawing.rect({ x: x5, y: ya }, { x: xd, y: yb }, this.cellColor);
           this.drawing.rect({ x: xd, y: ya }, { x: xg, y: yb }, color);
           break;
         }
@@ -303,6 +338,15 @@ export class TriangleMaze extends Maze {
               { x: x3, y: y5 },
             ],
             color,
+          );
+          this.drawing.polygon(
+            [
+              { x: x6, y: y8 },
+              { x: x7, y: y7 },
+              { x: x4, y: y4 },
+              { x: x3, y: y5 },
+            ],
+            this.cellColor,
           );
           this.drawing.polygon(
             [
@@ -327,6 +371,15 @@ export class TriangleMaze extends Maze {
               { x: x2, y: ya },
             ],
             color,
+          );
+          this.drawing.polygon(
+            [
+              { x: x6, y: y3 },
+              { x: x7, y: y4 },
+              { x: x4, y: y7 },
+              { x: x3, y: y6 },
+            ],
+            this.cellColor,
           );
           this.drawing.polygon(
             [

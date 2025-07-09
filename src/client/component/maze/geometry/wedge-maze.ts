@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
-import { modulo, type Rect } from '@technobuddha/library';
+import { type Cartesian, modulo, type Rect } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -17,7 +17,7 @@ const { SQRT2, SQRT1_2 } = Math;
 export type WedgeMazeProperties = MazeProperties;
 
 export class WedgeMaze extends Maze {
-  public constructor({ cellSize = 32, wallSize = 1, voidSize = 2, ...props }: WedgeMazeProperties) {
+  public constructor({ cellSize = 32, wallSize = 1, voidSize = 1, ...props }: WedgeMazeProperties) {
     super({ cellSize, wallSize, voidSize, ...props }, matrix);
   }
 
@@ -34,12 +34,11 @@ export class WedgeMaze extends Maze {
     return modulo(cell.x + modulo(cell.y, 2) * 2, 4);
   }
 
-  protected cellOffsets(cell: Cell): Record<string, number> {
-    return this.translateOffsets(
-      cell,
-      Math.floor(cell.x * 0.5) * this.cellSize,
-      cell.y * this.cellSize,
-    );
+  protected cellOrigin(cell: Cell): Cartesian {
+    return {
+      x: Math.floor(cell.x * 0.5) * this.cellSize,
+      y: cell.y * this.cellSize,
+    };
   }
 
   protected offsets(kind: Kind): Record<string, number> {
@@ -52,12 +51,12 @@ export class WedgeMaze extends Maze {
     const x2 = x1 + w;
     const x3 = x2 + v * SQRT1_2;
     const x4 = x2 + w * SQRT1_2;
-    const x5 = x4 + v * SQRT1_2;
+    const x5 = x3 + w * SQRT1_2;
     const xd = x0 + c;
     const xc = xd - (v + v * SQRT2);
     const xa = xc - w;
     const xb = xa + v * SQRT1_2;
-    const x8 = xa - w * SQRT1_2;
+    const x8 = xb - w * SQRT1_2;
     const x7 = xa - w * SQRT1_2;
     const x6 = x7 - w * SQRT1_2;
     const x9 = x6 + w;
@@ -67,12 +66,12 @@ export class WedgeMaze extends Maze {
     const y2 = y1 + w;
     const y3 = y2 + v * SQRT1_2;
     const y4 = y2 + w * SQRT1_2;
-    const y5 = y4 + w * SQRT1_2;
+    const y5 = y3 + w * SQRT1_2;
     const yd = y0 + c;
     const yc = yd - (v + v * SQRT2);
     const ya = yc - w;
-    const yb = ya - w * SQRT1_2;
-    const y8 = ya - w * SQRT1_2;
+    const yb = ya + v * SQRT1_2;
+    const y8 = yb - w * SQRT1_2;
     const y7 = ya - w * SQRT1_2;
     const y6 = y7 - w * SQRT1_2;
     const y9 = y6 + w;
@@ -118,12 +117,20 @@ export class WedgeMaze extends Maze {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0: {
-          const { x0, xd, y0, yd } = this.cellOffsets(cell);
+          const { x0, x1, xc, xd, y0, y1, yc, yd } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
               { x: x0, y: y0 },
               { x: xd, y: y0 },
               { x: x0, y: yd },
+            ],
+            this.backgroundColor,
+          );
+          this.drawing.polygon(
+            [
+              { x: x1, y: y1 },
+              { x: xc, y: y1 },
+              { x: x1, y: yc },
             ],
             color,
           );
@@ -131,12 +138,20 @@ export class WedgeMaze extends Maze {
         }
 
         case 1: {
-          const { x0, xd, y0, yd } = this.cellOffsets(cell);
+          const { x0, x1, xc, xd, y0, y1, yc, yd } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
               { x: x0, y: yd },
               { x: xd, y: y0 },
               { x: xd, y: yd },
+            ],
+            this.backgroundColor,
+          );
+          this.drawing.polygon(
+            [
+              { x: x1, y: yc },
+              { x: xc, y: yc },
+              { x: xc, y: y1 },
             ],
             color,
           );
@@ -144,12 +159,20 @@ export class WedgeMaze extends Maze {
         }
 
         case 2: {
-          const { x0, xd, y0, yd } = this.cellOffsets(cell);
+          const { x0, x1, xc, xd, y0, y1, yc, yd } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
               { x: x0, y: y0 },
               { x: x0, y: yd },
               { x: xd, y: yd },
+            ],
+            this.backgroundColor,
+          );
+          this.drawing.polygon(
+            [
+              { x: x1, y: yc },
+              { x: xc, y: yc },
+              { x: x1, y: y1 },
             ],
             color,
           );
@@ -157,12 +180,20 @@ export class WedgeMaze extends Maze {
         }
 
         case 3: {
-          const { x0, xd, y0, yd } = this.cellOffsets(cell);
+          const { x0, x1, xc, xd, y0, y1, yc, yd } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
               { x: x0, y: y0 },
               { x: xd, y: y0 },
               { x: xd, y: yd },
+            ],
+            this.backgroundColor,
+          );
+          this.drawing.polygon(
+            [
+              { x: x1, y: y1 },
+              { x: xc, y: y1 },
+              { x: xc, y: yc },
             ],
             color,
           );
@@ -288,6 +319,7 @@ export class WedgeMaze extends Maze {
         case 'a': {
           const { x1, x2, x6, x7, y0, y1 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x1, y: y0 }, { x: x2, y: y1 }, color);
+          this.drawing.rect({ x: x2, y: y0 }, { x: x6, y: y1 }, this.cellColor);
           this.drawing.rect({ x: x6, y: y0 }, { x: x7, y: y1 }, color);
           break;
         }
@@ -306,9 +338,18 @@ export class WedgeMaze extends Maze {
           );
           this.drawing.polygon(
             [
+              { x: x8, y: y5 },
+              { x: x5, y: y8 },
+              { x: x4, y: y7 },
               { x: x7, y: y4 },
-              { x: xa, y: y2 },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
+              { x: x7, y: y4 },
               { x: xb, y: y3 },
+              { x: xa, y: y2 },
               { x: x8, y: y5 },
             ],
             color,
@@ -319,6 +360,7 @@ export class WedgeMaze extends Maze {
         case 'c': {
           const { x0, x1, y1, y2, y6, y7 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y2 }, color);
+          this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y6 }, this.cellColor);
           this.drawing.rect({ x: x0, y: y6 }, { x: x1, y: y7 }, color);
           break;
         }
@@ -338,6 +380,15 @@ export class WedgeMaze extends Maze {
           this.drawing.polygon(
             [
               { x: x8, y: y5 },
+              { x: x5, y: y8 },
+              { x: x6, y: y9 },
+              { x: x9, y: y6 },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
+              { x: x8, y: y5 },
               { x: xa, y: y2 },
               { x: xb, y: y3 },
               { x: x9, y: y6 },
@@ -350,6 +401,7 @@ export class WedgeMaze extends Maze {
         case 'e': {
           const { xc, xd, y4, y7, yb, yc } = this.cellOffsets(cell);
           this.drawing.rect({ x: xc, y: y4 }, { x: xd, y: y7 }, color);
+          this.drawing.rect({ x: xc, y: y7 }, { x: xd, y: yb }, this.cellColor);
           this.drawing.rect({ x: xc, y: yb }, { x: xd, y: yc }, color);
           break;
         }
@@ -357,6 +409,7 @@ export class WedgeMaze extends Maze {
         case 'f': {
           const { x4, x7, xb, xc, yc, yd } = this.cellOffsets(cell);
           this.drawing.rect({ x: x4, y: yc }, { x: x7, y: yd }, color);
+          this.drawing.rect({ x: x7, y: yc }, { x: xb, y: yd }, this.cellColor);
           this.drawing.rect({ x: xb, y: yc }, { x: xc, y: yd }, color);
           break;
         }
@@ -375,6 +428,15 @@ export class WedgeMaze extends Maze {
           );
           this.drawing.polygon(
             [
+              { x: x4, y: y6 },
+              { x: x7, y: y9 },
+              { x: x8, y: y8 },
+              { x: x5, y: y5 },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
               { x: x8, y: y8 },
               { x: xb, y: ya },
               { x: xa, y: yb },
@@ -388,6 +450,7 @@ export class WedgeMaze extends Maze {
         case 'h': {
           const { x1, x2, x6, x7, yc, yd } = this.cellOffsets(cell);
           this.drawing.rect({ x: x1, y: yc }, { x: x2, y: yd }, color);
+          this.drawing.rect({ x: x2, y: yc }, { x: x6, y: yd }, this.cellColor);
           this.drawing.rect({ x: x6, y: yc }, { x: x7, y: yd }, color);
           break;
         }
@@ -395,6 +458,7 @@ export class WedgeMaze extends Maze {
         case 'i': {
           const { x0, x1, y4, y7, yb, yc } = this.cellOffsets(cell);
           this.drawing.rect({ x: x0, y: y4 }, { x: x1, y: y7 }, color);
+          this.drawing.rect({ x: x0, y: y7 }, { x: x1, y: yb }, this.cellColor);
           this.drawing.rect({ x: x0, y: yb }, { x: x1, y: yc }, color);
           break;
         }
@@ -402,6 +466,7 @@ export class WedgeMaze extends Maze {
         case 'j': {
           const { x4, x7, xb, xc, y0, y1 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x4, y: y0 }, { x: x7, y: y1 }, color);
+          this.drawing.rect({ x: x7, y: y0 }, { x: xb, y: y1 }, this.cellColor);
           this.drawing.rect({ x: xb, y: y0 }, { x: xc, y: y1 }, color);
           break;
         }
@@ -409,6 +474,7 @@ export class WedgeMaze extends Maze {
         case 'k': {
           const { xc, xd, y1, y2, y6, y7 } = this.cellOffsets(cell);
           this.drawing.rect({ x: xc, y: y1 }, { x: xd, y: y2 }, color);
+          this.drawing.rect({ x: xc, y: y2 }, { x: xd, y: y6 }, this.cellColor);
           this.drawing.rect({ x: xc, y: y6 }, { x: xd, y: y7 }, color);
           break;
         }
@@ -424,6 +490,15 @@ export class WedgeMaze extends Maze {
               { x: x2, y: y3 },
             ],
             color,
+          );
+          this.drawing.polygon(
+            [
+              { x: x6, y: y4 },
+              { x: x9, y: y7 },
+              { x: x8, y: y8 },
+              { x: x5, y: y5 },
+            ],
+            this.cellColor,
           );
           this.drawing.polygon(
             [

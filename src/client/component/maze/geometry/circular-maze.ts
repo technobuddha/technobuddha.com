@@ -1,4 +1,4 @@
-import { type Rect, toCartesian, toRadians } from '@technobuddha/library';
+import { type Cartesian, type Rect, toCartesian, toRadians } from '@technobuddha/library';
 
 import { matrix } from './circular-matrix.ts';
 import {
@@ -24,7 +24,7 @@ export class CircularMaze extends Maze {
   protected readonly zones: number[] = [];
 
   public constructor({
-    cellSize = 18,
+    cellSize = 28,
     wallSize = 2,
     centerRadius = 18,
     centerSegments = 1,
@@ -35,7 +35,7 @@ export class CircularMaze extends Maze {
       {
         cellSize,
         wallSize,
-        voidSize: 1,
+        voidSize: 2,
         ...props,
         wrapHorizontal: false,
         wrapVertical: false,
@@ -180,7 +180,11 @@ export class CircularMaze extends Maze {
     return { x, y };
   }
 
-  protected cellOffsets(cell: Cell): Record<string, number> {
+  protected cellOrigin(_cell: Cell): Cartesian {
+    throw new Error('not used by circular maze');
+  }
+
+  protected override cellOffsets(cell: Cell): Record<string, number> {
     let { cx, cy, r0, r1, r2, r3, r4, r5 } = this.offsets(this.cellKind(cell));
 
     const cols = this.zones[cell.y];
@@ -383,13 +387,16 @@ export class CircularMaze extends Maze {
       switch (cell.direction) {
         case 'a': {
           const { cx, cy, r4, r5, a1, a4, ac, af } = this.cellOffsets(cell);
-          this.drawing.arc(cx, cy, r4, r5, ac, af, color);
           this.drawing.arc(cx, cy, r4, r5, a1, a4, color);
+          this.drawing.arc(cx, cy, r4, r5, a4, ac, this.cellColor);
+          this.drawing.arc(cx, cy, r4, r5, ac, af, color);
+
           break;
         }
         case 'b': {
           const { cx, cy, r1, r2, r3, r4, ae, af, ag } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r1, r2, ae, ag, color);
+          this.drawing.arc(cx, cy, r2, r4, af, ag, this.cellColor);
           this.drawing.arc(cx, cy, r3, r4, af, ag, color);
           break;
         }
@@ -398,25 +405,29 @@ export class CircularMaze extends Maze {
         case 'h': {
           const { cx, cy, r0, r1, a3, a5, ab, ad } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r0, r1, a3, a5, color);
+          this.drawing.arc(cx, cy, r0, r1, a5, ab, this.cellColor);
           this.drawing.arc(cx, cy, r0, r1, ab, ad, color);
           break;
         }
         case 'd': {
           const { cx, cy, r1, r2, r3, r4, a0, a2, a5 } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r1, r2, a0, a5, color);
+          this.drawing.arc(cx, cy, r2, r3, a0, a2, this.cellColor);
           this.drawing.arc(cx, cy, r3, r4, a0, a2, color);
           break;
         }
         case 'e': {
           const { cx, cy, r4, r5, a1, a4, a6, a7 } = this.cellOffsets(cell);
-          this.drawing.arc(cx, cy, r4, r5, a6, a7, color);
           this.drawing.arc(cx, cy, r4, r5, a1, a4, color);
+          this.drawing.arc(cx, cy, r4, r5, a4, a6, this.cellColor);
+          this.drawing.arc(cx, cy, r4, r5, a6, a7, color);
           break;
         }
         case 'f': {
           const { cx, cy, r4, r5, a9, aa, ac, af } = this.cellOffsets(cell);
-          this.drawing.arc(cx, cy, r4, r5, ac, af, color);
           this.drawing.arc(cx, cy, r4, r5, a9, aa, color);
+          this.drawing.arc(cx, cy, r4, r5, aa, ac, this.cellColor);
+          this.drawing.arc(cx, cy, r4, r5, ac, af, color);
           break;
         }
 

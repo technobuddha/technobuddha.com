@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
-import { largestInscribedRectangle, modulo, type Polygon, type Rect } from '@technobuddha/library';
+import {
+  type Cartesian,
+  largestInscribedRectangle,
+  modulo,
+  type Polygon,
+  type Rect,
+} from '@technobuddha/library';
 
 import { alpha } from '../library/alpha.ts';
 
@@ -35,12 +41,11 @@ export class BrickMaze extends Maze {
     return modulo(cell.y, 2);
   }
 
-  protected cellOffsets(cell: Cell): Record<string, number> {
-    return this.translateOffsets(
-      cell,
-      cell.x * this.cellSize * 2 + (this.cellKind(cell) === 0 ? 0 : this.cellSize),
-      cell.y * this.cellSize,
-    );
+  protected cellOrigin(cell: Cell): Cartesian {
+    return {
+      x: cell.x * this.cellSize * 2 + (this.cellKind(cell) === 0 ? 0 : this.cellSize),
+      y: cell.y * this.cellSize,
+    };
   }
 
   protected offsets(_kind: Kind): Record<string, number> {
@@ -119,6 +124,7 @@ export class BrickMaze extends Maze {
         case 'a': {
           const { x1, x2, x3, x4, y0, y1 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x1, y: y0 }, { x: x2, y: y1 }, color);
+          this.drawing.rect({ x: x2, y: y0 }, { x: x3, y: y1 }, this.cellColor);
           this.drawing.rect({ x: x3, y: y0 }, { x: x4, y: y1 }, color);
           break;
         }
@@ -126,6 +132,7 @@ export class BrickMaze extends Maze {
         case 'b': {
           const { x5, x6, x7, x8, y0, y1 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x5, y: y0 }, { x: x6, y: y1 }, color);
+          this.drawing.rect({ x: x6, y: y0 }, { x: x7, y: y1 }, this.cellColor);
           this.drawing.rect({ x: x7, y: y0 }, { x: x8, y: y1 }, color);
           break;
         }
@@ -133,6 +140,7 @@ export class BrickMaze extends Maze {
         case 'c': {
           const { x8, x9, y1, y2, y3, y4 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x8, y: y1 }, { x: x9, y: y2 }, color);
+          this.drawing.rect({ x: x8, y: y2 }, { x: x9, y: y3 }, this.cellColor);
           this.drawing.rect({ x: x8, y: y3 }, { x: x9, y: y4 }, color);
           break;
         }
@@ -140,6 +148,7 @@ export class BrickMaze extends Maze {
         case 'd': {
           const { x5, x6, x7, x8, y4, y5 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x5, y: y4 }, { x: x6, y: y5 }, color);
+          this.drawing.rect({ x: x6, y: y4 }, { x: x7, y: y5 }, this.cellColor);
           this.drawing.rect({ x: x7, y: y4 }, { x: x8, y: y5 }, color);
           break;
         }
@@ -147,6 +156,7 @@ export class BrickMaze extends Maze {
         case 'e': {
           const { x1, x2, x3, x4, y4, y5 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x1, y: y4 }, { x: x2, y: y5 }, color);
+          this.drawing.rect({ x: x2, y: y4 }, { x: x3, y: y5 }, this.cellColor);
           this.drawing.rect({ x: x3, y: y4 }, { x: x4, y: y5 }, color);
           break;
         }
@@ -154,6 +164,7 @@ export class BrickMaze extends Maze {
         case 'f': {
           const { x0, x1, y1, y2, y3, y4 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y2 }, color);
+          this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, this.cellColor);
           this.drawing.rect({ x: x0, y: y3 }, { x: x1, y: y4 }, color);
           break;
         }
@@ -201,7 +212,7 @@ export class BrickMaze extends Maze {
     }
   }
 
-  protected getRect(cell: CellDirection): Rect {
+  protected getRect(cell: Cell): Rect {
     const { x2, x7, y2, y3 } = this.cellOffsets(cell);
 
     const interior: Polygon = [

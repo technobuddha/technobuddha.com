@@ -1,4 +1,4 @@
-import { largestInscribedRectangle, type Rect } from '@technobuddha/library';
+import { type Cartesian, largestInscribedRectangle, type Rect } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -34,8 +34,8 @@ export class SquareMaze extends Maze {
     return 0;
   }
 
-  protected cellOffsets(cell: Cell): Record<string, number> {
-    return this.translateOffsets(cell, cell.x * this.cellSize, cell.y * this.cellSize);
+  protected cellOrigin(cell: Cell): Cartesian {
+    return { x: cell.x * this.cellSize, y: cell.y * this.cellSize };
   }
 
   protected override offsets(_kind: Kind): Record<string, number> {
@@ -100,21 +100,25 @@ export class SquareMaze extends Maze {
       switch (cell.direction) {
         case 'n': {
           this.drawing.rect({ x: x1, y: y1 }, { x: x2, y: y0 }, color);
+          this.drawing.rect({ x: x2, y: y1 }, { x: x3, y: y0 }, this.cellColor);
           this.drawing.rect({ x: x3, y: y1 }, { x: x4, y: y0 }, color);
           break;
         }
         case 's': {
           this.drawing.rect({ x: x1, y: y4 }, { x: x2, y: y5 }, color);
+          this.drawing.rect({ x: x2, y: y4 }, { x: x3, y: y5 }, this.cellColor);
           this.drawing.rect({ x: x3, y: y4 }, { x: x4, y: y5 }, color);
           break;
         }
         case 'e': {
           this.drawing.rect({ x: x4, y: y1 }, { x: x5, y: y2 }, color);
+          this.drawing.rect({ x: x4, y: y2 }, { x: x5, y: y3 }, this.cellColor);
           this.drawing.rect({ x: x4, y: y3 }, { x: x5, y: y4 }, color);
           break;
         }
         case 'w': {
           this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y2 }, color);
+          this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, this.cellColor);
           this.drawing.rect({ x: x0, y: y3 }, { x: x1, y: y4 }, color);
           break;
         }

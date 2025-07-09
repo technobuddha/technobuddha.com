@@ -923,8 +923,23 @@ export abstract class Maze extends Random {
       !this.nexus(cell).mask
     );
   }
+  protected abstract cellOrigin(cell: Cell): Cartesian;
 
-  protected abstract cellOffsets(cell: Cell): Record<string, number>;
+  protected cellOffsets(cell: Cell): Record<string, number> {
+    const { x, y } = this.cellOrigin(cell);
+
+    return Object.fromEntries(
+      Object.entries(this.offsets(this.cellKind(cell))).map(([k, v]) => {
+        if (k.startsWith('x')) {
+          return [k, v + x];
+        }
+        if (k.startsWith('y')) {
+          return [k, v + y];
+        }
+        return [k, v];
+      }),
+    );
+  }
   //#endregion
   //#region Path
   public makePath(history: CellFacing[]): CellTunnel[] {
@@ -1306,20 +1321,6 @@ export abstract class Maze extends Random {
   public abstract drawPillar(cell: Cell, pillar: Pillar, color?: string): void;
   public abstract drawX(cell: Cell, color?: string): void;
   protected abstract getRect(cell: Cell): Rect;
-
-  protected translateOffsets(cell: Cell, x: number, y: number): Record<string, number> {
-    return Object.fromEntries(
-      Object.entries(this.offsets(this.cellKind(cell))).map(([k, v]) => {
-        if (k.startsWith('x')) {
-          return [k, v + x];
-        }
-        if (k.startsWith('y')) {
-          return [k, v + y];
-        }
-        return [k, v];
-      }),
-    );
-  }
   //#endregion
   //#region Location
   public parseLocation(p: Location): Cell {

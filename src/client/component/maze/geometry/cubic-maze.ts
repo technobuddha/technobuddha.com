@@ -1,4 +1,5 @@
 import {
+  type Cartesian,
   largestInscribedRectangle,
   modulo,
   type Polygon,
@@ -44,7 +45,7 @@ export class CubicMaze extends Maze {
     return modulo(cell.x, 3) + 3 * modulo(cell.y, 2);
   }
 
-  protected cellOffsets(cell: Cell): Record<string, number> {
+  protected cellOrigin(cell: Cell): Cartesian {
     let x = Math.floor((cell.x * 2) / 3) * this.cellSize * COS15;
     let y = cell.y * this.cellSize * SIN15 * 5;
 
@@ -56,7 +57,7 @@ export class CubicMaze extends Maze {
       x += this.cellSize * COS15;
     }
 
-    return this.translateOffsets(cell, x, y);
+    return { x, y };
   }
 
   protected offsets(kind: Kind): Record<string, number> {

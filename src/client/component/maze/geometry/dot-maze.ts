@@ -1,4 +1,4 @@
-import { type Rect } from '@technobuddha/library';
+import { type Cartesian, type Rect } from '@technobuddha/library';
 
 import { matrix } from './dot-matrix.ts';
 import {
@@ -34,8 +34,8 @@ export class DotMaze extends Maze {
     return 0;
   }
 
-  protected cellOffsets(cell: Cell): Record<string, number> {
-    return this.translateOffsets(cell, cell.x * this.cellSize, cell.y * this.cellSize);
+  protected cellOrigin(cell: Cell): Cartesian {
+    return { x: cell.x * this.cellSize, y: cell.y * this.cellSize };
   }
 
   protected offsets(_kind: Kind): Record<string, number> {

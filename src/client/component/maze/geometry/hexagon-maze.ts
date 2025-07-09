@@ -1,4 +1,9 @@
-import { largestInscribedRectangle, modulo, type Rect } from '@technobuddha/library';
+import {
+  type Cartesian,
+  largestInscribedRectangle,
+  modulo,
+  type Rect,
+} from '@technobuddha/library';
 
 import { matrix } from './hexagon-matrix.ts';
 import {
@@ -20,7 +25,7 @@ export type HexagonMazeProperties = MazeProperties;
 
 export class HexagonMaze extends Maze {
   public constructor({
-    cellSize = 28,
+    cellSize = 48,
     wallSize = 2,
     voidSize = 2,
     ...props
@@ -42,13 +47,13 @@ export class HexagonMaze extends Maze {
     return modulo(cell.x, 2);
   }
 
-  protected cellOffsets(cell: Cell): Record<string, number> {
-    return this.translateOffsets(
-      cell,
-      cell.x * this.cellSize * 0.75,
-      cell.y * this.cellSize * SIN60 +
+  protected cellOrigin(cell: Cell): Cartesian {
+    return {
+      x: cell.x * this.cellSize * 0.75,
+      y:
+        cell.y * this.cellSize * SIN60 +
         (this.cellKind(cell) === 0 ? 0 : (this.cellSize * SIN60) / 2),
-    );
+    };
   }
 
   protected override offsets(_kind: Kind): Record<string, number> {
@@ -93,49 +98,46 @@ export class HexagonMaze extends Maze {
 
     const ya = y9 + this.voidSize * TAN30 * COS30;
     const yb = y9 + this.wallSize * TAN30 * COS30;
+    const yc = y9 + (this.voidSize + this.wallSize) * TAN30 * COS30;
+
     const yi = y0 + this.cellSize * SIN60;
     const yh = yi - this.voidSize * TAN30 * COS30;
     const yg = yi - this.voidSize;
-    const yf = yi - (this.voidSize + this.wallSize) * TAN30 * COS30;
-    const yd = yi - (this.voidSize + this.wallSize);
+    const yf = yh - this.wallSize * TAN30 * COS30;
+    const yd = yg - this.wallSize;
     const ye = yd + this.wallSize * SIN30;
-    const yc = y9 + (this.voidSize + this.wallSize) * TAN30 * COS30;
 
     // prettier-ignore
     return {
       x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xa, xb, xc, xd, xe, xf, xg, xh, xi, xj, xk, xl, xn, xm,
-      y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, ya, yb, yc, yd, ye, yf, yg, yh, yi,
+      y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, ya, yb, yc, yd, ye, yf, yh, yg, yi,
     };
   }
 
   public override drawFloor(cell: Cell, color = this.cellColor): void {
     if (this.drawing) {
-      const { x0, x2, xa, x9, xd, xe, xl, xm, y0, y2, y9, yh, yi } = this.cellOffsets(cell);
+      const { x0, x2, xa, x9, xd, xe, xl, xm, y0, y2, y9, yg, yi } = this.cellOffsets(cell);
 
-      // First draw the complete hexagon including gaps (background)
-      // Use the outer void coordinates: x0, x9, xe, xm, y0, y9, yi
       this.drawing.polygon(
         [
-          { x: x9, y: y0 }, // Top-left outer edge (including void)
-          { x: xe, y: y0 }, // Top-right outer edge (including void)
-          { x: xm, y: y9 }, // Right outer edge (including void)
-          { x: xe, y: yi }, // Bottom-right outer edge (including void)
-          { x: x9, y: yi }, // Bottom-left outer edge (including void)
-          { x: x0, y: y9 }, // Left outer edge (including void)
+          { x: x9, y: y0 },
+          { x: xe, y: y0 },
+          { x: xm, y: y9 },
+          { x: xe, y: yi },
+          { x: x9, y: yi },
+          { x: x0, y: y9 },
         ],
         this.backgroundColor,
       );
 
-      // Then draw the hexagon without gaps (walls + interior)
-      // Use coordinates that exclude the void areas
       this.drawing.polygon(
         [
-          { x: xa, y: y2 }, // Top-left edge (excluding void)
-          { x: xd, y: y2 }, // Top-right edge (excluding void)
-          { x: xl, y: y9 }, // Right edge (excluding void)
-          { x: xd, y: yh }, // Bottom-right edge (excluding void)
-          { x: xa, y: yh }, // Bottom-left edge (excluding void)
-          { x: x2, y: y9 }, // Left edge (excluding void)
+          { x: xa, y: y2 },
+          { x: xd, y: y2 },
+          { x: xl, y: y9 },
+          { x: xd, y: yg },
+          { x: xa, y: yg },
+          { x: x2, y: y9 },
         ],
         color,
       );
@@ -223,26 +225,36 @@ export class HexagonMaze extends Maze {
         case 'a': {
           const { xa, xb, xc, xd, y0, y2 } = this.cellOffsets(cell);
           this.drawing.rect({ x: xa, y: y0 }, { x: xb, y: y2 }, color);
+          this.drawing.rect({ x: xb, y: y0 }, { x: xc, y: y2 }, this.cellColor);
           this.drawing.rect({ x: xc, y: y0 }, { x: xd, y: y2 }, color);
           break;
         }
         case 'b': {
-          const { xd, xf, xe, xh, xl, xn, xj, xk, y1, y2, y3, y4, y6, y7, y8, y9 } =
+          const { xd, xf, xg, xh, xl, xn, xj, xk, y1, y2, y3, y4, y6, y7, y8, y9 } =
             this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: xe, y: y1 },
+              { x: xf, y: y1 },
               { x: xh, y: y3 },
-              { x: xf, y: y4 },
+              { x: xg, y: y4 },
               { x: xd, y: y2 },
             ],
             color,
           );
           this.drawing.polygon(
             [
+              { x: xh, y: y3 },
               { x: xl, y: y6 },
+              { x: xj, y: y7 },
+              { x: xg, y: y4 },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
+              { x: xk, y: y6 },
               { x: xn, y: y8 },
-              { x: xk, y: y9 },
+              { x: xl, y: y9 },
               { x: xj, y: y7 },
             ],
             color,
@@ -250,22 +262,31 @@ export class HexagonMaze extends Maze {
           break;
         }
         case 'c': {
-          const { xf, xd, xe, xh, xj, xk, xl, xn, y9, ya, yb, yc, ye, yf, yg, yh } =
+          const { xg, xd, xf, xh, xj, xk, xn, y9, ya, yb, yc, ye, yf, yh, yg } =
             this.cellOffsets(cell);
           this.drawing.polygon(
             [
               { x: xk, y: y9 },
               { x: xn, y: ya },
-              { x: xl, y: yc },
+              { x: xk, y: yc },
               { x: xj, y: yb },
             ],
             color,
           );
           this.drawing.polygon(
             [
-              { x: xf, y: ye },
+              { x: xk, y: yc },
               { x: xh, y: yf },
-              { x: xe, y: yh },
+              { x: xg, y: ye },
+              { x: xj, y: yb },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
+              { x: xg, y: ye },
+              { x: xh, y: yf },
+              { x: xf, y: yh },
               { x: xd, y: yg },
             ],
             color,
@@ -275,27 +296,37 @@ export class HexagonMaze extends Maze {
         case 'd': {
           const { xa, xb, xc, xd, yg, yi } = this.cellOffsets(cell);
           this.drawing.rect({ x: xa, y: yg }, { x: xb, y: yi }, color);
+          this.drawing.rect({ x: xb, y: yg }, { x: xc, y: yi }, this.cellColor);
           this.drawing.rect({ x: xc, y: yg }, { x: xd, y: yi }, color);
           break;
         }
         case 'e': {
-          const { x1, x2, x3, x4, x6, x8, x7, xa, ya, y9, yb, yc, ye, yf, yg, yh } =
+          const { x1, x2, x3, x4, x6, x8, x7, xa, ya, y9, yb, yc, ye, yf, yh, yg } =
             this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x3, y: y9 },
+              { x: x2, y: y9 },
               { x: x4, y: yb },
-              { x: x2, y: yc },
+              { x: x3, y: yc },
               { x: x1, y: ya },
             ],
             color,
           );
           this.drawing.polygon(
             [
+              { x: x4, y: yb },
+              { x: x7, y: ye },
+              { x: x6, y: yh },
+              { x: x3, y: yc },
+            ],
+            this.cellColor,
+          );
+          this.drawing.polygon(
+            [
               { x: x7, y: ye },
               { x: x6, y: yf },
-              { x: x8, y: yh },
-              { x: xa, y: yg },
+              { x: x8, y: yg },
+              { x: xa, y: yh },
             ],
             color,
           );
@@ -312,6 +343,15 @@ export class HexagonMaze extends Maze {
               { x: x6, y: y3 },
             ],
             color,
+          );
+          this.drawing.polygon(
+            [
+              { x: x6, y: y3 },
+              { x: x7, y: y4 },
+              { x: x3, y: y9 },
+              { x: x6, y: y3 },
+            ],
+            this.cellColor,
           );
           this.drawing.polygon(
             [
@@ -362,13 +402,13 @@ export class HexagonMaze extends Maze {
         }
 
         case 'cd': {
-          const { xc, xd, xf, yd, ye, yg } = this.cellOffsets(cell);
+          const { xc, xd, xf, yd, ye, yh } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
               { x: xc, y: yd },
               { x: xf, y: ye },
-              { x: xd, y: yg },
-              { x: xc, y: yg },
+              { x: xd, y: yh },
+              { x: xc, y: yh },
             ],
             color,
           );
@@ -376,12 +416,12 @@ export class HexagonMaze extends Maze {
         }
 
         case 'de': {
-          const { x9, xa, xb, yd, ye, yg } = this.cellOffsets(cell);
+          const { x9, xa, xb, yd, ye, yh } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
               { x: xb, y: yd },
-              { x: xb, y: yg },
-              { x: xa, y: yg },
+              { x: xb, y: yh },
+              { x: xa, y: yh },
               { x: x9, y: ye },
             ],
             color,

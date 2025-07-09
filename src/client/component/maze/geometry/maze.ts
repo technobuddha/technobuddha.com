@@ -123,6 +123,44 @@ export function toDirection(facing: Facing): Direction {
   return facing === '!' ? '?' : (facing.toLowerCase() as Direction);
 }
 
+export type MazeColors = {
+  readonly background: string;
+  readonly cell: string;
+  readonly wall: string;
+  readonly mask: string;
+  readonly entrance: string;
+  readonly exit: string;
+  readonly tunnel: string;
+  readonly solution: string;
+  readonly scanned: string;
+  readonly avatar: string;
+  readonly pruned: string;
+  readonly path: string;
+  readonly blocked: string;
+  readonly error: string;
+  readonly bridge: string;
+  readonly text: string;
+};
+
+const defaultColors: NonNullable<MazeColors> = {
+  background: 'oklch(0.20 0 0)',
+  cell: 'oklch(0 0 0)',
+  wall: 'oklch(0.6993 0 0)',
+  mask: 'oklch(0 0 0)',
+  entrance: 'oklch(0.5198 0.176858 142.4953)',
+  exit: 'oklch(0.628 0.2577 29.23)',
+  solution: 'oklch(0.6611 0.115 213.72)',
+  scanned: 'oklch(0.5789 0.2344 0.51)',
+  avatar: 'oklch(0.6611 0.115 213.72)',
+  pruned: 'oklch(0.4446 0.1803 359.81)',
+  blocked: 'oklch(0.6298 0.2145 27.83)',
+  error: 'oklch(0.8664 0.294827 142.4953)',
+  path: 'oklch(0.8145 0.1672 83.88)',
+  tunnel: 'oklch(0.9544 0.0637 196.13)',
+  bridge: 'oklch(0.25 0 0)',
+  text: 'oklch(1 0 0)',
+};
+
 export type MazeProperties = RandomProperties & {
   readonly drawing?: Drawing;
   readonly width?: number;
@@ -135,22 +173,7 @@ export type MazeProperties = RandomProperties & {
   readonly wrapHorizontal?: boolean;
   readonly wrapVertical?: boolean;
 
-  readonly backgroundColor?: string;
-  readonly cellColor?: string;
-  readonly wallColor?: string;
-  readonly maskColor?: string;
-  readonly entranceColor?: string;
-  readonly exitColor?: string;
-  readonly tunnelColor?: string;
-  readonly solutionColor?: string;
-  readonly scannedColor?: string;
-  readonly avatarColor?: string;
-  readonly prunedColor?: string;
-  readonly pathColor?: string;
-  readonly blockedColor?: string;
-  readonly errorColor?: string;
-  readonly bridgeColor?: string;
-  readonly textColor?: string;
+  readonly color?: Partial<MazeColors>;
 
   readonly showDistances?: ShowDistances;
   readonly showCoordinates?: boolean;
@@ -226,24 +249,7 @@ export abstract class Maze extends Random {
   protected readonly braidFactor: NonNullable<MazeProperties['braidFactor']>;
 
   protected drawing: MazeProperties['drawing'];
-  //#endregion
-  //#region Colors
-  public readonly backgroundColor: NonNullable<MazeProperties['backgroundColor']>;
-  public readonly cellColor: NonNullable<MazeProperties['cellColor']>;
-  public readonly wallColor: NonNullable<MazeProperties['wallColor']>;
-  public readonly maskColor: NonNullable<MazeProperties['maskColor']>;
-  public readonly entranceColor: NonNullable<MazeProperties['entranceColor']>;
-  public readonly exitColor: NonNullable<MazeProperties['exitColor']>;
-  public readonly tunnelColor: NonNullable<MazeProperties['tunnelColor']>;
-  public readonly solutionColor: NonNullable<MazeProperties['solutionColor']>;
-  public readonly scannedColor: NonNullable<MazeProperties['scannedColor']>;
-  public readonly avatarColor: NonNullable<MazeProperties['avatarColor']>;
-  public readonly prunedColor: NonNullable<MazeProperties['prunedColor']>;
-  public readonly pathColor: NonNullable<MazeProperties['pathColor']>;
-  public readonly blockedColor: NonNullable<MazeProperties['blockedColor']>;
-  public readonly errorColor: NonNullable<MazeProperties['errorColor']>;
-  public readonly bridgeColor: NonNullable<MazeProperties['bridgeColor']>;
-  public readonly textColor: NonNullable<MazeProperties['textColor']>;
+  public readonly color: NonNullable<Required<MazeColors>>;
   //#endregion
   //#region Matrix
   public readonly directions: Matrix['directions'];
@@ -279,23 +285,7 @@ export abstract class Maze extends Random {
       wrapHorizontal = false,
       wrapVertical = false,
 
-      backgroundColor = 'oklch(0.20 0 0)',
-      cellColor = 'oklch(0 0 0)',
-      wallColor = 'oklch(0.6993 0 0)',
-      maskColor = cellColor,
-      entranceColor = 'oklch(0.5198 0.176858 142.4953)',
-      exitColor = 'oklch(0.628 0.2577 29.23)',
-      solutionColor = 'oklch(0.6611 0.115 213.72)',
-      scannedColor = 'oklch(0.5789 0.2344 0.51)',
-      avatarColor = 'oklch(0.6611 0.115 213.72)',
-      prunedColor = 'oklch(0.4446 0.1803 359.81)',
-      blockedColor = 'oklch(0.6298 0.2145 27.83)',
-      errorColor = 'oklch(0.8664 0.294827 142.4953)',
-
-      pathColor = 'oklch(0.8145 0.1672 83.88)',
-      tunnelColor = 'oklch(0.9544 0.0637 196.13)',
-      bridgeColor = 'oklch(0.25 0 0)',
-      textColor = 'oklch(1 0 0)',
+      color,
 
       showDistances = 'none',
       showCoordinates = false,
@@ -328,22 +318,7 @@ export abstract class Maze extends Random {
 
     this.drawing = drawing;
 
-    this.backgroundColor = backgroundColor;
-    this.cellColor = cellColor;
-    this.wallColor = wallColor;
-    this.maskColor = maskColor;
-    this.entranceColor = entranceColor;
-    this.exitColor = exitColor;
-    this.tunnelColor = tunnelColor;
-    this.solutionColor = solutionColor;
-    this.scannedColor = scannedColor;
-    this.avatarColor = avatarColor;
-    this.prunedColor = prunedColor;
-    this.pathColor = pathColor;
-    this.blockedColor = blockedColor;
-    this.errorColor = errorColor;
-    this.bridgeColor = bridgeColor;
-    this.textColor = textColor;
+    this.color = { ...defaultColors, ...color };
 
     this.showDistances = showDistances;
     this.showCoordinates = showCoordinates;
@@ -759,7 +734,7 @@ export abstract class Maze extends Random {
 
   protected abstract drawingSize(): DrawingSizes;
 
-  public clear(color: string = this.backgroundColor): void {
+  public clear(color: string = this.color.background): void {
     if (this.drawing) {
       this.drawing.clear(color, this.leftOffset, this.topOffset);
     }
@@ -780,7 +755,7 @@ export abstract class Maze extends Random {
   public drawMasks(): void {
     if (this.drawing) {
       for (const cell of this.cellsUnderMask()) {
-        this.drawFloor(cell, this.maskColor);
+        this.drawFloor(cell, this.color.mask);
       }
     }
   }
@@ -791,7 +766,7 @@ export abstract class Maze extends Random {
     if (unreachable.length > 0) {
       logger.error(`Unreachable cells: `, unreachable);
       for (const cell of unreachable) {
-        this.drawCell(cell, this.errorColor);
+        this.drawCell(cell, this.color.error);
       }
     }
 
@@ -801,7 +776,7 @@ export abstract class Maze extends Random {
     //       `Loop detected from {x: ${loop.cell.x}, y: ${loop.cell.y} :: ${loop.distance}} with ${loop.loops.map((l, i) => `{x: ${l.x}, y:${l.y} :: ${loop.distances[i]}}`).join(' ')}`,
     //     );
 
-    //     this.drawX(loop.cell, this.errorColor);
+    //     this.drawX(loop.cell, this.color.error);
     //   }
     // }
 
@@ -829,13 +804,13 @@ export abstract class Maze extends Random {
           let color: string | undefined = undefined;
 
           if (distance === Infinity) {
-            color = this.errorColor;
+            color = this.color.error;
           } else {
             const grey = (1 - distance / maxDistance) * 0.35 + 0.15;
 
             switch (this.showDistances) {
               case 'none': {
-                color = this.cellColor;
+                color = this.color.cell;
                 break;
               }
 
@@ -876,7 +851,7 @@ export abstract class Maze extends Random {
     }
   }
 
-  public drawSolution(color = this.solutionColor): void {
+  public drawSolution(color = this.color.solution): void {
     if (this.drawing) {
       this.drawDistances();
       this.drawPaths(this.solution, color);
@@ -1146,14 +1121,14 @@ export abstract class Maze extends Random {
   //#region Cell Drawing
   public drawCell<T extends Cell>(
     cell: T,
-    cellColor = this.cellColor,
-    wallColor = this.wallColor,
+    cellColor = this.color.cell,
+    wallColor = this.color.wall,
   ): T {
     this.drawFloor(
       cell,
-      this.isSame(cell, this.entrance) ? this.entranceColor
-      : this.isSame(cell, this.exit) ? this.exitColor
-      : this.nexus(cell).bridge ? this.bridgeColor
+      this.isSame(cell, this.entrance) ? this.color.entrance
+      : this.isSame(cell, this.exit) ? this.color.exit
+      : this.nexus(cell).bridge ? this.color.bridge
       : cellColor,
     );
 
@@ -1172,7 +1147,7 @@ export abstract class Maze extends Random {
     return cell;
   }
 
-  public drawWalls(cell: Cell, color = this.wallColor): void {
+  public drawWalls(cell: Cell, color = this.color.wall): void {
     const nexus = this.nexus(cell);
     const { walls, tunnels } = nexus;
 
@@ -1197,7 +1172,7 @@ export abstract class Maze extends Random {
     }
   }
 
-  public drawPillars(cell: Cell, color = this.wallColor): void {
+  public drawPillars(cell: Cell, color = this.color.wall): void {
     const { walls } = this.nexus(cell);
 
     for (const pillar of this.pillars) {
@@ -1207,7 +1182,7 @@ export abstract class Maze extends Random {
     }
   }
 
-  public drawText(cell: Cell, text: string, color = this.textColor): void {
+  public drawText(cell: Cell, text: string, color = this.color.text): void {
     if (this.drawing) {
       const { rect } = this.nexus(cell);
 
@@ -1215,22 +1190,22 @@ export abstract class Maze extends Random {
     }
   }
 
-  public drawBridge(cell: CellDirection, color = this.wallColor): void {
+  public drawBridge(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       this.drawWall(cell, color);
       this.drawDoor(cell, color);
     }
   }
 
-  public drawTunnel(cell: CellDirection, color = this.wallColor): void {
+  public drawTunnel(cell: CellDirection, color = this.color.wall): void {
     this.drawDoor(cell, color);
   }
 
-  public drawDoor(_cell: CellDirection, _color: string = this.wallColor): void {
+  public drawDoor(_cell: CellDirection, _color: string = this.color.wall): void {
     // Most mazes don't have to draw a door, it just the lack of a wall.
   }
 
-  public drawPath(cell: CellDirection, color = this.pathColor): void {
+  public drawPath(cell: CellDirection, color = this.color.path): void {
     if (this.drawing) {
       const { rect } = this.nexus(cell);
       if (cell.direction === '?') {
@@ -1243,7 +1218,7 @@ export abstract class Maze extends Random {
     }
   }
 
-  public drawPaths(cells: CellTunnel[], color = this.pathColor): void {
+  public drawPaths(cells: CellTunnel[], color = this.color.path): void {
     if (this.drawing) {
       for (const cell of cells) {
         this.drawPath(cell, cell.tunnel ? alpha(color, 0.75) : color);
@@ -1251,7 +1226,7 @@ export abstract class Maze extends Random {
     }
   }
 
-  public drawStar(cell: Cell, color = this.avatarColor): void {
+  public drawStar(cell: Cell, color = this.color.avatar): void {
     if (this.drawing) {
       const { rect } = this.nexus(cell);
       this.drawCell(cell);
@@ -1292,7 +1267,7 @@ export abstract class Maze extends Random {
     }
   }
 
-  public drawAvatar(cell: Cell, color = this.avatarColor): void {
+  public drawAvatar(cell: Cell, color = this.color.avatar): void {
     if (this.drawing) {
       this.drawCell(cell);
       const { rect } = this.nexus(cell);

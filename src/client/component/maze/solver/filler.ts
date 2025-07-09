@@ -16,7 +16,7 @@ export class Filler extends MazeSolver {
 
   public constructor({
     maze,
-    blockedColor = maze.prunedColor,
+    blockedColor = maze.color.pruned,
     method = 'cul-de-sac',
     ...props
   }: FillerProperties) {

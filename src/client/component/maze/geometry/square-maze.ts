@@ -15,9 +15,9 @@ export type SquareMazeProperties = MazeProperties;
 
 export class SquareMaze extends Maze {
   public constructor({
-    cellSize = 24,
+    cellSize = 28,
     wallSize = 2,
-    voidSize = 2,
+    voidSize = 1,
     ...props
   }: SquareMazeProperties) {
     super({ cellSize, wallSize, voidSize, ...props }, matrix);
@@ -56,15 +56,15 @@ export class SquareMaze extends Maze {
     return { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 };
   }
 
-  public override drawFloor(cell: Cell, color = this.cellColor): void {
+  public override drawFloor(cell: Cell, color = this.color.cell): void {
     if (this.drawing) {
       const { x0, x1, x4, x5, y0, y1, y4, y5 } = this.cellOffsets(cell);
-      this.drawing.rect({ x: x0, y: y0 }, { x: x5, y: y5 }, this.backgroundColor);
+      this.drawing.rect({ x: x0, y: y0 }, { x: x5, y: y5 }, this.color.background);
       this.drawing.rect({ x: x1, y: y1 }, { x: x4, y: y4 }, color);
     }
   }
 
-  public override drawWall(cell: CellDirection, color = this.wallColor): void {
+  public override drawWall(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       const { x1, x2, x3, x4, y1, y2, y3, y4 } = this.cellOffsets(cell);
 
@@ -92,7 +92,7 @@ export class SquareMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.wallColor): void {
+  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       const { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 } = this.cellOffsets(cell);
 
@@ -100,25 +100,25 @@ export class SquareMaze extends Maze {
       switch (cell.direction) {
         case 'n': {
           this.drawing.rect({ x: x1, y: y1 }, { x: x2, y: y0 }, color);
-          this.drawing.rect({ x: x2, y: y1 }, { x: x3, y: y0 }, this.cellColor);
+          this.drawing.rect({ x: x2, y: y1 }, { x: x3, y: y0 }, this.color.cell);
           this.drawing.rect({ x: x3, y: y1 }, { x: x4, y: y0 }, color);
           break;
         }
         case 's': {
           this.drawing.rect({ x: x1, y: y4 }, { x: x2, y: y5 }, color);
-          this.drawing.rect({ x: x2, y: y4 }, { x: x3, y: y5 }, this.cellColor);
+          this.drawing.rect({ x: x2, y: y4 }, { x: x3, y: y5 }, this.color.cell);
           this.drawing.rect({ x: x3, y: y4 }, { x: x4, y: y5 }, color);
           break;
         }
         case 'e': {
           this.drawing.rect({ x: x4, y: y1 }, { x: x5, y: y2 }, color);
-          this.drawing.rect({ x: x4, y: y2 }, { x: x5, y: y3 }, this.cellColor);
+          this.drawing.rect({ x: x4, y: y2 }, { x: x5, y: y3 }, this.color.cell);
           this.drawing.rect({ x: x4, y: y3 }, { x: x5, y: y4 }, color);
           break;
         }
         case 'w': {
           this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y2 }, color);
-          this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, this.cellColor);
+          this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, this.color.cell);
           this.drawing.rect({ x: x0, y: y3 }, { x: x1, y: y4 }, color);
           break;
         }
@@ -128,7 +128,7 @@ export class SquareMaze extends Maze {
     }
   }
 
-  public override drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
+  public override drawPillar({ x, y }: Cell, pillar: Pillar, color = this.color.wall): void {
     if (this.drawing) {
       const { x1, x2, x3, x4, y1, y2, y3, y4 } = this.cellOffsets({ x, y });
 
@@ -147,7 +147,7 @@ export class SquareMaze extends Maze {
     }
   }
 
-  public override drawX(cell: Cell, color = this.blockedColor): void {
+  public override drawX(cell: Cell, color = this.color.blocked): void {
     if (this.drawing) {
       const { x2, x3, y2, y3 } = this.cellOffsets(cell);
 

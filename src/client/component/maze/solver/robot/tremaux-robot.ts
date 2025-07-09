@@ -23,8 +23,8 @@ export class TremauxRobot extends Robot {
     maze,
     program = 'random',
     showMarks = false,
-    pathColor = maze.pathColor,
-    blockedColor = maze.blockedColor,
+    pathColor = maze.color.path,
+    blockedColor = maze.color.blocked,
     ...props
   }: TremauxRobotProperties) {
     super({ maze, program, ...props });

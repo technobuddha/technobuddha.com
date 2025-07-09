@@ -114,7 +114,7 @@ export class TriangleMaze extends Maze {
     return { ...normalX, ...invertY };
   }
 
-  public drawFloor(cell: Cell, color = this.cellColor): void {
+  public drawFloor(cell: Cell, color = this.color.cell): void {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0: {
@@ -125,7 +125,7 @@ export class TriangleMaze extends Maze {
               { x: x9, y: y0 },
               { x: xi, y: yb },
             ],
-            this.backgroundColor,
+            this.color.background,
           );
           this.drawing.polygon(
             [
@@ -146,7 +146,7 @@ export class TriangleMaze extends Maze {
               { x: xi, y: y0 },
               { x: x9, y: yb },
             ],
-            this.backgroundColor,
+            this.color.background,
           );
           this.drawing.polygon(
             [
@@ -164,7 +164,7 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public drawWall(cell: CellDirection, color = this.wallColor): void {
+  public drawWall(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
@@ -241,14 +241,14 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.wallColor): void {
+  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { x2, x5, xd, xg, y0, y1 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x2, y: y0 }, { x: x5, y: y1 }, color);
-          this.drawing.rect({ x: x5, y: y0 }, { x: xd, y: y1 }, this.cellColor);
+          this.drawing.rect({ x: x5, y: y0 }, { x: xd, y: y1 }, this.color.cell);
           this.drawing.rect({ x: xd, y: y0 }, { x: xg, y: y1 }, color);
           break;
         }
@@ -272,7 +272,7 @@ export class TriangleMaze extends Maze {
               { x: xc, y: y3 },
               { x: xb, y: y4 },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -305,7 +305,7 @@ export class TriangleMaze extends Maze {
               { x: xc, y: y8 },
               { x: xb, y: y7 },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -322,7 +322,7 @@ export class TriangleMaze extends Maze {
         case 'd': {
           const { x2, x5, xd, xg, ya, yb } = this.cellOffsets(cell);
           this.drawing.rect({ x: x2, y: ya }, { x: x5, y: yb }, color);
-          this.drawing.rect({ x: x5, y: ya }, { x: xd, y: yb }, this.cellColor);
+          this.drawing.rect({ x: x5, y: ya }, { x: xd, y: yb }, this.color.cell);
           this.drawing.rect({ x: xd, y: ya }, { x: xg, y: yb }, color);
           break;
         }
@@ -346,7 +346,7 @@ export class TriangleMaze extends Maze {
               { x: x4, y: y4 },
               { x: x3, y: y5 },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -379,7 +379,7 @@ export class TriangleMaze extends Maze {
               { x: x4, y: y7 },
               { x: x3, y: y6 },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -398,7 +398,7 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
+  public drawPillar(cell: Cell, pillar: Pillar, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
@@ -491,7 +491,7 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = this.blockedColor): void {
+  public drawX(cell: Cell, color = this.color.blocked): void {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0: {

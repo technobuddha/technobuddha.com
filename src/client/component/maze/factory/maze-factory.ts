@@ -13,16 +13,13 @@ export class MazeFactory {
   public width: MazeSettings['width'];
   public height: MazeSettings['height'];
   public cellSize: MazeSettings['cellSize'];
-  public cellColor: MazeSettings['cellColor'];
+  public color: MazeSettings['color'];
   public wallSize: MazeSettings['wallSize'];
   public voidSize: MazeSettings['voidSize'];
-  public wallColor: MazeSettings['wallColor'];
   public entrance: MazeSettings['entrance'];
   public exit: MazeSettings['exit'];
   public start: MazeSettings['start'];
   public random: MazeSettings['random'];
-  public maskColor: MazeSettings['maskColor'];
-  public solutionColor: MazeSettings['solutionColor'];
 
   public constructor({
     drawing,
@@ -30,30 +27,24 @@ export class MazeFactory {
     width,
     height,
     cellSize,
-    cellColor,
+    color,
     wallSize,
     voidSize,
-    wallColor,
     entrance,
     exit,
     start, // = 'random',
-    maskColor,
-    solutionColor,
   }: MazeSettings = {}) {
     this.drawing = drawing;
     this.random = random;
     this.width = width;
     this.height = height;
     this.cellSize = cellSize;
-    this.cellColor = cellColor;
+    this.color = color;
     this.wallSize = wallSize;
     this.voidSize = voidSize;
-    this.wallColor = wallColor;
     this.entrance = entrance;
     this.exit = exit;
     this.start = start;
-    this.maskColor = maskColor;
-    this.solutionColor = solutionColor;
   }
 
   public create(
@@ -67,14 +58,11 @@ export class MazeFactory {
       width: this.width,
       height: this.height,
       cellSize: this.cellSize,
-      cellColor: this.cellColor,
+      color: this.color,
       wallSize: this.wallSize,
       voidSize: this.voidSize,
-      wallColor: this.wallColor,
       entrance: this.entrance,
       exit: this.exit,
-      maskColor: this.maskColor,
-      solutionColor: this.solutionColor,
       plugin,
     });
     maze.reset(); // TODO [2025-07-15]: Reset should not be needed here, but generator is accessing uninitialized things

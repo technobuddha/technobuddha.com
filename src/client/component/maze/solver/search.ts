@@ -21,8 +21,8 @@ export class Search extends MazeSolver {
 
   public constructor({
     maze,
-    avatarColor = maze.avatarColor,
-    pathColor = maze.pathColor,
+    avatarColor = maze.color.avatar,
+    pathColor = maze.color.path,
     program = 'random',
     ...props
   }: SearchProperties) {

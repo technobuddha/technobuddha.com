@@ -211,7 +211,7 @@ export class Human extends MazeSolver {
         this.maze.drawPaths(move.path);
       }
 
-      this.maze.drawStar(human, this.maze.avatarColor);
+      this.maze.drawStar(human, this.maze.color.avatar);
       yield;
 
       makeChoice: while (true) {

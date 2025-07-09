@@ -23,9 +23,9 @@ export class Dijkstras extends MazeSolver {
 
   public constructor({
     maze,
-    scannedColor = maze.scannedColor,
-    avatarColor = maze.avatarColor,
-    prunedColor = maze.prunedColor,
+    scannedColor = maze.color.scanned,
+    avatarColor = maze.color.avatar,
+    prunedColor = maze.color.pruned,
     ...props
   }: DijkstrasProperties) {
     super({ maze, ...props });

@@ -9,7 +9,7 @@ export class ZetaMaze extends DotMaze {
     this.freezeWalls();
   }
 
-  public override drawWalls(cell: Cell, color = this.wallColor): void {
+  public override drawWalls(cell: Cell, color = this.color.wall): void {
     super.drawWalls(cell, color);
     const { walls } = this.nexus(cell);
 

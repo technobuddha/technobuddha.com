@@ -59,7 +59,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
 
       const factory = new MazeFactory({
         drawing,
-        maskColor,
+        color: { mask: maskColor },
         cellSize: 16,
         voidSize: 0,
         wallSize: 1,

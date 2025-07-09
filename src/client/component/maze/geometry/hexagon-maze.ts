@@ -25,9 +25,9 @@ export type HexagonMazeProperties = MazeProperties;
 
 export class HexagonMaze extends Maze {
   public constructor({
-    cellSize = 48,
+    cellSize = 36,
     wallSize = 2,
-    voidSize = 2,
+    voidSize = 1,
     ...props
   }: HexagonMazeProperties) {
     super({ cellSize, wallSize, voidSize, ...props }, matrix);
@@ -114,7 +114,7 @@ export class HexagonMaze extends Maze {
     };
   }
 
-  public override drawFloor(cell: Cell, color = this.cellColor): void {
+  public override drawFloor(cell: Cell, color = this.color.cell): void {
     if (this.drawing) {
       const { x0, x2, xa, x9, xd, xe, xl, xm, y0, y2, y9, yg, yi } = this.cellOffsets(cell);
 
@@ -127,7 +127,7 @@ export class HexagonMaze extends Maze {
           { x: x9, y: yi },
           { x: x0, y: y9 },
         ],
-        this.backgroundColor,
+        this.color.background,
       );
 
       this.drawing.polygon(
@@ -144,7 +144,7 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public override drawWall(cell: CellDirection, color = this.wallColor): void {
+  public override drawWall(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
@@ -218,14 +218,14 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.wallColor): void {
+  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { xa, xb, xc, xd, y0, y2 } = this.cellOffsets(cell);
           this.drawing.rect({ x: xa, y: y0 }, { x: xb, y: y2 }, color);
-          this.drawing.rect({ x: xb, y: y0 }, { x: xc, y: y2 }, this.cellColor);
+          this.drawing.rect({ x: xb, y: y0 }, { x: xc, y: y2 }, this.color.cell);
           this.drawing.rect({ x: xc, y: y0 }, { x: xd, y: y2 }, color);
           break;
         }
@@ -248,7 +248,7 @@ export class HexagonMaze extends Maze {
               { x: xj, y: y7 },
               { x: xg, y: y4 },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -280,7 +280,7 @@ export class HexagonMaze extends Maze {
               { x: xg, y: ye },
               { x: xj, y: yb },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -296,7 +296,7 @@ export class HexagonMaze extends Maze {
         case 'd': {
           const { xa, xb, xc, xd, yg, yi } = this.cellOffsets(cell);
           this.drawing.rect({ x: xa, y: yg }, { x: xb, y: yi }, color);
-          this.drawing.rect({ x: xb, y: yg }, { x: xc, y: yi }, this.cellColor);
+          this.drawing.rect({ x: xb, y: yg }, { x: xc, y: yi }, this.color.cell);
           this.drawing.rect({ x: xc, y: yg }, { x: xd, y: yi }, color);
           break;
         }
@@ -319,7 +319,7 @@ export class HexagonMaze extends Maze {
               { x: x6, y: yh },
               { x: x3, y: yc },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -351,7 +351,7 @@ export class HexagonMaze extends Maze {
               { x: x3, y: y9 },
               { x: x6, y: y3 },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -369,7 +369,7 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public override drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
+  public override drawPillar(cell: Cell, pillar: Pillar, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
@@ -462,7 +462,7 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public override drawX(cell: Cell, color = this.blockedColor): void {
+  public override drawX(cell: Cell, color = this.color.blocked): void {
     if (this.drawing) {
       const { x5, xb, xc, xi, y5, y9, yd } = this.cellOffsets(cell);
       this.drawing.line({ x: xb, y: y5 }, { x: xc, y: yd }, color);

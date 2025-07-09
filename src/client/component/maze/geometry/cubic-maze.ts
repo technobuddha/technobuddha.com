@@ -193,7 +193,7 @@ export class CubicMaze extends Maze {
     }
   }
 
-  public drawFloor(cell: Cell, color = this.cellColor): void {
+  public drawFloor(cell: Cell, color = this.color.cell): void {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0:
@@ -207,7 +207,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: yz },
               { x: x0, y: yn },
             ],
-            this.backgroundColor,
+            this.color.background,
           );
 
           this.drawing.polygon(
@@ -233,7 +233,7 @@ export class CubicMaze extends Maze {
               { x: x9, y: yi },
               { x: x0, y: y9 },
             ],
-            this.backgroundColor,
+            this.color.background,
           );
           this.drawing.polygon(
             [
@@ -258,7 +258,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: yn },
               { x: x0, y: yz },
             ],
-            this.backgroundColor,
+            this.color.background,
           );
           this.drawing.polygon(
             [
@@ -277,7 +277,7 @@ export class CubicMaze extends Maze {
     }
   }
 
-  public drawWall(cell: CellDirection, color = this.wallColor): void {
+  public drawWall(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
@@ -458,7 +458,7 @@ export class CubicMaze extends Maze {
     }
   }
 
-  public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
+  public drawPillar(cell: Cell, pillar: Pillar, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
@@ -637,7 +637,7 @@ export class CubicMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.wallColor): void {
+  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
@@ -661,7 +661,7 @@ export class CubicMaze extends Maze {
               { x: x3, y: yb },
               { x: x2, y: y5 },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -693,7 +693,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: yt },
               { x: x4, y: ys },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -725,7 +725,7 @@ export class CubicMaze extends Maze {
               { x: x3, y: yw },
               { x: x2, y: yq },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -757,7 +757,7 @@ export class CubicMaze extends Maze {
               { x: x1, y: yj },
               { x: x0, y: yi },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -792,7 +792,7 @@ export class CubicMaze extends Maze {
               { x: xe, y: y7 },
               { x: xb, y: y4 },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -825,7 +825,7 @@ export class CubicMaze extends Maze {
               { x: xf, y: yc },
               { x: xc, y: yf },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -858,7 +858,7 @@ export class CubicMaze extends Maze {
               { x: x6, y: yf },
               { x: x3, y: yc },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -891,7 +891,7 @@ export class CubicMaze extends Maze {
               { x: x6, y: y3 },
               { x: x3, y: y6 },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -925,7 +925,7 @@ export class CubicMaze extends Maze {
               { x: x3, y: y5 },
               { x: x2, y: yb },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -957,7 +957,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: yi },
               { x: x4, y: yj },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -989,7 +989,7 @@ export class CubicMaze extends Maze {
               { x: x3, y: yq },
               { x: x2, y: yw },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -1021,7 +1021,7 @@ export class CubicMaze extends Maze {
               { x: x1, y: ys },
               { x: x0, y: yt },
             ],
-            this.cellColor,
+            this.color.cell,
           );
           this.drawing.polygon(
             [
@@ -1040,7 +1040,7 @@ export class CubicMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = this.blockedColor): void {
+  public drawX(cell: Cell, color = this.color.blocked): void {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0:

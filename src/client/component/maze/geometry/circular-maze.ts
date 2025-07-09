@@ -24,7 +24,7 @@ export class CircularMaze extends Maze {
   protected readonly zones: number[] = [];
 
   public constructor({
-    cellSize = 28,
+    cellSize = 18,
     wallSize = 2,
     centerRadius = 18,
     centerSegments = 1,
@@ -35,7 +35,7 @@ export class CircularMaze extends Maze {
       {
         cellSize,
         wallSize,
-        voidSize: 2,
+        voidSize: 1,
         ...props,
         wrapHorizontal: false,
         wrapVertical: false,
@@ -250,7 +250,7 @@ export class CircularMaze extends Maze {
     return { cx, cy, r0, r1, r2, r3, r4, r5 };
   }
 
-  public drawFloor(cell: Cell, color = this.cellColor): void {
+  public drawFloor(cell: Cell, color = this.color.cell): void {
     if (this.drawing) {
       const cols = this.zones[cell.y];
       if (cols === 1) {
@@ -259,13 +259,13 @@ export class CircularMaze extends Maze {
       } else {
         const { cx, cy, r0, r1, r4, r5, a0, a1, af, ag } = this.cellOffsets(cell);
 
-        this.drawing.arc(cx, cy, r0, r5, a0, ag, this.backgroundColor);
+        this.drawing.arc(cx, cy, r0, r5, a0, ag, this.color.background);
         this.drawing.arc(cx, cy, r1, r4, a1, af, color);
       }
     }
   }
 
-  public drawWall(cell: CellDirection, color = this.wallColor): void {
+  public drawWall(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
@@ -336,7 +336,7 @@ export class CircularMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.wallColor): void {
+  public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
@@ -381,14 +381,14 @@ export class CircularMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.wallColor): void {
+  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {
         case 'a': {
           const { cx, cy, r4, r5, a1, a4, ac, af } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r4, r5, a1, a4, color);
-          this.drawing.arc(cx, cy, r4, r5, a4, ac, this.cellColor);
+          this.drawing.arc(cx, cy, r4, r5, a4, ac, this.color.cell);
           this.drawing.arc(cx, cy, r4, r5, ac, af, color);
 
           break;
@@ -396,7 +396,7 @@ export class CircularMaze extends Maze {
         case 'b': {
           const { cx, cy, r1, r2, r3, r4, ae, af, ag } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r1, r2, ae, ag, color);
-          this.drawing.arc(cx, cy, r2, r4, af, ag, this.cellColor);
+          this.drawing.arc(cx, cy, r2, r4, af, ag, this.color.cell);
           this.drawing.arc(cx, cy, r3, r4, af, ag, color);
           break;
         }
@@ -405,28 +405,28 @@ export class CircularMaze extends Maze {
         case 'h': {
           const { cx, cy, r0, r1, a3, a5, ab, ad } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r0, r1, a3, a5, color);
-          this.drawing.arc(cx, cy, r0, r1, a5, ab, this.cellColor);
+          this.drawing.arc(cx, cy, r0, r1, a5, ab, this.color.cell);
           this.drawing.arc(cx, cy, r0, r1, ab, ad, color);
           break;
         }
         case 'd': {
           const { cx, cy, r1, r2, r3, r4, a0, a2, a5 } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r1, r2, a0, a5, color);
-          this.drawing.arc(cx, cy, r2, r3, a0, a2, this.cellColor);
+          this.drawing.arc(cx, cy, r2, r3, a0, a2, this.color.cell);
           this.drawing.arc(cx, cy, r3, r4, a0, a2, color);
           break;
         }
         case 'e': {
           const { cx, cy, r4, r5, a1, a4, a6, a7 } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r4, r5, a1, a4, color);
-          this.drawing.arc(cx, cy, r4, r5, a4, a6, this.cellColor);
+          this.drawing.arc(cx, cy, r4, r5, a4, a6, this.color.cell);
           this.drawing.arc(cx, cy, r4, r5, a6, a7, color);
           break;
         }
         case 'f': {
           const { cx, cy, r4, r5, a9, aa, ac, af } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r4, r5, a9, aa, color);
-          this.drawing.arc(cx, cy, r4, r5, aa, ac, this.cellColor);
+          this.drawing.arc(cx, cy, r4, r5, aa, ac, this.color.cell);
           this.drawing.arc(cx, cy, r4, r5, ac, af, color);
           break;
         }
@@ -436,7 +436,7 @@ export class CircularMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = this.blockedColor): void {
+  public drawX(cell: Cell, color = this.color.blocked): void {
     if (this.drawing) {
       if (this.zones[cell.y] === 1) {
         const { cx, cy } = this.cellOffsets(cell);
@@ -487,7 +487,7 @@ export class CircularMaze extends Maze {
     };
   }
 
-  public override drawPath(cell: CellDirection, color = this.pathColor): void {
+  public override drawPath(cell: CellDirection, color = this.color.path): void {
     if (this.drawing) {
       const cols = this.zones[cell.y];
 

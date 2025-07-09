@@ -28,8 +28,8 @@ export class Chain extends Roboto {
   public constructor({
     maze,
     robot = 'wall-walking',
-    avatarColor = maze.avatarColor,
-    pathColor = maze.pathColor,
+    avatarColor = maze.color.avatar,
+    pathColor = maze.color.path,
     chainColor = '#333333',
     ...props
   }: ChainProperties) {

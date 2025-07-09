@@ -121,13 +121,13 @@ export class DotMaze extends Maze {
     }
   }
 
-  public override drawCell<T extends Cell>(cell: T, color = this.cellColor): T {
+  public override drawCell<T extends Cell>(cell: T, color = this.color.cell): T {
     super.drawCell(cell, color);
     this.drawIntersections(cell);
     return cell;
   }
 
-  public drawFloor(cell: Cell, color = this.cellColor): void {
+  public drawFloor(cell: Cell, color = this.color.cell): void {
     if (this.drawing) {
       const { x0, x1, x6, x7, y0, y1, y6, y7 } = this.cellOffsets(cell);
 
@@ -147,13 +147,13 @@ export class DotMaze extends Maze {
     }
   }
 
-  public override drawPillars(cell: Cell, color = this.wallColor): void {
+  public override drawPillars(cell: Cell, color = this.color.wall): void {
     for (const pillar of this.pillars) {
       this.drawPillar(cell, pillar, color);
     }
   }
 
-  public drawWall(cd: CellDirection, color = this.wallColor): void {
+  public drawWall(cd: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cd.direction) {
@@ -259,11 +259,11 @@ export class DotMaze extends Maze {
           { x: x7, y: y1 },
           { x: x7, y: y0 },
         ],
-        walls.b === false || crossedB ? this.cellColor : this.wallColor,
+        walls.b === false || crossedB ? this.color.cell : this.color.wall,
       );
 
       if (tunnels && !walls.b && crossedB && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x6, y: y0 }, { x: x7, y: y1 }, this.tunnelColor);
+        this.drawing.line({ x: x6, y: y0 }, { x: x7, y: y1 }, this.color.tunnel);
       }
 
       // d
@@ -277,11 +277,11 @@ export class DotMaze extends Maze {
           { x: x7, y: y7 },
           { x: x7, y: y6 },
         ],
-        walls.d === false || crossedD ? this.cellColor : this.wallColor,
+        walls.d === false || crossedD ? this.color.cell : this.color.wall,
       );
 
       if (tunnels && !walls.d && crossedD && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x6, y: y7 }, { x: x7, y: y6 }, this.tunnelColor);
+        this.drawing.line({ x: x6, y: y7 }, { x: x7, y: y6 }, this.color.tunnel);
       }
 
       // f
@@ -295,11 +295,11 @@ export class DotMaze extends Maze {
           { x: x1, y: y7 },
           { x: x0, y: y6 },
         ],
-        walls.f === false || crossedF ? this.cellColor : this.wallColor,
+        walls.f === false || crossedF ? this.color.cell : this.color.wall,
       );
 
       if (tunnels && !walls.f && crossedF && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x0, y: y6 }, { x: x1, y: y7 }, this.tunnelColor);
+        this.drawing.line({ x: x0, y: y6 }, { x: x1, y: y7 }, this.color.tunnel);
       }
 
       // h
@@ -313,16 +313,16 @@ export class DotMaze extends Maze {
           { x: x1, y: y0 },
           { x: x0, y: y0 },
         ],
-        walls.h === false || crossedH ? this.cellColor : this.wallColor,
+        walls.h === false || crossedH ? this.color.cell : this.color.wall,
       );
 
       if (tunnels && !walls.h && crossedH && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x0, y: y1 }, { x: x1, y: y0 }, this.tunnelColor);
+        this.drawing.line({ x: x0, y: y1 }, { x: x1, y: y0 }, this.color.tunnel);
       }
     }
   }
 
-  public drawPillar(cell: Cell, pillar: Pillar, color = this.wallColor): void {
+  public drawPillar(cell: Cell, pillar: Pillar, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
@@ -435,7 +435,7 @@ export class DotMaze extends Maze {
     }
   }
 
-  public drawX(cell: Cell, color = this.blockedColor): void {
+  public drawX(cell: Cell, color = this.color.blocked): void {
     if (this.drawing) {
       const { x2, x3, x4, x5, y2, y3, y4, y5 } = this.cellOffsets(cell);
 

@@ -7,7 +7,7 @@ import {
   type Rect,
 } from '@technobuddha/library';
 
-import { alpha } from '../library/alpha.ts';
+import { alpha } from '../library/index.ts';
 
 import { matrix } from './brick-matrix.ts';
 import {

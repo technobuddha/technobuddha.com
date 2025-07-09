@@ -7,10 +7,10 @@ import {
   type CustomDrawingSize,
   type DrawingSizes,
   type Kind,
+  Maze,
   type MazeProperties,
   type Pillar,
 } from './maze.ts';
-import { Maze } from './maze.ts';
 import { matrix } from './octogon-matrix.ts';
 
 const { SQRT2, SQRT1_2 } = Math;

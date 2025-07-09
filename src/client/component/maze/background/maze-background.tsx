@@ -4,12 +4,12 @@ import { Size } from '@technobuddha/size';
 
 import { useUserInterface } from '#context/user-interface';
 
-import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
-import { MazeFactory } from '../factory/maze-factory.ts';
+import { CanvasDrawing } from '../drawing/index.ts';
+import { MazeFactory } from '../factory/index.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
 import { type Maze, type MazeProperties } from '../geometry/index.ts';
-import { chooser } from '../library/chooser.ts';
-import { generators, solvers } from '../maker/mazes.ts';
+import { chooser } from '../library/index.ts';
+import { generators, solvers } from '../maker/index.ts';
 import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
 import { mazes } from './mazes.ts';

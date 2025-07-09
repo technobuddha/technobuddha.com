@@ -5,10 +5,10 @@ import {
   type CellDirection,
   type DrawingSizes,
   type Kind,
+  Maze,
   type MazeProperties,
   type Pillar,
 } from './maze.ts';
-import { Maze } from './maze.ts';
 import { matrix } from './triangle-matrix.ts';
 
 const SIN60 = Math.sin(Math.PI / 3);

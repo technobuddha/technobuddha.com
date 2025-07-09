@@ -39,7 +39,7 @@ import {
   ZetaMaze,
   type ZetaMazeProperties,
 } from '../geometry/index.ts';
-import { type Choices } from '../library/chooser.ts';
+import { type Choices } from '../library/index.ts';
 import { donutPlugin, ellipisePlugin, portalPlugin, trianglePlugin } from '../plugins/index.ts';
 import {
   Chain,

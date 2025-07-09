@@ -1,4 +1,4 @@
-import { animate } from '../drawing/animate.ts';
+import { animate } from '../drawing/index.ts';
 import { type MazeGenerator } from '../generator/index.ts';
 import { type Maze } from '../geometry/index.ts';
 import { type MazeSolver } from '../solver/index.ts';

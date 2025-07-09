@@ -11,10 +11,10 @@ import {
   type CellDirection,
   type DrawingSizes,
   type Kind,
+  Maze,
   type MazeProperties,
   type Pillar,
 } from './maze.ts';
-import { Maze } from './maze.ts';
 
 const SIN30 = Math.sin(Math.PI / 6);
 const COS30 = Math.cos(Math.PI / 6);

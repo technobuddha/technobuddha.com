@@ -5,10 +5,10 @@ import {
   type CellDirection,
   type DrawingSizes,
   type Kind,
+  Maze,
   type MazeProperties,
   type Pillar,
 } from './maze.ts';
-import { Maze } from './maze.ts';
 import { matrix } from './square-matrix.ts';
 
 export type SquareMazeProperties = MazeProperties;

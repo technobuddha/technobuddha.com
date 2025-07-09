@@ -5,10 +5,10 @@ import {
   type CellDirection,
   type DrawingSizes,
   type Kind,
+  Maze,
   type MazeProperties,
   type Pillar,
 } from './maze.ts';
-import { Maze } from './maze.ts';
 import { kindMatrix, matrix, offsetXMatrix, offsetYMatrix } from './pentagon-matrix.ts';
 
 export type PentagonMazeProperties = MazeProperties;

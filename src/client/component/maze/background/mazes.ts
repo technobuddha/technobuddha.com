@@ -1,5 +1,5 @@
 import { SquareMaze, type SquareMazeProperties } from '../geometry/index.ts';
-import { type Choices } from '../library/chooser.ts';
+import { type Choices } from '../library/index.ts';
 
 type PropsMazeGeometry = { geometry: typeof SquareMaze } & SquareMazeProperties;
 

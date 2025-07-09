@@ -5,10 +5,10 @@ import { useMeasure } from 'react-use';
 
 import { Checkbox, MenuItem, Select } from '#control';
 
-import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
+import { CanvasDrawing } from '../drawing/index.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
 import { type Maze, type MazeProperties } from '../geometry/index.ts';
-import { allChoices, chooser } from '../library/chooser.ts';
+import { allChoices, chooser } from '../library/index.ts';
 import { Human, type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
 import { CustomControls } from './controls/custom-controls.tsx';

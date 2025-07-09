@@ -6,10 +6,10 @@ import {
   type CellDirection,
   type DrawingSizes,
   type Kind,
+  Maze,
   type MazeProperties,
   type Pillar,
 } from './maze.ts';
-import { Maze } from './maze.ts';
 import { matrix } from './wedge-matrix.ts';
 
 const { SQRT2, SQRT1_2 } = Math;

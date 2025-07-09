@@ -1,7 +1,7 @@
 import { create2DArray } from '@technobuddha/library';
 
 import { type Cell, type Direction, type Move } from '../../geometry/index.ts';
-import { darken } from '../../library/darken.ts';
+import { darken } from '../../library/index.ts';
 
 import { Robot, type RobotProperties } from './robot.ts';
 import { RobotError } from './robot-error.ts';

@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { darken } from '../library/darken.ts';
+import { darken } from '../library/index.ts';
 
 import { type MazeSolverProperties } from './maze-solver.ts';
 import { MazeSolver } from './maze-solver.ts';

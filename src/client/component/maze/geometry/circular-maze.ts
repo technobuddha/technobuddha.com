@@ -6,12 +6,12 @@ import {
   type CellDirection,
   type DrawingSizes,
   type Kind,
+  Maze,
   type MazeProperties,
   type MoveOffset,
   type Pillar,
   type Wall,
 } from './maze.ts';
-import { Maze } from './maze.ts';
 
 export type CircularMazeProperties = MazeProperties & {
   readonly centerRadius?: number;

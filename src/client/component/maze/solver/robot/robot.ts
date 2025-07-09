@@ -1,9 +1,8 @@
 import { manhattanDistance } from '@technobuddha/library';
 
 import { type Cell, type CellFacing, type Maze, type Move } from '../../geometry/index.ts';
-import { darken } from '../../library/darken.ts';
-import { PathSet } from '../../library/path-set.ts';
-import { Random, type RandomProperties } from '../../random/random.ts';
+import { darken, PathSet } from '../../library/index.ts';
+import { Random, type RandomProperties } from '../../random/index.ts';
 
 export type Program = 'random' | 'seek' | 'left-turn' | 'right-turn' | 'straight';
 

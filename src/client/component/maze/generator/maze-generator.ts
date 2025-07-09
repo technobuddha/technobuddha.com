@@ -8,7 +8,7 @@ import {
   type Move,
 } from '../geometry/index.ts';
 import { logger } from '../library/logger.ts';
-import { Random, type RandomProperties } from '../random/random.ts';
+import { Random, type RandomProperties } from '../random/index.ts';
 
 export type Strategy = 'random' | 'right-turn' | 'left-turn' | 'straight' | 'bridge-builder';
 
@@ -277,7 +277,7 @@ export abstract class MazeGenerator extends Random {
         ) {
           break;
         } else {
-          if (tunnel.length > 0) {
+          if (tunnel) {
             for (const span of tunnel) {
               const expected = this.maze.traverse(probe, direction);
               if (!this.maze.isIdentical(span, expected)) {

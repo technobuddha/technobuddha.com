@@ -11,12 +11,10 @@ import {
   translate,
 } from '@technobuddha/library';
 
-import { type Drawing } from '../drawing/drawing.ts';
+import { type Drawing } from '../drawing/index.ts';
 import { type MazeGenerator } from '../generator/index.ts';
-import { alpha } from '../library/alpha.ts';
-import { logger } from '../library/logger.ts';
-import { lookAhead } from '../library/look-ahead.ts';
-import { Random, type RandomProperties } from '../random/random.ts';
+import { alpha, logger, lookAhead } from '../library/index.ts';
+import { Random, type RandomProperties } from '../random/index.ts';
 
 import { Nexus } from './nexus.ts';
 

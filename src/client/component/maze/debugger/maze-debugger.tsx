@@ -2,8 +2,8 @@ import React from 'react';
 
 import { MenuItem, NumberField, Select } from '#control';
 
-import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
-import { MazeFactory } from '../factory/maze-factory.ts';
+import { CanvasDrawing } from '../drawing/index.ts';
+import { MazeFactory } from '../factory/index.ts';
 import {
   BrickMaze,
   CircularMaze,

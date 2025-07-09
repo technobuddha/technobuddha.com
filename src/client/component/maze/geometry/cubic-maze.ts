@@ -13,10 +13,10 @@ import {
   type CellDirection,
   type DrawingSizes,
   type Kind,
+  Maze,
   type MazeProperties,
   type Pillar,
 } from './maze.ts';
-import { Maze } from './maze.ts';
 
 const SIN15 = Math.sin(toRadians(15));
 const COS15 = Math.cos(toRadians(15));

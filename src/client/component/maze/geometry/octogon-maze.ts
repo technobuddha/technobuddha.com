@@ -1,76 +1,25 @@
-/* eslint-disable unicorn/consistent-destructuring */
-import { type Cartesian, modulo, type Rect } from '@technobuddha/library';
+import { type Rect } from '@technobuddha/library';
 
 import {
   type Cell,
   type CellDirection,
-  type CustomDrawingSize,
-  type DrawingSizes,
   type Kind,
   Maze,
   type MazeProperties,
   type Pillar,
 } from './maze.ts';
-import { matrix } from './octogon-matrix.ts';
+import { matrix, type MatrixPart } from './octogon-matrix.ts';
 
 const { SQRT2, SQRT1_2 } = Math;
 
 export type OctogonMazeProperties = MazeProperties;
 
-export class OctogonMaze extends Maze {
-  public constructor({
-    cellSize = 40,
-    wallSize = 1,
-    voidSize = 1,
-    ...props
-  }: OctogonMazeProperties) {
-    super({ cellSize, wallSize, voidSize, ...props }, matrix);
-  }
-
-  protected drawingSize(): DrawingSizes {
-    return {
-      groupWidth: this.cellSize,
-      horizontalCellsPerGroup: 2,
-      groupHeight: this.cellSize,
-      custom({ width, height, actualWidth, actualHeight }: CustomDrawingSize): CustomDrawingSize {
-        return {
-          width: modulo(width, 2) === 0 ? width - 1 : width,
-          height: height,
-          actualWidth,
-          actualHeight,
-        };
-      },
-    };
-  }
-
-  // Don't render the last row of squares, the maze looks better
-  public override inMaze(cell: Cell): boolean {
-    return super.inMaze(cell) && !(cell.y === this.height - 1 && cell.x % 2 === 1);
-  }
-
-  public cellKind(cell: Cell): number {
-    return modulo(cell.x, 2);
-  }
-
-  protected cellOrigin(cell: Cell): Cartesian {
-    switch (this.cellKind(cell)) {
-      case 0: {
-        return { x: cell.x * this.cellSize * 0.5, y: cell.y * this.cellSize };
-      }
-
-      case 1: {
-        const ao = this.cellSize / (1 + Math.SQRT2);
-
-        return {
-          x: ((cell.x - 1) * this.cellSize) / 2 + this.cellSize - Math.sqrt((ao * ao) / 2),
-          y: cell.y * this.cellSize + this.cellSize - Math.sqrt((ao * ao) / 2),
-        };
-      }
-
-      default: {
-        throw new Error(`Unknown cell kind: ${this.cellKind(cell)}`);
-      }
-    }
+export abstract class OctogonMaze extends Maze {
+  public constructor(
+    { cellSize = 40, wallSize = 1, voidSize = 1, ...props }: OctogonMazeProperties,
+    partMatrix: MatrixPart,
+  ) {
+    super({ cellSize, wallSize, voidSize, ...props }, { ...matrix, ...partMatrix });
   }
 
   protected offsets(kind: Kind): Record<string, number> {
@@ -214,6 +163,28 @@ export class OctogonMaze extends Maze {
         };
       }
 
+      case 2: {
+        const x0 = 0;
+        const x1 = x0 + v;
+        const x2 = x1 + w;
+        const x5 = x0 + ag;
+        const x4 = x5 - v;
+        const x3 = x4 - w;
+
+        const y0 = 0;
+        const y1 = y0 + v;
+        const y2 = y1 + w;
+        const y5 = y0 + ag;
+        const y4 = y5 - v;
+        const y3 = y4 - w;
+
+        // prettier-ignore
+        return {
+          x0, x1, x2, x3, x4, x5,
+          y0, y1, y2, y3, y4, y5,
+        }
+      }
+
       default: {
         throw new Error(`Unknown kind: ${kind}`);
       }
@@ -280,6 +251,14 @@ export class OctogonMaze extends Maze {
             color,
           );
 
+          break;
+        }
+
+        case 2: {
+          const { x0, x1, x4, x5, y0, y1, y4, y5 } = this.cellOffsets(cell);
+
+          this.drawing.rect({ x: x0, y: y0 }, { x: x5, y: y5 }, this.color.background);
+          this.drawing.rect({ x: x1, y: y1 }, { x: x4, y: y4 }, color);
           break;
         }
 
@@ -426,6 +405,36 @@ export class OctogonMaze extends Maze {
             ],
             color,
           );
+          break;
+        }
+
+        // Kind 2
+
+        case 'm': {
+          const { x2, x3, y1, y2 } = this.cellOffsets(cell);
+
+          this.drawing.rect({ x: x2, y: y1 }, { x: x3, y: y2 }, color);
+          break;
+        }
+
+        case 'n': {
+          const { x3, x4, y2, y3 } = this.cellOffsets(cell);
+
+          this.drawing.rect({ x: x3, y: y2 }, { x: x4, y: y3 }, color);
+          break;
+        }
+
+        case 'o': {
+          const { x2, x3, y3, y4 } = this.cellOffsets(cell);
+
+          this.drawing.rect({ x: x2, y: y3 }, { x: x3, y: y4 }, color);
+          break;
+        }
+
+        case 'p': {
+          const { x1, x2, y2, y3 } = this.cellOffsets(cell);
+
+          this.drawing.rect({ x: x1, y: y2 }, { x: x2, y: y3 }, color);
           break;
         }
 
@@ -729,6 +738,40 @@ export class OctogonMaze extends Maze {
           break;
         }
 
+        // Kind 2
+
+        case 'm': {
+          const { x1, x2, x3, x4, y0, y1 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x1, y: y0 }, { x: x2, y: y1 }, color);
+          this.drawing.rect({ x: x2, y: y0 }, { x: x3, y: y1 }, this.color.cell);
+          this.drawing.rect({ x: x3, y: y0 }, { x: x4, y: y1 }, color);
+          break;
+        }
+
+        case 'n': {
+          const { x4, x5, y1, y2, y3, y4 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x4, y: y1 }, { x: x5, y: y2 }, color);
+          this.drawing.rect({ x: x4, y: y2 }, { x: x5, y: y3 }, this.color.cell);
+          this.drawing.rect({ x: x4, y: y3 }, { x: x5, y: y4 }, color);
+          break;
+        }
+
+        case 'o': {
+          const { x1, x2, x3, x4, y3, y4 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x1, y: y3 }, { x: x2, y: y4 }, color);
+          this.drawing.rect({ x: x2, y: y3 }, { x: x3, y: y4 }, this.color.cell);
+          this.drawing.rect({ x: x3, y: y3 }, { x: x4, y: y4 }, color);
+          break;
+        }
+
+        case 'p': {
+          const { x0, x1, y1, y2, y3, y4 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y2 }, color);
+          this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, this.color.cell);
+          this.drawing.rect({ x: x0, y: y3 }, { x: x1, y: y4 }, color);
+          break;
+        }
+
         // no default
       }
     }
@@ -912,6 +955,36 @@ export class OctogonMaze extends Maze {
           break;
         }
 
+        // Kind 2
+
+        case 'mn': {
+          const { x3, x4, y1, y2 } = this.cellOffsets(cell);
+
+          this.drawing.rect({ x: x3, y: y1 }, { x: x4, y: y2 }, color);
+          break;
+        }
+
+        case 'no': {
+          const { x3, x4, y3, y4 } = this.cellOffsets(cell);
+
+          this.drawing.rect({ x: x3, y: y3 }, { x: x4, y: y4 }, color);
+          break;
+        }
+
+        case 'op': {
+          const { x1, x2, y3, y4 } = this.cellOffsets(cell);
+
+          this.drawing.rect({ x: x1, y: y3 }, { x: x2, y: y4 }, color);
+          break;
+        }
+
+        case 'pm': {
+          const { x1, x2, y1, y2 } = this.cellOffsets(cell);
+
+          this.drawing.rect({ x: x1, y: y1 }, { x: x2, y: y2 }, color);
+          break;
+        }
+
         // no default
       }
     }
@@ -937,6 +1010,14 @@ export class OctogonMaze extends Maze {
           break;
         }
 
+        case 2: {
+          const { x2, x3, y2, y3 } = this.cellOffsets(cell);
+
+          this.drawing.line({ x: x2, y: y2 }, { x: x3, y: y3 }, color);
+          this.drawing.line({ x: x2, y: y3 }, { x: x3, y: y2 }, color);
+          break;
+        }
+
         // no default
       }
     }
@@ -958,6 +1039,12 @@ export class OctogonMaze extends Maze {
         const { x5, xd, y5, yd } = this.cellOffsets(cell);
 
         return { x: x5, y: y5, width: xd - x5, height: yd - y5 };
+      }
+
+      case 2: {
+        const { x2, x3, y2, y3 } = this.cellOffsets(cell);
+
+        return { x: x2, y: y2, width: x3 - x2, height: y3 - y2 };
       }
 
       default: {

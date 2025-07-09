@@ -26,8 +26,10 @@ import {
   HexagonMaze,
   type HexagonMazeProperties,
   type Maze,
-  OctogonMaze,
-  type OctogonMazeProperties,
+  OctogonDiamond,
+  type OctogonDiamondProperties,
+  OctogonSquare,
+  type OctogonSquareProperties,
   PentagonMaze,
   type PentagonMazeProperties,
   SquareMaze,
@@ -62,7 +64,8 @@ type PropsMazeGeometry =
   | ({ geometry: typeof CubicMaze } & CubicMazeProperties)
   | ({ geometry: typeof DotMaze } & DotMazeProperties)
   | ({ geometry: typeof HexagonMaze } & HexagonMazeProperties)
-  | ({ geometry: typeof OctogonMaze } & OctogonMazeProperties)
+  | ({ geometry: typeof OctogonDiamond } & OctogonDiamondProperties)
+  | ({ geometry: typeof OctogonSquare } & OctogonSquareProperties)
   | ({ geometry: typeof PentagonMaze } & PentagonMazeProperties)
   | ({ geometry: typeof SquareMaze } & SquareMazeProperties)
   | ({ geometry: typeof TriangleMaze } & TriangleMazeProperties)
@@ -145,8 +148,18 @@ export const mazes: Choices<PropsMazeGeometry> = [
   },
   {
     weight: 1,
-    title: 'Octogon',
-    props: { geometry: OctogonMaze },
+    items: [
+      {
+        weight: 1,
+        title: 'Octogon (Diamond)',
+        props: { geometry: OctogonDiamond },
+      },
+      {
+        weight: 1,
+        title: 'Octogon (Square)',
+        props: { geometry: OctogonSquare },
+      },
+    ],
   },
   {
     weight: 1,

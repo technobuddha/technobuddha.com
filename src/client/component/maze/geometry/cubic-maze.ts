@@ -207,7 +207,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: yz },
               { x: x0, y: yn },
             ],
-            this.color.background,
+            this.color.void,
           );
 
           this.drawing.polygon(
@@ -233,7 +233,7 @@ export class CubicMaze extends Maze {
               { x: x9, y: yi },
               { x: x0, y: y9 },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -258,7 +258,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: yn },
               { x: x0, y: yz },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -637,7 +637,7 @@ export class CubicMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
+  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {

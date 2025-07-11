@@ -122,7 +122,7 @@ export function toDirection(facing: Facing): Direction {
 }
 
 export type MazeColors = {
-  readonly background: string;
+  readonly void: string;
   readonly cell: string;
   readonly wall: string;
   readonly mask: string;
@@ -141,9 +141,9 @@ export type MazeColors = {
 };
 
 const defaultColors: NonNullable<MazeColors> = {
-  background: 'oklch(0.20 0 0)',
+  void: 'oklch(0.33 0 0)',
   cell: 'oklch(0 0 0)',
-  wall: 'oklch(0.6993 0 0)',
+  wall: 'oklch(0.75 0 0)',
   mask: 'oklch(0 0 0)',
   entrance: 'oklch(0.5198 0.176858 142.4953)',
   exit: 'oklch(0.628 0.2577 29.23)',
@@ -574,7 +574,7 @@ export abstract class Maze extends Random {
   }
 
   public randomCellFacing(cell = this.randomCell()): CellFacing {
-    const facing = this.opposite(this.randomPick(this.nexus(cell).wallDirections)!);
+    const facing = this.opposite(this.randomPick(this.nexus(cell).wallDirections())!);
     return { ...cell, facing };
   }
 
@@ -701,7 +701,11 @@ export abstract class Maze extends Random {
       const facing =
         direction ?
           this.opposite(
-            this.randomPick(this.nexus(entrance).wallDirections.filter((d) => d !== direction))!,
+            this.randomPick(
+              this.nexus(entrance)
+                .wallDirections()
+                .filter((d) => d !== direction),
+            )!,
           )
         : '!';
       this.entrance = { ...entrance, facing };
@@ -732,7 +736,7 @@ export abstract class Maze extends Random {
 
   protected abstract drawingSize(): DrawingSizes;
 
-  public clear(color: string = this.color.background): void {
+  public clear(color: string = this.color.void): void {
     if (this.drawing) {
       this.drawing.clear(color, this.leftOffset, this.topOffset);
     }
@@ -1025,7 +1029,8 @@ export abstract class Maze extends Random {
   public traverseTo(source: Cell, destination: Cell): { direction: Direction; target: CellFacing } {
     return (
       this.nexus(source)
-        .wallDirections.map((direction) => ({
+        .wallDirections()
+        .map((direction) => ({
           direction,
           target: this.traverse(source, direction),
         }))
@@ -1100,12 +1105,13 @@ export abstract class Maze extends Random {
     destination: Cell,
   ): { direction: Direction; target: CellFacing; tunnel?: CellFacing[] } | undefined {
     return this.nexus(source)
-      .wallDirections.map((direction) => ({ direction, ...this.walk(source, direction) }))
+      .wallDirections()
+      .map((direction) => ({ direction, ...this.walk(source, direction) }))
       .find(({ target }) => this.isSame(destination, target));
   }
 
   public preferreds(cell: Cell): Direction[] {
-    return this.moves(cell, { wall: 'all' })
+    return this.moves(cell, { wall: true })
       .filter(({ direction }) => this.preferredMatrix[this.cellKind(cell)].includes(direction))
       .map(({ direction }) => direction);
   }
@@ -1117,18 +1123,21 @@ export abstract class Maze extends Random {
   }
   //#endregion
   //#region Cell Drawing
+  protected cellColor(cell: Cell, color: string): string {
+    return (
+      this.isSame(cell, this.entrance) ? this.color.entrance
+      : this.isSame(cell, this.exit) ? this.color.exit
+      : this.nexus(cell).bridge ? this.color.bridge
+      : color
+    );
+  }
+
   public drawCell<T extends Cell>(
     cell: T,
     cellColor = this.color.cell,
     wallColor = this.color.wall,
   ): T {
-    this.drawFloor(
-      cell,
-      this.isSame(cell, this.entrance) ? this.color.entrance
-      : this.isSame(cell, this.exit) ? this.color.exit
-      : this.nexus(cell).bridge ? this.color.bridge
-      : cellColor,
-    );
+    this.drawFloor(cell, this.cellColor(cell, cellColor));
 
     this.drawWalls(cell, wallColor);
     this.drawPillars(cell, wallColor);
@@ -1149,7 +1158,7 @@ export abstract class Maze extends Random {
     const nexus = this.nexus(cell);
     const { walls, tunnels } = nexus;
 
-    for (const direction of Object.keys(walls) as Direction[]) {
+    for (const direction of nexus.wallDirections()) {
       if (walls[direction]) {
         if (tunnels[direction]) {
           const move = this.traverse(cell, direction);
@@ -1161,11 +1170,11 @@ export abstract class Maze extends Random {
         this.drawWall({ ...cell, direction }, color);
       } else {
         const move = this.traverse(cell, direction);
-        if (move && this.inMaze(move) && this.nexus(move).tunnels[direction]) {
+        if (this.inMaze(move) && this.nexus(move).tunnels[direction]) {
           this.drawTunnel({ ...cell, direction });
           continue;
         }
-        this.drawDoor({ ...cell, direction }, color);
+        this.drawPassage({ ...cell, direction }, color);
       }
     }
   }
@@ -1191,15 +1200,15 @@ export abstract class Maze extends Random {
   public drawBridge(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       this.drawWall(cell, color);
-      this.drawDoor(cell, color);
+      this.drawPassage(cell, color);
     }
   }
 
   public drawTunnel(cell: CellDirection, color = this.color.wall): void {
-    this.drawDoor(cell, color);
+    this.drawPassage(cell, color);
   }
 
-  public drawDoor(_cell: CellDirection, _color: string = this.color.wall): void {
+  public drawPassage(_cell: CellDirection, _color: string = this.color.wall): void {
     // Most mazes don't have to draw a door, it just the lack of a wall.
   }
 

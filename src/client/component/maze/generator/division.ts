@@ -103,7 +103,7 @@ export class Division extends MazeGenerator {
         const cell = frontier[index];
 
         const neighbors = this.maze
-          .moves(cell, { wall: 'all' })
+          .moves(cell, { wall: false })
           .filter(({ target }) => region.subregions[target.x][target.y] === 'm');
 
         const neighbor = this.randomPick(neighbors);

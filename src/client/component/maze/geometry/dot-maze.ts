@@ -1,4 +1,4 @@
-import { type Cartesian, type Rect } from '@technobuddha/library';
+import { type Cartesian, modulo, type Rect } from '@technobuddha/library';
 
 import { matrix } from './dot-matrix.ts';
 import {
@@ -14,9 +14,11 @@ import {
 
 export type DotMazeProperties = MazeProperties;
 
+const { SQRT1_2 } = Math;
+
 export class DotMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 8, ...props }: MazeProperties) {
-    super({ cellSize, wallSize, ...props }, matrix);
+  public constructor({ cellSize = 32, wallSize = 8, ...props }: MazeProperties) {
+    super({ cellSize, wallSize, voidSize: 2, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -39,53 +41,46 @@ export class DotMaze extends Maze {
   }
 
   protected offsets(_kind: Kind): Record<string, number> {
+    const c = this.cellSize;
+    const w = this.wallSize;
+    const v = this.voidSize;
+
     const x0 = 0;
-    const x7 = x0 + this.cellSize;
-    const xc = (x0 + x7) / 2;
-    const x1 = x0 + this.wallSize / Math.SQRT2;
-    const x3 = xc - this.wallSize / 2;
-    const x4 = xc + this.wallSize / 2;
-    const x2 = x3 - this.wallSize / Math.SQRT2;
-    const x5 = x4 + this.wallSize / Math.SQRT2;
-    const x6 = x7 - this.wallSize / Math.SQRT2;
-    const xx = x0 - this.wallSize / Math.SQRT2;
-    const xz = x7 + this.wallSize / Math.SQRT2;
+    const x1 = x0 + v;
+    const x3 = x1 + w * SQRT1_2;
+    const x2 = x3 - v * SQRT1_2;
+    const x4 = x3 + v * SQRT1_2;
+    const x7 = x0 + c * 0.5;
+    const x6 = x7 - w * 0.5;
+    const x5 = x6 - w * SQRT1_2;
+    const x8 = x7 + w * 0.5;
+    const x9 = x8 + w * SQRT1_2;
+    const xe = x0 + c;
+    const xd = xe - v;
+    const xb = xd - w * SQRT1_2;
+    const xa = xb - v * SQRT1_2;
+    const xc = xb + v * SQRT1_2;
 
     const y0 = 0;
-    const y7 = y0 + this.cellSize;
-    const yc = (y0 + y7) / 2;
-    const y1 = y0 + this.wallSize / Math.SQRT2;
-    const y3 = yc - this.wallSize / 2;
-    const y4 = yc + this.wallSize / 2;
-    const y2 = y3 - this.wallSize / Math.SQRT2;
-    const y5 = y4 + this.wallSize / Math.SQRT2;
-    const y6 = y7 - this.wallSize / Math.SQRT2;
-    const yx = y0 - this.wallSize / Math.SQRT2;
-    const yz = y7 + this.wallSize / Math.SQRT2;
+    const y1 = y0 + v;
+    const y3 = y1 + w * SQRT1_2;
+    const y2 = y3 - v * SQRT1_2;
+    const y4 = y3 + v * SQRT1_2;
+    const y7 = y0 + c * 0.5;
+    const y6 = y7 - w * 0.5;
+    const y5 = y6 - w * SQRT1_2;
+    const y8 = y7 + w * 0.5;
+    const y9 = y8 + w * SQRT1_2;
+    const ye = y0 + c;
+    const yd = ye - v;
+    const yb = yd - w * SQRT1_2;
+    const ya = yb - v * SQRT1_2;
+    const yc = yb + v * SQRT1_2;
 
-    // z0 z1 z2 z3 z4 z5 z6 z7 z8 z9
-    // zx z0 z1 z2 z3 z4 z5 z6 z7 zz
+    // prettier-ignore
     return {
-      xx,
-      x0,
-      x1,
-      x2,
-      x3,
-      x4,
-      x5,
-      x6,
-      x7,
-      xz,
-      yx,
-      y0,
-      y1,
-      y2,
-      y3,
-      y4,
-      y5,
-      y6,
-      y7,
-      yz,
+      x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xa, xb, xc, xd, xe,
+      y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, ya, yb, yc, yd, ye,
     };
   }
 
@@ -122,55 +117,56 @@ export class DotMaze extends Maze {
   }
 
   public override drawCell<T extends Cell>(cell: T, color = this.color.cell): T {
-    super.drawCell(cell, color);
-    this.drawIntersections(cell);
+    if (this.drawing) {
+      const { x7, x8, y7, y9 } = this.cellOffsets(cell);
+
+      super.drawCell(cell, color);
+      this.drawIntersections(cell);
+
+      const x = x7;
+      const y = y7;
+      const r = Math.hypot(x8 - x, y9 - y);
+
+      this.drawing.circle({ x, y }, r, this.cellColor(cell, color));
+    }
+
     return cell;
   }
 
-  public drawFloor(cell: Cell, color = this.color.cell): void {
+  public override drawFloor(cell: Cell, color = this.color.cell): void {
     if (this.drawing) {
-      const { x0, x1, x6, x7, y0, y1, y6, y7 } = this.cellOffsets(cell);
+      const { x0, x1, xd, xe, y0, y1, yd, ye } = this.cellOffsets(cell);
 
-      this.drawing.polygon(
-        [
-          { x: x0, y: y6 },
-          { x: x0, y: y1 },
-          { x: x1, y: y0 },
-          { x: x6, y: y0 },
-          { x: x7, y: y1 },
-          { x: x7, y: y6 },
-          { x: x6, y: y7 },
-          { x: x1, y: y7 },
-        ],
-        color,
-      );
+      this.drawing.rect({ x: x0, y: y0 }, { x: xe, y: ye }, this.color.void);
+      this.drawing.rect({ x: x1, y: y1 }, { x: xd, y: yd }, color);
     }
   }
 
+  // Pillars are always displayed
   public override drawPillars(cell: Cell, color = this.color.wall): void {
     for (const pillar of this.pillars) {
       this.drawPillar(cell, pillar, color);
     }
   }
 
-  public drawWall(cd: CellDirection, color = this.color.wall): void {
+  public override drawWall(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-      switch (cd.direction) {
+      switch (cell.direction) {
         case 'a': {
-          const { x3, x4, y0, y2 } = this.cellOffsets(cd);
-          this.drawing.rect({ x: x3, y: y0 }, { x: x4, y: y2 }, color);
+          const { x6, x8, y1, y5 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x6, y: y1 }, { x: x8, y: y5 }, color);
           break;
         }
 
         case 'b': {
-          const { x4, x5, x6, x7, y0, y1, y2, y3 } = this.cellOffsets(cd);
+          const { x8, x9, xb, xd, y1, y3, y5, y6 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x4, y: y2 },
-              { x: x6, y: y0 },
-              { x: x7, y: y1 },
-              { x: x5, y: y3 },
+              { x: xb, y: y1 },
+              { x: xd, y: y3 },
+              { x: x9, y: y6 },
+              { x: x8, y: y5 },
             ],
             color,
           );
@@ -178,19 +174,19 @@ export class DotMaze extends Maze {
         }
 
         case 'c': {
-          const { x5, x7, y3, y4 } = this.cellOffsets(cd);
-          this.drawing.rect({ x: x5, y: y3 }, { x: x7, y: y4 }, color);
+          const { x9, xd, y6, y8 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x9, y: y6 }, { x: xd, y: y8 }, color);
           break;
         }
 
         case 'd': {
-          const { x4, x5, x6, x7, y4, y5, y6, y7 } = this.cellOffsets(cd);
+          const { x8, x9, xb, xd, y8, y9, yb, yd } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x4, y: y5 },
-              { x: x5, y: y4 },
-              { x: x7, y: y6 },
-              { x: x6, y: y7 },
+              { x: x9, y: y8 },
+              { x: xd, y: yb },
+              { x: xb, y: yd },
+              { x: x8, y: y9 },
             ],
             color,
           );
@@ -198,19 +194,19 @@ export class DotMaze extends Maze {
         }
 
         case 'e': {
-          const { x3, x4, y5, y7 } = this.cellOffsets(cd);
-          this.drawing.rect({ x: x3, y: y5 }, { x: x4, y: y7 }, color);
+          const { x6, x8, y9, yd } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x6, y: y9 }, { x: x8, y: yd }, color);
           break;
         }
 
         case 'f': {
-          const { x0, x1, x2, x3, y4, y5, y6, y7 } = this.cellOffsets(cd);
+          const { x1, x3, x5, x6, y8, y9, yb, yd } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x0, y: y6 },
-              { x: x2, y: y4 },
-              { x: x3, y: y5 },
-              { x: x1, y: y7 },
+              { x: x5, y: y8 },
+              { x: x6, y: y9 },
+              { x: x3, y: yd },
+              { x: x1, y: yb },
             ],
             color,
           );
@@ -219,19 +215,135 @@ export class DotMaze extends Maze {
         }
 
         case 'g': {
-          const { x0, x2, y3, y4 } = this.cellOffsets(cd);
-          this.drawing.rect({ x: x0, y: y3 }, { x: x2, y: y4 }, color);
+          const { x1, x5, y6, y8 } = this.cellOffsets(cell);
+          this.drawing.rect({ x: x1, y: y6 }, { x: x5, y: y8 }, color);
           break;
         }
 
         case 'h': {
-          const { x0, x1, x2, x3, y0, y1, y2, y3 } = this.cellOffsets(cd);
+          const { x1, x3, x5, x6, y1, y3, y5, y6 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x0, y: y1 },
-              { x: x1, y: y0 },
-              { x: x3, y: y2 },
-              { x: x2, y: y3 },
+              { x: x3, y: y1 },
+              { x: x6, y: y5 },
+              { x: x5, y: y6 },
+              { x: x1, y: y3 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        // no default
+      }
+    }
+  }
+
+  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
+    if (this.drawing) {
+      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+      switch (cell.direction) {
+        case 'a': {
+          const { x3, x6, x8, xb, y0, y1 } = this.cellOffsets(cell);
+          this.drawing.polygon(
+            [
+              { x: x3, y: y0 },
+              { x: x6, y: y0 },
+              { x: x6, y: y1 },
+              { x: x3, y: y1 },
+            ],
+            color,
+          );
+
+          this.drawing.rect({ x: x6, y: y0 }, { x: x8, y: y1 }, this.color.cell);
+
+          this.drawing.polygon(
+            [
+              { x: x8, y: y0 },
+              { x: xb, y: y0 },
+              { x: xb, y: y1 },
+              { x: x8, y: y1 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'c': {
+          const { xd, xe, y3, y6, y8, yb } = this.cellOffsets(cell);
+
+          this.drawing.polygon(
+            [
+              { x: xe, y: y3 },
+              { x: xe, y: y6 },
+              { x: xd, y: y6 },
+              { x: xd, y: y3 },
+            ],
+            color,
+          );
+
+          this.drawing.rect({ x: xd, y: y6 }, { x: xe, y: y8 }, this.color.cell);
+
+          this.drawing.polygon(
+            [
+              { x: xe, y: y8 },
+              { x: xe, y: yb },
+              { x: xd, y: yb },
+              { x: xd, y: y8 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'e': {
+          const { x3, x6, x8, xb, yd, ye } = this.cellOffsets(cell);
+
+          this.drawing.polygon(
+            [
+              { x: x3, y: ye },
+              { x: x6, y: ye },
+              { x: x6, y: yd },
+              { x: x3, y: yd },
+            ],
+            color,
+          );
+
+          this.drawing.rect({ x: x6, y: yd }, { x: x8, y: ye }, this.color.cell);
+
+          this.drawing.polygon(
+            [
+              { x: x8, y: yd },
+              { x: xb, y: yd },
+              { x: xb, y: ye },
+              { x: x8, y: ye },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 'g': {
+          const { x0, x1, y3, y6, y8, yb } = this.cellOffsets(cell);
+
+          this.drawing.polygon(
+            [
+              { x: x0, y: y3 },
+              { x: x0, y: y6 },
+              { x: x1, y: y6 },
+              { x: x1, y: y3 },
+            ],
+            color,
+          );
+
+          this.drawing.rect({ x: x0, y: y6 }, { x: x1, y: y8 }, this.color.cell);
+
+          this.drawing.polygon(
+            [
+              { x: x0, y: y8 },
+              { x: x0, y: yb },
+              { x: x1, y: yb },
+              { x: x1, y: y8 },
             ],
             color,
           );
@@ -246,78 +358,278 @@ export class DotMaze extends Maze {
   public drawIntersections(cell: Cell, tunnels = true): void {
     if (this.drawing) {
       const { walls } = this.nexus(cell);
+      const { x0, x1, x2, x3, xb, xc, xd, xe, y0, y1, y2, y3, yc, yd, yb, ye } =
+        this.cellOffsets(cell);
 
-      const { x0, x1, x6, x7, y0, y1, y6, y7 } = this.cellOffsets(cell);
+      const nCell = { x: cell.x, y: cell.y - 1 };
+      const eCell = { x: cell.x + 1, y: cell.y };
+      const wCell = { x: cell.x - 1, y: cell.y };
+      const sCell = { x: cell.x, y: cell.y + 1 };
+
       // b
-      const crossedB =
-        this.inMaze({ x: cell.x, y: cell.y - 1 }) &&
-        this.nexus({ x: cell.x, y: cell.y - 1 }).walls.d === false;
+      const crossedB = this.inMaze(nCell) && this.nexus(nCell).walls.d === false;
 
-      this.drawing.polygon(
-        [
-          { x: x6, y: y0 },
-          { x: x7, y: y1 },
-          { x: x7, y: y0 },
-        ],
-        walls.b === false || crossedB ? this.color.cell : this.color.wall,
-      );
+      if (walls.b) {
+        if (crossedB) {
+          this.drawing.polygon(
+            [
+              { x: xc, y: y0 },
+              { x: xe, y: y0 },
+              { x: xe, y: y2 },
+            ],
+            this.color.cell,
+          );
+          this.drawing.polygon(
+            [
+              { x: xb, y: y0 },
+              { x: xc, y: y0 },
+              { x: xe, y: y2 },
+              { x: xe, y: y3 },
+              { x: xd, y: y3 },
+              { x: xb, y: y1 },
+            ],
+            this.color.wall, // lime
+          );
+        } else {
+          this.drawing.polygon(
+            [
+              { x: xb, y: y1 },
+              { x: xd, y: y1 },
+              { x: xd, y: y3 },
+            ],
+            this.color.wall, // maybe void
+          );
+        }
+      } else {
+        this.drawing.polygon(
+          [
+            { x: xb, y: y1 },
+            { x: xc, y: y0 },
+            { x: xe, y: y0 },
+            { x: xe, y: y2 },
+            { x: xd, y: y3 },
+          ],
+          this.color.cell, // wall extension
+        );
+        this.drawing.polygon(
+          [
+            { x: xb, y: y0 },
+            { x: xc, y: y0 },
+            { x: xb, y: y1 },
+          ],
+          this.color.wall, // yellow,
+        );
+        this.drawing.polygon(
+          [
+            { x: xd, y: y3 },
+            { x: xe, y: y3 },
+            { x: xe, y: y2 },
+          ],
+          this.color.wall, // yellow,
+        );
 
-      if (tunnels && !walls.b && crossedB && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x6, y: y0 }, { x: x7, y: y1 }, this.color.tunnel);
+        if (tunnels && crossedB && modulo(cell.x + cell.y, 2) === 0) {
+          this.drawing.line({ x: xb, y: y1 }, { x: xd, y: y3 }, this.color.tunnel);
+        }
       }
 
       // d
-      const crossedD =
-        this.inMaze({ x: cell.x + 1, y: cell.y }) &&
-        this.nexus({ x: cell.x + 1, y: cell.y }).walls.f === false;
+      const crossedD = this.inMaze(eCell) && this.nexus(eCell).walls.f === false;
 
-      this.drawing.polygon(
-        [
-          { x: x6, y: y7 },
-          { x: x7, y: y7 },
-          { x: x7, y: y6 },
-        ],
-        walls.d === false || crossedD ? this.color.cell : this.color.wall,
-      );
+      if (walls.d) {
+        if (crossedD) {
+          this.drawing.polygon(
+            [
+              { x: xc, y: ye },
+              { x: xe, y: yc },
+              { x: xe, y: ye },
+            ],
+            this.color.cell,
+          );
+          this.drawing.polygon(
+            [
+              { x: xb, y: ye },
+              { x: xc, y: ye },
+              { x: xe, y: yc },
+              { x: xe, y: yb },
+              { x: xd, y: yb },
+              { x: xb, y: yd },
+            ],
+            this.color.wall, // lime
+          );
+        } else {
+          this.drawing.polygon(
+            [
+              { x: xb, y: yd },
+              { x: xd, y: yb },
+              { x: xd, y: yd },
+            ],
+            this.color.wall, // maybe void
+          );
+        }
+      } else {
+        this.drawing.polygon(
+          [
+            { x: xb, y: yd },
+            { x: xd, y: yb },
+            { x: xe, y: yc },
+            { x: xe, y: ye },
+            { x: xc, y: ye },
+          ],
+          this.color.cell, // wall extension
+        );
+        this.drawing.polygon(
+          [
+            { x: xb, y: ye },
+            { x: xc, y: ye },
+            { x: xb, y: yd },
+          ],
+          this.color.wall, // yellow,
+        );
+        this.drawing.polygon(
+          [
+            { x: xd, y: yb },
+            { x: xe, y: yb },
+            { x: xe, y: yc },
+          ],
+          this.color.wall, // yellow,
+        );
 
-      if (tunnels && !walls.d && crossedD && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x6, y: y7 }, { x: x7, y: y6 }, this.color.tunnel);
+        if (tunnels && crossedD && modulo(cell.x + cell.y, 2) === 0) {
+          this.drawing.line({ x: xb, y: yd }, { x: xd, y: yb }, this.color.tunnel);
+        }
       }
 
       // f
-      const crossedF =
-        this.inMaze({ x: cell.x, y: cell.y + 1 }) &&
-        this.nexus({ x: cell.x, y: cell.y + 1 }).walls.h === false;
+      const crossedF = this.inMaze(sCell) && this.nexus(sCell).walls.h === false;
+      if (walls.f) {
+        if (crossedF) {
+          this.drawing.polygon(
+            [
+              { x: x0, y: yc },
+              { x: x2, y: ye },
+              { x: x0, y: ye },
+            ],
+            this.color.cell,
+          );
+          this.drawing.polygon(
+            [
+              { x: x0, y: yb },
+              { x: x1, y: yb },
+              { x: x3, y: yd },
+              { x: x3, y: ye },
+              { x: x2, y: ye },
+              { x: x0, y: yc },
+            ],
+            this.color.wall, // lime
+          );
+        } else {
+          this.drawing.polygon(
+            [
+              { x: x1, y: yb },
+              { x: x3, y: yd },
+              { x: x1, y: yd },
+            ],
+            this.color.wall, // maybe void
+          );
+        }
+      } else {
+        this.drawing.polygon(
+          [
+            { x: x0, y: yc },
+            { x: x1, y: yb },
+            { x: x3, y: yd },
+            { x: x2, y: ye },
+            { x: x0, y: ye },
+          ],
+          this.color.cell, // wall extension
+        );
+        this.drawing.polygon(
+          [
+            { x: x3, y: ye },
+            { x: x2, y: ye },
+            { x: x3, y: yd },
+          ],
+          this.color.wall, // yellow,
+        );
+        this.drawing.polygon(
+          [
+            { x: x1, y: yb },
+            { x: x0, y: yb },
+            { x: x0, y: yc },
+          ],
+          this.color.wall, // yellow,
+        );
 
-      this.drawing.polygon(
-        [
-          { x: x0, y: y7 },
-          { x: x1, y: y7 },
-          { x: x0, y: y6 },
-        ],
-        walls.f === false || crossedF ? this.color.cell : this.color.wall,
-      );
-
-      if (tunnels && !walls.f && crossedF && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x0, y: y6 }, { x: x1, y: y7 }, this.color.tunnel);
+        if (tunnels && crossedF && modulo(cell.x + cell.y, 2) === 0) {
+          this.drawing.line({ x: x1, y: yb }, { x: x3, y: yd }, this.color.tunnel);
+        }
       }
 
       // h
-      const crossedH =
-        this.inMaze({ x: cell.x - 1, y: cell.y }) &&
-        this.nexus({ x: cell.x - 1, y: cell.y }).walls.b === false;
+      const crossedH = this.inMaze(wCell) && this.nexus(wCell).walls.b === false;
+      if (walls.h) {
+        if (crossedH) {
+          this.drawing.polygon(
+            [
+              { x: x2, y: y0 },
+              { x: x0, y: y2 },
+              { x: x0, y: y0 },
+            ],
+            this.color.cell,
+          );
+          this.drawing.polygon(
+            [
+              { x: x3, y: y0 },
+              { x: x3, y: y1 },
+              { x: x1, y: y3 },
+              { x: x0, y: y3 },
+              { x: x0, y: y2 },
+              { x: x2, y: y0 },
+            ],
+            this.color.wall, // lime
+          );
+        } else {
+          this.drawing.polygon(
+            [
+              { x: x3, y: y1 },
+              { x: x1, y: y3 },
+              { x: x1, y: y1 },
+            ],
+            this.color.wall, // maybe void
+          );
+        }
+      } else {
+        this.drawing.polygon(
+          [
+            { x: x2, y: y0 },
+            { x: x3, y: y1 },
+            { x: x1, y: y3 },
+            { x: x0, y: y2 },
+            { x: x0, y: y0 },
+          ],
+          this.color.cell, // wall extension
+        );
+        this.drawing.polygon(
+          [
+            { x: x3, y: y0 },
+            { x: x2, y: y0 },
+            { x: x3, y: y1 },
+          ],
+          this.color.wall, // yellow,
+        );
+        this.drawing.polygon(
+          [
+            { x: x1, y: y3 },
+            { x: x0, y: y3 },
+            { x: x0, y: y2 },
+          ],
+          this.color.wall, // yellow,
+        );
 
-      this.drawing.polygon(
-        [
-          { x: x0, y: y1 },
-          { x: x1, y: y0 },
-          { x: x0, y: y0 },
-        ],
-        walls.h === false || crossedH ? this.color.cell : this.color.wall,
-      );
-
-      if (tunnels && !walls.h && crossedH && (cell.x + cell.y) % 2 === 0) {
-        this.drawing.line({ x: x0, y: y1 }, { x: x1, y: y0 }, this.color.tunnel);
+        if (tunnels && crossedH && modulo(cell.x + cell.y, 2) === 0) {
+          this.drawing.line({ x: x1, y: y3 }, { x: x3, y: y1 }, this.color.tunnel);
+        }
       }
     }
   }
@@ -327,12 +639,12 @@ export class DotMaze extends Maze {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
         case 'ab': {
-          const { x4, x6, y0, y2 } = this.cellOffsets(cell);
+          const { x8, xb, y1, y5 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x4, y: y2 },
-              { x: x6, y: y0 },
-              { x: x4, y: y0 },
+              { x: x8, y: y1 },
+              { x: xb, y: y1 },
+              { x: x8, y: y5 },
             ],
             color,
           );
@@ -340,12 +652,12 @@ export class DotMaze extends Maze {
         }
 
         case 'bc': {
-          const { x5, x7, y1, y3 } = this.cellOffsets(cell);
+          const { x9, xd, y3, y6 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x5, y: y3 },
-              { x: x7, y: y3 },
-              { x: x7, y: y1 },
+              { x: xd, y: y3 },
+              { x: xd, y: y6 },
+              { x: x9, y: y6 },
             ],
             color,
           );
@@ -353,12 +665,12 @@ export class DotMaze extends Maze {
         }
 
         case 'cd': {
-          const { x5, x7, y4, y6 } = this.cellOffsets(cell);
+          const { x9, xd, y8, yb } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x5, y: y4 },
-              { x: x7, y: y4 },
-              { x: x7, y: y6 },
+              { x: xd, y: y8 },
+              { x: xd, y: yb },
+              { x: x9, y: y8 },
             ],
             color,
           );
@@ -366,12 +678,12 @@ export class DotMaze extends Maze {
         }
 
         case 'de': {
-          const { x4, x6, y5, y7 } = this.cellOffsets(cell);
+          const { x8, xb, y9, yd } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x4, y: y7 },
-              { x: x4, y: y5 },
-              { x: x6, y: y7 },
+              { x: x8, y: y9 },
+              { x: xb, y: yd },
+              { x: x8, y: yd },
             ],
             color,
           );
@@ -379,12 +691,12 @@ export class DotMaze extends Maze {
         }
 
         case 'ef': {
-          const { x1, x3, y5, y7 } = this.cellOffsets(cell);
+          const { x3, x6, y9, yd } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x1, y: y7 },
-              { x: x3, y: y5 },
-              { x: x3, y: y7 },
+              { x: x6, y: y9 },
+              { x: x6, y: yd },
+              { x: x3, y: yd },
             ],
             color,
           );
@@ -392,12 +704,12 @@ export class DotMaze extends Maze {
         }
 
         case 'fg': {
-          const { x0, x2, y4, y6 } = this.cellOffsets(cell);
+          const { x1, x5, y8, yb } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x0, y: y6 },
-              { x: x0, y: y4 },
-              { x: x2, y: y4 },
+              { x: x1, y: y8 },
+              { x: x5, y: y8 },
+              { x: x1, y: yb },
             ],
             color,
           );
@@ -405,12 +717,12 @@ export class DotMaze extends Maze {
         }
 
         case 'gh': {
-          const { x0, x2, y1, y3 } = this.cellOffsets(cell);
+          const { x1, x5, y3, y6 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x0, y: y3 },
-              { x: x2, y: y3 },
-              { x: x0, y: y1 },
+              { x: x1, y: y3 },
+              { x: x5, y: y6 },
+              { x: x1, y: y6 },
             ],
             color,
           );
@@ -418,12 +730,12 @@ export class DotMaze extends Maze {
         }
 
         case 'ha': {
-          const { x1, x3, y0, y2 } = this.cellOffsets(cell);
+          const { x3, x6, y1, y5 } = this.cellOffsets(cell);
           this.drawing.polygon(
             [
-              { x: x1, y: y0 },
-              { x: x3, y: y0 },
-              { x: x3, y: y2 },
+              { x: x3, y: y1 },
+              { x: x6, y: y1 },
+              { x: x6, y: y5 },
             ],
             color,
           );
@@ -437,18 +749,18 @@ export class DotMaze extends Maze {
 
   public drawX(cell: Cell, color = this.color.blocked): void {
     if (this.drawing) {
-      const { x2, x3, x4, x5, y2, y3, y4, y5 } = this.cellOffsets(cell);
+      const { x5, x6, x8, x9, y5, y6, y8, y9 } = this.cellOffsets(cell);
 
-      this.drawing.line({ x: x3, y: y2 }, { x: x4, y: y5 }, color);
-      this.drawing.line({ x: x4, y: y2 }, { x: x3, y: y5 }, color);
-      this.drawing.line({ x: x2, y: y4 }, { x: x5, y: y3 }, color);
-      this.drawing.line({ x: x5, y: y4 }, { x: x2, y: y3 }, color);
+      this.drawing.line({ x: x5, y: y6 }, { x: x9, y: y8 }, color);
+      this.drawing.line({ x: x6, y: y5 }, { x: x8, y: y9 }, color);
+      this.drawing.line({ x: x8, y: y5 }, { x: x6, y: y9 }, color);
+      this.drawing.line({ x: x9, y: y6 }, { x: x5, y: y8 }, color);
     }
   }
 
   protected getRect(cell: Cell): Rect {
-    const { x2, x5, y2, y5 } = this.cellOffsets(cell);
+    const { x5, x9, y5, y9 } = this.cellOffsets(cell);
 
-    return { x: x2, y: y2, width: x5 - x2, height: y5 - y2 };
+    return { x: x5, y: y5, width: x9 - x5, height: y9 - y5 };
   }
 }

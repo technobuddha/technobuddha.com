@@ -124,7 +124,7 @@ export class WedgeMaze extends Maze {
               { x: xd, y: y0 },
               { x: x0, y: yd },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -145,7 +145,7 @@ export class WedgeMaze extends Maze {
               { x: xd, y: y0 },
               { x: xd, y: yd },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -166,7 +166,7 @@ export class WedgeMaze extends Maze {
               { x: x0, y: yd },
               { x: xd, y: yd },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -187,7 +187,7 @@ export class WedgeMaze extends Maze {
               { x: xd, y: y0 },
               { x: xd, y: yd },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -313,7 +313,7 @@ export class WedgeMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
+  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       switch (cell.direction) {
         case 'a': {

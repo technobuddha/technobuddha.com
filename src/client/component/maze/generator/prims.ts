@@ -24,7 +24,7 @@ export class Prims extends MazeGenerator {
 
       const next = this.randomPick(
         this.maze
-          .moves(currentCell, { wall: 'all' })
+          .moves(currentCell, { wall: true })
           .filter(({ target }) => !this.isVisited(target)),
       );
       if (next) {

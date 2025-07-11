@@ -48,8 +48,6 @@ import {
   type ChainProperties,
   Dijkstras,
   type DijkstrasProperties,
-  DrunkardsWalk,
-  type DrunkardsWalkProperties,
   FibonaccisRabbits,
   type FibonaccisRabbitsProperties,
   Filler,
@@ -395,7 +393,6 @@ type PropsMazeSolver =
   | ({ solver: typeof Filler } & Omit<FillerProperties, 'maze'>)
   | ({ solver: typeof Chain } & Omit<ChainProperties, 'maze'>)
   | ({ solver: typeof Dijkstras } & Omit<DijkstrasProperties, 'maze'>)
-  | ({ solver: typeof DrunkardsWalk } & Omit<DrunkardsWalkProperties, 'maze'>)
   | ({ solver: typeof FibonaccisRabbits } & Omit<FibonaccisRabbitsProperties, 'maze'>);
 
 export const solvers: Choices<PropsMazeSolver> = [
@@ -614,7 +611,8 @@ export const solvers: Choices<PropsMazeSolver> = [
     weight: 0,
     title: "Drunkard's Walk",
     props: {
-      solver: DrunkardsWalk,
+      solver: Roboto,
+      robots: [{ algorithm: 'drunkards-walk' }],
     },
   },
   {

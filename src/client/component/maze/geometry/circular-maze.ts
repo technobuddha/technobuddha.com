@@ -381,7 +381,7 @@ export class CircularMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
+  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {

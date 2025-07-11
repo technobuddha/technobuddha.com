@@ -125,7 +125,7 @@ export class TriangleMaze extends Maze {
               { x: x9, y: y0 },
               { x: xi, y: yb },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -146,7 +146,7 @@ export class TriangleMaze extends Maze {
               { x: xi, y: y0 },
               { x: x9, y: yb },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -241,7 +241,7 @@ export class TriangleMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
+  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {

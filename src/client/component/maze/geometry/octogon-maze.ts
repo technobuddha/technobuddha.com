@@ -209,7 +209,7 @@ export abstract class OctogonMaze extends Maze {
               { x: xb, y: yv },
               { x: x0, y: yk },
             ],
-            this.color.background,
+            this.color.void,
           );
 
           this.drawing.polygon(
@@ -238,7 +238,7 @@ export abstract class OctogonMaze extends Maze {
               { x: xi, y: y9 },
               { x: x9, y: yi },
             ],
-            this.color.background,
+            this.color.void,
           );
 
           this.drawing.polygon(
@@ -257,7 +257,7 @@ export abstract class OctogonMaze extends Maze {
         case 2: {
           const { x0, x1, x4, x5, y0, y1, y4, y5 } = this.cellOffsets(cell);
 
-          this.drawing.rect({ x: x0, y: y0 }, { x: x5, y: y5 }, this.color.background);
+          this.drawing.rect({ x: x0, y: y0 }, { x: x5, y: y5 }, this.color.void);
           this.drawing.rect({ x: x1, y: y1 }, { x: x4, y: y4 }, color);
           break;
         }
@@ -443,7 +443,7 @@ export abstract class OctogonMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
+  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {

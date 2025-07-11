@@ -24,7 +24,7 @@ export class RecursiveBacktracker extends MazeGenerator {
 
       const start: CellFacing = {
         ...randomCell,
-        facing: this.maze.opposite(this.randomPick(this.maze.nexus(randomCell).wallDirections)!),
+        facing: this.maze.opposite(this.randomPick(this.maze.nexus(randomCell).wallDirections())!),
       };
 
       this.createPlayer({ start, strategy: strategy?.[i] });
@@ -47,7 +47,7 @@ export class RecursiveBacktracker extends MazeGenerator {
             .filter((c) => this.isVisitedByMe(c) && !this.maze.nexus(c).bridge)
             .flatMap((c) =>
               this.maze
-                .moves(c, { wall: 'all' })
+                .moves(c, { wall: true })
                 .filter(
                   ({ target }) => !this.isVisitedByMe(target) && !this.maze.nexus(target).bridge,
                 ),

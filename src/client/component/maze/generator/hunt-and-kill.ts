@@ -36,7 +36,7 @@ export class HuntAndKill extends MazeGenerator {
         for (const cell of this.maze.cellsInMaze(this.huntMethod)) {
           if (!this.isVisited(cell)) {
             const hunted = this.randomPick(
-              this.maze.moves(cell, { wall: 'all' }).filter(({ target }) => this.isVisited(target)),
+              this.maze.moves(cell, { wall: true }).filter(({ target }) => this.isVisited(target)),
             );
             if (hunted) {
               target = { ...cell, direction: hunted.direction };

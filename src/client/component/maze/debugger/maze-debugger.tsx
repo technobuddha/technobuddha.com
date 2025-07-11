@@ -9,6 +9,7 @@ import {
   CircularMaze,
   CubicMaze,
   type Direction,
+  DotMaze,
   HexagonMaze,
   type Maze,
   type MazeProperties,
@@ -25,6 +26,7 @@ import {
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   circular: (props) => new CircularMaze(props),
   cubic: (props) => new CubicMaze(props),
+  dot: (props) => new DotMaze(props),
   pentagon: (props) => new PentagonMaze(props),
   brick: (props) => new BrickMaze(props),
   square: (props) => new SquareMaze(props),

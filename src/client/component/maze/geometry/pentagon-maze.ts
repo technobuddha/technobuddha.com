@@ -162,7 +162,7 @@ export class PentagonMaze extends Maze {
               { x: xa, y: yh },
               { x: x0, y: y7 },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -189,7 +189,7 @@ export class PentagonMaze extends Maze {
               { x: x7, y: yk },
               { x: x0, y: yk },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -216,7 +216,7 @@ export class PentagonMaze extends Maze {
               { x: xa, y: yk },
               { x: x0, y: ya },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -242,7 +242,7 @@ export class PentagonMaze extends Maze {
               { x: xk, y: yh },
               { x: x0, y: yh },
             ],
-            this.color.background,
+            this.color.void,
           );
           this.drawing.polygon(
             [
@@ -764,7 +764,7 @@ export class PentagonMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
+  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {

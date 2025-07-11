@@ -118,7 +118,7 @@ export class BrickMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
+  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       switch (cell.direction) {
         case 'a': {

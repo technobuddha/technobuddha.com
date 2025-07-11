@@ -59,7 +59,7 @@ export class SquareMaze extends Maze {
   public override drawFloor(cell: Cell, color = this.color.cell): void {
     if (this.drawing) {
       const { x0, x1, x4, x5, y0, y1, y4, y5 } = this.cellOffsets(cell);
-      this.drawing.rect({ x: x0, y: y0 }, { x: x5, y: y5 }, this.color.background);
+      this.drawing.rect({ x: x0, y: y0 }, { x: x5, y: y5 }, this.color.void);
       this.drawing.rect({ x: x1, y: y1 }, { x: x4, y: y4 }, color);
     }
   }
@@ -92,7 +92,7 @@ export class SquareMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
+  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       const { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 } = this.cellOffsets(cell);
 

@@ -19,6 +19,15 @@ export class OctogonDiamond extends OctogonMaze {
     };
   }
 
+  // Don't render the last row of squares, the maze looks better
+  public override inMaze(cell: Cell): boolean {
+    return (
+      super.inMaze(cell) &&
+      cell.x < this.width - 1 &&
+      (modulo(cell.x, 2) === 0 || cell.y < this.height - 1)
+    );
+  }
+
   public override cellKind(cell: Cell): number {
     return modulo(cell.x, 2);
   }

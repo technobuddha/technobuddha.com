@@ -45,11 +45,11 @@ export class Nexus {
     this.rect = rect;
   }
 
-  public get wallDirections(): Direction[] {
+  public wallDirections(): Direction[] {
     return Object.keys(this.walls) as Direction[];
   }
 
-  public get tunnelDirections(): Direction[] {
+  public tunnelDirections(): Direction[] {
     return Object.keys(this.tunnels) as Direction[];
   }
 

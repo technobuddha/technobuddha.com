@@ -89,8 +89,6 @@ export class Chain extends Roboto {
       this.maze.drawPath(this.maze.drawCell(pathCell), this.pathColor);
     } else if (this.chain.some((c) => this.maze.isSame(c, cell))) {
       this.maze.drawAvatar(cell, this.chainColor);
-    } else if (this.blocked[cell.x][cell.y]) {
-      this.maze.drawX(cell);
     }
   }
 

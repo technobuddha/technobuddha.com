@@ -127,7 +127,7 @@ export class HexagonMaze extends Maze {
           { x: x9, y: yi },
           { x: x0, y: y9 },
         ],
-        this.color.background,
+        this.color.void,
       );
 
       this.drawing.polygon(
@@ -218,7 +218,7 @@ export class HexagonMaze extends Maze {
     }
   }
 
-  public override drawDoor(cell: CellDirection, color = this.color.wall): void {
+  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (cell.direction) {

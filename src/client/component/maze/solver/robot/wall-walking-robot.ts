@@ -8,7 +8,7 @@ export type WallWalkingRobotProperties = RobotProperties & {
 };
 
 export class WallWalkingRobot extends Robot {
-  public algorithm = 'wall-walking';
+  public readonly algorithm = 'wall-walking';
   private readonly visits: number[][];
 
   public constructor({ turn = 'right', ...props }: WallWalkingRobotProperties) {

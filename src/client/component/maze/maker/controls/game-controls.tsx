@@ -3,7 +3,6 @@ import React from 'react';
 import { type Phase } from '../phase.ts';
 import { type Runner } from '../runner.ts';
 
-import { HumanOptions } from './human-options.tsx';
 import { MovementControls } from './movement-controls.tsx';
 
 import css from './game-controls.module.css';
@@ -33,7 +32,6 @@ export const GameControls: React.FC<GameControlsProps> = ({ runner }) => {
   return (
     <div className={css.gameControls}>
       {phase === 'solve' && <MovementControls runner={runner} />}
-      <HumanOptions runner={runner} />
     </div>
   );
 };

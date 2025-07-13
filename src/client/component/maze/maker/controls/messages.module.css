@@ -1,4 +1,18 @@
 .messages {
+  .header {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0.5rem;
+
+    .title {
+      flex: 1;
+    }
+
+    button {
+      padding: 0.125rem;
+    }
+  }
+
   .scroll {
     background-color: #aaaaaa;
     height: 10rem;

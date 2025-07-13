@@ -24,8 +24,8 @@ const COS15 = Math.cos(toRadians(15));
 export type CubicMazeProperties = MazeProperties;
 
 export class CubicMaze extends Maze {
-  public constructor({ cellSize = 24, wallSize = 2, ...props }: CubicMazeProperties) {
-    super({ cellSize, wallSize, voidSize: 2, ...props }, matrix);
+  public constructor({ cellSize = 24, wallSize = 2, voidSize = 2, ...props }: CubicMazeProperties) {
+    super({ cellSize, wallSize, voidSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {

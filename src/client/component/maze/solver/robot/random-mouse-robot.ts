@@ -3,7 +3,7 @@ import { Robot, type RobotProperties } from './robot.ts';
 export type RandomMouseRobotProperties = Omit<RobotProperties, 'program'>;
 
 export class RandomMouseRobot extends Robot {
-  public algorithm = 'random-mouse';
+  public readonly algorithm = 'random-mouse';
 
   public constructor({ maze, ...props }: RandomMouseRobotProperties) {
     super({ maze, program: 'random', ...props });

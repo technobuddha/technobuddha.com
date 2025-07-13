@@ -50,7 +50,7 @@ export class Chain extends Roboto {
               turn,
               program: turn === 'right' ? 'right-turn' : 'left-turn',
               color,
-              clearCell: this.restoreCell.bind(this),
+              drawCell: this.restoreCell.bind(this),
             },
             this.current,
           )
@@ -61,7 +61,7 @@ export class Chain extends Roboto {
               algorithm: 'backtracking',
               program: turn === 'right' ? 'right-turn' : 'left-turn',
               color,
-              clearCell: this.restoreCell.bind(this),
+              drawCell: this.restoreCell.bind(this),
               blocked: this.blocked,
             },
             this.current,
@@ -72,7 +72,7 @@ export class Chain extends Roboto {
               algorithm: 'tremaux',
               program: turn === 'right' ? 'right-turn' : 'left-turn',
               color,
-              clearCell: this.restoreCell.bind(this),
+              drawCell: this.restoreCell.bind(this),
             },
             this.current,
           );

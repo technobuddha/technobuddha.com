@@ -14,8 +14,13 @@ import { kindMatrix, matrix, offsetXMatrix, offsetYMatrix } from './pentagon-mat
 export type PentagonMazeProperties = MazeProperties;
 
 export class PentagonMaze extends Maze {
-  public constructor({ cellSize = 28, wallSize = 2, ...props }: PentagonMazeProperties) {
-    super({ cellSize, wallSize, voidSize: 1, ...props }, matrix);
+  public constructor({
+    cellSize = 28,
+    wallSize = 2,
+    voidSize = 1,
+    ...props
+  }: PentagonMazeProperties) {
+    super({ cellSize, wallSize, voidSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {

@@ -12,14 +12,12 @@ type SolverMaker = (props: MazeSolverProperties) => MazeSolver;
 type Plugin = (this: void, maze: Maze) => void;
 
 type RunnerProperties = {
-  mazeMaker: MazeMaker;
-  generatorMaker: GeneratorMaker;
-  solverMaker: SolverMaker;
-  plugin?: Plugin;
-  drawing?: Drawing;
-  showCoordinates?: boolean;
-
-  mode?: { [P in Phase]?: PlayMode };
+  readonly mazeMaker: MazeMaker;
+  readonly generatorMaker: GeneratorMaker;
+  readonly solverMaker: SolverMaker;
+  readonly plugin?: Plugin;
+  readonly drawing?: Drawing;
+  readonly mode?: { [P in Phase]?: PlayMode };
 };
 
 let id = 0;
@@ -47,14 +45,13 @@ export class Runner extends EventTarget {
     solverMaker,
     plugin,
     drawing,
-    showCoordinates = false,
     mode,
   }: RunnerProperties) {
     super();
 
     this.id = id++;
 
-    this.maze = mazeMaker({ drawing, plugin, showCoordinates });
+    this.maze = mazeMaker({ drawing, plugin });
     this.maze.reset();
     this.generator = generatorMaker({ maze: this.maze });
     this.solver = solverMaker({ maze: this.maze });
@@ -158,7 +155,7 @@ export class Runner extends EventTarget {
           }
 
           case 'braid': {
-            this.stepper = this.maze.braid();
+            this.stepper = this.generator.braid();
             this.baseSpeed = 1;
             break;
           }
@@ -235,7 +232,6 @@ export class Runner extends EventTarget {
 
               if (done) {
                 this.maze.draw();
-
                 this.switchPhase('braid');
               }
               break;
@@ -257,6 +253,7 @@ export class Runner extends EventTarget {
               const done = await this.run();
 
               if (done) {
+                this.maze.draw();
                 this.switchPhase('final');
               }
               break;

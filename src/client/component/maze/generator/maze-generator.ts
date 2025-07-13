@@ -26,6 +26,7 @@ export type MazeGeneratorProperties = RandomProperties & {
   maze: Maze;
   start?: Cell;
   speed?: number;
+  braiding?: number;
   bridgeMinLength?: number;
   bridgeMaxLength?: number;
   stepsAfterBridge?: number;
@@ -46,11 +47,13 @@ export abstract class MazeGenerator extends Random {
 
   public readonly speed: number;
   public start: Cell;
+  public readonly braiding: number;
 
   public constructor({
     maze,
     start,
     speed = 5,
+    braiding = 0,
     bridgeMinLength = 1,
     bridgeMaxLength = 1,
     stepsAfterBridge = 1,
@@ -72,6 +75,7 @@ export abstract class MazeGenerator extends Random {
 
     this.start = start ?? this.maze.randomCell();
     this.speed = speed;
+    this.braiding = braiding;
   }
   //#region Player
   protected createPlayer({
@@ -240,6 +244,28 @@ export abstract class MazeGenerator extends Random {
     }
     throw new Error(`No current cell defined for player ${this.player}.`);
   }
+
+  public async *braid(): AsyncGenerator<void> {
+    const deadEnds = this.maze.deadEnds();
+    const target = deadEnds.length - Math.floor(this.braiding * deadEnds.length);
+
+    while (deadEnds.length > target) {
+      const index = this.randomNumber(deadEnds.length);
+      const cell = deadEnds[index];
+
+      deadEnds.splice(index, 1);
+
+      const move = this.randomPick(this.maze.moves(cell, { wall: true }));
+      if (move) {
+        this.maze.removeWall(cell, move.direction);
+        yield;
+        const nindex = deadEnds.findIndex((c) => this.maze.isSame(c, move.target));
+        if (nindex >= 0) {
+          deadEnds.splice(nindex, 1);
+        }
+      }
+    }
+  }
   //#endregion
   //#region Bridge
   protected buildBridge(
@@ -281,9 +307,6 @@ export abstract class MazeGenerator extends Random {
             for (const span of tunnel) {
               const expected = this.maze.traverse(probe, direction);
               if (!this.maze.isIdentical(span, expected)) {
-                logger.warn(
-                  `Tunnel (${span.x},${span.y}:${span.facing}) does not match (${expected.x},${expected.y}:${expected.facing})`,
-                );
                 break bridgeBuilding;
               }
               direction = path[modulo(index++, path.length)];

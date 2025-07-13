@@ -4,7 +4,7 @@ import { RobotError } from './robot-error.ts';
 export type DrunkenRobotProperties = Omit<RobotProperties, 'program'>;
 
 export class DrunkenRobot extends Robot {
-  public algorithm = 'drunkards-walk';
+  public readonly algorithm = 'drunkards-walk';
 
   public constructor({ maze, ...props }: DrunkenRobotProperties) {
     super({ maze, program: 'random', ...props });

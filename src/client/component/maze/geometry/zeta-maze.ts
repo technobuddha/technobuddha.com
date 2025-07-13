@@ -9,17 +9,6 @@ export class ZetaMaze extends DotMaze {
     this.freezeWalls();
   }
 
-  public override drawWalls(cell: Cell, color = this.color.wall): void {
-    super.drawWalls(cell, color);
-    const { walls } = this.nexus(cell);
-
-    for (const direction of this.directions) {
-      if (!(direction in walls)) {
-        this.drawWall({ ...cell, direction }, color);
-      }
-    }
-  }
-
   public override drawIntersections(cell: Cell): void {
     super.drawIntersections(cell, false);
   }
@@ -29,12 +18,12 @@ export class ZetaMaze extends DotMaze {
       for (let y = 1; y < this.height; ++y) {
         if (this.randomChance(0.5)) {
           // remove walls on the \ diagonal
-          delete this.nexus({ x: x, y: y }).walls.h;
-          delete this.nexus({ x: x - 1, y: y - 1 }).walls.d;
+          this.nexus({ x: x, y: y }).erectBarrior('h');
+          this.nexus({ x: x - 1, y: y - 1 }).erectBarrior('d');
         } else {
           // remove walls on the / diagonal
-          delete this.nexus({ x: x - 1, y: y }).walls.b;
-          delete this.nexus({ x: x, y: y - 1 }).walls.f;
+          this.nexus({ x: x - 1, y: y }).erectBarrior('b');
+          this.nexus({ x: x, y: y - 1 }).erectBarrior('f');
         }
       }
     }

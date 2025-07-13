@@ -13,7 +13,7 @@ export type RobotProperties = RandomProperties & {
   program?: Program;
   trails?: number;
   showPath?: boolean;
-  clearCell?: (cell: Cell) => void;
+  drawCell?: (cell: Cell, color?: string) => void;
 };
 
 export abstract class Robot extends Random implements Disposable {
@@ -28,8 +28,8 @@ export abstract class Robot extends Random implements Disposable {
   protected readonly showPath: boolean;
   protected readonly start: CellFacing;
   protected readonly maze: Maze;
-  protected clearCell: (cell: Cell) => void;
-  protected avatar: (cell: CellFacing, color: string) => void;
+  protected drawCell: (cell: Cell, color?: string) => void;
+  protected avatar: (cell: Cell, color: string) => void;
   protected bias = true;
   protected pathSet = new PathSet();
 
@@ -41,7 +41,7 @@ export abstract class Robot extends Random implements Disposable {
     showPath = false,
     program = 'random',
     random = maze.random,
-    clearCell = (cell) => maze.drawCell(cell),
+    drawCell = (cell, color) => maze.drawCell(cell, color),
     ...props
   }: RobotProperties) {
     super({ random, ...props });
@@ -52,7 +52,7 @@ export abstract class Robot extends Random implements Disposable {
     this.color = color;
     this.trails = trails;
     this.showPath = showPath;
-    this.clearCell = clearCell;
+    this.drawCell = drawCell;
 
     this.location = location;
     this.previous = location;
@@ -68,12 +68,22 @@ export abstract class Robot extends Random implements Disposable {
     return `${this.algorithm} ${this.program}`;
   }
 
+  protected redrawCell(cell: Cell, color?: string): void {
+    this.drawCell(cell, color);
+
+    const index = this.trail.findIndex((c) => this.maze.isSame(c, cell));
+    if (index > 0) {
+      this.avatar(cell, darken(this.color, (0.5 / this.trail.length) * (index + 1)));
+      this.maze.drawDot(cell, this.maze.color.cell);
+    }
+  }
+
   protected drawPath(): void {
     if (this.showPath) {
       const currentPathSet = new PathSet(this.maze.makePath(this.path()));
 
       for (const path of this.pathSet.difference(currentPathSet)) {
-        this.clearCell(path);
+        this.drawCell(path);
       }
 
       for (const path of currentPathSet.difference(this.pathSet)) {
@@ -87,13 +97,14 @@ export abstract class Robot extends Random implements Disposable {
     if (this.trails > 0) {
       while (this.trail.length > this.trails) {
         const cell = this.trail.pop()!;
-        this.clearCell(cell);
+        this.redrawCell(cell);
       }
 
       for (let i = 0; i < this.trail.length; i++) {
         const cell = this.trail[i];
-        this.clearCell(cell);
+        this.redrawCell(cell);
         this.avatar(cell, darken(this.color, (0.5 / this.trail.length) * (i + 1)));
+        this.maze.drawDot(cell, this.maze.color.cell);
       }
 
       this.trail.unshift(this.location);
@@ -101,26 +112,27 @@ export abstract class Robot extends Random implements Disposable {
   }
 
   protected moveTo(next: CellFacing): void {
-    this.clearCell(this.location);
+    this.redrawCell(this.location);
 
     this.history.push({ ...this.location });
     this.previous = this.location;
     this.location = next;
 
+    this.redrawCell(this.location);
     this.avatar(this.location, this.color);
     this.drawPath();
     this.drawTrails();
   }
 
   protected backtrack(): void {
-    this.clearCell(this.location);
+    this.redrawCell(this.location);
 
     this.history.pop();
     this.location = this.previous;
     this.previous = this.history.at(-1) ?? this.start;
 
-    this.clearCell(this.location);
-    this.maze.drawAvatar(this.location, this.color);
+    this.redrawCell(this.location);
+    this.avatar(this.location, this.color);
     this.drawPath();
     this.drawTrails();
   }
@@ -194,10 +206,10 @@ export abstract class Robot extends Random implements Disposable {
   public dispose(): void {
     if (this.trails > 0) {
       for (const cell of this.trail) {
-        this.clearCell(cell);
+        this.redrawCell(cell);
       }
     } else {
-      this.clearCell(this.location);
+      this.redrawCell(this.location);
     }
   }
 

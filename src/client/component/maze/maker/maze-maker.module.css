@@ -59,8 +59,14 @@
       }
     }
 
-    .gap {
-      flex-grow: 1;
+    .settings {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 0.5rem;
+
+      .hidden {
+        display: none;
+      }
     }
 
     .buttons {

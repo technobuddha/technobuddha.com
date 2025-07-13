@@ -17,8 +17,8 @@ export type DotMazeProperties = MazeProperties;
 const { SQRT1_2 } = Math;
 
 export class DotMaze extends Maze {
-  public constructor({ cellSize = 32, wallSize = 8, ...props }: MazeProperties) {
-    super({ cellSize, wallSize, voidSize: 2, ...props }, matrix);
+  public constructor({ cellSize = 32, wallSize = 8, voidSize = 2, ...props }: MazeProperties) {
+    super({ cellSize, wallSize, voidSize, ...props }, matrix);
   }
 
   protected drawingSize(): DrawingSizes {
@@ -357,7 +357,7 @@ export class DotMaze extends Maze {
 
   public drawIntersections(cell: Cell, tunnels = true): void {
     if (this.drawing) {
-      const { walls } = this.nexus(cell);
+      const { walls, barriors } = this.nexus(cell);
       const { x0, x1, x2, x3, xb, xc, xd, xe, y0, y1, y2, y3, yc, yd, yb, ye } =
         this.cellOffsets(cell);
 
@@ -369,7 +369,7 @@ export class DotMaze extends Maze {
       // b
       const crossedB = this.inMaze(nCell) && this.nexus(nCell).walls.d === false;
 
-      if (walls.b) {
+      if (walls.b || barriors.b) {
         if (crossedB) {
           this.drawing.polygon(
             [
@@ -436,7 +436,7 @@ export class DotMaze extends Maze {
       // d
       const crossedD = this.inMaze(eCell) && this.nexus(eCell).walls.f === false;
 
-      if (walls.d) {
+      if (walls.d || barriors.d) {
         if (crossedD) {
           this.drawing.polygon(
             [
@@ -502,7 +502,7 @@ export class DotMaze extends Maze {
 
       // f
       const crossedF = this.inMaze(sCell) && this.nexus(sCell).walls.h === false;
-      if (walls.f) {
+      if (walls.f || barriors.f) {
         if (crossedF) {
           this.drawing.polygon(
             [
@@ -568,7 +568,7 @@ export class DotMaze extends Maze {
 
       // h
       const crossedH = this.inMaze(wCell) && this.nexus(wCell).walls.b === false;
-      if (walls.h) {
+      if (walls.h || barriors.h) {
         if (crossedH) {
           this.drawing.polygon(
             [

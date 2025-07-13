@@ -1,5 +1,7 @@
 import { create2DArray } from '@technobuddha/library';
 
+import { type Cell } from '../../geometry/index.ts';
+
 import { Robot, type RobotProperties } from './robot.ts';
 import { RobotError } from './robot-error.ts';
 
@@ -9,7 +11,7 @@ export type BacktrackingRobotProperties = RobotProperties & {
 };
 
 export class BacktrackingRobot extends Robot {
-  public algorithm = 'backtracking';
+  public readonly algorithm = 'backtracking';
   private readonly blocked: boolean[][];
   private readonly showMarks: boolean;
 
@@ -17,18 +19,17 @@ export class BacktrackingRobot extends Robot {
     super({ maze, ...props });
     this.showMarks = showMarks;
     this.blocked = blocked ?? create2DArray(this.maze.width, this.maze.height, false);
+  }
 
-    const cc = this.clearCell;
-    this.clearCell = (cell) => {
-      cc(cell);
-      if (this.showMarks && this.blocked[cell.x][cell.y]) {
-        this.maze.drawX(cell);
-      }
-    };
+  public override redrawCell(cell: Cell, color?: string): void {
+    super.redrawCell(cell, color);
+    if (this.showMarks && this.blocked[cell.x][cell.y]) {
+      this.maze.drawX(cell);
+    }
   }
 
   public execute(): void {
-    this.clearCell(this.location);
+    this.redrawCell(this.location);
 
     const moves = this.maze
       .moves(this.location, { wall: false })

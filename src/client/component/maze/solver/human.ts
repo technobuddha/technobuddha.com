@@ -164,7 +164,8 @@ export class Human extends MazeSolver {
     if (this.deadEnd[cell.x][cell.y]) {
       this.maze.drawX(this.maze.drawCell(cell), 'red');
     } else if (this.visited[cell.x][cell.y]) {
-      this.maze.drawAvatar(this.maze.drawCell(cell), '#444444');
+      this.maze.drawCell(cell);
+      this.maze.drawAvatar(cell, '#444444');
     }
   }
 

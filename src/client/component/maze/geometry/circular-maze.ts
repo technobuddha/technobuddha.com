@@ -25,7 +25,8 @@ export class CircularMaze extends Maze {
 
   public constructor({
     cellSize = 18,
-    wallSize = 2,
+    wallSize = 1,
+    voidSize = 1,
     centerRadius = 18,
     centerSegments = 1,
     plugin,
@@ -35,7 +36,7 @@ export class CircularMaze extends Maze {
       {
         cellSize,
         wallSize,
-        voidSize: 1,
+        voidSize,
         ...props,
         wrapHorizontal: false,
         wrapVertical: false,
@@ -259,7 +260,7 @@ export class CircularMaze extends Maze {
       } else {
         const { cx, cy, r0, r1, r4, r5, a0, a1, af, ag } = this.cellOffsets(cell);
 
-        this.drawing.arc(cx, cy, r0, r5, a0, ag, this.color.background);
+        this.drawing.arc(cx, cy, r0, r5, a0, ag, this.color.void);
         this.drawing.arc(cx, cy, r1, r4, a1, af, color);
       }
     }

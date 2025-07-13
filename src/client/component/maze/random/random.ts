@@ -1,4 +1,4 @@
-import { randomPick, randomShuffle } from '@technobuddha/library';
+import { randomPick, randomShuffle, randomWeightedPick } from '@technobuddha/library';
 
 export type RandomProperties = {
   random?: () => number;
@@ -14,6 +14,10 @@ export class Random extends EventTarget {
 
   public randomPick<T>(array: T[]): T | undefined {
     return randomPick(array, this.random);
+  }
+
+  public randomWeightedPick<T extends { weight: number }>(array: T[]): T | undefined {
+    return randomWeightedPick(array, this.random);
   }
 
   public randomShuffle<T>(array: T[]): T[] {

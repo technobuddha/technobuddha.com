@@ -48,7 +48,8 @@ export class Dijkstras extends MazeSolver {
     distances[entrance.x][entrance.y].distance = 0;
 
     queue.unshift(entrance);
-    this.maze.drawAvatar(this.maze.drawCell(entrance), avatarColor);
+    this.maze.drawCell(entrance);
+    this.maze.drawAvatar(entrance, avatarColor);
     yield;
 
     let cell = queue.pop();
@@ -67,14 +68,15 @@ export class Dijkstras extends MazeSolver {
       distances[cell.x][cell.y].children = validMoves.length;
 
       if (validMoves.length > 0) {
-        this.maze.drawAvatar(this.maze.drawCell(cell), scannedColor);
+        this.maze.drawCell(cell);
+        this.maze.drawAvatar(cell, scannedColor);
         for (const validMove of validMoves) {
           distances[validMove.target.x][validMove.target.y] = {
             parent: cell,
             distance,
           };
-          // this.maze.drawCell(cell, scannedColor);
-          this.maze.drawAvatar(this.maze.drawCell(validMove.target), avatarColor);
+          this.maze.drawCell(validMove.target);
+          this.maze.drawAvatar(validMove.target, avatarColor);
           yield;
           queue.unshift(validMove.target);
         }

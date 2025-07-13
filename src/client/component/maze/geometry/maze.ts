@@ -96,7 +96,7 @@ export type DrawingSizes = {
   readonly custom?: (this: void, args: CustomDrawingSize) => CustomDrawingSize;
 };
 
-type ShowDistances = 'none' | 'greyscale' | 'primary' | 'color' | 'spectrum';
+export type ShowDistances = 'none' | 'greyscale' | 'primary' | 'color' | 'spectrum';
 
 type Loop = {
   readonly cell: Cell;
@@ -143,12 +143,12 @@ export type MazeColors = {
 const defaultColors: NonNullable<MazeColors> = {
   void: 'oklch(0.33 0 0)',
   cell: 'oklch(0 0 0)',
-  wall: 'oklch(0.75 0 0)',
+  wall: 'oklch(0.80 0 0)',
   mask: 'oklch(0 0 0)',
   entrance: 'oklch(0.5198 0.176858 142.4953)',
   exit: 'oklch(0.628 0.2577 29.23)',
   solution: 'oklch(0.6611 0.115 213.72)',
-  scanned: 'oklch(0.5789 0.2344 0.51)',
+  scanned: 'oklch(0.6373 0.2035 143.01)', //'oklch(0.5789 0.2344 0.51)',
   avatar: 'oklch(0.6611 0.115 213.72)',
   pruned: 'oklch(0.4446 0.1803 359.81)',
   blocked: 'oklch(0.6298 0.2145 27.83)',
@@ -176,8 +176,6 @@ export type MazeProperties = RandomProperties & {
   readonly showDistances?: ShowDistances;
   readonly showCoordinates?: boolean;
   readonly showKind?: boolean;
-
-  readonly braidFactor?: number;
 
   readonly plugin?: (this: void, maze: Maze) => void;
 };
@@ -244,7 +242,6 @@ export abstract class Maze extends Random {
   protected plugin: MazeProperties['plugin'];
   protected readonly requestedWidth: MazeProperties['width'];
   protected readonly requestedHeight: MazeProperties['height'];
-  protected readonly braidFactor: NonNullable<MazeProperties['braidFactor']>;
 
   protected drawing: MazeProperties['drawing'];
   public readonly color: NonNullable<Required<MazeColors>>;
@@ -288,7 +285,6 @@ export abstract class Maze extends Random {
       showDistances = 'none',
       showCoordinates = false,
       showKind = false,
-      braidFactor = 0,
 
       plugin,
       ...props
@@ -331,7 +327,6 @@ export abstract class Maze extends Random {
     this.requestedWidth = requestedWidth;
     this.requestedHeight = requestedHeight;
     this.plugin = plugin;
-    this.braidFactor = braidFactor;
 
     this.reset();
   }
@@ -403,6 +398,7 @@ export abstract class Maze extends Random {
           y,
           walls: this.initialWalls({ x, y }),
           tunnels: this.initialTunnels({ x, y }),
+          barriors: this.initialBarriors({ x, y }),
           rect: toSquare(this.getRect({ x, y })),
         }),
     );
@@ -425,6 +421,12 @@ export abstract class Maze extends Random {
       Object.keys(this.initialWalls(cell)).map((d) => [d as Direction, false]),
     ) as Record<Direction, false>;
   }
+
+  public initialBarriors(cell: Cell): Wall {
+    return Object.fromEntries(
+      Object.keys(this.initialWalls(cell)).map((d) => [d as Direction, false]),
+    ) as Record<Direction, false>;
+  }
   //#endregion
   //#region Direction
   public angle(direction: Direction): number {
@@ -434,6 +436,10 @@ export abstract class Maze extends Random {
     }
 
     throw new Error(`"${direction}" is not a valid direction`);
+  }
+
+  public heading(facing: Facing): number {
+    return this.angle(toDirection(facing));
   }
 
   public opposite(facing: Facing): Direction;
@@ -648,28 +654,6 @@ export abstract class Maze extends Random {
     const unreachable = this.cellsInMaze().filter((cell) => distances[cell.x][cell.y] === Infinity);
 
     return { maxDistance, maxCell, distances, unreachable, loops };
-  }
-
-  public async *braid(): AsyncGenerator<void> {
-    const deadEnds = this.deadEnds();
-    const target = deadEnds.length - Math.floor(this.braidFactor * deadEnds.length);
-
-    while (deadEnds.length > target) {
-      const index = this.randomNumber(deadEnds.length);
-      const cell = deadEnds[index];
-
-      deadEnds.splice(index, 1);
-
-      const move = this.randomPick(this.moves(cell, { wall: true }));
-      if (move) {
-        this.removeWall(cell, move.direction);
-        yield;
-        const nindex = deadEnds.findIndex((c) => this.isSame(c, move.target));
-        if (nindex >= 0) {
-          deadEnds.splice(nindex, 1);
-        }
-      }
-    }
   }
 
   public addTermini(): this {
@@ -1156,10 +1140,10 @@ export abstract class Maze extends Random {
 
   public drawWalls(cell: Cell, color = this.color.wall): void {
     const nexus = this.nexus(cell);
-    const { walls, tunnels } = nexus;
+    const { walls, tunnels, barriors } = nexus;
 
-    for (const direction of nexus.wallDirections()) {
-      if (walls[direction]) {
+    for (const direction of this.directions) {
+      if (walls[direction] === true) {
         if (tunnels[direction]) {
           const move = this.traverse(cell, direction);
           if (this.inMaze(move) && !this.nexus(move).walls[this.opposite(move.facing)]) {
@@ -1168,7 +1152,9 @@ export abstract class Maze extends Random {
           }
         }
         this.drawWall({ ...cell, direction }, color);
-      } else {
+      } else if (barriors[direction]) {
+        this.drawWall({ ...cell, direction }, color);
+      } else if (walls[direction] === false) {
         const move = this.traverse(cell, direction);
         if (this.inMaze(move) && this.nexus(move).tunnels[direction]) {
           this.drawTunnel({ ...cell, direction });
@@ -1276,22 +1262,24 @@ export abstract class Maze extends Random {
 
   public drawAvatar(cell: Cell, color = this.color.avatar): void {
     if (this.drawing) {
-      this.drawCell(cell);
       const { rect } = this.nexus(cell);
 
-      this.drawing.circle(
-        { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 },
-        Math.abs(rect.width) / 4,
-        color,
-      );
+      this.renderCircle(rect, color);
     }
   }
 
-  protected renderCircle(rect: Rect, color: string): void {
+  public drawDot(cell: Cell, color = this.color.avatar, r = 0.125): void {
+    if (this.drawing) {
+      const { rect } = this.nexus(cell);
+      this.renderCircle(rect, color, r);
+    }
+  }
+
+  protected renderCircle(rect: Rect, color: string, r = 0.25): void {
     if (this.drawing) {
       this.drawing.circle(
         { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 },
-        Math.abs(rect.width) / 4,
+        Math.abs(rect.width) * r,
         color,
       );
     }

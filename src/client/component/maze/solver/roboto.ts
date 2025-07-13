@@ -5,6 +5,10 @@ import { DrunkenRobot, type DrunkenRobotProperties } from './robot/drunken-robot
 import {
   BacktrackingRobot,
   type BacktrackingRobotProperties,
+  DijkstrasRobot,
+  type DijkstrasRobotProperties,
+  // PledgeRobot,
+  // type PledgeRobotProperties,
   RandomMouseRobot,
   type RandomMouseRobotProperties,
   type Robot,
@@ -23,11 +27,13 @@ type RoboProperties<Algorithm extends string, Properties> = Omit<
 };
 
 export type Robo =
-  | RoboProperties<'tremaux', TremauxRobotProperties>
-  | RoboProperties<'wall-walking', WallWalkingRobotProperties>
   | RoboProperties<'backtracking', BacktrackingRobotProperties>
+  | RoboProperties<'dijkstras', DijkstrasRobotProperties>
+  | RoboProperties<'drunkards-walk', DrunkenRobotProperties>
+  // | RoboProperties<'pledge', PledgeRobotProperties>
   | RoboProperties<'random-mouse', RandomMouseRobotProperties>
-  | RoboProperties<'drunkards-walk', DrunkenRobotProperties>;
+  | RoboProperties<'tremaux', TremauxRobotProperties>
+  | RoboProperties<'wall-walking', WallWalkingRobotProperties>;
 
 export type RobotoProperties = MazeSolverProperties & {
   robots: Robo[];
@@ -63,6 +69,14 @@ export class Roboto extends MazeSolver {
       case 'drunkards-walk': {
         return new DrunkenRobot({ maze: this.maze, location, ...robo });
       }
+
+      case 'dijkstras': {
+        return new DijkstrasRobot({ maze: this.maze, location, ...robo });
+      }
+
+      // case 'pledge': {
+      //   return new PledgeRobot({ maze: this.maze, location, ...robo });
+      // }
 
       // no default
     }

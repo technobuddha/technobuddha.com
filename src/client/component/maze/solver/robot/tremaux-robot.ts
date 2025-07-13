@@ -13,8 +13,8 @@ export type TremauxRobotProperties = RobotProperties & {
 };
 
 export class TremauxRobot extends Robot {
-  public algorithm = 'trémaux';
-  protected readonly showMarks: boolean = true;
+  public readonly algorithm = 'trémaux';
+  protected readonly showMarks: boolean;
   protected readonly markedColor: string;
   protected readonly blockedColor: string;
   protected readonly marks: Record<Direction, number>[][];
@@ -61,7 +61,7 @@ export class TremauxRobot extends Robot {
       2,
     );
 
-    this.clearCell(this.location);
+    this.redrawCell(this.location);
     this.moveTo(next.target);
 
     for (const direction of Object.keys(

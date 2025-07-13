@@ -85,7 +85,7 @@
     "@react-router/serve": "7.5.3",
     "@technobuddha/color": "0.3.2",
     "@technobuddha/datagrid": "1.2.12",
-    "@technobuddha/library": "1.9.18",
+    "@technobuddha/library": "1.9.19",
     "@technobuddha/react-hooks": "1.6.2",
     "@technobuddha/size": "1.9.8",
     "@types/browserslist-useragent": "3.0.7",

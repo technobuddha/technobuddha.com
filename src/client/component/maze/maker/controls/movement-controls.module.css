@@ -5,10 +5,17 @@
   align-items: center;
 
   .human {
+    width: 100%;
     margin: 0 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.5rem;
 
-    .row {
-      text-align: center;
+    .col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
   }
 

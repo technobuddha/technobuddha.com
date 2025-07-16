@@ -1,4 +1,4 @@
-import { type CellFacing } from '#componentmaze/geometry';
+import { type CellFacing } from '../geometry/index.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 import { DrunkenRobot, type DrunkenRobotProperties } from './robot/drunken-robot.ts';

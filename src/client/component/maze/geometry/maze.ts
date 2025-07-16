@@ -399,7 +399,7 @@ export abstract class Maze extends Random {
           y,
           walls: this.initialWalls({ x, y }),
           tunnels: this.initialTunnels({ x, y }),
-          barriors: this.initialBarriors({ x, y }),
+          barriers: this.initialBarriers({ x, y }),
           rect: toSquare(this.getRect({ x, y })),
         }),
     );
@@ -423,7 +423,7 @@ export abstract class Maze extends Random {
     ) as Record<Direction, false>;
   }
 
-  public initialBarriors(cell: Cell): Wall {
+  public initialBarriers(cell: Cell): Wall {
     return Object.fromEntries(
       Object.keys(this.initialWalls(cell)).map((d) => [d as Direction, false]),
     ) as Record<Direction, false>;
@@ -709,8 +709,6 @@ export abstract class Maze extends Random {
       solution.unshift(cell);
       cell = parent[cell.x][cell.y];
     }
-
-    solution.unshift(entrance);
 
     return solution;
   }
@@ -1195,7 +1193,7 @@ export abstract class Maze extends Random {
 
   public drawWalls(cell: Cell, color = this.color.wall): void {
     const nexus = this.nexus(cell);
-    const { walls, tunnels, barriors } = nexus;
+    const { walls, tunnels, barriers } = nexus;
 
     for (const direction of this.directions) {
       if (walls[direction] === true) {
@@ -1207,7 +1205,7 @@ export abstract class Maze extends Random {
           }
         }
         this.drawWall({ ...cell, direction }, color);
-      } else if (barriors[direction]) {
+      } else if (barriers[direction]) {
         this.drawWall({ ...cell, direction }, color);
       } else if (walls[direction] === false) {
         const move = this.traverse(cell, direction);

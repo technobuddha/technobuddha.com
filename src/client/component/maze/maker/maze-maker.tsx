@@ -90,6 +90,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       timer.current = undefined;
     }
 
+    // cspell: words solpro
     const solpro = mode === 'game' ? humanProducer : solverProducer;
 
     if (drawing && geometryProducer && generatorProducer && solpro) {

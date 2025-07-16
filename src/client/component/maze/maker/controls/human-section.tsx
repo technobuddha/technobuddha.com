@@ -21,6 +21,19 @@ export const HumanSection: React.FC<HumanSectionProps> = ({ className, onChange,
   const [markVisited, setMarkVisited] = React.useState(false);
   const [markDeadEnds, setMarkDeadEnds] = React.useState(true);
   const [hideReverse, setHideReverse] = React.useState(false);
+  const [hmr, setHMR] = React.useState(0);
+
+  React.useEffect(() => {
+    const handleHMR = (): void => {
+      setHMR((prev) => prev + 1);
+    };
+
+    import.meta.hot?.on('vite:beforeUpdate', handleHMR);
+
+    return () => {
+      import.meta.hot?.off('vite:beforeUpdate', handleHMR);
+    };
+  }, []);
 
   const handleFinalDestinationChange = React.useCallback((checked: boolean) => {
     setFinalDestination(checked);
@@ -59,10 +72,10 @@ export const HumanSection: React.FC<HumanSectionProps> = ({ className, onChange,
             hideReverse,
           },
         }),
-      title: 'Human Options',
+      title: 'Human',
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [finalDestination, markVisited, markDeadEnds, hideReverse, onChange]);
+  }, [finalDestination, markVisited, markDeadEnds, hideReverse, onChange, hmr]);
 
   return (
     <Section className={className} title="human">

@@ -12,13 +12,13 @@ Todo:
   ✔ Brick artifacts after Division @done(25-07-16 10:44)
   ✔ Dot artifacts after Division @done(25-07-16 10:45)
   ✔ Solution for rabbits, mouse, drunk @done(25-07-16 10:45)
-  ✔ Wraparound for Octogon Square @done(25-07-16 10:45)
+  ✔ Wraparound for Octagon Square @done(25-07-16 10:45)
   ✔ Wall-walking + braid = stuck in loop = frozen @done(25-07-16 10:45)
   ✔ decide on seek needs to be aware of circles @done(25-07-16 10:45)
-  ✔ distance function should account for wraparound @done(25-07-16 10:45)
 
+  ✔ distance function should account for wraparound @done(25-07-16 12:33)
   ☐ Brick mazes path need some love.
   ☐ Chain gets stuck in circle (center entrance)
-  ☐ Human reverse doesn't always work
+  ✔ Human reverse doesn't always work @started(25-07-16 12:35) @done(25-07-16 14:51) @lasted(2h16m21s)
   ☐ background running multiple mazes
-  ☐ get the fucking pledge bot working
+  ☐ get the fucking pledge bot working @started(25-07-14 00:00)

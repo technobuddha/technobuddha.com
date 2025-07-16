@@ -37,6 +37,7 @@ export class Runner extends EventTarget {
   private playing = true;
   private aborted = false;
   private delay = 0;
+  public observationTime = 10000;
   private observationTimer: ReturnType<typeof setTimeout> | undefined = undefined;
 
   public constructor({
@@ -268,7 +269,7 @@ export class Runner extends EventTarget {
                 this.observationTimer = setTimeout(() => {
                   this.switchPhase('exit');
                   this.dispatchEvent(new CustomEvent('command', {}));
-                }, 15000);
+                }, this.observationTime);
               }
 
               break;
@@ -306,5 +307,10 @@ export class Runner extends EventTarget {
     this.aborted = true;
 
     this.solver?.dispose();
+  }
+
+  public exit(): void {
+    this.switchPhase('exit');
+    this.dispatchEvent(new CustomEvent('command', {}));
   }
 }

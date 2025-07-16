@@ -357,7 +357,7 @@ export class DotMaze extends Maze {
 
   public drawIntersections(cell: Cell, tunnels = true): void {
     if (this.drawing) {
-      const { walls, barriors } = this.nexus(cell);
+      const { walls, barriers } = this.nexus(cell);
       const { x0, x1, x2, x3, xb, xc, xd, xe, y0, y1, y2, y3, yc, yd, yb, ye } =
         this.cellOffsets(cell);
 
@@ -369,7 +369,7 @@ export class DotMaze extends Maze {
       // b
       const crossedB = this.inMaze(nCell) && this.nexus(nCell).walls.d === false;
 
-      if (walls.b || barriors.b) {
+      if (walls.b || barriers.b) {
         if (crossedB) {
           this.drawing.polygon(
             [
@@ -436,7 +436,7 @@ export class DotMaze extends Maze {
       // d
       const crossedD = this.inMaze(eCell) && this.nexus(eCell).walls.f === false;
 
-      if (walls.d || barriors.d) {
+      if (walls.d || barriers.d) {
         if (crossedD) {
           this.drawing.polygon(
             [
@@ -502,7 +502,7 @@ export class DotMaze extends Maze {
 
       // f
       const crossedF = this.inMaze(sCell) && this.nexus(sCell).walls.h === false;
-      if (walls.f || barriors.f) {
+      if (walls.f || barriers.f) {
         if (crossedF) {
           this.drawing.polygon(
             [
@@ -568,7 +568,7 @@ export class DotMaze extends Maze {
 
       // h
       const crossedH = this.inMaze(wCell) && this.nexus(wCell).walls.b === false;
-      if (walls.h || barriors.h) {
+      if (walls.h || barriers.h) {
         if (crossedH) {
           this.drawing.polygon(
             [

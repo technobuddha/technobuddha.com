@@ -9,7 +9,7 @@ export type NexusProperties = {
   y: number;
   walls: Wall;
   tunnels: Tunnels;
-  barriors: Wall;
+  barriers: Wall;
   bridge?: boolean;
   mask?: boolean;
   distance?: number;
@@ -21,7 +21,7 @@ export class Nexus {
   public readonly y: number;
   public readonly walls: Wall;
   public readonly tunnels: Tunnels;
-  public readonly barriors: Wall;
+  public readonly barriers: Wall;
   public bridge: boolean;
   public mask: boolean;
   public distance: number;
@@ -32,7 +32,7 @@ export class Nexus {
     y,
     walls,
     tunnels,
-    barriors,
+    barriers,
     bridge = false,
     mask = false,
     distance = Infinity,
@@ -42,7 +42,7 @@ export class Nexus {
     this.y = y;
     this.walls = walls;
     this.tunnels = tunnels;
-    this.barriors = barriors;
+    this.barriers = barriers;
     this.bridge = bridge;
     this.mask = mask;
     this.distance = distance;
@@ -77,10 +77,10 @@ export class Nexus {
     }
   }
 
-  public erectBarrior(direction: Direction): void {
+  public erectbarrier(direction: Direction): void {
     if (direction in this.walls) {
       delete this.walls[direction];
     }
-    this.barriors[direction] = true;
+    this.barriers[direction] = true;
   }
 }

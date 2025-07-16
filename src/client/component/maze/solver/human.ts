@@ -48,13 +48,13 @@ export class Human extends MazeSolver {
       hideReverse: true,
       ...options,
     };
-    this.keyHandler = this.intializeKeyboardHandler();
+    this.keyHandler = this.initializeKeyboardHandler();
   }
 
   //#region Keyboard Handler
   private readonly keyHandler: (event: KeyboardEvent) => void;
 
-  private intializeKeyboardHandler(): (event: KeyboardEvent) => void {
+  private initializeKeyboardHandler(): (event: KeyboardEvent) => void {
     // eslint-disable-next-line unicorn/consistent-function-scoping
     const handler = (event: KeyboardEvent): void => {
       this.dispatchEvent(new CustomEvent('keydown', { detail: event.key }));
@@ -149,7 +149,6 @@ export class Human extends MazeSolver {
             break;
           }
         } else {
-          // destination.path.push(destination);
           cellPaths.push(toCellPath(destination));
           break;
         }
@@ -174,6 +173,7 @@ export class Human extends MazeSolver {
     exit = this.maze.exit,
   } = {}): AsyncGenerator<void> {
     const history: CellFacing[] = [entrance];
+    let autoSolve = false;
     let human: CellFacing = entrance;
     let reverse = human;
     let destinations: CellPath[] = [];
@@ -189,7 +189,24 @@ export class Human extends MazeSolver {
       }
       this.restoreCell(reverse);
 
-      destinations = this.destinations(human);
+      if (autoSolve) {
+        // The first element of the solution is the starting point, so we skip it.
+        const [, ...solution] = this.maze.solve(human);
+        const [next] = solution;
+        const walk = this.maze.walkTo(human, next);
+
+        destinations = [
+          {
+            ...this.maze.exit,
+            path: this.maze.makePath(solution),
+            history: solution,
+            direction: walk!.direction,
+            branch: walk!.direction,
+          },
+        ];
+      } else {
+        destinations = this.destinations(human);
+      }
 
       const turns = this.maze.straight(this.maze.isSame(human, entrance) ? entrance : human, bias);
       bias = !bias;
@@ -217,8 +234,9 @@ export class Human extends MazeSolver {
 
       makeChoice: while (true) {
         for (const move of destinations) {
+          this.maze.drawCell(move);
           this.maze.drawAvatar(
-            this.maze.drawCell(move),
+            move,
             this.maze.isSame(move, destinations[choice]) ? 'lime' : 'yellow',
           );
         }
@@ -240,7 +258,9 @@ export class Human extends MazeSolver {
                   this.visited[path.x][path.y] = true;
                 }
               }
+
               history.push(...destinations[choice].history);
+
               if (this.options.markVisited) {
                 this.visited[human.x][human.y] = true;
               }
@@ -258,14 +278,22 @@ export class Human extends MazeSolver {
             }
 
             case 'ArrowDown': {
+              if (this.maze.isSame(human, history.at(-1))) {
+                history.pop();
+              }
               human = history.pop() ?? human;
+
+              this.deadEnd[human.x][human.y] = false;
               break makeChoice;
             }
 
             case 'Escape': {
-              history.push(...this.maze.solve(human));
-              human = this.maze.exit;
+              autoSolve = !autoSolve;
               break makeChoice;
+            }
+
+            case 'x': {
+              return;
             }
 
             // no default

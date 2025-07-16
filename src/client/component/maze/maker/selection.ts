@@ -538,7 +538,7 @@ export const solvers: SolverSelection[] = [
     weight: 1,
     variations: [
       {
-        title: 'backtracking vs tremaux',
+        title: 'Backtracking vs. Trémaux',
         weight: 1,
         maker: (props) =>
           new Roboto({
@@ -603,7 +603,7 @@ export const solvers: SolverSelection[] = [
           }),
       },
       {
-        title: 'backtracking vs dijkstra',
+        title: 'Backtracking vs. Dijkstra',
         weight: 1,
         maker: (props) =>
           new Roboto({

@@ -1,12 +1,8 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import { memoize } from 'lodash-es';
-import {
-  IoCaretBackCircleOutline,
-  IoCaretDownCircleOutline,
-  IoCaretForwardCircleOutline,
-  IoCaretUpCircleOutline,
-} from 'react-icons/io5';
+import { GiExitDoor } from 'react-icons/gi';
+import { RiArrowTurnBackLine, RiArrowUpLine, RiRestartLine } from 'react-icons/ri';
 
 import { type Human } from '../../solver/index.ts';
 
@@ -32,39 +28,51 @@ export const MovementControls: React.FC<MovementControlsProps> = ({ runner }) =>
     [runner],
   );
 
-  const handleChange = React.useCallback(() => {
-    runner?.setMode('refresh');
+  const handleRefresh = React.useCallback(() => {
+    if (runner) {
+      runner.observationTime = 0;
+    }
 
     const human = runner?.solver as Human;
     if (human) {
-      human.dispatchEvent(new CustomEvent('keydown', { detail: 'Escape' }));
+      human.dispatchEvent(new CustomEvent('keydown', { detail: 'x' }));
     }
   }, [runner]);
 
   return (
     <div className={css.movementControls}>
       <div className={css.human}>
-        <div className={css.row}>
-          <Button variant="outlined" color="primary" onClick={handleCommand('ArrowUp')}>
-            <IoCaretUpCircleOutline size="1em" />
+        <div className={css.col}>
+          <Tooltip title="Change Direction">
+            <Button variant="outlined" color="primary" onClick={handleCommand('ArrowLeft')}>
+              <RiRestartLine size="1em" />
+            </Button>
+          </Tooltip>
+        </div>
+        <div className={css.col}>
+          <Tooltip title="Move Forward">
+            <Button variant="outlined" color="primary" onClick={handleCommand('ArrowUp')}>
+              <RiArrowUpLine size="1em" />
+            </Button>
+          </Tooltip>
+          <Tooltip title="Move Backward">
+            <Button variant="outlined" color="primary" onClick={handleCommand('ArrowDown')}>
+              <RiArrowTurnBackLine size="1em" />
+            </Button>
+          </Tooltip>
+        </div>
+        <div className={css.col}>
+          <Tooltip title="Exit Maze">
+            <Button variant="outlined" color="primary" onClick={handleCommand('Escape')}>
+              <GiExitDoor size="1em" />
+            </Button>
+          </Tooltip>
+        </div>
+        <div className={css.col}>
+          <Button variant="outlined" color="primary" onClick={handleRefresh}>
+            {playModeIcons.refresh}
           </Button>
         </div>
-        <div className={css.row}>
-          <Button variant="outlined" color="primary" onClick={handleCommand('ArrowLeft')}>
-            <IoCaretBackCircleOutline size="1em" />
-          </Button>
-          <Button variant="outlined" color="primary" onClick={handleCommand('ArrowDown')}>
-            <IoCaretDownCircleOutline size="1em" />
-          </Button>
-          <Button variant="outlined" color="primary" onClick={handleCommand('ArrowRight')}>
-            <IoCaretForwardCircleOutline size="1em" />
-          </Button>
-        </div>
-      </div>
-      <div className={css.maze}>
-        <Button variant="outlined" color="primary" onClick={handleChange}>
-          {playModeIcons.refresh}
-        </Button>
       </div>
     </div>
   );

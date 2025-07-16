@@ -49,6 +49,10 @@ export class TriangleMaze extends Maze {
     };
   }
 
+  public override manhattanDistance(a: Cell, b: Cell): number {
+    return super.manhattanDistance({ ...a, x: a.x / 2 }, { ...b, x: b.x / 2 });
+  }
+
   protected offsets(kind: Kind): Record<string, number> {
     const c = this.cellSize;
     const w = this.wallSize;

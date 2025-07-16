@@ -1,12 +1,12 @@
 import React from 'react';
 import { randomWeightedPick } from '@technobuddha/library';
 
-import { Checkbox, MenuItem, Select } from '#control';
+import { MenuItem, Select } from '#control';
 
 import { type MazeProperties } from '../../geometry/index.ts';
 
 import { type GeometryProducer } from '../maze-maker.tsx';
-import { distances, geometries, wraparounds } from '../selection.ts';
+import { debugs, distances, geometries, wraparounds } from '../selection.ts';
 
 import { Section } from './section.tsx';
 import { fixUndefined, restoreUndefined, UNDEFINED } from './undefined.ts';
@@ -17,146 +17,124 @@ type GeometrySectionProps = {
   readonly children?: never;
 };
 
-type Selection = (typeof geometries)[number];
-type Variation = Selection['variations'][number];
-type Size = Selection['sizes'][number];
-type Wraparound = (typeof wraparounds)[number];
-type Distance = (typeof distances)[number];
-
 export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onChange }) => {
-  const [geometry, setGeometry] = React.useState<Selection>();
-  const [variation, setVariation] = React.useState<Variation>();
-  const [size, setSize] = React.useState<Size>();
-  const [wraparound, setWraparound] = React.useState<Wraparound>();
-  const [showCoordinates, setShowCoordinates] = React.useState(false);
-  const [distance, setDistance] = React.useState<Distance>();
+  const [geometry, setGeometry] = React.useState<string>();
+  const [variation, setVariation] = React.useState<string>();
+  const [size, setSize] = React.useState<string>();
+  const [wraparound, setWraparound] = React.useState<string>();
+  const [debug, setDebug] = React.useState<string>();
+  const [distance, setDistance] = React.useState<string>();
+  const [hmr, setHMR] = React.useState(0);
+
+  React.useEffect(() => {
+    const handleHMR = (): void => {
+      setHMR((prev) => prev + 1);
+    };
+
+    import.meta.hot?.on('vite:beforeUpdate', handleHMR);
+
+    return () => {
+      import.meta.hot?.off('vite:beforeUpdate', handleHMR);
+    };
+  }, []);
 
   const handleGeometryChange = React.useCallback((value: string) => {
     const title = restoreUndefined(value);
     const g = geometries.find((g) => g.title === title);
 
-    setGeometry(g);
+    setGeometry(title);
 
     if (g && g.variations.length === 1) {
-      setVariation(g.variations[0]);
+      setVariation(g.variations[0].title);
     } else {
       setVariation(undefined);
     }
 
     if (g && g.sizes.length === 1) {
-      setSize(g.sizes[0]);
+      setSize(g.sizes[0].title);
     } else {
       setSize(undefined);
     }
   }, []);
 
-  const handleVariationChange = React.useCallback(
-    (value: string) => {
-      const title = restoreUndefined(value);
-      const v = geometry?.variations.find((v) => v.title === title);
+  const handleVariationChange = React.useCallback((value: string) => {
+    setVariation(restoreUndefined(value));
+  }, []);
 
-      setVariation(v);
-    },
-    [geometry],
-  );
+  const handleSizeChange = React.useCallback((value: string) => {
+    setSize(restoreUndefined(value));
+  }, []);
 
-  const handleSizeChange = React.useCallback(
-    (value: string) => {
-      const title = restoreUndefined(value);
-      const s = geometry?.sizes.find((s) => s.title === title);
-
-      setSize(s);
-    },
-    [geometry],
-  );
-
-  const handleCoordinatesChange = React.useCallback((checked: boolean) => {
-    setShowCoordinates(checked);
+  const handleDebugChange = React.useCallback((value: string) => {
+    setDebug(restoreUndefined(value));
   }, []);
 
   const handleWraparoundChange = React.useCallback((value: string) => {
-    const title = restoreUndefined(value);
-    const w = wraparounds.find((w) => w.title === title);
-
-    setWraparound(w);
+    setWraparound(restoreUndefined(value));
   }, []);
 
   const handleDistanceChange = React.useCallback((value: string) => {
-    const title = restoreUndefined(value);
-    const d = distances.find((d) => d.title === title);
-
-    setDistance(d);
+    setDistance(restoreUndefined(value));
   }, []);
 
   React.useEffect(() => {
-    const { wrapHorizontal, wrapVertical } = wraparound ?? randomWeightedPick(wraparounds)!;
-    const { showDistances } = distance ?? randomWeightedPick(distances)!;
+    onChange?.(() => {
+      const currGeometry =
+        geometries.find((g) => g.title === geometry) ?? randomWeightedPick(geometries)!;
+      const currVariation =
+        currGeometry.variations.find((v) => v.title === variation) ??
+        randomWeightedPick(currGeometry.variations)!;
+      const currSize =
+        currGeometry.sizes.find((s) => s.title === size) ?? randomWeightedPick(currGeometry.sizes)!;
+      const currWraparound =
+        wraparounds.find((w) => w.title === wraparound) ?? randomWeightedPick(wraparounds)!;
+      const currDistance =
+        distances.find((d) => d.title === distance) ?? randomWeightedPick(distances)!;
+      const currDebug = debugs.find((d) => d.title === debug) ?? randomWeightedPick(debugs)!;
 
-    if (geometry) {
-      const { cellSize, wallSize, voidSize } = size ?? randomWeightedPick(geometry.sizes)!;
+      const { wrapHorizontal, wrapVertical } = currWraparound;
+      const { showDistances } = currDistance;
+      const { cellSize, wallSize, voidSize } = currSize;
+      const { showCoordinates, showKind } = currDebug;
 
-      if (variation) {
-        onChange?.(() => ({
-          maker: (props: MazeProperties) =>
-            variation.maker({
-              cellSize,
-              wallSize,
-              voidSize,
-              showCoordinates,
-              wrapHorizontal,
-              wrapVertical,
-              showDistances,
-              ...props,
-            }),
-          title: variation.title,
-        }));
-      } else {
-        onChange?.(() => {
-          const v = randomWeightedPick(geometry.variations)!;
-          return {
-            maker: (props: MazeProperties) =>
-              v.maker({
-                cellSize,
-                wallSize,
-                voidSize,
-                showCoordinates,
-                wrapHorizontal,
-                wrapVertical,
-                showDistances,
-                ...props,
-              }),
-            title: v.title,
-          };
-        });
+      const titles: string[] = [currGeometry.title];
+
+      if (currVariation.title !== currGeometry.title) {
+        titles.push(currVariation.title);
       }
-    } else {
-      onChange?.(() => {
-        const g = randomWeightedPick(geometries)!;
-        const v = randomWeightedPick(g.variations)!;
-        const s = randomWeightedPick(g.sizes)!;
 
-        return {
-          maker: (props: MazeProperties) =>
-            v.maker({
-              cellSize: s.cellSize,
-              wallSize: s.wallSize,
-              voidSize: s.voidSize,
-              showCoordinates,
-              wrapHorizontal,
-              wrapVertical,
-              showDistances,
-              ...props,
-            }),
-          title: v.title,
-        };
-      });
-    }
-  }, [onChange, geometry, variation, size, wraparound, showCoordinates, distance]);
+      if (currSize.title !== currGeometry.title) {
+        titles.push(currSize.title);
+      }
+
+      if (currWraparound.title !== 'None') {
+        titles.push(`[Wraparound ${currWraparound.title}]`);
+      }
+
+      const title = titles.join(' ');
+
+      return {
+        maker: (props: MazeProperties) =>
+          currVariation.maker({
+            cellSize,
+            wallSize,
+            voidSize,
+            showCoordinates,
+            showKind,
+            wrapHorizontal,
+            wrapVertical,
+            showDistances,
+            ...props,
+          }),
+        title,
+      };
+    });
+  }, [geometry, variation, size, wraparound, distance, debug, onChange, hmr]);
 
   return (
     <Section className={className} title="Geometry">
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem' }}>
-        <Select label="Shape" value={fixUndefined(geometry?.title)} onChange={handleGeometryChange}>
+        <Select label="Shape" value={fixUndefined(geometry)} onChange={handleGeometryChange}>
           <MenuItem key={UNDEFINED} value={UNDEFINED}>
             (random)
           </MenuItem>
@@ -171,14 +149,15 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
         <Select
           label="Variation"
           disabled={!geometry}
-          value={fixUndefined(variation?.title)}
+          value={fixUndefined(variation)}
           onChange={handleVariationChange}
         >
           <MenuItem key={UNDEFINED} value={UNDEFINED}>
             (random)
           </MenuItem>
-          {geometry?.variations
-            .sort((a, b) => a.title.localeCompare(b.title))
+          {geometries
+            .find((g) => g.title === geometry)
+            ?.variations.sort((a, b) => a.title.localeCompare(b.title))
             .map((m) => (
               <MenuItem key={m.title} value={m.title}>
                 {m.title}
@@ -188,23 +167,25 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
         <Select
           label="Size"
           disabled={!geometry}
-          value={fixUndefined(size?.title)}
+          value={fixUndefined(size)}
           onChange={handleSizeChange}
         >
           <MenuItem key={UNDEFINED} value={UNDEFINED}>
             (random)
           </MenuItem>
-          {geometry?.sizes.map((m) => (
-            <MenuItem key={m.title} value={m.title}>
-              {m.title}
-            </MenuItem>
-          ))}
+          {geometries
+            .find((g) => g.title === geometry)
+            ?.sizes.map((m) => (
+              <MenuItem key={m.title} value={m.title}>
+                {m.title}
+              </MenuItem>
+            ))}
         </Select>
       </div>
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem' }}>
         <Select
           label="Wraparound"
-          value={fixUndefined(wraparound?.title)}
+          value={fixUndefined(wraparound)}
           onChange={handleWraparoundChange}
         >
           <MenuItem key={UNDEFINED} value={UNDEFINED}>
@@ -218,7 +199,7 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
         </Select>
         <Select
           label="Show Distances"
-          value={fixUndefined(distance?.title)}
+          value={fixUndefined(distance)}
           onChange={handleDistanceChange}
         >
           <MenuItem key={UNDEFINED} value={UNDEFINED}>
@@ -230,12 +211,17 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
             </MenuItem>
           ))}
         </Select>
+        <Select label="Debug" value={fixUndefined(debug)} onChange={handleDebugChange}>
+          <MenuItem key={UNDEFINED} value={UNDEFINED}>
+            (random)
+          </MenuItem>
+          {debugs.map((m) => (
+            <MenuItem key={m.title} value={m.title}>
+              {m.title}
+            </MenuItem>
+          ))}
+        </Select>
       </div>
-      <Checkbox
-        label="Show Coordinates"
-        checked={showCoordinates}
-        onChange={handleCoordinatesChange}
-      />
     </Section>
   );
 };

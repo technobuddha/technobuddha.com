@@ -1,0 +1,24 @@
+
+Todo:
+  ✔ Demo doesn't start until other modes are selected, not populating... @done(25-07-16 10:44)
+  ✔ Human options should take effect immediately and shouldn't reset the maze. @done(25-07-16 10:44)
+  ✔ Humans should be able to jump to the next maze. @done(25-07-16 10:44)
+  ✔ Human in cubic is looping with default selection @done(25-07-16 10:44)
+  ✔ Circle doesn't appear to draw door/floors right @done(25-07-16 10:44)
+  ✔ Titles need to be merged better @done(25-07-16 10:44)
+  ✔ Weighted random picker @done(25-07-16 10:44)
+  ✔ Trails behave better in loop back, or backtrack. @done(25-07-16 10:44)
+  ✔ Trails look different than head @done(25-07-16 10:44)
+  ✔ Brick artifacts after Division @done(25-07-16 10:44)
+  ✔ Dot artifacts after Division @done(25-07-16 10:45)
+  ✔ Solution for rabbits, mouse, drunk @done(25-07-16 10:45)
+  ✔ Wraparound for Octogon Square @done(25-07-16 10:45)
+  ✔ Wall-walking + braid = stuck in loop = frozen @done(25-07-16 10:45)
+  ✔ decide on seek needs to be aware of circles @done(25-07-16 10:45)
+  ✔ distance function should account for wraparound @done(25-07-16 10:45)
+
+  ☐ Brick mazes path need some love.
+  ☐ Chain gets stuck in circle (center entrance)
+  ☐ Human reverse doesn't always work
+  ☐ background running multiple mazes
+  ☐ get the fucking pledge bot working

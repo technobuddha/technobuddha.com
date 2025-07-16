@@ -79,7 +79,7 @@ export const matrix: Matrix = {
     F: ['k', 'jl', 'i'],
     G: ['c', 'db', 'a'],
     H: ['i', 'lj', 'k'],
-    I: ['h', 'eg', 'h'],
+    I: ['h', 'eg', 'f'],
     J: ['b', 'ac', 'd'],
     K: ['f', 'eg', 'h'],
     L: ['d', 'ac', 'b'],

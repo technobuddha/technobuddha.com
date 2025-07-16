@@ -17,8 +17,8 @@ import {
   HexagonMaze,
   type Maze,
   type MazeProperties,
-  OctogonDiamond,
-  OctogonSquare,
+  OctagonDiamond,
+  OctagonSquare,
   PentagonMaze,
   type ShowDistances,
   SquareMaze,
@@ -28,7 +28,6 @@ import {
 } from '../geometry/index.ts';
 import {
   Chain,
-  Dijkstras,
   FibonaccisRabbits,
   Filler,
   type MazeSolver,
@@ -62,7 +61,10 @@ export const geometries: GeometrySelection[] = [
     title: 'Brick',
     weight: 1,
     variations: [{ title: 'Brick', weight: 1, maker: (props) => new BrickMaze(props) }],
-    sizes: [{ title: 'Brick', weight: 1, cellSize: 20, wallSize: 1, voidSize: 2 }],
+    sizes: [
+      { title: 'Brick', weight: 1, cellSize: 20, wallSize: 1, voidSize: 1 },
+      { title: 'Large', weight: 1, cellSize: 32, wallSize: 2, voidSize: 4 },
+    ],
   },
   {
     title: 'Circular',
@@ -90,13 +92,16 @@ export const geometries: GeometrySelection[] = [
         maker: (props) => new CircularMaze({ ...props, centerRadius: 128, centerSegments: 16 }),
       },
     ],
-    sizes: [{ title: 'Circular', weight: 1, cellSize: 18, wallSize: 1, voidSize: 1 }],
+    sizes: [
+      { title: 'Circular', weight: 1, cellSize: 18, wallSize: 1, voidSize: 1 },
+      { title: 'Large', weight: 1, cellSize: 24, wallSize: 2, voidSize: 2 },
+    ],
   },
   {
     title: 'Cubic',
     weight: 1,
     variations: [{ title: 'Cubic', weight: 1, maker: (props) => new CubicMaze(props) }],
-    sizes: [{ title: 'Cubic', weight: 1, cellSize: 24, wallSize: 2, voidSize: 2 }],
+    sizes: [{ title: 'Cubic', weight: 1, cellSize: 28, wallSize: 2, voidSize: 2 }],
   },
   {
     title: 'Dot',
@@ -114,13 +119,13 @@ export const geometries: GeometrySelection[] = [
     sizes: [{ title: 'Hexagon', weight: 1, cellSize: 36, wallSize: 2, voidSize: 1 }],
   },
   {
-    title: 'Octogon',
+    title: 'Octagon',
     weight: 1,
     variations: [
-      { title: 'Diamond', weight: 1, maker: (props) => new OctogonDiamond(props) },
-      { title: 'Square', weight: 1, maker: (props) => new OctogonSquare(props) },
+      { title: 'Diamond', weight: 1, maker: (props) => new OctagonDiamond(props) },
+      { title: 'Square', weight: 1, maker: (props) => new OctagonSquare(props) },
     ],
-    sizes: [{ title: 'Octogon', weight: 1, cellSize: 40, wallSize: 1, voidSize: 1 }],
+    sizes: [{ title: 'Octagon', weight: 1, cellSize: 40, wallSize: 1, voidSize: 1 }],
   },
   {
     title: 'Pentagon',
@@ -131,7 +136,13 @@ export const geometries: GeometrySelection[] = [
   {
     title: 'Square',
     weight: 1,
-    variations: [{ title: 'Square', weight: 1, maker: (props) => new SquareMaze(props) }],
+    variations: [
+      {
+        title: 'Square',
+        weight: 1,
+        maker: (props) => new SquareMaze({ entrance: 'random edge', ...props }),
+      },
+    ],
     sizes: [
       { weight: 1, title: 'Square', cellSize: 28, wallSize: 2, voidSize: 2 },
       { weight: 1, title: 'Tiny', cellSize: 12, wallSize: 1, voidSize: 0 },
@@ -155,13 +166,41 @@ export const geometries: GeometrySelection[] = [
     title: 'Triangle',
     weight: 1,
     variations: [{ title: 'Triangle', weight: 1, maker: (props) => new TriangleMaze(props) }],
-    sizes: [{ title: 'Triangle', weight: 1, cellSize: 28, wallSize: 2, voidSize: 2 }],
+    sizes: [{ title: 'Triangle', weight: 1, cellSize: 32, wallSize: 2, voidSize: 1 }],
   },
   {
     title: 'Wedge',
     weight: 1,
     variations: [{ title: 'Wedge', weight: 1, maker: (props) => new WedgeMaze(props) }],
     sizes: [{ title: 'Wedge', weight: 1, cellSize: 32, wallSize: 1, voidSize: 2 }],
+  },
+];
+
+type DebugSelection = {
+  title: string;
+  weight: number;
+  showCoordinates: boolean;
+  showKind: boolean;
+};
+
+export const debugs: DebugSelection[] = [
+  {
+    title: 'None',
+    weight: 1,
+    showCoordinates: false,
+    showKind: false,
+  },
+  {
+    title: 'Coordinates',
+    weight: 0,
+    showCoordinates: true,
+    showKind: false,
+  },
+  {
+    title: 'Kind',
+    weight: 0,
+    showCoordinates: false,
+    showKind: true,
   },
 ];
 
@@ -390,7 +429,7 @@ export const solvers: SolverSelection[] = [
     weight: 1,
     variations: [
       {
-        title: 'Follow the Right Wall',
+        title: 'Right',
         weight: 1,
         maker: (props) =>
           new Roboto({
@@ -399,7 +438,7 @@ export const solvers: SolverSelection[] = [
           }),
       },
       {
-        title: 'Follow the Left Wall',
+        title: 'Left',
         weight: 1,
         maker: (props) =>
           new Roboto({
@@ -495,11 +534,11 @@ export const solvers: SolverSelection[] = [
     ],
   },
   {
-    title: 'The Great Race',
+    title: 'Wacky Race',
     weight: 1,
     variations: [
       {
-        title: 'The Great Race',
+        title: 'backtracking vs tremaux',
         weight: 1,
         maker: (props) =>
           new Roboto({
@@ -582,14 +621,14 @@ export const solvers: SolverSelection[] = [
     weight: 1,
     variations: [
       {
-        title: 'Dead End Filler',
+        title: 'Dead End',
         weight: 1,
         maker: (props) => new Filler({ ...props, method: 'dead-end' }),
       },
       {
-        title: 'Blind Alley Filler',
+        title: 'Blind Alley',
         weight: 1,
-        maker: (props) => new Filler({ ...props, method: 'cul-de-sac' }),
+        maker: (props) => new Filler({ ...props, method: 'blind-alley' }),
       },
     ],
   },
@@ -621,17 +660,6 @@ export const solvers: SolverSelection[] = [
       {
         title: "Dijkstra's",
         weight: 1,
-        maker: (props) => new Dijkstras(props),
-      },
-    ],
-  },
-  {
-    title: "Dijkstra's Robot",
-    weight: 0,
-    variations: [
-      {
-        title: "Dijkstra's Robot",
-        weight: 1,
         maker: (props) =>
           new Roboto({
             ...props,
@@ -645,12 +673,15 @@ export const solvers: SolverSelection[] = [
     weight: 0,
     variations: [
       {
-        title: 'Pledge Robot',
+        title: 'Pledge',
         weight: 1,
         maker: (props) =>
           new Roboto({
             ...props,
-            robots: [{ algorithm: 'pledge', color: 'lime', turn: 'right' }],
+            robots: [
+              { algorithm: 'pledge', color: 'lime', turn: 'right' },
+              { algorithm: 'wall-walking', turn: 'right', color: 'magenta' },
+            ],
           }),
       },
     ],
@@ -687,7 +718,7 @@ export const wraparounds: {
 }[] = [
   {
     weight: 12,
-    title: 'No Wrapping',
+    title: 'None',
     wrapHorizontal: false,
     wrapVertical: false,
   },
@@ -737,7 +768,7 @@ export const distances: { weight: number; title: string; showDistances: ShowDist
 export const braids: { weight: number; title: string; braiding: number }[] = [
   {
     weight: 12,
-    title: 'No Braiding',
+    title: 'None',
     braiding: 0,
   },
   {

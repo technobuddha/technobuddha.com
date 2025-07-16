@@ -6,7 +6,7 @@ import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 export type FillerProperties = MazeSolverProperties & {
   readonly blockedColor?: string;
-  readonly method?: 'cul-de-sac' | 'dead-end';
+  readonly method?: 'blind-alley' | 'dead-end';
 };
 
 export class Filler extends MazeSolver {
@@ -17,7 +17,7 @@ export class Filler extends MazeSolver {
   public constructor({
     maze,
     blockedColor = maze.color.pruned,
-    method = 'cul-de-sac',
+    method = 'blind-alley',
     ...props
   }: FillerProperties) {
     super({ maze, ...props });

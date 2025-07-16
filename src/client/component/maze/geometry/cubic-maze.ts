@@ -34,10 +34,10 @@ export class CubicMaze extends Maze {
       horizontalCellsPerGroup: 3,
       groupHeight: this.cellSize * SIN15 * 5,
       verticalCellsPerGroup: 1,
-      leftPadding: 0, //this.cellSize / 2,
-      rightPadding: 0, //this.cellSize / 2,
+      leftPadding: 0,
+      rightPadding: this.cellSize * COS15,
       topPadding: this.cellSize / 2,
-      bottomPadding: 0, //this.cellSize / 2,
+      bottomPadding: 0,
     };
   }
 
@@ -58,6 +58,10 @@ export class CubicMaze extends Maze {
     }
 
     return { x, y };
+  }
+
+  public override manhattanDistance(a: Cell, b: Cell): number {
+    return super.manhattanDistance({ ...a, x: a.x / 3 }, { ...b, x: b.x / 3 });
   }
 
   protected offsets(kind: Kind): Record<string, number> {

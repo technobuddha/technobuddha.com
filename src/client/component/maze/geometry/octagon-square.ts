@@ -1,18 +1,18 @@
 import { type Cartesian, modulo } from '@technobuddha/library';
 
 import { type Cell, type DrawingSizes } from './maze.ts';
-import { matrixSquare } from './octogon-matrix.ts';
-import { OctogonMaze, type OctogonMazeProperties } from './octogon-maze.ts';
+import { matrixSquare } from './octagon-matrix.ts';
+import { OctagonMaze, type OctagonMazeProperties } from './octagon-maze.ts';
 
-export type OctogonSquareProperties = OctogonMazeProperties;
+export type OctagonSquareProperties = OctagonMazeProperties;
 
-export class OctogonSquare extends OctogonMaze {
-  public constructor(props: OctogonSquareProperties) {
+export class OctagonSquare extends OctagonMaze {
+  public constructor(props: OctagonSquareProperties) {
     super(props, matrixSquare);
   }
 
   protected drawingSize(): DrawingSizes {
-    // Calculare the length of a an octogon side
+    // Calculare the length of a an octagon side
     const ao = this.cellSize / (1 + Math.SQRT2);
 
     return {
@@ -20,13 +20,19 @@ export class OctogonSquare extends OctogonMaze {
       horizontalCellsPerGroup: 2,
       groupHeight: this.cellSize + ao,
       verticalCellsPerGroup: 2,
-      bottomPadding: -(ao * Math.SQRT1_2),
+      topPadding: this.wrapVertical ? this.cellSize * Math.SQRT1_2 * 0.5 : 0,
+      bottomPadding:
+        this.wrapVertical ? this.cellSize * Math.SQRT1_2 * 0.5 : -ao * 2 * Math.SQRT1_2,
     };
   }
 
   // Don't render the last row of squares, the maze looks better
   public override inMaze(cell: Cell): boolean {
-    return super.inMaze(cell) && cell.x < this.width - 1 && cell.y < this.height - 1;
+    return (
+      super.inMaze(cell) &&
+      (this.wrapHorizontal || cell.x < this.width - 1) &&
+      (this.wrapVertical || cell.y < this.height - 1)
+    );
   }
 
   public override cellKind(cell: Cell): number {
@@ -41,7 +47,7 @@ export class OctogonSquare extends OctogonMaze {
   }
 
   protected cellOrigin(cell: Cell): Cartesian {
-    // Calculare the length of a an octogon side
+    // Calculare the length of a an octagon side
     const ao = this.cellSize / (1 + Math.SQRT2);
 
     let x = 0;

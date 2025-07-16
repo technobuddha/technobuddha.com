@@ -30,7 +30,7 @@ export class Chain extends Roboto {
     robot = 'wall-walking',
     avatarColor = maze.color.avatar,
     pathColor = maze.color.path,
-    chainColor = '#333333',
+    chainColor = '#EEEEEE',
     ...props
   }: ChainProperties) {
     super({ maze, robots: [], ...props });
@@ -48,7 +48,6 @@ export class Chain extends Roboto {
             {
               algorithm: 'wall-walking',
               turn,
-              program: turn === 'right' ? 'right-turn' : 'left-turn',
               color,
               drawCell: this.restoreCell.bind(this),
             },
@@ -109,13 +108,23 @@ export class Chain extends Roboto {
     this.chain = [link];
     while (!this.maze.isSame(link, exit)) {
       this.maze.drawAvatar(this.maze.drawCell(link), this.chainColor);
-      const [{ target }] = this.maze
+      yield;
+      const closest = this.maze
         .moves(link, { wall: 'all' })
         .filter(({ target }) => !this.chain.some((c) => this.maze.isSame(c, target)))
-        .sort(
-          ({ target: a }, { target: b }) =>
-            Math.hypot(a.x - exit.x, a.y - exit.y) - Math.hypot(b.x - exit.x, b.y - exit.y),
-        );
+        .map((m) => ({
+          move: m,
+          distance: this.maze.manhattanDistance(m.target, this.maze.exit),
+        }))
+        .sort((a, b) => a.distance - b.distance);
+
+      if (closest.length === 0) {
+        throw new Error('Unable to build a chain');
+      }
+
+      const { target } = this.randomPick(
+        closest.filter((c) => c.distance === closest[0].distance),
+      )!.move;
       link = target;
       this.chain.push(link);
     }

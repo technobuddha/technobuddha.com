@@ -73,8 +73,9 @@ export class BrickMaze extends Maze {
 
   public drawFloor(cell: Cell, color = this.color.cell): void {
     if (this.drawing) {
-      const { x1, x8, y1, y4 } = this.cellOffsets(cell);
+      const { x0, x1, x8, x9, y0, y1, y4, y5 } = this.cellOffsets(cell);
 
+      this.drawing.rect({ x: x0, y: y0 }, { x: x9, y: y5 }, this.color.void);
       this.drawing.rect({ x: x1, y: y1 }, { x: x8, y: y4 }, color);
     }
   }

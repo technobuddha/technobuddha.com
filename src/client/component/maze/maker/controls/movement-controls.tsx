@@ -10,6 +10,7 @@ import {
 
 import { type Human } from '../../solver/index.ts';
 
+import { playModeIcons } from '../play-mode.tsx';
 import { type Runner } from '../runner.ts';
 
 import css from './movement-controls.module.css';
@@ -31,22 +32,38 @@ export const MovementControls: React.FC<MovementControlsProps> = ({ runner }) =>
     [runner],
   );
 
+  const handleChange = React.useCallback(() => {
+    runner?.setMode('refresh');
+
+    const human = runner?.solver as Human;
+    if (human) {
+      human.dispatchEvent(new CustomEvent('keydown', { detail: 'Escape' }));
+    }
+  }, [runner]);
+
   return (
     <div className={css.movementControls}>
-      <div style={{ textAlign: 'center' }}>
-        <Button variant="outlined" color="primary" onClick={handleCommand('ArrowUp')}>
-          <IoCaretUpCircleOutline size={28} />
-        </Button>
+      <div className={css.human}>
+        <div className={css.row}>
+          <Button variant="outlined" color="primary" onClick={handleCommand('ArrowUp')}>
+            <IoCaretUpCircleOutline size="1em" />
+          </Button>
+        </div>
+        <div className={css.row}>
+          <Button variant="outlined" color="primary" onClick={handleCommand('ArrowLeft')}>
+            <IoCaretBackCircleOutline size="1em" />
+          </Button>
+          <Button variant="outlined" color="primary" onClick={handleCommand('ArrowDown')}>
+            <IoCaretDownCircleOutline size="1em" />
+          </Button>
+          <Button variant="outlined" color="primary" onClick={handleCommand('ArrowRight')}>
+            <IoCaretForwardCircleOutline size="1em" />
+          </Button>
+        </div>
       </div>
-      <div style={{ textAlign: 'center' }}>
-        <Button variant="outlined" color="primary" onClick={handleCommand('ArrowLeft')}>
-          <IoCaretBackCircleOutline size={28} />
-        </Button>
-        <Button variant="outlined" color="primary" onClick={handleCommand('ArrowDown')}>
-          <IoCaretDownCircleOutline size={28} />
-        </Button>
-        <Button variant="outlined" color="primary" onClick={handleCommand('ArrowRight')}>
-          <IoCaretForwardCircleOutline size={28} />
+      <div className={css.maze}>
+        <Button variant="outlined" color="primary" onClick={handleChange}>
+          {playModeIcons.refresh}
         </Button>
       </div>
     </div>

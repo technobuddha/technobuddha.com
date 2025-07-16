@@ -17,83 +17,76 @@ type GeneratorSectionProps = {
   readonly children?: never;
 };
 
-type Selection = (typeof generators)[number];
-type Variation = Selection['variations'][number];
-type Braiding = (typeof braids)[number];
-
 export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, onChange }) => {
-  const [generator, setGenerator] = React.useState<Selection>();
-  const [variation, setVariation] = React.useState<Variation>();
-  const [braid, setBraid] = React.useState<Braiding>();
+  const [generator, setGenerator] = React.useState<string>();
+  const [variation, setVariation] = React.useState<string>();
+  const [braid, setBraid] = React.useState<string>();
+  const [hmr, setHMR] = React.useState(0);
+
+  React.useEffect(() => {
+    const handleHMR = (): void => {
+      setHMR((prev) => prev + 1);
+    };
+
+    import.meta.hot?.on('vite:beforeUpdate', handleHMR);
+
+    return () => {
+      import.meta.hot?.off('vite:beforeUpdate', handleHMR);
+    };
+  }, []);
 
   const handleGeneratorChange = React.useCallback((value: string) => {
     const title = restoreUndefined(value);
+    setGenerator(title);
+
     const g = generators.find((g) => g.title === title);
-
-    setGenerator(g);
-
     if (g && g.variations.length === 1) {
-      setVariation(g.variations[0]);
+      setVariation(g.variations[0].title);
     } else {
       setVariation(undefined);
     }
   }, []);
 
-  const handleVariationChange = React.useCallback(
-    (value: string) => {
-      const title = restoreUndefined(value);
-      const v = generator?.variations.find((v) => v.title === title);
-
-      setVariation(v);
-    },
-    [generator],
-  );
+  const handleVariationChange = React.useCallback((value: string) => {
+    setVariation(restoreUndefined(value));
+  }, []);
 
   const handleBraidChange = React.useCallback((value: string) => {
-    const title = restoreUndefined(value);
-    setBraid(braids.find((b) => b.title === title));
+    setBraid(restoreUndefined(value));
   }, []);
 
   React.useEffect(() => {
-    const { braiding } = braid ?? randomWeightedPick(braids)!;
+    onChange?.(() => {
+      const currGenerator =
+        generators.find((g) => g.title === generator) ?? randomWeightedPick(generators)!;
+      const currVariation =
+        currGenerator.variations.find((v) => v.title === variation) ??
+        randomWeightedPick(currGenerator.variations)!;
+      const currBraid = braids.find((b) => b.title === braid) ?? randomWeightedPick(braids)!;
+      const { braiding } = currBraid;
 
-    if (generator) {
-      if (variation) {
-        onChange?.(() => ({
-          maker: (props: MazeGeneratorProperties) => variation.maker({ braiding, ...props }),
-          title: variation.title,
-        }));
-      } else {
-        onChange?.(() => {
-          const v = randomWeightedPick(generator.variations)!;
-          return {
-            maker: (props: MazeGeneratorProperties) => v.maker({ braiding, ...props }),
-            title: v.title,
-          };
-        });
+      const titles: string[] = [currGenerator.title];
+      if (currVariation.title !== currGenerator.title) {
+        titles.push(currVariation.title);
       }
-    } else {
-      onChange?.(() => {
-        const g = randomWeightedPick(generators)!;
-        const v = randomWeightedPick(g.variations)!;
 
-        return {
-          maker: (props: MazeGeneratorProperties) => v.maker({ braiding, ...props }),
-          title: v.title,
-        };
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [generator, variation, braid]);
+      if (currBraid.title !== 'None') {
+        titles.push(`[${currBraid.title}]`);
+      }
+
+      const title = titles.join(' ');
+
+      return {
+        maker: (props: MazeGeneratorProperties) => currVariation.maker({ braiding, ...props }),
+        title,
+      };
+    });
+  }, [generator, variation, braid, onChange, hmr]);
 
   return (
     <Section className={className} title="Generator">
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem' }}>
-        <Select
-          label="Algorithm"
-          value={fixUndefined(generator?.title)}
-          onChange={handleGeneratorChange}
-        >
+        <Select label="Algorithm" value={fixUndefined(generator)} onChange={handleGeneratorChange}>
           <MenuItem key={UNDEFINED} value={UNDEFINED}>
             (random)
           </MenuItem>
@@ -108,14 +101,15 @@ export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, o
         <Select
           label="Variation"
           disabled={!generator}
-          value={fixUndefined(variation?.title)}
+          value={fixUndefined(variation)}
           onChange={handleVariationChange}
         >
           <MenuItem key={UNDEFINED} value={UNDEFINED}>
             (random)
           </MenuItem>
-          {generator?.variations
-            .sort((a, b) => a.title.localeCompare(b.title))
+          {generators
+            .find((g) => g.title === generator)
+            ?.variations.sort((a, b) => a.title.localeCompare(b.title))
             .map((m) => (
               <MenuItem key={m.title} value={m.title}>
                 {m.title}
@@ -123,7 +117,7 @@ export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, o
             ))}
         </Select>
       </div>
-      <Select label="Braid" value={fixUndefined(braid?.title)} onChange={handleBraidChange}>
+      <Select label="Braid" value={fixUndefined(braid)} onChange={handleBraidChange}>
         <MenuItem key={UNDEFINED} value={UNDEFINED}>
           (random)
         </MenuItem>

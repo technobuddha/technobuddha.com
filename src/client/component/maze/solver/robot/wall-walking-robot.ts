@@ -3,7 +3,7 @@ import { create2DArray } from '@technobuddha/library';
 import { Robot, type RobotProperties } from './robot.ts';
 import { RobotError } from './robot-error.ts';
 
-export type WallWalkingRobotProperties = RobotProperties & {
+export type WallWalkingRobotProperties = Omit<RobotProperties, 'program'> & {
   turn: 'right' | 'left';
 };
 
@@ -12,7 +12,7 @@ export class WallWalkingRobot extends Robot {
   private readonly visits: number[][];
 
   public constructor({ turn = 'right', ...props }: WallWalkingRobotProperties) {
-    const program = turn === 'right' ? 'right-turn' : 'left-turn';
+    const program = turn === 'right' ? 'right-wall' : 'left-wall';
     super({ program, ...props });
     this.visits = create2DArray(this.maze.width, this.maze.height, 0);
   }

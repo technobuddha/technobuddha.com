@@ -43,7 +43,6 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
 
   const [mazeName, setMazeName] = React.useState('');
   const [generatorName, setGeneratorName] = React.useState('');
-  const [braidingName, setBraidingName] = React.useState('');
   const [solverName, setSolverName] = React.useState('');
 
   const [phasePlayMode, setPhasePlayMode] = React.useState<{ [P in Phase]?: PlayMode }>({
@@ -123,15 +122,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    mode,
-    geometryProducer,
-    generatorProducer,
-    solverProducer,
-    humanProducer,
-    drawing,
-    mazeNumber,
-  ]);
+  }, [mode, drawing, mazeNumber]);
 
   const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -193,8 +184,6 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
             <span className={css.option}>{mazeName}</span>
             <span className={css.text}>Generator:</span>
             <span className={css.option}>{generatorName}</span>
-            <span className={css.text}>Braid:</span>
-            <span className={css.option}>{braidingName}</span>
             <span className={css.text}>Solver:</span>
             <span className={css.option}>{solverName}</span>
           </div>
@@ -214,11 +203,11 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         </ToggleButtonGroup>
         <div className={css.settings}>
           <GeometrySection
-            className={clsx(!(mode === 'custom' || mode === 'game') && css.hidden)}
+            className={clsx(mode === 'demo' && css.hidden)}
             onChange={handleGeometryChange}
           />
           <GeneratorSection
-            className={clsx(!(mode === 'custom' || mode === 'game') && css.hidden)}
+            className={clsx(mode === 'demo' && css.hidden)}
             onChange={handleGeneratorChange}
           />
           <SolverSection
@@ -228,13 +217,14 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           <HumanSection
             className={clsx(mode !== 'game' && css.hidden)}
             onChange={handleHumanChange}
+            runner={runner}
           />
         </div>
-        <Messages runner={runner} />
         {mode === 'game' && <GameControls runner={runner} />}
         {mode === 'custom' && (
           <CustomControls runner={runner} onPhasePlayModeChange={handlePhasePlayModeChange} />
         )}
+        <Messages runner={runner} />
       </div>
     </div>
   );

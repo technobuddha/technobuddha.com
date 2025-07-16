@@ -1,6 +1,7 @@
 import {
   type Cartesian,
   create2DArray,
+  manhattanDistance,
   modulo,
   type Rect,
   rotate,
@@ -604,6 +605,32 @@ export abstract class Maze extends Random {
   public restore(backup: Nexus[][]): void {
     this.nexuses = structuredClone(backup);
   }
+
+  public manhattanDistance(a: Cell, b: Cell): number {
+    const distances: number[] = [manhattanDistance(a, b)];
+
+    if (this.wrapHorizontal) {
+      distances.push(
+        manhattanDistance({ ...a, x: a.x + this.width }, b),
+        manhattanDistance({ ...a, x: a.x - this.width }, b),
+      );
+    }
+    if (this.wrapVertical) {
+      distances.push(
+        manhattanDistance({ ...a, y: a.y + this.height }, b),
+        manhattanDistance({ ...a, y: a.y - this.height }, b),
+      );
+    }
+    if (this.wrapHorizontal && this.wrapVertical) {
+      distances.push(
+        manhattanDistance({ x: a.x + this.width, y: a.y + this.height }, b),
+        manhattanDistance({ x: a.x - this.width, y: a.y - this.height }, b),
+      );
+    }
+
+    return Math.min(...distances);
+  }
+
   public analyze(entrance: Cell = this.entrance): {
     maxDistance: number;
     maxCell: Cell;
@@ -654,6 +681,38 @@ export abstract class Maze extends Random {
     const unreachable = this.cellsInMaze().filter((cell) => distances[cell.x][cell.y] === Infinity);
 
     return { maxDistance, maxCell, distances, unreachable, loops };
+  }
+
+  public solve(entrance: CellFacing = this.entrance, exit: CellFacing = this.exit): CellFacing[] {
+    const visited = create2DArray(this.width, this.height, false);
+    const parent: (CellFacing | undefined)[][] = create2DArray(this.width, this.height, undefined);
+    const queue: CellFacing[] = [entrance];
+
+    visited[entrance.x][entrance.y] = true;
+
+    while (queue.length > 0) {
+      const cell = queue.shift()!;
+
+      for (const move of this.moves(cell, { wall: false }).filter(
+        ({ target }) => !visited[target.x][target.y],
+      )) {
+        visited[move.target.x][move.target.y] = true;
+        parent[move.target.x][move.target.y] = cell;
+        queue.push(move.target);
+      }
+    }
+
+    const solution: CellFacing[] = [];
+
+    let cell: CellFacing | undefined = exit;
+    while (cell) {
+      solution.unshift(cell);
+      cell = parent[cell.x][cell.y];
+    }
+
+    solution.unshift(entrance);
+
+    return solution;
   }
 
   public addTermini(): this {
@@ -952,20 +1011,16 @@ export abstract class Maze extends Random {
   //#endregion
   //#region Construction
   public addWall(cell: Cell, direction: Direction, draw = true): void {
-    if (this.inMaze(cell)) {
+    const cell2 = this.move(cell, direction);
+    if (this.inMaze(cell) && this.inMaze(cell2)) {
       this.nexus(cell).addWall(direction);
+
+      const direction2 = this.opposite(cell2.facing);
+      this.nexus(cell2).addWall(direction2);
+
       if (draw) {
         this.drawCell(cell);
-      }
-
-      const cell2 = this.move(cell, direction);
-      if (this.inMaze(cell2)) {
-        const direction2 = this.opposite(cell2.facing);
-
-        this.nexus(cell2).addWall(direction2);
-        if (draw) {
-          this.drawCell(cell2);
-        }
+        this.drawCell(cell2);
       }
     }
   }
@@ -1169,7 +1224,8 @@ export abstract class Maze extends Random {
     const { walls } = this.nexus(cell);
 
     for (const pillar of this.pillars) {
-      if (pillar[0] in walls && pillar[1] in walls) {
+      if (pillar[0] in walls || pillar[1] in walls) {
+        // if (walls[pillar[0] as Direction] === true || walls[pillar[1] as Direction] === true) {
         this.drawPillar(cell, pillar, color);
       }
     }

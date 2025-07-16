@@ -1,13 +1,13 @@
 import { type Cartesian, modulo } from '@technobuddha/library';
 
 import { type Cell, type DrawingSizes } from './maze.ts';
-import { matrixDiamond } from './octogon-matrix.ts';
-import { OctogonMaze, type OctogonMazeProperties } from './octogon-maze.ts';
+import { matrixDiamond } from './octagon-matrix.ts';
+import { OctagonMaze, type OctagonMazeProperties } from './octagon-maze.ts';
 
-export type OctogonDiamondProperties = OctogonMazeProperties;
+export type OctagonDiamondProperties = OctagonMazeProperties;
 
-export class OctogonDiamond extends OctogonMaze {
-  public constructor(props: OctogonDiamondProperties) {
+export class OctagonDiamond extends OctagonMaze {
+  public constructor(props: OctagonDiamondProperties) {
     super(props, matrixDiamond);
   }
 
@@ -33,7 +33,7 @@ export class OctogonDiamond extends OctogonMaze {
   }
 
   protected cellOrigin(cell: Cell): Cartesian {
-    // Calculare the length of a an octogon side
+    // Calculate the length of a an octagon side
     const ao = this.cellSize / (1 + Math.SQRT2);
 
     switch (this.cellKind(cell)) {

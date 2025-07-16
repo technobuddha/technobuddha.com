@@ -17,70 +17,66 @@ type SolverSectionProps = {
   readonly children?: never;
 };
 
-type Selection = (typeof solvers)[number];
-type Variation = Selection['variations'][number];
-
 export const SolverSection: React.FC<SolverSectionProps> = ({ className, onChange }) => {
-  const [solver, setSolver] = React.useState<Selection>();
-  const [variation, setVariation] = React.useState<Variation>();
+  const [solver, setSolver] = React.useState<string>();
+  const [variation, setVariation] = React.useState<string>();
+  const [hmr, setHMR] = React.useState(0);
+
+  React.useEffect(() => {
+    const handleHMR = (): void => {
+      setHMR((prev) => prev + 1);
+    };
+
+    import.meta.hot?.on('vite:beforeUpdate', handleHMR);
+
+    return () => {
+      import.meta.hot?.off('vite:beforeUpdate', handleHMR);
+    };
+  }, []);
 
   const handleSolverChange = React.useCallback((value: string) => {
     const title = restoreUndefined(value);
+    setSolver(title);
+
     const g = solvers.find((g) => g.title === title);
 
-    setSolver(g);
-
     if (g && g.variations.length === 1) {
-      setVariation(g.variations[0]);
+      setVariation(g.variations[0].title);
     } else {
       setVariation(undefined);
     }
   }, []);
 
-  const handleVariationChange = React.useCallback(
-    (value: string) => {
-      const title = restoreUndefined(value);
-      const v = solver?.variations.find((v) => v.title === title);
-
-      setVariation(v);
-    },
-    [solver],
-  );
+  const handleVariationChange = React.useCallback((value: string) => {
+    setVariation(restoreUndefined(value));
+  }, []);
 
   React.useEffect(() => {
-    if (solver) {
-      if (variation) {
-        onChange?.(() => ({
-          maker: (props: MazeSolverProperties) => variation.maker(props),
-          title: variation.title,
-        }));
-      } else {
-        onChange?.(() => {
-          const v = randomWeightedPick(solver.variations)!;
-          return {
-            maker: (props: MazeSolverProperties) => v.maker(props),
-            title: v.title,
-          };
-        });
-      }
-    } else {
-      onChange?.(() => {
-        const g = randomWeightedPick(solvers)!;
-        const v = randomWeightedPick(g.variations)!;
+    onChange?.(() => {
+      const currSolver = solvers.find((g) => g.title === solver) ?? randomWeightedPick(solvers)!;
+      const currVariation =
+        currSolver.variations.find((v) => v.title === variation) ??
+        randomWeightedPick(currSolver.variations)!;
 
-        return {
-          maker: (props: MazeSolverProperties) => v.maker(props),
-          title: v.title,
-        };
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [solver, variation]);
+      const titles: string[] = [currSolver.title];
+
+      if (currVariation.title !== currSolver.title) {
+        titles.push(currVariation.title);
+      }
+
+      const title = titles.join(' ');
+
+      return {
+        maker: (props: MazeSolverProperties) => currVariation.maker(props),
+        title,
+      };
+    });
+  }, [solver, variation, onChange, hmr]);
 
   return (
     <Section className={className} title="Solver">
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem' }}>
-        <Select label="Algorithm" value={fixUndefined(solver?.title)} onChange={handleSolverChange}>
+        <Select label="Algorithm" value={fixUndefined(solver)} onChange={handleSolverChange}>
           <MenuItem key={UNDEFINED} value={UNDEFINED}>
             (random)
           </MenuItem>
@@ -95,14 +91,15 @@ export const SolverSection: React.FC<SolverSectionProps> = ({ className, onChang
         <Select
           label="Variation"
           disabled={!solver}
-          value={fixUndefined(variation?.title)}
+          value={fixUndefined(variation)}
           onChange={handleVariationChange}
         >
           <MenuItem key={UNDEFINED} value={UNDEFINED}>
             (random)
           </MenuItem>
-          {solver?.variations
-            .sort((a, b) => a.title.localeCompare(b.title))
+          {solvers
+            .find((s) => s.title === solver)
+            ?.variations.sort((a, b) => a.title.localeCompare(b.title))
             .map((m) => (
               <MenuItem key={m.title} value={m.title}>
                 {m.title}

@@ -1,10 +1,17 @@
-import { manhattanDistance } from '@technobuddha/library';
+import { modulo } from '@technobuddha/library';
 
 import { type Cell, type CellFacing, type Maze, type Move } from '../../geometry/index.ts';
 import { darken, PathSet } from '../../library/index.ts';
 import { Random, type RandomProperties } from '../../random/index.ts';
 
-export type Program = 'random' | 'seek' | 'left-turn' | 'right-turn' | 'straight';
+export type Program =
+  | 'random'
+  | 'seek'
+  | 'straight'
+  | 'left-turn'
+  | 'right-turn'
+  | 'right-wall'
+  | 'left-wall';
 
 export type RobotProperties = RandomProperties & {
   maze: Maze;
@@ -32,6 +39,8 @@ export abstract class Robot extends Random implements Disposable {
   protected avatar: (cell: Cell, color: string) => void;
   protected bias = true;
   protected pathSet = new PathSet();
+
+  private seekingWall = true;
 
   public constructor({
     maze,
@@ -100,7 +109,7 @@ export abstract class Robot extends Random implements Disposable {
         this.redrawCell(cell);
       }
 
-      for (let i = 0; i < this.trail.length; i++) {
+      for (let i = this.trail.length - 1; i >= 0; i--) {
         const cell = this.trail[i];
         this.redrawCell(cell);
         this.avatar(cell, darken(this.color, (0.5 / this.trail.length) * (i + 1)));
@@ -118,10 +127,10 @@ export abstract class Robot extends Random implements Disposable {
     this.previous = this.location;
     this.location = next;
 
-    this.redrawCell(this.location);
-    this.avatar(this.location, this.color);
     this.drawPath();
     this.drawTrails();
+    this.redrawCell(this.location);
+    this.avatar(this.location, this.color);
   }
 
   protected backtrack(): void {
@@ -131,10 +140,10 @@ export abstract class Robot extends Random implements Disposable {
     this.location = this.previous;
     this.previous = this.history.at(-1) ?? this.start;
 
-    this.redrawCell(this.location);
-    this.avatar(this.location, this.color);
     this.drawPath();
     this.drawTrails();
+    this.redrawCell(this.location);
+    this.avatar(this.location, this.color);
   }
 
   protected decide(moves: Move[]): Move | undefined {
@@ -148,11 +157,14 @@ export abstract class Robot extends Random implements Disposable {
       }
 
       case 'seek': {
-        return moves.sort(
-          (a, b) =>
-            manhattanDistance({ x: a.target.x, y: a.target.y }, this.maze.exit) -
-            manhattanDistance({ x: b.target.x, y: b.target.y }, this.maze.exit),
-        )[0];
+        const closest = moves
+          .map((m) => ({
+            move: m,
+            distance: this.maze.manhattanDistance(m.target, this.maze.exit),
+          }))
+          .sort((a, b) => a.distance - b.distance);
+
+        return this.randomPick(closest.filter((c) => c.distance === closest[0].distance))!.move;
       }
 
       case 'left-turn': {
@@ -173,6 +185,70 @@ export abstract class Robot extends Random implements Disposable {
           }
         }
         return undefined;
+      }
+
+      case 'right-wall': {
+        const right = this.maze.rightTurn(this.location);
+        const { walls } = this.maze.nexus(this.location);
+
+        if (this.seekingWall) {
+          const wall = right.findIndex((t) => walls[t] === true);
+          if (wall >= 0) {
+            // We are seeking a wall, and we found one
+            this.seekingWall = false;
+
+            const dirs = new Set(moves.map((m) => m.direction));
+            let next = wall;
+            while (!dirs.has(right[next])) {
+              next = modulo(next + 1, right.length);
+              if (next === wall) {
+                // We have gone all the way around, so we will just pick the first
+                return undefined;
+              }
+            }
+
+            return moves.find((m) => m.direction === right[next]);
+          }
+
+          this.bias = !this.bias;
+          const [first] = this.maze.straight(this.location, this.bias);
+          return moves.find((m) => m.direction === first);
+        }
+
+        const [first] = right.map((t) => moves.find((m) => m.direction === t)).filter(Boolean);
+        return first;
+      }
+
+      case 'left-wall': {
+        const left = this.maze.leftTurn(this.location);
+        const { walls } = this.maze.nexus(this.location);
+
+        if (this.seekingWall) {
+          const wall = left.findIndex((t) => walls[t] === true);
+          if (wall >= 0) {
+            // We are seeking a wall, and we found one
+            this.seekingWall = false;
+
+            const dirs = new Set(moves.map((m) => m.direction));
+            let next = wall;
+            while (!dirs.has(left[next])) {
+              next = modulo(next + 1, left.length);
+              if (next === wall) {
+                // We have gone all the way around, so we will just pick the first
+                return undefined;
+              }
+            }
+
+            return moves.find((m) => m.direction === left[next]);
+          }
+
+          this.bias = !this.bias;
+          const [first] = this.maze.straight(this.location, this.bias);
+          return moves.find((m) => m.direction === first);
+        }
+
+        const [first] = left.map((t) => moves.find((m) => m.direction === t)).filter(Boolean);
+        return first;
       }
 
       case 'straight': {

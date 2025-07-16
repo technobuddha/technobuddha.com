@@ -16,7 +16,7 @@ type Queue = {
   parent?: CellFacing;
 };
 
-export type DijkstrasRobotProperties = RobotProperties & {
+export type DijkstrasRobotProperties = Omit<RobotProperties, 'program' | 'showPath'> & {
   readonly showMarks?: boolean;
   readonly scannedColor?: string;
   readonly prunedColor?: string;
@@ -32,6 +32,7 @@ export class DijkstrasRobot extends Robot {
 
   protected readonly queue: Queue[];
   protected readonly journal: Journal[][];
+  protected readonly scanned: boolean[][];
 
   public constructor({
     maze,
@@ -47,10 +48,13 @@ export class DijkstrasRobot extends Robot {
     this.avatarColor = avatarColor;
     this.prunedColor = prunedColor;
 
-    this.queue = [{ cell: this.maze.entrance, distance: 0 }];
+    this.scanned = create2DArray<boolean>(maze.width, maze.height, false);
     this.journal = create2DArray<Journal>(this.maze.width, this.maze.height, () => ({
       distance: Infinity,
     }));
+
+    this.scanned[this.maze.entrance.x][this.maze.entrance.y] = true;
+    this.queue = [{ cell: this.maze.entrance, distance: 0 }];
   }
 
   public override get name(): string {
@@ -75,7 +79,7 @@ export class DijkstrasRobot extends Robot {
       const validMoves = this.randomShuffle(
         this.maze
           .moves(cell, { wall: false })
-          .filter(({ target }) => this.journal[target.x][target.y].distance > distance),
+          .filter(({ target }) => !this.scanned[target.x][target.y]),
       );
 
       this.journal[cell.x][cell.y].parent = parent;
@@ -85,9 +89,10 @@ export class DijkstrasRobot extends Robot {
 
       if (validMoves.length > 0) {
         for (const validMove of validMoves) {
+          this.scanned[validMove.target.x][validMove.target.y] = true;
           this.queue.unshift({ cell: validMove.target, distance: distance + 1, parent: cell });
         }
-      } else {
+      } else if (!this.maze.isSame(cell, this.maze.exit)) {
         let parent = cell;
         while (parent) {
           this.journal[parent.x][parent.y].children ??= 0;

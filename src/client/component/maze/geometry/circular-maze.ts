@@ -1,4 +1,10 @@
-import { type Cartesian, type Rect, toCartesian, toRadians } from '@technobuddha/library';
+import {
+  type Cartesian,
+  manhattanDistance,
+  type Rect,
+  toCartesian,
+  toRadians,
+} from '@technobuddha/library';
 
 import { matrix } from './circular-matrix.ts';
 import {
@@ -147,6 +153,21 @@ export class CircularMaze extends Maze {
 
   public override cellZone(cell: Cell): number {
     return this.zones[cell.y];
+  }
+
+  public override manhattanDistance(a: Cell, b: Cell): number {
+    const zone = this.zones[this.height - 1];
+    const zoneA = { ...a, x: (a.x * zone) / this.zones[a.y] };
+    const zoneB = { ...b, x: (b.x * zone) / this.zones[b.y] };
+
+    const distances: number[] = [manhattanDistance(zoneA, zoneB)];
+
+    distances.push(
+      manhattanDistance({ ...zoneA, x: zoneA.x + this.width }, { ...zoneB, x: zoneB.x }),
+      manhattanDistance({ ...zoneA, x: zoneA.x - this.width }, { ...zoneB, x: zoneB.x }),
+    );
+
+    return Math.min(...distances);
   }
 
   public override resolveMove(cell: Cell, move: MoveOffset): Cell {

@@ -8,15 +8,15 @@ import {
   type MazeProperties,
   type Pillar,
 } from './maze.ts';
-import { matrix, type MatrixPart } from './octogon-matrix.ts';
+import { matrix, type MatrixPart } from './octagon-matrix.ts';
 
 const { SQRT2, SQRT1_2 } = Math;
 
-export type OctogonMazeProperties = MazeProperties;
+export type OctagonMazeProperties = MazeProperties;
 
-export abstract class OctogonMaze extends Maze {
+export abstract class OctagonMaze extends Maze {
   public constructor(
-    { cellSize = 40, wallSize = 1, voidSize = 1, ...props }: OctogonMazeProperties,
+    { cellSize = 40, wallSize = 1, voidSize = 1, ...props }: OctagonMazeProperties,
     partMatrix: MatrixPart,
   ) {
     super({ cellSize, wallSize, voidSize, ...props }, { ...matrix, ...partMatrix });

@@ -5,16 +5,18 @@ import { Checkbox } from '#control';
 import { Human, type MazeSolverProperties } from '../../solver/index.ts';
 
 import { type SolverProducer } from '../maze-maker.tsx';
+import { type Runner } from '../runner.ts';
 
 import { Section } from './section.tsx';
 
 type HumanSectionProps = {
   readonly className?: string;
   readonly onChange?: (this: void, producer: SolverProducer) => void;
+  readonly runner?: Runner;
   readonly children?: never;
 };
 
-export const HumanSection: React.FC<HumanSectionProps> = ({ className, onChange }) => {
+export const HumanSection: React.FC<HumanSectionProps> = ({ className, onChange, runner }) => {
   const [finalDestination, setFinalDestination] = React.useState(true);
   const [markVisited, setMarkVisited] = React.useState(false);
   const [markDeadEnds, setMarkDeadEnds] = React.useState(true);
@@ -37,6 +39,15 @@ export const HumanSection: React.FC<HumanSectionProps> = ({ className, onChange 
   }, []);
 
   React.useEffect(() => {
+    if (runner?.solver instanceof Human) {
+      const human = runner.solver;
+
+      human.options.finalDestination = finalDestination;
+      human.options.markVisited = markVisited;
+      human.options.markDeadEnds = markDeadEnds;
+      human.options.hideReverse = hideReverse;
+    }
+
     onChange?.(() => ({
       maker: (props: MazeSolverProperties) =>
         new Human({
@@ -50,6 +61,7 @@ export const HumanSection: React.FC<HumanSectionProps> = ({ className, onChange 
         }),
       title: 'Human Options',
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finalDestination, markVisited, markDeadEnds, hideReverse, onChange]);
 
   return (

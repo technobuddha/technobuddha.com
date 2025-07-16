@@ -7,8 +7,8 @@ import {
   type BacktrackingRobotProperties,
   DijkstrasRobot,
   type DijkstrasRobotProperties,
-  // PledgeRobot,
-  // type PledgeRobotProperties,
+  PledgeRobot,
+  type PledgeRobotProperties,
   RandomMouseRobot,
   type RandomMouseRobotProperties,
   type Robot,
@@ -30,7 +30,7 @@ export type Robo =
   | RoboProperties<'backtracking', BacktrackingRobotProperties>
   | RoboProperties<'dijkstras', DijkstrasRobotProperties>
   | RoboProperties<'drunkards-walk', DrunkenRobotProperties>
-  // | RoboProperties<'pledge', PledgeRobotProperties>
+  | RoboProperties<'pledge', PledgeRobotProperties>
   | RoboProperties<'random-mouse', RandomMouseRobotProperties>
   | RoboProperties<'tremaux', TremauxRobotProperties>
   | RoboProperties<'wall-walking', WallWalkingRobotProperties>;
@@ -74,9 +74,9 @@ export class Roboto extends MazeSolver {
         return new DijkstrasRobot({ maze: this.maze, location, ...robo });
       }
 
-      // case 'pledge': {
-      //   return new PledgeRobot({ maze: this.maze, location, ...robo });
-      // }
+      case 'pledge': {
+        return new PledgeRobot({ maze: this.maze, location, ...robo });
+      }
 
       // no default
     }
@@ -135,7 +135,10 @@ export class Roboto extends MazeSolver {
       this.activateOneRobot(this.createRobot(robo, entrance));
     }
 
-    while (!this.robots.some((robot) => this.isProgramComplete(robot, exit))) {
+    while (
+      this.robots.length > 0 &&
+      !this.robots.some((robot) => this.isProgramComplete(robot, exit))
+    ) {
       this.runAllRobots();
       yield;
     }

@@ -131,29 +131,4 @@ export class TremauxRobot extends Robot {
       }
     }
   }
-
-  // public override path(): CellFacing[] {
-  //   let curr: CellFacing = this.start;
-  //   let prev: CellFacing = this.start;
-
-  //   const path: CellFacing[] = [curr];
-  //   while (!this.maze.isSame(curr, this.location)) {
-  //     const moves = this.maze.moves(curr, { wall: false }).filter(
-  //       // eslint-disable-next-line @typescript-eslint/no-loop-func
-  //       (move) =>
-  //         !this.maze.isSame(move.target, prev) && this.marks[curr.x][curr.y][move.direction] === 1,
-  //     );
-
-  //     if (moves.length === 0 || moves.length > 1) {
-  //       throw new RobotError(`${this.name} can not find a solution`, this.color);
-  //     }
-
-  //     const [next] = moves;
-  //     prev = curr;
-  //     curr = next.target;
-  //     path.push(curr);
-  //   }
-
-  //   return path;
-  // }
 }

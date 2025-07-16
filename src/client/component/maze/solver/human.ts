@@ -12,10 +12,10 @@ import {
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 
 type Options = {
-  readonly finalDestination: boolean;
-  readonly markVisited: boolean;
-  readonly markDeadEnds: boolean;
-  readonly hideReverse: boolean;
+  finalDestination: boolean;
+  markVisited: boolean;
+  markDeadEnds: boolean;
+  hideReverse: boolean;
 };
 
 type CellPath = Cell & {
@@ -259,6 +259,12 @@ export class Human extends MazeSolver {
 
             case 'ArrowDown': {
               human = history.pop() ?? human;
+              break makeChoice;
+            }
+
+            case 'Escape': {
+              history.push(...this.maze.solve(human));
+              human = this.maze.exit;
               break makeChoice;
             }
 

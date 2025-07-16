@@ -26,10 +26,10 @@ import {
   HexagonMaze,
   type HexagonMazeProperties,
   type Maze,
-  OctogonDiamond,
-  type OctogonDiamondProperties,
-  OctogonSquare,
-  type OctogonSquareProperties,
+  OctagonDiamond,
+  type OctagonDiamondProperties,
+  OctagonSquare,
+  type OctagonSquareProperties,
   PentagonMaze,
   type PentagonMazeProperties,
   SquareMaze,
@@ -46,8 +46,6 @@ import { donutPlugin, ellipisePlugin, portalPlugin, trianglePlugin } from '../pl
 import {
   Chain,
   type ChainProperties,
-  Dijkstras,
-  type DijkstrasProperties,
   FibonaccisRabbits,
   type FibonaccisRabbitsProperties,
   Filler,
@@ -62,8 +60,8 @@ type PropsMazeGeometry =
   | ({ geometry: typeof CubicMaze } & CubicMazeProperties)
   | ({ geometry: typeof DotMaze } & DotMazeProperties)
   | ({ geometry: typeof HexagonMaze } & HexagonMazeProperties)
-  | ({ geometry: typeof OctogonDiamond } & OctogonDiamondProperties)
-  | ({ geometry: typeof OctogonSquare } & OctogonSquareProperties)
+  | ({ geometry: typeof OctagonDiamond } & OctagonDiamondProperties)
+  | ({ geometry: typeof OctagonSquare } & OctagonSquareProperties)
   | ({ geometry: typeof PentagonMaze } & PentagonMazeProperties)
   | ({ geometry: typeof SquareMaze } & SquareMazeProperties)
   | ({ geometry: typeof TriangleMaze } & TriangleMazeProperties)
@@ -149,13 +147,13 @@ export const mazes: Choices<PropsMazeGeometry> = [
     items: [
       {
         weight: 1,
-        title: 'Octogon (Diamond)',
-        props: { geometry: OctogonDiamond },
+        title: 'Octagon (Diamond)',
+        props: { geometry: OctagonDiamond },
       },
       {
         weight: 1,
-        title: 'Octogon (Square)',
-        props: { geometry: OctogonSquare },
+        title: 'Octagon (Square)',
+        props: { geometry: OctagonSquare },
       },
     ],
   },
@@ -392,7 +390,6 @@ type PropsMazeSolver =
   | ({ solver: typeof Roboto } & Omit<RobotoProperties, 'maze'>)
   | ({ solver: typeof Filler } & Omit<FillerProperties, 'maze'>)
   | ({ solver: typeof Chain } & Omit<ChainProperties, 'maze'>)
-  | ({ solver: typeof Dijkstras } & Omit<DijkstrasProperties, 'maze'>)
   | ({ solver: typeof FibonaccisRabbits } & Omit<FibonaccisRabbitsProperties, 'maze'>);
 
 export const solvers: Choices<PropsMazeSolver> = [
@@ -566,7 +563,7 @@ export const solvers: Choices<PropsMazeSolver> = [
         title: 'Blind Alley Filler',
         props: {
           solver: Filler,
-          method: 'cul-de-sac',
+          method: 'blind-alley',
         },
       },
     ],
@@ -604,7 +601,8 @@ export const solvers: Choices<PropsMazeSolver> = [
     weight: 100,
     title: "Dijkstra's",
     props: {
-      solver: Dijkstras,
+      solver: Roboto,
+      robots: [{ algorithm: 'dijkstras', color: 'lime', showMarks: true }],
     },
   },
   {

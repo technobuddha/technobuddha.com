@@ -7,13 +7,10 @@ import {
   type Rect,
 } from '@technobuddha/library';
 
-import { alpha } from '../library/index.ts';
-
 import { matrix } from './brick-matrix.ts';
 import {
   type Cell,
   type CellDirection,
-  type CellTunnel,
   type DrawingSizes,
   type Kind,
   type MazeProperties,
@@ -232,145 +229,6 @@ export class BrickMaze extends Maze {
 
       this.drawing.line({ x: x2, y: y2 }, { x: x7, y: y3 }, color);
       this.drawing.line({ x: x2, y: y3 }, { x: x7, y: y2 }, color);
-    }
-  }
-
-  public override drawPaths(cells: CellTunnel[], color: string = this.color.path): void {
-    if (this.drawing) {
-      let prev: CellTunnel | undefined = undefined;
-      for (const cell of cells) {
-        let kolor = color;
-        const { rect } = this.nexus(cell);
-
-        if (cell.direction === '?') {
-          this.renderCircle(rect, kolor);
-        } else {
-          let angle = this.angleMatrix[cell.direction] ?? 0;
-
-          if (prev) {
-            switch (prev.direction) {
-              case 'a': {
-                switch (cell.direction) {
-                  case 'b': {
-                    rect.x += rect.width * 0.55;
-                    angle = 270;
-                    break;
-                  }
-
-                  case 'c': {
-                    rect.x += rect.width * 0.55;
-                    break;
-                  }
-
-                  // no default
-                }
-                break;
-              }
-
-              case 'b': {
-                switch (cell.direction) {
-                  case 'a': {
-                    rect.x -= rect.width * 0.55;
-                    angle = 270;
-                    break;
-                  }
-
-                  case 'f': {
-                    rect.x -= rect.width * 0.55;
-                    break;
-                  }
-
-                  // no default
-                }
-                break;
-              }
-
-              case 'c': {
-                switch (cell.direction) {
-                  case 'a': {
-                    rect.x -= rect.width * 0.55;
-                    angle = 270;
-                    break;
-                  }
-
-                  case 'e': {
-                    rect.x -= rect.width * 0.55;
-                    angle = 90;
-                    break;
-                  }
-
-                  // no default
-                }
-                break;
-              }
-
-              case 'd': {
-                switch (cell.direction) {
-                  case 'e': {
-                    rect.x -= rect.width * 0.55;
-                    angle = 90;
-                    break;
-                  }
-
-                  case 'f': {
-                    rect.x -= rect.width * 0.55;
-                    break;
-                  }
-
-                  // no default
-                }
-                break;
-              }
-
-              case 'e': {
-                switch (cell.direction) {
-                  case 'c': {
-                    rect.x += rect.width * 0.55;
-                    break;
-                  }
-
-                  case 'd': {
-                    rect.x += rect.width * 0.55;
-                    angle = 90;
-                    break;
-                  }
-
-                  // no default
-                }
-                break;
-              }
-
-              case 'f': {
-                switch (cell.direction) {
-                  case 'b': {
-                    rect.x += rect.width * 0.55;
-                    angle = 270;
-                    break;
-                  }
-
-                  case 'd': {
-                    rect.x += rect.width * 0.55;
-                    angle = 90;
-                    break;
-                  }
-
-                  // no default
-                }
-                break;
-              }
-
-              // no default
-            }
-          }
-
-          if (cell.tunnel) {
-            kolor = alpha(kolor, 0.6);
-          }
-
-          this.renderArrow(rect, angle, kolor);
-        }
-        prev = cell;
-      }
     }
   }
 }

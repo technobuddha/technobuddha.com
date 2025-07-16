@@ -17,48 +17,25 @@ import { type MazeGenerator } from '../generator/index.ts';
 import { alpha, logger, lookAhead } from '../library/index.ts';
 import { Random, type RandomProperties } from '../random/index.ts';
 
-import { Nexus } from './nexus.ts';
+import { type Bridge } from './bridges.ts';
+import { defaultColors, type MazeColors } from './color.ts';
+import {
+  type Cell,
+  type CellDirection,
+  type CellFacing,
+  type CellTunnel,
+  type Direction,
+  type Facing,
+  type Kind,
+  type Move,
+  type MoveOffset,
+  type Pillar,
+  type Terminus,
+} from './geometry.ts';
+import { type BridgeMatrix, type Matrix } from './matrix.ts';
+import { Nexus, type Tunnels, type Wall } from './nexus.ts';
 
 const starShape = rotate(star(5, 0.5, 1), Math.PI / 10);
-
-// prettier-ignore
-export type Direction =
-  |'a'|'b'|'c'|'d'|'e'|'f'|'g'|'h'|'i'|'j'|'k'|'l'|'m'|'n'|'o'|'p'|'q'|'r'|'s'|'t'|'u'|'v'|'w'|'x'|'y'|'z'|'?';
-
-// prettier-ignore
-export type Facing =
-  |'A'|'B'|'C'|'D'|'E'|'F'|'G'|'H'|'I'|'J'|'K'|'L'|'M'|'N'|'O'|'P'|'Q'|'R'|'S'|'T'|'U'|'V'|'W'|'X'|'Y'|'Z'|'!';
-
-export type Pillar = `${Direction}${Direction}`;
-
-export type Kind = number;
-
-export type MoveOffset = { x: number; y: number; zone?: 'up' | 'down' };
-
-export type Cell = {
-  x: number;
-  y: number;
-};
-
-export type CellDirection = Cell & {
-  direction: Direction;
-};
-
-export type CellFacing = Cell & {
-  facing: Facing;
-};
-
-export type CellTunnel = CellDirection & {
-  tunnel: boolean;
-};
-
-export type Move = {
-  direction: Direction;
-  target: CellFacing;
-  tunnel?: CellFacing[];
-};
-
-export type Terminus = CellFacing;
 
 export type AllOrder =
   | 'top-left'
@@ -72,11 +49,8 @@ export type AllOrder =
   | 'random';
 
 type Zone = 'edge' | 'interior';
-type Location = `${AllOrder} ${Zone}`;
 
-export type Directional<T> = Partial<Record<Direction, T | false | undefined>>;
-export type Wall = Directional<true>;
-export type Tunnels = Directional<CellFacing>;
+type Location = `${AllOrder} ${Zone}`;
 
 export type CustomDrawingSize = {
   readonly width: number;
@@ -122,44 +96,6 @@ export function toDirection(facing: Facing): Direction {
   return facing === '!' ? '?' : (facing.toLowerCase() as Direction);
 }
 
-export type MazeColors = {
-  readonly void: string;
-  readonly cell: string;
-  readonly wall: string;
-  readonly mask: string;
-  readonly entrance: string;
-  readonly exit: string;
-  readonly tunnel: string;
-  readonly solution: string;
-  readonly scanned: string;
-  readonly avatar: string;
-  readonly pruned: string;
-  readonly path: string;
-  readonly blocked: string;
-  readonly error: string;
-  readonly bridge: string;
-  readonly text: string;
-};
-
-const defaultColors: NonNullable<MazeColors> = {
-  void: 'oklch(0.33 0 0)',
-  cell: 'oklch(0 0 0)',
-  wall: 'oklch(0.80 0 0)',
-  mask: 'oklch(0 0 0)',
-  entrance: 'oklch(0.5198 0.176858 142.4953)',
-  exit: 'oklch(0.628 0.2577 29.23)',
-  solution: 'oklch(0.6611 0.115 213.72)',
-  scanned: 'oklch(0.6373 0.2035 143.01)', //'oklch(0.5789 0.2344 0.51)',
-  avatar: 'oklch(0.6611 0.115 213.72)',
-  pruned: 'oklch(0.4446 0.1803 359.81)',
-  blocked: 'oklch(0.6298 0.2145 27.83)',
-  error: 'oklch(0.8664 0.294827 142.4953)',
-  path: 'oklch(0.8145 0.1672 83.88)',
-  tunnel: 'oklch(0.9544 0.0637 196.13)',
-  bridge: 'oklch(0.25 0 0)',
-  text: 'oklch(1 0 0)',
-};
-
 export type MazeProperties = RandomProperties & {
   readonly drawing?: Drawing;
   readonly width?: number;
@@ -179,42 +115,6 @@ export type MazeProperties = RandomProperties & {
   readonly showKind?: boolean;
 
   readonly plugin?: (this: void, maze: Maze) => void;
-};
-
-export type Bridge = {
-  readonly pieces: number;
-  readonly direction: Direction;
-  readonly path: Direction[];
-  readonly connect: Partial<Record<Direction, Direction>>;
-};
-
-export type BridgeLayout = {
-  path: Direction[];
-  pieces?: number;
-  connect?: Partial<Record<Direction, Direction>>;
-};
-
-export type BridgeMatrix = {
-  readonly pieces?: number;
-  readonly connect: Partial<Record<Direction, Direction>>;
-  readonly layouts: Record<Kind, BridgeLayout[]>;
-};
-
-export type Matrix = {
-  readonly directions: Direction[];
-  readonly pillars: Pillar[];
-  readonly wall: Record<Kind, Partial<Record<Direction, boolean>>>;
-  readonly opposite: {
-    readonly direction: Partial<Record<Direction, Facing>>;
-    readonly facing: Partial<Record<Facing, Direction>>;
-  };
-  readonly rightTurn: Partial<Record<Facing, Direction[]>>;
-  readonly leftTurn: Partial<Record<Facing, Direction[]>>;
-  readonly straight: Partial<Record<Facing, (Direction | `${Direction}${Direction}`)[]>>;
-  readonly move: Record<Kind, Partial<Record<Direction, MoveOffset | MoveOffset[]>>>;
-  readonly preferred: Record<Kind, Direction[]>;
-  readonly angle: Partial<Record<Direction, number>>;
-  readonly bridge?: BridgeMatrix;
 };
 
 export abstract class Maze extends Random {
@@ -280,19 +180,17 @@ export abstract class Maze extends Random {
       exit,
       wrapHorizontal = false,
       wrapVertical = false,
-
       color,
-
       showDistances = 'none',
       showCoordinates = false,
       showKind = false,
-
       plugin,
       ...props
     }: MazeProperties,
     matrix: Matrix,
   ) {
     super(props);
+
     this.directions = matrix.directions;
     this.pillars = matrix.pillars;
     this.wallMatrix = matrix.wall;

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
-import { type Matrix } from './maze.ts';
+import { type Matrix } from '../matrix.ts';
 
 export const matrix: Matrix = {
   // bridge: {
@@ -66,12 +66,12 @@ export const matrix: Matrix = {
     'st',
     'tp',
   ],
-  wall: [
-    { a: true, b: true, c: true, d: true, e: true },
-    { f: true, g: true, h: true, i: true, j: true },
-    { k: true, l: true, m: true, n: true, o: true },
-    { p: true, q: true, r: true, s: true, t: true },
-  ],
+  wall: {
+    0: { a: true, b: true, c: true, d: true, e: true },
+    1: { f: true, g: true, h: true, i: true, j: true },
+    2: { k: true, l: true, m: true, n: true, o: true },
+    3: { p: true, q: true, r: true, s: true, t: true },
+  },
   opposite: {
     direction: {
       a: 'M',

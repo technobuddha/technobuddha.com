@@ -6,18 +6,17 @@ import {
   toRadians,
 } from '@technobuddha/library';
 
-import { matrix } from './circular-matrix.ts';
 import {
   type Cell,
   type CellDirection,
-  type DrawingSizes,
   type Kind,
-  Maze,
-  type MazeProperties,
   type MoveOffset,
   type Pillar,
-  type Wall,
-} from './maze.ts';
+} from '../geometry.ts';
+import { type DrawingSizes, Maze, type MazeProperties } from '../maze.ts';
+import { type Wall } from '../nexus.ts';
+
+import { matrix } from './circular-matrix.ts';
 
 export type CircularMazeProperties = MazeProperties & {
   readonly centerRadius?: number;
@@ -558,6 +557,6 @@ export class CircularMaze extends Maze {
   }
 
   public override drawMasks(): void {
-    // Masks aren't disaplyed in the circular maze
+    // Masks aren't displayed in the circular maze
   }
 }

@@ -1,6 +1,10 @@
 import { type Rect } from '@technobuddha/library';
 
-import { type Direction, type Tunnels, type Wall } from './maze.ts';
+import { type CellFacing, type Direction } from './geometry.ts';
+
+type Directional<T> = Partial<Record<Direction, T | false | undefined>>;
+export type Wall = Directional<true>;
+export type Tunnels = Directional<CellFacing>;
 
 export type Offsets = Record<string, number>;
 
@@ -77,7 +81,7 @@ export class Nexus {
     }
   }
 
-  public erectbarrier(direction: Direction): void {
+  public erectBarrier(direction: Direction): void {
     if (direction in this.walls) {
       delete this.walls[direction];
     }

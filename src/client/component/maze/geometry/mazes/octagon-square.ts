@@ -1,6 +1,8 @@
 import { type Cartesian, modulo } from '@technobuddha/library';
 
-import { type Cell, type DrawingSizes } from './maze.ts';
+import { type Cell } from '../geometry.ts';
+import { type DrawingSizes } from '../maze.ts';
+
 import { matrixSquare } from './octagon-matrix.ts';
 import { OctagonMaze, type OctagonMazeProperties } from './octagon-maze.ts';
 
@@ -12,7 +14,7 @@ export class OctagonSquare extends OctagonMaze {
   }
 
   protected drawingSize(): DrawingSizes {
-    // Calculare the length of a an octagon side
+    // Calculate the length of a an octagon side
     const ao = this.cellSize / (1 + Math.SQRT2);
 
     return {
@@ -47,7 +49,7 @@ export class OctagonSquare extends OctagonMaze {
   }
 
   protected cellOrigin(cell: Cell): Cartesian {
-    // Calculare the length of a an octagon side
+    // Calculate the length of a an octagon side
     const ao = this.cellSize / (1 + Math.SQRT2);
 
     let x = 0;

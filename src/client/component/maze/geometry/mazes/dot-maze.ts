@@ -1,16 +1,15 @@
 import { type Cartesian, modulo, type Rect } from '@technobuddha/library';
 
-import { matrix } from './dot-matrix.ts';
 import {
   type Cell,
   type CellDirection,
   type Direction,
-  type DrawingSizes,
   type Kind,
-  Maze,
-  type MazeProperties,
   type Pillar,
-} from './maze.ts';
+} from '../geometry.ts';
+import { type DrawingSizes, Maze, type MazeProperties } from '../maze.ts';
+
+import { matrix } from './dot-matrix.ts';
 
 export type DotMazeProperties = MazeProperties;
 

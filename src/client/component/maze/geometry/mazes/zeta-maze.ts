@@ -1,5 +1,6 @@
+import { type Cell } from '../geometry.ts';
+
 import { DotMaze, type DotMazeProperties } from './dot-maze.ts';
-import { type Cell } from './maze.ts';
 
 export type ZetaMazeProperties = DotMazeProperties;
 
@@ -18,12 +19,12 @@ export class ZetaMaze extends DotMaze {
       for (let y = 1; y < this.height; ++y) {
         if (this.randomChance(0.5)) {
           // remove walls on the \ diagonal
-          this.nexus({ x: x, y: y }).erectbarrier('h');
-          this.nexus({ x: x - 1, y: y - 1 }).erectbarrier('d');
+          this.nexus({ x: x, y: y }).erectBarrier('h');
+          this.nexus({ x: x - 1, y: y - 1 }).erectBarrier('d');
         } else {
           // remove walls on the / diagonal
-          this.nexus({ x: x - 1, y: y }).erectbarrier('b');
-          this.nexus({ x: x, y: y - 1 }).erectbarrier('f');
+          this.nexus({ x: x - 1, y: y }).erectBarrier('b');
+          this.nexus({ x: x, y: y - 1 }).erectBarrier('f');
         }
       }
     }

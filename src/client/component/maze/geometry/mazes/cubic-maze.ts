@@ -7,16 +7,10 @@ import {
   toRadians,
 } from '@technobuddha/library';
 
+import { type Cell, type CellDirection, type Kind, type Pillar } from '../geometry.ts';
+import { type DrawingSizes, Maze, type MazeProperties } from '../maze.ts';
+
 import { matrix } from './cubic-matrix.ts';
-import {
-  type Cell,
-  type CellDirection,
-  type DrawingSizes,
-  type Kind,
-  Maze,
-  type MazeProperties,
-  type Pillar,
-} from './maze.ts';
 
 const SIN15 = Math.sin(toRadians(15));
 const COS15 = Math.cos(toRadians(15));

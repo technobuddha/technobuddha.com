@@ -1,13 +1,8 @@
 import { type Rect } from '@technobuddha/library';
 
-import {
-  type Cell,
-  type CellDirection,
-  type Kind,
-  Maze,
-  type MazeProperties,
-  type Pillar,
-} from './maze.ts';
+import { type Cell, type CellDirection, type Kind, type Pillar } from '../geometry.ts';
+import { Maze, type MazeProperties } from '../maze.ts';
+
 import { matrix, type MatrixPart } from './octagon-matrix.ts';
 
 const { SQRT2, SQRT1_2 } = Math;

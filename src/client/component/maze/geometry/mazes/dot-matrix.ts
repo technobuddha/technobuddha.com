@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
-import { type Matrix } from './maze.ts';
+import { type Matrix } from '../matrix.ts';
 
 export const matrix: Matrix = {
   // bridge: {

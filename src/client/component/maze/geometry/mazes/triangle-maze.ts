@@ -1,14 +1,8 @@
 import { type Cartesian, modulo, type Rect } from '@technobuddha/library';
 
-import {
-  type Cell,
-  type CellDirection,
-  type DrawingSizes,
-  type Kind,
-  Maze,
-  type MazeProperties,
-  type Pillar,
-} from './maze.ts';
+import { type Cell, type CellDirection, type Kind, type Pillar } from '../geometry.ts';
+import { type DrawingSizes, Maze, type MazeProperties } from '../maze.ts';
+
 import { matrix } from './triangle-matrix.ts';
 
 const SIN60 = Math.sin(Math.PI / 3);

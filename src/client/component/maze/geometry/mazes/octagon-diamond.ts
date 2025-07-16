@@ -1,6 +1,8 @@
 import { type Cartesian, modulo } from '@technobuddha/library';
 
-import { type Cell, type DrawingSizes } from './maze.ts';
+import { type Cell } from '../geometry.ts';
+import { type DrawingSizes } from '../maze.ts';
+
 import { matrixDiamond } from './octagon-matrix.ts';
 import { OctagonMaze, type OctagonMazeProperties } from './octagon-maze.ts';
 

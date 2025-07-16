@@ -5,16 +5,10 @@ import {
   type Rect,
 } from '@technobuddha/library';
 
+import { type Cell, type CellDirection, type Kind, type Pillar } from '../geometry.ts';
+import { type DrawingSizes, Maze, type MazeProperties } from '../maze.ts';
+
 import { matrix } from './hexagon-matrix.ts';
-import {
-  type Cell,
-  type CellDirection,
-  type DrawingSizes,
-  type Kind,
-  Maze,
-  type MazeProperties,
-  type Pillar,
-} from './maze.ts';
 
 const SIN30 = Math.sin(Math.PI / 6);
 const COS30 = Math.cos(Math.PI / 6);

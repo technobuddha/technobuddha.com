@@ -1,38 +1,50 @@
-import { randomPick, randomShuffle } from '@technobuddha/library';
+import { type CellFacing, type Maze } from '../geometry/index.ts';
+import { Random, type RandomProperties } from '../random/index.ts';
 
-import { type CellDirection, type Maze } from '../geometry/maze.ts';
+type Trash = AbortController;
 
-export type MazeSolverProperties = {
-  maze: Maze;
-  speed?: number;
-  random?(this: void): number;
+export type MazeSolverProperties = RandomProperties & {
+  readonly maze: Maze;
+  readonly speed?: number;
 };
 
 export type SolveArguments = {
-  color?: string;
-  entrance?: CellDirection;
-  exit?: CellDirection;
+  readonly color?: string;
+  readonly entrance?: CellFacing;
+  readonly exit?: CellFacing;
 };
 
-export abstract class MazeSolver {
-  public readonly speed: number;
+export abstract class MazeSolver extends Random implements Disposable {
+  public readonly speed: NonNullable<MazeSolverProperties['speed']>;
+  protected readonly maze: MazeSolverProperties['maze'];
+  protected readonly trash = new Set<Trash>();
 
-  protected maze: MazeSolverProperties['maze'];
-  protected random: () => number;
-
-  public constructor({ maze, speed = 1, random = Math.random }: MazeSolverProperties) {
+  public constructor({ maze, speed = 1, random = maze.random, ...props }: MazeSolverProperties) {
+    super({ random, ...props });
     this.maze = maze;
     this.speed = speed;
-    this.random = random;
   }
 
-  protected randomPick<T>(array: T[]): T | undefined {
-    return randomPick(array, this.random);
+  //#region Trash
+  protected addTrash(controller: Trash): void {
+    this.trash.add(controller);
   }
 
-  protected randomShuffle<T>(array: T[]): T[] {
-    return randomShuffle(array, this.random);
+  protected removeTrash(controller: Trash): void {
+    this.trash.delete(controller);
   }
 
-  public abstract solve(args?: SolveArguments): Iterator<void>;
+  public dispose(): void {
+    for (const trash of this.trash) {
+      trash.abort();
+    }
+    this.trash.clear();
+  }
+
+  public [Symbol.dispose](): void {
+    this.dispose();
+  }
+  //#endregion
+
+  public abstract solve(args?: SolveArguments): AsyncGenerator<void>;
 }

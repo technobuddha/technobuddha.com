@@ -1,6 +1,6 @@
-import { toRadians } from '@technobuddha/library';
+import { type Cartesian, type Rect, toRadians } from '@technobuddha/library';
 
-import { Drawing, type Rect, type XY } from './drawing.ts';
+import { Drawing } from './drawing.ts';
 
 export class CanvasDrawing extends Drawing {
   private readonly canvas: CanvasRenderingContext2D;
@@ -31,7 +31,7 @@ export class CanvasDrawing extends Drawing {
     this.canvas.translate(originX, originY);
   }
 
-  public line(start: XY, finish: XY, color: string): void {
+  public line(start: Cartesian, finish: Cartesian, color: string): void {
     this.canvas.strokeStyle = color;
     this.canvas.beginPath();
     this.canvas.moveTo(start.x, start.y);
@@ -39,7 +39,7 @@ export class CanvasDrawing extends Drawing {
     this.canvas.stroke();
   }
 
-  public rect(start: XY, finish: XY, color: string): void {
+  public rect(start: Cartesian, finish: Cartesian, color: string): void {
     this.canvas.fillStyle = color;
     this.canvas.fillStyle = color;
 
@@ -47,7 +47,7 @@ export class CanvasDrawing extends Drawing {
     this.canvas.fillRect(start.x, start.y, finish.x - start.x, finish.y - start.y);
   }
 
-  public polygon(points: XY[], color: string): void {
+  public polygon(points: Cartesian[], color: string): void {
     this.canvas.fillStyle = color;
     this.canvas.beginPath();
     this.canvas.moveTo(points[0].x, points[0].y);
@@ -63,13 +63,14 @@ export class CanvasDrawing extends Drawing {
 
     const metrics = this.canvas.measureText(text);
 
-    const x = rect.x + (rect.w - metrics.width) / 2;
+    const x = rect.x + (rect.width - metrics.width) / 2;
     const y =
-      rect.y + (rect.h + (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)) / 2;
+      rect.y +
+      (rect.height + (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)) / 2;
     this.canvas.fillText(text, x, y);
   }
 
-  public override circle(center: XY, radius: number, color = 'black'): void {
+  public override circle(center: Cartesian, radius: number, color = 'black'): void {
     this.canvas.fillStyle = color;
     this.canvas.beginPath();
     this.canvas.arc(center.x, center.y, radius, 0, 2 * Math.PI);

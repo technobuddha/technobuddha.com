@@ -1,6 +1,6 @@
-import { type Maze } from '../geometry/maze.ts';
+import { type Maze } from '../geometry/index.ts';
 
-export function ellipisePlugin(maze: Maze): void {
+export function ellipsePlugin(maze: Maze): void {
   const rx = Math.floor(maze.width / 2) + 1;
   const ry = Math.floor(maze.height / 2) + 1;
   const x0 = Math.floor(maze.width / 2);

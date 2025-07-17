@@ -1,4 +1,5 @@
 import React from 'react';
+import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
 import { BrowserRouter } from 'react-router';
 
 type RouterProps = {
@@ -6,5 +7,7 @@ type RouterProps = {
 };
 
 export const Router: React.FC<RouterProps> = ({ children }) => (
-  <BrowserRouter>{children}</BrowserRouter>
+  <NuqsAdapter>
+    <BrowserRouter>{children}</BrowserRouter>
+  </NuqsAdapter>
 );

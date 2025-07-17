@@ -1,6 +1,6 @@
 import { type InitOptions } from 'i18next';
 
-// TODO
+// TODO [2025-08-01]: Remove this when we have a proper build system
 // const isDevelopment = import.meta.env.NODE_ENV !== 'production';
 const isDevelopment = true;
 

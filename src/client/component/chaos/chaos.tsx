@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -156,7 +157,7 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.error(err);
-        }); // TODO [2025-05-01]: use snackbar to show error
+        }); // TODO [2025-08-01]: use snackbar to show error
     } else {
       setTimeout(() => {
         const context = canvas.current!.getContext('2d')!;

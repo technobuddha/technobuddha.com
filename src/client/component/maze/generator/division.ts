@@ -1,17 +1,22 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { type Cell } from '../geometry/maze.ts';
+import { type Cell } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
 type SubRegion = 'a' | 'b' | 'm';
+
+type RegionProperties = {
+  width: number;
+  height: number;
+};
 
 class Region {
   private readonly width: number;
   private readonly height: number;
   public subregions: (SubRegion | null)[][];
 
-  public constructor({ width, height }: { width: number; height: number }) {
+  public constructor({ width, height }: RegionProperties) {
     this.width = width;
     this.height = height;
     this.subregions = create2DArray(width, height, null);
@@ -61,7 +66,7 @@ class Region {
   }
 }
 
-type DivisionProperties = MazeGeneratorProperties & {
+export type DivisionProperties = MazeGeneratorProperties & {
   threshold?: number;
 };
 
@@ -74,7 +79,7 @@ export class Division extends MazeGenerator {
     this.threshold = threshold;
   }
 
-  public *generate(): Generator<void> {
+  public async *generate(): AsyncGenerator<void> {
     this.maze.removeInteriorWalls();
     this.maze.draw();
 
@@ -94,17 +99,18 @@ export class Division extends MazeGenerator {
       const frontier = [seedA, seedB];
 
       while (frontier.length > 0) {
-        const index = Math.floor(this.random() * frontier.length);
+        const index = this.randomNumber(frontier.length);
         const cell = frontier[index];
 
         const neighbors = this.maze
-          .neighbors(cell)
-          .filter((n) => region.subregions[n.x][n.y] === 'm');
+          .moves(cell, { wall: false })
+          .filter(({ target }) => region.subregions[target.x][target.y] === 'm');
 
-        if (neighbors.length > 0) {
-          const neighbor = neighbors[Math.floor(this.random() * neighbors.length)];
-          region.subregions[neighbor.x][neighbor.y] = region.subregions[cell.x][cell.y];
-          frontier.push(neighbor);
+        const neighbor = this.randomPick(neighbors);
+        if (neighbor) {
+          region.subregions[neighbor.target.x][neighbor.target.y] =
+            region.subregions[cell.x][cell.y];
+          frontier.push(neighbor.target);
         } else {
           frontier.splice(index, 1);
         }
@@ -113,13 +119,15 @@ export class Division extends MazeGenerator {
       const boundary = region
         .cells('a')
         .flatMap((cell) =>
-          this.maze.neighbors(cell).filter((n) => region.subregions[n.x][n.y] === 'b'),
+          this.maze
+            .moves(cell)
+            .filter(({ target }) => region.subregions[target.x][target.y] === 'b'),
         );
 
-      boundary.splice(Math.floor(this.random() * boundary.length), 1);
+      boundary.splice(this.randomNumber(boundary.length), 1);
 
       for (const cd of boundary) {
-        this.maze.addWall(cd, this.maze.opposite(cd));
+        this.maze.addWall(cd.target, this.maze.opposite(cd.target.facing));
         yield;
       }
 

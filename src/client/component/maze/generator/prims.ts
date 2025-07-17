@@ -1,35 +1,38 @@
-import { create2DArray } from '@technobuddha/library';
-
-import { type Cell } from '../geometry/maze.ts';
+import { type Cell } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
+export type PrimsProperties = MazeGeneratorProperties;
+
 export class Prims extends MazeGenerator {
-  private readonly visited: boolean[][];
   public activeCells: Cell[];
 
-  public constructor(props: MazeGeneratorProperties) {
+  public constructor(props: PrimsProperties) {
     super(props);
 
-    this.visited = create2DArray(this.maze.width, this.maze.height, false);
     this.activeCells = [this.start];
-    this.visited[this.start.x][this.start.y] = true;
+
+    this.player = 0;
+    this.createPlayer({ start: this.start });
+    this.visit();
   }
 
-  public override *generate(): Generator<void> {
+  public override async *generate(): AsyncGenerator<void> {
     while (this.activeCells.length > 0) {
-      const cellIndex = Math.floor(this.random() * this.activeCells.length);
-      this.currentCell = this.activeCells[cellIndex];
+      const cellIndex = this.randomNumber(this.activeCells.length);
+      const currentCell = this.activeCells[cellIndex];
 
-      const cell = this.randomPick(
-        this.maze.neighbors(this.currentCell).filter((c) => !this.visited[c.x][c.y]),
+      const next = this.randomPick(
+        this.maze
+          .moves(currentCell, { wall: true })
+          .filter(({ target }) => !this.isVisited(target)),
       );
-      if (cell) {
-        this.maze.removeWall(this.currentCell, cell.direction);
+      if (next) {
+        this.maze.removeWall(currentCell, next.direction);
         yield;
-        this.visited[cell.x][cell.y] = true;
+        this.visit({ cell: next.target });
 
-        this.activeCells.push(cell);
+        this.activeCells.push(next.target);
       } else {
         this.activeCells.splice(cellIndex, 1);
       }

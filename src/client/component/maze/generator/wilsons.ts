@@ -1,27 +1,25 @@
-import { create2DArray } from '@technobuddha/library';
-
-import { type Cell, type CellDirection } from '../geometry/maze.ts';
+import { type Cell, type CellFacing } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
+export type WilsonsProperties = MazeGeneratorProperties;
+
 export class Wilsons extends MazeGenerator {
-  private readonly visited: boolean[][];
   private readonly unvisited: Cell[];
 
-  public constructor(props: MazeGeneratorProperties) {
+  public constructor(props: WilsonsProperties) {
     super(props);
 
-    const { width, height } = this.maze;
-
-    this.visited = create2DArray(width, height, false);
     this.unvisited = this.maze.cellsInMaze();
 
-    this.currentCell = this.start;
-    this.markAsVisited(this.currentCell);
+    this.player = 0;
+    this.createPlayer();
+
+    this.markAsVisited(this.start);
   }
 
   private markAsVisited(cell: Cell): void {
-    this.visited[cell.x][cell.y] = true;
+    this.visit({ cell });
 
     const index = this.unvisited.findIndex((c) => c.x === cell.x && c.y === cell.y);
     if (index >= 0) {
@@ -29,37 +27,35 @@ export class Wilsons extends MazeGenerator {
     }
   }
 
-  public *generate(): Generator<void> {
-    this.maze.freezeWalls();
-
+  public async *generate(): AsyncGenerator<void> {
     while (this.unvisited.length > 0) {
-      this.currentCell = this.randomPick(this.unvisited)!;
-      let path: (Cell | CellDirection)[] = [this.currentCell];
+      let currentCell = this.randomPick(this.unvisited)!;
+      let path: (Cell | CellFacing)[] = [currentCell];
 
-      while (!this.visited[this.currentCell.x][this.currentCell.y]) {
-        const cell = this.randomPick(this.maze.neighbors(this.currentCell))!;
+      while (!this.isVisited(currentCell)) {
+        const { target } = this.randomPick(this.maze.moves(currentCell, { wall: true }))!;
 
         let cellVisited = false;
         let cellPreviousIndex = -1;
         for (const [index, pathCell] of path.entries()) {
-          if (this.maze.isSame(pathCell, cell)) {
+          if (this.maze.isSame(pathCell, target)) {
             cellVisited = true;
             cellPreviousIndex = index;
           }
         }
 
         if (cellVisited) {
-          this.currentCell = path[cellPreviousIndex];
+          currentCell = path[cellPreviousIndex];
           path = path.slice(0, cellPreviousIndex + 1);
         } else {
-          path.push(cell);
-          this.currentCell = cell;
+          path.push(target);
+          currentCell = target;
         }
       }
 
       for (const cell of path) {
-        if ('direction' in cell) {
-          this.maze.removeWall(cell, this.maze.opposite(cell));
+        if ('facing' in cell) {
+          this.maze.removeWall(cell, this.maze.opposite(cell.facing));
           yield;
         }
         this.markAsVisited(cell);

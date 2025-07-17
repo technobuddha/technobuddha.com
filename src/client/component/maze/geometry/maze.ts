@@ -1,43 +1,41 @@
 import {
+  type Cartesian,
   create2DArray,
+  manhattanDistance,
   modulo,
-  randomPick,
-  randomShuffle,
-  toCartesian,
-  toPolar,
+  type Rect,
+  rotate,
+  scale,
+  star,
+  toRadians,
+  toSquare,
+  translate,
 } from '@technobuddha/library';
-import { isObject } from 'lodash-es';
 
-import { type Drawing, type Rect } from '../drawing/drawing.ts';
+import { type Drawing } from '../drawing/index.ts';
 import { type MazeGenerator } from '../generator/index.ts';
+import { alpha, logger, lookAhead } from '../library/index.ts';
+import { Random, type RandomProperties } from '../random/index.ts';
 
-import { Nexus } from './nexus.ts';
+import { type Bridge } from './bridges.ts';
+import { defaultColors, type MazeColors } from './color.ts';
+import {
+  type Cell,
+  type CellDirection,
+  type CellFacing,
+  type CellTunnel,
+  type Direction,
+  type Facing,
+  type Kind,
+  type Move,
+  type MoveOffset,
+  type Pillar,
+  type Terminus,
+} from './geometry.ts';
+import { type BridgeMatrix, type Matrix } from './matrix.ts';
+import { Nexus, type Tunnels, type Wall } from './nexus.ts';
 
-export type Direction = string;
-export type Pillar = `${Direction}${Direction}`;
-
-export type Kind = number;
-
-export type XY = { x: number; y: number };
-
-export type Move = { x: number; y: number; zone?: 'up' | 'down' };
-
-export type Cell = {
-  x: number;
-  y: number;
-};
-
-export type CellDirection = Cell & {
-  direction: Direction;
-};
-
-export type Terminus = Cell & {
-  direction: Direction;
-};
-
-export type CellPillar = Cell & {
-  pillar: Pillar;
-};
+const starShape = rotate(star(5, 0.5, 1), Math.PI / 10);
 
 export type AllOrder =
   | 'top-left'
@@ -51,105 +49,94 @@ export type AllOrder =
   | 'random';
 
 type Zone = 'edge' | 'interior';
+
 type Location = `${AllOrder} ${Zone}`;
 
-export type Directional<T> = Record<Direction, T | false | undefined>;
-export type Wall = Directional<true>;
-export type Portal = Directional<CellDirection>;
+export type CustomDrawingSize = {
+  readonly width: number;
+  readonly height: number;
+  readonly actualWidth: number;
+  readonly actualHeight: number;
+};
 
 export type DrawingSizes = {
-  fixedWidth?: number;
-  fixedHeight?: number;
-  groupWidth: number;
-  groupHeight: number;
-  verticalCellsPerGroup?: number;
-  horizontalCellsPerGroup?: number;
-  topPadding?: number;
-  leftPadding?: number;
-  bottomPadding?: number;
-  rightPadding?: number;
-  custom?(
-    this: void,
-    args: { width: number; height: number; actualWidth: number; actualHeight: number },
-  ): { width: number; height: number; actualWidth: number; actualHeight: number };
+  readonly groupWidth: number;
+  readonly groupHeight: number;
+  readonly verticalCellsPerGroup?: number;
+  readonly horizontalCellsPerGroup?: number;
+  readonly topPadding?: number;
+  readonly leftPadding?: number;
+  readonly bottomPadding?: number;
+  readonly rightPadding?: number;
+  readonly custom?: (this: void, args: CustomDrawingSize) => CustomDrawingSize;
 };
 
-type ShowDistances = 'none' | 'greyscale' | 'primary' | 'color' | 'spectrum';
+export type ShowDistances = 'none' | 'greyscale' | 'primary' | 'color' | 'spectrum';
 
 type Loop = {
-  cell: Cell;
-  distance: number;
-  loops: Cell[];
-  distances: number[];
+  readonly cell: Cell;
+  readonly distance: number;
+  readonly loops: Cell[];
+  readonly distances: number[];
 };
 
-export type MazeProperties = {
-  drawing?: Drawing;
-  width?: number;
-  height?: number;
-  cellSize?: number;
-  cellColor?: string;
-  wallSize?: number;
-  wallColor?: string;
-  maskColor?: string;
-  entrance?: Cell | CellDirection | Location;
-  exit?: Cell | CellDirection | Location;
-  entranceColor?: string;
-  exitColor?: string;
-  random?(this: void): number;
-  plugin?(this: void, maze: Maze): void;
-  wrapHorizontal?: boolean;
-  wrapVertical?: boolean;
-  showDistances?: ShowDistances;
-  solutionColor?: string;
+export function isFacing(orientation: string): orientation is Facing {
+  return /^[A-Z!]$/u.test(orientation);
+}
+
+export function toFacing(direction: Direction): Facing {
+  return direction === '?' ? '!' : (direction.toUpperCase() as Facing);
+}
+
+export function isDirection(orientation: string): orientation is Direction {
+  return /^[a-z?]$/u.test(orientation);
+}
+
+export function toDirection(facing: Facing): Direction {
+  return facing === '!' ? '?' : (facing.toLowerCase() as Direction);
+}
+
+export type MazeProperties = RandomProperties & {
+  readonly drawing?: Drawing;
+  readonly width?: number;
+  readonly height?: number;
+  readonly cellSize?: number;
+  readonly wallSize?: number;
+  readonly voidSize?: number;
+  readonly entrance?: Cell | CellDirection | Location;
+  readonly exit?: Cell | CellDirection | Location;
+  readonly wrapHorizontal?: boolean;
+  readonly wrapVertical?: boolean;
+
+  readonly color?: Partial<MazeColors>;
+
+  readonly showDistances?: ShowDistances;
+  readonly showCoordinates?: boolean;
+  readonly showKind?: boolean;
+
+  readonly plugin?: (this: void, maze: Maze) => void;
 };
 
-export type DirectionMatrix = Direction[];
-export type PillarMatrix = Pillar[];
-export type WallMatrix = Record<Kind, Record<Direction, boolean>>;
-export type OppositeMatrix = Record<Direction, Direction | Record<Kind, Direction>>;
-export type TurnMatrix = Record<Direction, Direction[] | Record<Kind, Direction[]>>;
-export type AngleMatrix = Record<Direction, number>;
-export type MoveMatrix = Record<Kind, Record<Direction, Move | Move[]>>;
-export type PreferredMatrix = Record<Kind, Direction[]>;
-export type PathMatrix = Record<Direction, number>;
-
-export abstract class Maze {
-  public width: NonNullable<MazeProperties['width']> = 25;
-  public height: NonNullable<MazeProperties['height']> = 25;
-  public readonly cellSize: NonNullable<MazeProperties['cellSize']>;
-  public readonly cellColor: NonNullable<MazeProperties['cellColor']>;
-  public readonly wallSize: NonNullable<MazeProperties['wallSize']>;
-  public readonly wallColor: NonNullable<MazeProperties['wallColor']>;
-  public readonly maskColor: NonNullable<MazeProperties['maskColor']>;
+export abstract class Maze extends Random {
+  //#region Properties
   public readonly wrapHorizontal: boolean;
   public readonly wrapVertical: boolean;
-  public readonly showDistances: ShowDistances;
-  public entrance: Terminus = { x: -1, y: -1, direction: '?' };
-  public exit: Terminus = { x: -1, y: -1, direction: '?' };
-  public solution: CellDirection[] = [];
-  public solutionColor: string;
+  public entrance: Terminus = { x: -1, y: -1, facing: '!' };
+  public exit: Terminus = { x: -1, y: -1, facing: '!' };
+  public solution: CellTunnel[] = [];
 
-  public readonly directions: DirectionMatrix;
-  public readonly pillars: PillarMatrix;
+  public leftOffset = 0;
+  public topOffset = 0;
+  public readonly bridgePieces: number;
 
-  protected leftOffset = 0;
-  protected topOffset = 0;
-
-  public readonly random: NonNullable<MazeProperties['random']>;
-
-  protected entranceColor: NonNullable<MazeProperties['entranceColor']>;
-  protected exitColor: NonNullable<MazeProperties['exitColor']>;
-  protected drawing: MazeProperties['drawing'];
-
-  private readonly wallMatrix: WallMatrix;
-  private readonly oppositeMatrix: OppositeMatrix;
-  private readonly rightTurnMatrix: TurnMatrix;
-  private readonly leftTurnMatrix: TurnMatrix;
-  private readonly straightMatrix: TurnMatrix;
-  private readonly moveMatrix: MoveMatrix;
-  private readonly preferredMatrix: PreferredMatrix;
-  private readonly pathMatrix: PathMatrix;
+  public width: NonNullable<MazeProperties['width']> = 25;
+  public height: NonNullable<MazeProperties['height']> = 25;
+  public readonly wallSize: NonNullable<MazeProperties['wallSize']>;
+  public readonly cellSize: NonNullable<MazeProperties['cellSize']>;
+  public readonly voidSize: NonNullable<MazeProperties['voidSize']>;
+  public readonly showDistances: NonNullable<MazeProperties['showDistances']>;
+  public readonly showCoordinates: NonNullable<MazeProperties['showCoordinates']>;
+  public readonly showKind: NonNullable<MazeProperties['showKind']>;
 
   private readonly entranceSpec: MazeProperties['entrance'];
   private readonly exitSpec: MazeProperties['exit'];
@@ -157,73 +144,84 @@ export abstract class Maze {
   protected readonly requestedWidth: MazeProperties['width'];
   protected readonly requestedHeight: MazeProperties['height'];
 
+  protected drawing: MazeProperties['drawing'];
+  public readonly color: NonNullable<Required<MazeColors>>;
+  //#endregion
+  //#region Matrix
+  public readonly directions: Matrix['directions'];
+  public readonly pillars: Matrix['pillars'];
+  protected readonly wallMatrix: Matrix['wall'];
+  protected readonly oppositeMatrix: Matrix['opposite'];
+  protected readonly rightTurnMatrix: Matrix['rightTurn'];
+  protected readonly leftTurnMatrix: Matrix['leftTurn'];
+  protected readonly straightMatrix: Matrix['straight'];
+  protected readonly moveMatrix: Matrix['move'];
+  protected readonly preferredMatrix: Matrix['preferred'];
+  protected readonly angleMatrix: Matrix['angle'];
+  protected readonly bridgeMatrix: BridgeMatrix | undefined;
+  //#endregion
+  //#region Hooks
   public hookPreGeneration: ((generator: MazeGenerator) => void) | undefined = undefined;
   public hookPostGeneration: ((generator: MazeGenerator) => void) | undefined = undefined;
-
+  //#endregion
+  //#region Nexus
   protected nexuses: Nexus[][] = [];
-
+  //#endregion
   //#region Construction
   public constructor(
     {
       drawing,
-      cellSize = 21,
-      cellColor = 'black',
-      wallSize = 1,
-      wallColor = '#9e9e9e',
-      maskColor = cellColor,
-      entrance,
-      exit,
-      entranceColor = 'green',
-      exitColor = 'red',
-      wrapHorizontal = false,
-      wrapVertical = false,
-      random = Math.random,
-      showDistances = 'primary',
-      solutionColor = '#08A4BD',
       width: requestedWidth,
       height: requestedHeight,
+      cellSize = 21,
+      wallSize = 1,
+      voidSize = 0,
+      entrance,
+      exit,
+      wrapHorizontal = false,
+      wrapVertical = false,
+      color,
+      showDistances = 'none',
+      showCoordinates = false,
+      showKind = false,
       plugin,
+      ...props
     }: MazeProperties,
-    directions: DirectionMatrix,
-    pillars: PillarMatrix,
-    wallMatrix: WallMatrix,
-    oppositeMatrix: OppositeMatrix,
-    rightTurnMatrix: TurnMatrix,
-    leftTurnMatrix: TurnMatrix,
-    straightMatrix: TurnMatrix,
-    moveMatrix: MoveMatrix,
-    preferredMatrix: PreferredMatrix,
-    pathMatrix: PathMatrix,
+    matrix: Matrix,
   ) {
-    this.wallMatrix = wallMatrix;
-    this.oppositeMatrix = oppositeMatrix;
-    this.rightTurnMatrix = rightTurnMatrix;
-    this.leftTurnMatrix = leftTurnMatrix;
-    this.straightMatrix = straightMatrix;
-    this.moveMatrix = moveMatrix;
-    this.preferredMatrix = preferredMatrix;
-    this.pathMatrix = pathMatrix;
+    super(props);
+
+    this.directions = matrix.directions;
+    this.pillars = matrix.pillars;
+    this.wallMatrix = matrix.wall;
+    this.oppositeMatrix = matrix.opposite;
+    this.rightTurnMatrix = matrix.rightTurn;
+    this.leftTurnMatrix = matrix.leftTurn;
+    this.straightMatrix = matrix.straight;
+    this.moveMatrix = matrix.move;
+    this.preferredMatrix = matrix.preferred;
+    this.angleMatrix = matrix.angle;
+    this.bridgeMatrix = matrix.bridge;
+
+    this.bridgePieces = matrix.bridge?.pieces ?? 1;
 
     this.cellSize = cellSize;
     this.wallSize = wallSize;
+    this.voidSize = voidSize;
+
     this.drawing = drawing;
 
-    this.directions = directions;
-    this.pillars = pillars;
-    this.cellColor = cellColor;
-    this.wallColor = wallColor;
-    this.maskColor = maskColor;
+    this.color = { ...defaultColors, ...color };
+
+    this.showDistances = showDistances;
+    this.showCoordinates = showCoordinates;
+    this.showKind = showKind;
 
     this.wrapHorizontal = wrapHorizontal;
     this.wrapVertical = wrapVertical;
-    this.showDistances = showDistances;
 
-    this.random = random;
     this.entranceSpec = entrance;
     this.exitSpec = exit;
-    this.entranceColor = entranceColor;
-    this.exitColor = exitColor;
-    this.solutionColor = solutionColor;
 
     this.requestedWidth = requestedWidth;
     this.requestedHeight = requestedHeight;
@@ -287,15 +285,6 @@ export abstract class Maze {
     this.createCells();
 
     this.plugin?.(this);
-
-    for (const cell of this.allCells()) {
-      if (this.nexus(cell).mask) {
-        const wall = this.nexus(cell).walls;
-        for (const direction of Object.keys(wall)) {
-          delete wall[direction];
-        }
-      }
-    }
   }
 
   public createCells(): void {
@@ -307,7 +296,9 @@ export abstract class Maze {
           x,
           y,
           walls: this.initialWalls({ x, y }),
-          portals: this.initialPortals({ x, y }),
+          tunnels: this.initialTunnels({ x, y }),
+          barriers: this.initialBarriers({ x, y }),
+          rect: toSquare(this.getRect({ x, y })),
         }),
     );
   }
@@ -324,67 +315,103 @@ export abstract class Maze {
     throw new Error(`No initial walls for cell (${cell.x}, ${cell.y}) kind ${kind}`);
   }
 
-  public initialPortals(cell: Cell): Portal {
-    return Object.fromEntries(Object.keys(this.initialWalls(cell)).map((d) => [d, false]));
-  }
-  //#endregion
-  //#region utility functions
-  public randomPick<T>(array: T[]): T | undefined {
-    return randomPick(array, this.random);
+  public initialTunnels(cell: Cell): Tunnels {
+    return Object.fromEntries(
+      Object.keys(this.initialWalls(cell)).map((d) => [d as Direction, false]),
+    ) as Record<Direction, false>;
   }
 
-  public randomShuffle<T>(array: T[]): T[] {
-    return randomShuffle(array, this.random);
+  public initialBarriers(cell: Cell): Wall {
+    return Object.fromEntries(
+      Object.keys(this.initialWalls(cell)).map((d) => [d as Direction, false]),
+    ) as Record<Direction, false>;
   }
   //#endregion
   //#region Direction
-  public opposite(cell: CellDirection): Direction {
-    if (cell.direction === '?') {
-      return '?';
+  public angle(direction: Direction): number {
+    const angle = this.angleMatrix[direction];
+    if (angle != null) {
+      return angle;
     }
 
-    const opposite = this.oppositeMatrix[cell.direction];
+    throw new Error(`"${direction}" is not a valid direction`);
+  }
+
+  public heading(facing: Facing): number {
+    return this.angle(toDirection(facing));
+  }
+
+  public opposite(facing: Facing): Direction;
+  public opposite(direction: Direction): Facing;
+  public opposite(orientation: Facing | Direction): Direction | Facing {
+    if (isFacing(orientation)) {
+      if (orientation === '!') {
+        return '?';
+      }
+
+      const opposite = this.oppositeMatrix.facing[orientation];
+      if (opposite) {
+        return opposite;
+      }
+
+      throw new Error(`"${orientation}" is not a valid facing`);
+    }
+
+    if (orientation === '?') {
+      return '!';
+    }
+
+    const opposite = this.oppositeMatrix.direction[orientation];
     if (opposite) {
-      return isObject(opposite) ? opposite[this.cellKind(cell)] : opposite;
+      return opposite;
     }
 
-    throw new Error(`"${cell.direction}" is not a valid direction`);
+    throw new Error(`"${orientation}" is not a valid direction`);
   }
 
-  public rightTurn(cell: CellDirection): Direction[] {
-    const rightTurn = this.rightTurnMatrix[cell.direction];
+  public rightTurn(cell: CellFacing): Direction[] {
+    const rightTurn = this.rightTurnMatrix[cell.facing];
     if (rightTurn) {
-      return (Array.isArray(rightTurn) ? rightTurn : rightTurn[this.cellKind(cell)]).filter(
-        (d) => d in this.nexus(cell).walls,
-      );
+      return rightTurn.filter((d) => d in this.nexus(cell).walls);
     }
 
-    throw new Error(`"${cell.direction}" is not a valid direction`);
+    throw new Error(`"${cell.facing}" is not a valid facing`);
   }
 
-  public leftTurn(cell: CellDirection): Direction[] {
-    const leftTurn = this.leftTurnMatrix[cell.direction];
+  public leftTurn(cell: CellFacing): Direction[] {
+    const leftTurn = this.leftTurnMatrix[cell.facing];
     if (leftTurn) {
-      return (Array.isArray(leftTurn) ? leftTurn : leftTurn[this.cellKind(cell)]).filter(
-        (d) => d in this.nexus(cell).walls,
-      );
+      return leftTurn.filter((d) => d in this.nexus(cell).walls);
     }
 
-    throw new Error(`"${cell.direction}" is not a valid direction`);
+    throw new Error(`"${cell.facing}" is not a valid facing`);
   }
 
-  public straight(cell: CellDirection, bias = this.random() < 0.5): Direction[] {
-    const straight = this.straightMatrix[cell.direction];
+  public straight(cell: CellFacing, bias = this.randomChance(0.5)): Direction[] {
+    const straight = this.straightMatrix[cell.facing];
     if (straight) {
-      const directions = Array.isArray(straight) ? straight : straight[this.cellKind(cell)];
-      const validDirections = directions.flatMap((dir) => {
-        const dirs = Array.from(dir).filter((d) => d in this.nexus(cell).walls);
+      const validDirections = straight.flatMap((dir) => {
+        const dirs = Array.from(dir).filter((d) => d in this.nexus(cell).walls) as Direction[];
         return bias ? dirs : dirs.reverse();
       });
-      return validDirections.filter((d) => d !== '');
+      return validDirections;
     }
 
-    throw new Error(`"${cell.direction}" is not a valid direction`);
+    throw new Error(`"${cell.facing}" is not a valid direction`);
+  }
+
+  public straightest(cell: CellFacing, bias = this.randomChance(0.5)): Direction {
+    const straights = this.straight(cell, bias);
+    if (straights.length > 1) {
+      return straights[0];
+    }
+
+    throw new Error(`(${cell.x},${cell.y}):${cell.facing} has no straight.`);
+  }
+
+  public forward(cell: CellFacing, bias = this.randomChance(0.5)): Direction {
+    const [forward] = this.straight(cell, bias);
+    return forward;
   }
   //#endregion
   //#region Cell Selection
@@ -428,15 +455,19 @@ export abstract class Maze {
   }
 
   public cellsUnderMask(order: AllOrder = 'top-left'): Cell[] {
-    return this.allCells(order).filter((cell) => this.nexus(cell).mask);
+    return this.cellsInMaze(order).filter((cell) => this.nexus(cell).mask);
   }
 
   public cellsOnEdge(order: AllOrder = 'top-left'): Cell[] {
-    return this.allCells(order).filter((cell) => this.adjacent(cell).some((c) => !this.inMaze(c)));
+    return this.cellsInMaze(order).filter(
+      (cell) => this.moves(cell, { wall: 'all', inMaze: false }).length > 0,
+    );
   }
 
   public cellsInterior(order: AllOrder = 'top-left'): Cell[] {
-    return this.allCells(order).filter((cell) => this.adjacent(cell).every((c) => this.inMaze(c)));
+    return this.cellsInMaze(order).filter((cell) =>
+      this.moves(cell, { wall: 'all', inMaze: 'all' }).every(({ target }) => this.inMaze(target)),
+    );
   }
 
   public deadEnds(): Cell[] {
@@ -447,10 +478,15 @@ export abstract class Maze {
     return this.randomPick(this.cellsInMaze())!;
   }
 
+  public randomCellFacing(cell = this.randomCell()): CellFacing {
+    const facing = this.opposite(this.randomPick(this.nexus(cell).wallDirections())!);
+    return { ...cell, facing };
+  }
+
   public removeInteriorWalls(): void {
     for (const cell of this.cellsInMaze()) {
       const wall = this.nexus(cell).walls;
-      for (const direction of Object.keys(wall).filter((d) => wall[d])) {
+      for (const direction of (Object.keys(wall) as Direction[]).filter((d) => wall[d])) {
         const move = this.move(cell, direction);
         if (move && this.inMaze(move)) {
           wall[direction] = false;
@@ -460,11 +496,6 @@ export abstract class Maze {
   }
   //#endregion
   //#region Maze
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public freezeWalls(): void {
-    // This is a no-op for most kinds of mazes
-  }
-
   public backup(): Nexus[][] {
     return structuredClone(this.nexuses);
   }
@@ -472,6 +503,32 @@ export abstract class Maze {
   public restore(backup: Nexus[][]): void {
     this.nexuses = structuredClone(backup);
   }
+
+  public manhattanDistance(a: Cell, b: Cell): number {
+    const distances: number[] = [manhattanDistance(a, b)];
+
+    if (this.wrapHorizontal) {
+      distances.push(
+        manhattanDistance({ ...a, x: a.x + this.width }, b),
+        manhattanDistance({ ...a, x: a.x - this.width }, b),
+      );
+    }
+    if (this.wrapVertical) {
+      distances.push(
+        manhattanDistance({ ...a, y: a.y + this.height }, b),
+        manhattanDistance({ ...a, y: a.y - this.height }, b),
+      );
+    }
+    if (this.wrapHorizontal && this.wrapVertical) {
+      distances.push(
+        manhattanDistance({ x: a.x + this.width, y: a.y + this.height }, b),
+        manhattanDistance({ x: a.x - this.width, y: a.y - this.height }, b),
+      );
+    }
+
+    return Math.min(...distances);
+  }
+
   public analyze(entrance: Cell = this.entrance): {
     maxDistance: number;
     maxCell: Cell;
@@ -497,7 +554,10 @@ export abstract class Maze {
         maxCell = cell;
       }
 
-      const loopCells = this.validMoves(cell).filter((n) => distances[n.x][n.y] < distance - 1);
+      const loopCells = this.moves(cell, { wall: false })
+        .filter(({ target }) => distances[target.x][target.y] !== Infinity)
+        .filter(({ target }) => distances[target.x][target.y] !== distance)
+        .map(({ target }) => target);
       if (loopCells.length > 0) {
         loops.push({
           cell,
@@ -507,10 +567,12 @@ export abstract class Maze {
         });
       }
 
-      const moves = this.validMoves(cell).filter((n) => distances[n.x][n.y] === Infinity);
-      for (const move of moves) {
-        distances[move.x][move.y] = distance + 1;
-        queue.unshift(move);
+      const moves = this.moves(cell, { wall: false })
+        .filter(({ target }) => distances[target.x][target.y] === Infinity)
+        .map(({ target }) => target);
+      for (const next of moves) {
+        distances[next.x][next.y] = distance + 1;
+        queue.unshift(next);
       }
     }
 
@@ -519,26 +581,34 @@ export abstract class Maze {
     return { maxDistance, maxCell, distances, unreachable, loops };
   }
 
-  public braid(): void {
-    const deadEnds = this.deadEnds();
+  public solve(entrance: CellFacing = this.entrance, exit: CellFacing = this.exit): CellFacing[] {
+    const visited = create2DArray(this.width, this.height, false);
+    const parent: (CellFacing | undefined)[][] = create2DArray(this.width, this.height, undefined);
+    const queue: CellFacing[] = [entrance];
 
-    while (deadEnds.length > 0) {
-      const index = Math.floor(this.random() * deadEnds.length);
-      const cell = deadEnds[index];
+    visited[entrance.x][entrance.y] = true;
 
-      deadEnds.splice(index, 1);
+    while (queue.length > 0) {
+      const cell = queue.shift()!;
 
-      const neighbor = this.randomPick(
-        this.neighbors(cell).filter((c) => this.nexus(cell).walls[c.direction]),
-      );
-      if (neighbor) {
-        this.removeWall(cell, neighbor.direction);
-        const nindex = deadEnds.findIndex((c) => this.isSame(c, neighbor));
-        if (nindex >= 0) {
-          deadEnds.splice(nindex, 1);
-        }
+      for (const move of this.moves(cell, { wall: false }).filter(
+        ({ target }) => !visited[target.x][target.y],
+      )) {
+        visited[move.target.x][move.target.y] = true;
+        parent[move.target.x][move.target.y] = cell;
+        queue.push(move.target);
       }
     }
+
+    const solution: CellFacing[] = [];
+
+    let cell: CellFacing | undefined = exit;
+    while (cell) {
+      solution.unshift(cell);
+      cell = parent[cell.x][cell.y];
+    }
+
+    return solution;
   }
 
   public addTermini(): this {
@@ -559,23 +629,33 @@ export abstract class Maze {
       exit = this.analyze(entrance).maxCell;
     }
 
-    const outsideEntrance = this.randomPick(this.adjacent(entrance).filter((c) => !this.inMaze(c)));
+    const outsideEntrance = this.randomPick(this.moves(entrance, { wall: true, inMaze: false }));
     if (outsideEntrance) {
-      this.entrance = { ...entrance, direction: this.opposite(outsideEntrance) };
+      this.entrance = { ...entrance, facing: this.opposite(outsideEntrance.direction) };
       this.nexus(this.entrance).walls[outsideEntrance.direction] = false;
     } else {
-      this.entrance = {
-        ...entrance,
-        direction: this.randomPick(this.validMoves(entrance))?.direction ?? '?',
-      };
+      const direction = this.randomPick(
+        this.moves(entrance, { wall: false }).map(({ direction }) => direction),
+      );
+      const facing =
+        direction ?
+          this.opposite(
+            this.randomPick(
+              this.nexus(entrance)
+                .wallDirections()
+                .filter((d) => d !== direction),
+            )!,
+          )
+        : '!';
+      this.entrance = { ...entrance, facing };
     }
 
-    const outsideExit = this.randomPick(this.adjacent(exit).filter((c) => !this.inMaze(c)));
+    const outsideExit = this.randomPick(this.moves(exit, { wall: true, inMaze: false }));
     if (outsideExit) {
-      this.exit = { ...exit, direction: outsideExit.direction };
-      this.nexus(this.exit).walls[this.exit.direction] = false;
+      this.exit = { ...exit, facing: this.opposite(outsideExit.direction) };
+      this.nexus(this.exit).walls[outsideExit.direction] = false;
     } else {
-      this.exit = { ...exit, direction: '?' };
+      this.exit = { ...exit, facing: '!' };
     }
 
     return this;
@@ -595,7 +675,7 @@ export abstract class Maze {
 
   protected abstract drawingSize(): DrawingSizes;
 
-  public clear(color?: string): void {
+  public clear(color: string = this.color.void): void {
     if (this.drawing) {
       this.drawing.clear(color, this.leftOffset, this.topOffset);
     }
@@ -607,20 +687,6 @@ export abstract class Maze {
 
       for (const cell of this.cellsInMaze()) {
         this.drawCell(cell);
-
-        for (const outside of this.adjacent(cell).filter((c) => !this.inMaze(c))) {
-          if (this.nexus(cell).walls[outside.direction]) {
-            this.drawOutsideWall({ ...outside, direction: this.opposite(outside) });
-          } else {
-            this.drawDoor({ ...outside, direction: this.opposite(outside) });
-          }
-
-          for (const pillar of this.pillars) {
-            if (pillar.includes(this.opposite(outside))) {
-              this.drawOutsidePillar({ ...outside, pillar });
-            }
-          }
-        }
       }
 
       this.drawMasks();
@@ -630,30 +696,40 @@ export abstract class Maze {
   public drawMasks(): void {
     if (this.drawing) {
       for (const cell of this.cellsUnderMask()) {
-        this.drawFloor(cell, this.maskColor);
+        this.drawFloor(cell, this.color.mask);
       }
     }
   }
 
+  public detectErrors(): void {
+    const { unreachable } = this.analyze(this.entrance);
+
+    if (unreachable.length > 0) {
+      logger.error(`Unreachable cells: `, unreachable);
+      for (const cell of unreachable) {
+        this.drawCell(cell, this.color.error);
+      }
+    }
+
+    // if (loops.length > 0) {
+    //   for (const loop of loops) {
+    //     logger.error(
+    //       `Loop detected from {x: ${loop.cell.x}, y: ${loop.cell.y} :: ${loop.distance}} with ${loop.loops.map((l, i) => `{x: ${l.x}, y:${l.y} :: ${loop.distances[i]}}`).join(' ')}`,
+    //     );
+
+    //     this.drawX(loop.cell, this.color.error);
+    //   }
+    // }
+
+    // if (loops.length > 0 || unreachable.length > 0) {
+    //   // eslint-disable-next-line no-debugger
+    //   debugger;
+    // }
+  }
+
   public drawDistances(point = this.entrance): void {
     if (this.drawing) {
-      const { maxDistance, distances, unreachable, loops } = this.analyze(point);
-
-      if (unreachable.length > 0) {
-        // eslint-disable-next-line no-console
-        console.log(`Unreachable cells: `, unreachable);
-      }
-
-      if (loops.length > 0) {
-        for (const loop of loops) {
-          // eslint-disable-next-line no-console
-          console.log(
-            `Loop detected from ${loop.cell.x}, ${loop.cell.y} with distance ${loop.distance}`,
-            loop.loops,
-            loop.distances,
-          );
-        }
-      }
+      const { maxDistance, distances } = this.analyze(point);
 
       for (let x = 0; x < distances.length; ++x) {
         for (let y = 0; y < distances[x].length; ++y) {
@@ -669,32 +745,37 @@ export abstract class Maze {
           let color: string | undefined = undefined;
 
           if (distance === Infinity) {
-            color = 'rgba(0,255,0,.5)';
+            color = this.color.error;
           } else {
+            const grey = (1 - distance / maxDistance) * 0.35 + 0.15;
+
             switch (this.showDistances) {
               case 'none': {
+                color = this.color.cell;
                 break;
               }
 
               case 'greyscale': {
-                const grey = (1 - distance / maxDistance) * 0.35 + 0.15;
-
-                color = `rgba(${255 * grey}, ${255 * grey}, ${255 * grey})`;
+                // color = `rgba(${255 * grey}, ${255 * grey}, ${255 * grey})`;
+                color = `oklch(${grey} 0 0)`;
                 break;
               }
 
               case 'primary': {
-                color = `hsl(212, 72.3%, ${3 + 35 * (1 - this.nexus(cell).distance / maxDistance)}%)`;
+                // color = `hsl(212, 72.3%, ${3 + 35 * (1 - this.nexus(cell).distance / maxDistance)}%)`;
+                color = `oklch(${grey} 0.115 213.72)`;
+                //oklch(0.6611 0.115 213.72)
                 break;
               }
 
               case 'color': {
-                color = `hsl(270, 100%, ${15 + 35 * (1 - this.nexus(cell).distance / maxDistance)}%)`;
+                color = `hsl(276, 100%, ${15 + 35 * (1 - this.nexus(cell).distance / maxDistance)}%)`;
                 break;
               }
 
               case 'spectrum': {
-                color = `hsl(${(this.nexus(cell).distance * 360) / maxDistance}, 25%, 50%)`;
+                //color = `hsl(${(this.nexus(cell).distance * 360) / maxDistance}, 25%, 50%)`;
+                color = `oklch(0.5999 0.1279 ${(1 - distance / maxDistance) * 360} )`;
                 break;
               }
               // no default
@@ -707,19 +788,16 @@ export abstract class Maze {
         }
       }
 
-      this.drawMasks();
+      //this.drawMasks();
     }
   }
 
-  public drawSolution(color = this.solutionColor): void {
+  public drawSolution(color = this.color.solution): void {
     if (this.drawing) {
       this.drawDistances();
-
-      for (const cell of this.solution) {
-        this.drawPath(cell, color);
-      }
-
-      this.drawPath(this.drawCell(this.exit), color);
+      this.drawPaths(this.solution, color);
+      this.drawCell(this.exit);
+      this.drawPath({ ...this.exit, direction: this.opposite(this.exit.facing) }, color);
     }
   }
   //#endregion
@@ -732,19 +810,23 @@ export abstract class Maze {
     throw new Error(`No nexus for cell (${cell.x}, ${cell.y})`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
-  public isSame(cell1: Cell | undefined | null, cell2: Cell | undefined | null): boolean {
+  public isSame(cell1: Cell | undefined | null, cell2: Cell | undefined | null): boolean;
+  public isSame(cell1: CellTunnel, cell2: CellTunnel): boolean {
+    if (cell1 && cell2 && 'tunnel' in cell1 && 'tunnel' in cell2) {
+      return cell1.x === cell2.x && cell1.y === cell2.y && cell1.tunnel === cell2.tunnel;
+    }
     return cell1?.x === cell2?.x && cell1?.y === cell2?.y;
   }
 
-  public isDeadEnd(cell: Cell): boolean {
-    const wall = this.nexus(cell).walls;
-    const dirs = Object.keys(wall);
+  public isIdentical(cell1: CellFacing, cell2: CellFacing): boolean {
+    return cell1.x === cell2.x && cell1.y === cell2.y && cell1.facing === cell2.facing;
+  }
 
+  public isDeadEnd(cell: Cell): boolean {
     return (
       !this.isSame(cell, this.entrance) &&
       !this.isSame(cell, this.exit) &&
-      dirs.reduce((acc, dir) => acc + (wall[dir] ? 1 : 0), 0) === dirs.length - 1
+      this.moves(cell, { wall: false }).length === 1
     );
   }
 
@@ -757,66 +839,176 @@ export abstract class Maze {
       !this.nexus(cell).mask
     );
   }
+  protected abstract cellOrigin(cell: Cell): Cartesian;
 
-  public addWall(cell: Cell, direction: Direction, draw = true): void {
-    if (this.inMaze(cell)) {
-      this.nexus(cell).walls[direction] = true;
-      if (draw) {
-        this.drawCell(cell, this.cellColor, this.wallColor);
-      }
+  protected cellOffsets(cell: Cell): Record<string, number> {
+    const { x, y } = this.cellOrigin(cell);
 
-      const cell2 = this.move(cell, direction);
-      if (cell2 && this.inMaze(cell2)) {
-        this.nexus({ x: cell2.x, y: cell2.y }).walls[this.opposite(cell2)] = true;
-        if (draw) {
-          this.drawCell(cell2, this.cellColor, this.wallColor);
+    return Object.fromEntries(
+      Object.entries(this.offsets(this.cellKind(cell))).map(([k, v]) => {
+        if (k.startsWith('x')) {
+          return [k, v + x];
         }
+        if (k.startsWith('y')) {
+          return [k, v + y];
+        }
+        return [k, v];
+      }),
+    );
+  }
+  //#endregion
+  //#region Path
+  public makePath(history: CellFacing[]): CellTunnel[] {
+    const path: CellTunnel[] = [];
+
+    if (history.length > 0) {
+      for (const [cell, next] of lookAhead(this.flatten(history))) {
+        const walk = this.walkTo(cell, next);
+        if (walk) {
+          const { direction, tunnel } = walk;
+
+          path.push({ x: cell.x, y: cell.y, direction, tunnel: false });
+          if (tunnel) {
+            for (const [tunnelCell, tunnelNext] of lookAhead(tunnel, next)) {
+              const traverse = this.traverseTo(tunnelCell, tunnelNext);
+              path.push({
+                x: tunnelCell.x,
+                y: tunnelCell.y,
+                direction: traverse.direction,
+                tunnel: true,
+              });
+            }
+          }
+        }
+      }
+    }
+
+    return path;
+  }
+
+  public flatten<T extends Cell = Cell>(path: T[]): T[] {
+    const flatPath: T[] = [];
+
+    for (let i = 0; i < path.length; ++i) {
+      const cell = path[i];
+
+      const loop = path.findLastIndex((c) => this.isSame(c, cell));
+      if (loop > i) {
+        // If we find a loop, we skip the rest of the path
+        i = loop;
+        flatPath.push(path[loop]);
+      } else {
+        flatPath.push(cell);
+      }
+    }
+
+    return flatPath;
+  }
+  //#endregion
+  //#region Construction
+  public addWall(cell: Cell, direction: Direction, draw = true): void {
+    const cell2 = this.move(cell, direction);
+    if (this.inMaze(cell) && this.inMaze(cell2)) {
+      this.nexus(cell).addWall(direction);
+
+      const direction2 = this.opposite(cell2.facing);
+      this.nexus(cell2).addWall(direction2);
+
+      if (draw) {
+        this.drawCell(cell);
+        this.drawCell(cell2);
       }
     }
   }
 
   public removeWall(cell: Cell, direction: Direction): void {
     if (this.inMaze(cell)) {
-      this.nexus(cell).walls[direction] = false;
-      this.drawCell(cell, this.cellColor, this.wallColor);
+      this.nexus(cell).removeWall(direction);
+      this.drawCell(cell);
 
       const cell2 = this.move(cell, direction);
-      if (cell2 && this.inMaze(cell2)) {
-        this.nexus(cell2).walls[this.opposite(cell2)] = false;
-        this.drawCell(cell2, this.cellColor, this.wallColor);
+      if (this.inMaze(cell2)) {
+        const direction2 = this.opposite(cell2.facing);
+
+        this.nexus(cell2).removeWall(direction2);
+        this.drawCell(cell2);
       }
     }
   }
-
-  public move(cell: Cell, dir: Direction): CellDirection | undefined {
-    let move = this.moveMatrix[this.cellKind(cell)][dir];
+  //#endregion
+  //#region Movement
+  public traverse(cell: Cell, direction: Direction): CellFacing {
+    let move = this.moveMatrix[this.cellKind(cell)][direction];
 
     if (move) {
       if (Array.isArray(move)) {
         move = move[modulo(cell.y, move.length)];
       }
 
-      let next = { ...this.resolveMove(cell, move), direction: dir };
-
-      while (true) {
-        const portal = this.inMaze(next) ? this.nexus(next).portals[next.direction] : false;
-        if (portal) {
-          const { destination } = this.nexus(next);
-          next = portal;
-          if (destination) {
-            break;
-          }
-        } else {
-          break;
-        }
-      }
-
-      return next;
+      return { ...this.resolveMove(cell, move), facing: toFacing(direction) };
     }
-    return undefined;
+
+    throw new Error(`No traverse for cell (${cell.x}, ${cell.y}) in direction "${direction}"`);
   }
 
-  public resolveMove(cell: Cell, move: Move): Cell {
+  public traversals(
+    cell: Cell,
+    { wall = 'all', inMaze = 'all' }: { wall?: boolean | 'all'; inMaze?: boolean | 'all' } = {},
+  ): Move[] {
+    return (Object.entries(this.nexus(cell).walls) as [Direction, boolean][])
+      .filter(([, w]) => wall === 'all' || w === wall)
+      .map(([direction]) => ({ direction, target: this.traverse(cell, direction) }))
+      .filter(({ target }) => inMaze === 'all' || this.inMaze(target) === inMaze);
+  }
+
+  public traverseTo(source: Cell, destination: Cell): { direction: Direction; target: CellFacing } {
+    return (
+      this.nexus(source)
+        .wallDirections()
+        .map((direction) => ({
+          direction,
+          target: this.traverse(source, direction),
+        }))
+        .find(({ target }) => this.isSame(destination, target)) ?? {
+        direction: '?',
+        target: { ...destination, facing: '!' },
+      }
+    );
+  }
+
+  public move(cell: Cell, direction: Direction): CellFacing {
+    return this.walk(cell, direction).target;
+  }
+
+  public moves(
+    cell: Cell,
+    { wall = false, inMaze = true }: { wall?: boolean | 'all'; inMaze?: boolean | 'all' } = {},
+  ): Move[] {
+    return (Object.entries(this.nexus(cell).walls) as [Direction, boolean][])
+      .filter(([, w]) => wall === 'all' || w === wall)
+      .map(([direction]) => ({ direction, ...this.walk(cell, direction) }))
+      .filter(({ target }) => inMaze === 'all' || this.inMaze(target) === inMaze);
+  }
+
+  public walk(cell: Cell, direction: Direction): { target: CellFacing; tunnel?: CellFacing[] } {
+    const tunnel: CellFacing[] = [];
+
+    let target = this.traverse(cell, direction);
+    while (true) {
+      const portal =
+        this.inMaze(target) ? this.nexus(target).tunnels[this.opposite(target.facing)] : false;
+      if (portal) {
+        tunnel.push(target);
+        target = { ...portal };
+      } else {
+        break;
+      }
+    }
+
+    return tunnel.length > 0 ? { target, tunnel } : { target };
+  }
+
+  public resolveMove(cell: Cell, move: MoveOffset): Cell {
     let { x, y } = cell;
 
     x += move.x;
@@ -843,182 +1035,214 @@ export abstract class Maze {
     return { x, y };
   }
 
-  public adjacent(cell: Cell): CellDirection[] {
-    return Object.keys(this.nexus(cell).walls)
-      .map((direction) => this.move(cell, direction))
-      .filter((c) => c != null);
+  public walkTo(
+    source: Cell,
+    destination: Cell,
+  ): { direction: Direction; target: CellFacing; tunnel?: CellFacing[] } | undefined {
+    return this.nexus(source)
+      .wallDirections()
+      .map((direction) => ({ direction, ...this.walk(source, direction) }))
+      .find(({ target }) => this.isSame(destination, target));
   }
 
-  public neighbors(cell: Cell): CellDirection[] {
-    return this.adjacent(cell).filter((c) => this.inMaze(c));
+  public preferreds(cell: Cell): Direction[] {
+    return this.moves(cell, { wall: true })
+      .filter(({ direction }) => this.preferredMatrix[this.cellKind(cell)].includes(direction))
+      .map(({ direction }) => direction);
   }
-
-  public validMoves(cell: Cell): CellDirection[] {
-    return this.neighbors(cell).filter((cd) => !this.nexus(cell).walls[cd.direction]);
-  }
-
-  public preferreds(cell: Cell): string[] {
-    return this.neighbors(cell)
-      .filter((cd) => this.preferredMatrix[this.cellKind(cell)].includes(cd.direction))
-      .map((cd) => cd.direction);
-  }
-
+  //#endregion
+  //#region Cell Kind
   public abstract cellKind(cell: Cell): Kind;
+  public cellZone(_cell: Cell): number {
+    return 0;
+  }
   //#endregion
   //#region Cell Drawing
+  protected cellColor(cell: Cell, color: string): string {
+    return (
+      this.isSame(cell, this.entrance) ? this.color.entrance
+      : this.isSame(cell, this.exit) ? this.color.exit
+      : this.nexus(cell).bridge ? this.color.bridge
+      : color
+    );
+  }
+
   public drawCell<T extends Cell>(
     cell: T,
-    cellColor = this.cellColor,
-    wallColor = this.wallColor,
+    cellColor = this.color.cell,
+    wallColor = this.color.wall,
   ): T {
-    this.drawFloor(
-      cell,
-      this.isSame(cell, this.entrance) ? this.entranceColor
-      : this.isSame(cell, this.exit) ? this.exitColor
-      : cellColor,
-    );
+    this.drawFloor(cell, this.cellColor(cell, cellColor));
 
-    if (this.nexus(cell).bridge) {
-      this.drawText(cell, '◯', 'white'); //'rgb(123 51 6)'  ✧✦
-    }
+    this.drawWalls(cell, wallColor);
+    this.drawPillars(cell, wallColor);
 
-    const wall = this.nexus(cell).walls;
-    for (const direction of Object.keys(wall)) {
-      if (wall[direction]) {
-        this.drawWall({ ...cell, direction }, wallColor);
-      } else {
-        this.drawDoor({ ...cell, direction }, wallColor);
-      }
-    }
-
-    for (const pillar of this.pillars) {
-      if (pillar[0] in wall && pillar[1] in wall) {
-        this.drawPillar({ ...cell, pillar }, this.wallColor);
-      }
+    // if (this.nexus(cell).bridge) {
+    // this.drawText(cell, '◯', 'white');
+    // } else
+    if (this.showCoordinates) {
+      this.drawText(cell, cell.x === 0 ? cell.y.toString() : cell.x.toString());
+    } else if (this.showKind) {
+      this.drawText(cell, this.cellKind(cell).toString());
     }
 
     return cell;
   }
 
-  public drawText(cell: Cell, text: string, color = 'black'): void {
-    if (this.drawing) {
-      this.drawing.text(this.getRect(cell), text, color);
-    }
-  }
+  public drawWalls(cell: Cell, color = this.color.wall): void {
+    const nexus = this.nexus(cell);
+    const { walls, tunnels, barriers } = nexus;
 
-  protected renderArrow(rect: Rect, angle: number, color: string): void {
-    if (this.drawing) {
-      const coords: XY[] = [
-        { x: 1, y: 0 },
-        { x: -1, y: 2 / 3 },
-        { x: 0, y: 0 },
-        { x: -1, y: -2 / 3 },
-      ];
-
-      // scale
-      for (const c of coords) {
-        c.x = (c.x * rect.w) / 2;
-        c.y = (c.y * rect.h) / 2;
+    for (const direction of this.directions) {
+      if (walls[direction] === true) {
+        if (tunnels[direction]) {
+          const move = this.traverse(cell, direction);
+          if (this.inMaze(move) && !this.nexus(move).walls[this.opposite(move.facing)]) {
+            this.drawBridge({ ...cell, direction });
+            continue;
+          }
+        }
+        this.drawWall({ ...cell, direction }, color);
+      } else if (barriers[direction]) {
+        this.drawWall({ ...cell, direction }, color);
+      } else if (walls[direction] === false) {
+        const move = this.traverse(cell, direction);
+        if (this.inMaze(move) && this.nexus(move).tunnels[direction]) {
+          this.drawTunnel({ ...cell, direction });
+          continue;
+        }
+        this.drawPassage({ ...cell, direction }, color);
       }
+    }
+  }
 
-      // rotate
-      for (const c of coords) {
-        const pc = toPolar(c);
-        pc.angle += (angle / 180) * Math.PI;
-        const { x, y } = toCartesian(pc);
-        c.x = x;
-        c.y = y;
+  public drawPillars(cell: Cell, color = this.color.wall): void {
+    const { walls } = this.nexus(cell);
+
+    for (const pillar of this.pillars) {
+      if (pillar[0] in walls || pillar[1] in walls) {
+        // if (walls[pillar[0] as Direction] === true || walls[pillar[1] as Direction] === true) {
+        this.drawPillar(cell, pillar, color);
       }
-
-      this.drawing.polygon(
-        coords.map((c) => ({ x: rect.x + rect.w / 2 + c.x, y: rect.y + rect.h / 2 - c.y })),
-        color,
-      );
     }
   }
 
-  protected renderCircle(rect: Rect, color: string): void {
+  public drawText(cell: Cell, text: string, color = this.color.text): void {
     if (this.drawing) {
-      this.drawing.circle(
-        { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 },
-        Math.abs(rect.w) / 4,
-        color,
-      );
+      const { rect } = this.nexus(cell);
+
+      this.drawing.text(rect, text, color);
     }
   }
 
-  protected cellRect(cell: Cell): Rect {
-    const rect = this.getRect(cell);
-
-    if (rect.w > rect.h) {
-      rect.x += (rect.w - rect.h) / 2;
-      rect.w = rect.h;
-    } else if (rect.h > rect.w) {
-      rect.y += (rect.h - rect.w) / 2;
-      rect.h = rect.w;
-    }
-
-    return rect;
-  }
-
-  public drawAvatar(cell: Cell, color = 'cyan'): void {
+  public drawBridge(cell: CellDirection, color = this.color.wall): void {
     if (this.drawing) {
-      this.drawCell(cell);
-      const rect = this.cellRect(cell);
-
-      this.drawing.circle(
-        { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 },
-        Math.abs(rect.w) / 4,
-        color,
-      );
+      this.drawWall(cell, color);
+      this.drawPassage(cell, color);
     }
   }
 
-  public drawPath(cell: CellDirection, color = 'cyan'): void {
+  public drawTunnel(cell: CellDirection, color = this.color.wall): void {
+    this.drawPassage(cell, color);
+  }
+
+  public drawPassage(_cell: CellDirection, _color: string = this.color.wall): void {
+    // Most mazes don't have to draw a door, it just the lack of a wall.
+  }
+
+  public drawPath(cell: CellDirection, color = this.color.path): void {
     if (this.drawing) {
-      const rect = this.cellRect(cell);
+      const { rect } = this.nexus(cell);
       if (cell.direction === '?') {
         this.renderCircle(rect, color);
       } else {
-        const angle = this.pathMatrix[cell.direction];
+        const angle = this.angleMatrix[cell.direction] ?? 0;
 
         this.renderArrow(rect, angle, color);
       }
     }
   }
 
-  protected translateOffsets(cell: Cell, x: number, y: number): Record<string, number> {
-    return Object.fromEntries(
-      Object.entries(this.offsets(this.cellKind(cell))).map(([k, v]) => {
-        if (k.startsWith('x')) {
-          return [k, v + x];
-        }
-        if (k.startsWith('y')) {
-          return [k, v + y];
-        }
-        return [k, v];
-      }),
+  public drawPaths(cells: CellTunnel[], color = this.color.path): void {
+    if (this.drawing) {
+      for (const cell of cells) {
+        this.drawPath(cell, cell.tunnel ? alpha(color, 0.75) : color);
+      }
+    }
+  }
+
+  public drawStar(cell: Cell, color = this.color.avatar): void {
+    if (this.drawing) {
+      const { rect } = this.nexus(cell);
+      this.drawCell(cell);
+      this.renderStar(rect, color);
+    }
+  }
+
+  protected renderArrow(rect: Rect, angle: number, color: string): void {
+    this.renderShape(
+      [
+        { x: 1, y: 0 },
+        { x: -1, y: 2 / 3 },
+        { x: 0, y: 0 },
+        { x: -1, y: -2 / 3 },
+      ],
+      rect,
+      angle,
+      color,
     );
   }
 
-  public drawDoor(_cd: CellDirection, _color: string = this.wallColor): void {
-    // Most mazes don't have to draw a door, it just the lack of a wall.
+  protected renderStar(rect: Rect, color: string): void {
+    this.renderShape(starShape, rect, 0, color);
   }
 
-  public drawOutsideWall(cd: CellDirection, color = this.wallColor): void {
-    this.drawWall(cd, color);
+  protected renderShape(coords: Cartesian[], rect: Rect, angle: number, color: string): void {
+    if (this.drawing) {
+      this.drawing.polygon(
+        translate(
+          rotate(scale(coords, { x: rect.width / 2, y: rect.height / 2 }), toRadians(angle)),
+          {
+            x: rect.x + rect.width / 2,
+            y: rect.y + rect.height / 2,
+          },
+        ),
+        color,
+      );
+    }
   }
 
-  public drawOutsidePillar(cell: CellPillar, color = this.wallColor): void {
-    this.drawPillar(cell, color);
+  public drawAvatar(cell: Cell, color = this.color.avatar): void {
+    if (this.drawing) {
+      const { rect } = this.nexus(cell);
+
+      this.renderCircle(rect, color);
+    }
+  }
+
+  public drawDot(cell: Cell, color = this.color.avatar, r = 0.125): void {
+    if (this.drawing) {
+      const { rect } = this.nexus(cell);
+      this.renderCircle(rect, color, r);
+    }
+  }
+
+  protected renderCircle(rect: Rect, color: string, r = 0.25): void {
+    if (this.drawing) {
+      this.drawing.circle(
+        { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 },
+        Math.abs(rect.width) * r,
+        color,
+      );
+    }
   }
 
   protected abstract offsets(kind: Kind): Record<string, number>;
   public abstract drawFloor(cell: Cell, color?: string): void;
-  public abstract drawWall(cd: CellDirection, color?: string): void;
-  public abstract drawPillar(cell: CellPillar, color?: string): void;
+  public abstract drawWall(cell: CellDirection, color?: string): void;
+  public abstract drawPillar(cell: Cell, pillar: Pillar, color?: string): void;
   public abstract drawX(cell: Cell, color?: string): void;
-  public abstract getRect(cell: Cell): Rect;
+  protected abstract getRect(cell: Cell): Rect;
   //#endregion
   //#region Location
   public parseLocation(p: Location): Cell {
@@ -1028,11 +1252,11 @@ export abstract class Maze {
 
     switch (zone) {
       case 'edge': {
-        return cells.find((cell) => this.adjacent(cell).some((c) => !this.inMaze(c)))!;
+        return cells.find((cell) => this.moves(cell, { wall: 'all', inMaze: false }).length > 0)!;
       }
 
       case 'interior': {
-        return cells.find((cell) => this.adjacent(cell).every((c) => this.inMaze(c)))!;
+        return cells.find((cell) => this.moves(cell, { wall: 'all', inMaze: false }).length === 0)!;
       }
 
       // no default
@@ -1045,6 +1269,18 @@ export abstract class Maze {
     }
 
     return pd;
+  }
+  //#endregion
+  //#region Bridge
+  public bridges(cell: Cell): Bridge[] {
+    const pieces = this.bridgeMatrix?.pieces ?? 1;
+    const connect = this.bridgeMatrix?.connect ?? {};
+    return (this.bridgeMatrix?.layouts[this.cellKind(cell)] ?? []).map((layout) => ({
+      direction: layout.path[0],
+      pieces,
+      connect,
+      ...layout,
+    }));
   }
   //#endregion
 }

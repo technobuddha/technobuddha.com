@@ -1,34 +1,30 @@
-/* eslint-disable @typescript-eslint/no-loop-func */
 import React from 'react';
-import { toCapitalWordCase, toHumanCase } from '@technobuddha/library';
-import {
-  IoFootsteps,
-  IoPause,
-  IoPlay,
-  IoPlayForward,
-  IoPlaySkipForward,
-  IoRefresh,
-} from 'react-icons/io5';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import clsx from 'clsx';
+import { parseAsString, useQueryState } from 'nuqs';
 import { useMeasure } from 'react-use';
 
-import { MenuItem, Select } from '#control';
+import { CanvasDrawing } from '../drawing/index.ts';
+import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
+import { type Maze, type MazeProperties } from '../geometry/index.ts';
+import { type Phase, type PlayMode, Runner } from '../runner/index.ts';
+import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
-import { animate } from '../drawing/animate.ts';
-import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
-import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/maze-generator.ts';
-import { type Maze, type MazeProperties } from '../geometry/maze.ts';
-import { allChoices, chooser } from '../library/chooser.ts';
-import { generators, mazes, plugins, solvers } from '../library/mazes.ts';
-import { type MazeSolver, type MazeSolverProperties } from '../solver/maze-solver.ts';
+import { CustomControls } from './controls/custom-controls.tsx';
+import { GameControls } from './controls/game-controls.tsx';
+import { GeneratorSection } from './controls/generator-section.tsx';
+import { GeometrySection } from './controls/geometry-section.tsx';
+import { HumanSection } from './controls/human-section.tsx';
+import { Messages } from './controls/messages.tsx';
+import { SolverSection } from './controls/solver-section.tsx';
 
 import css from './maze-maker.module.css';
 
-const mazeChoices = Array.from(allChoices(mazes));
-const generatorChoices = Array.from(allChoices(generators));
-const solverChoices = Array.from(allChoices(solvers));
-
-type Phase = 'maze' | 'generate' | 'braid' | 'solve' | 'done';
-type PlayMode = 'pause' | 'step' | 'play' | 'fast' | 'instant';
+export type Producer<Object, Props> = () => { maker: (props: Props) => Object; title: string };
+export type GeometryProducer = Producer<Maze, MazeProperties>;
+export type GeneratorProducer = Producer<MazeGenerator, MazeGeneratorProperties>;
+export type SolverProducer = Producer<MazeSolver, MazeSolverProperties>;
+export type BraidingProducer = () => { maker: () => number; title: string };
 
 type MazeMakerProps = {
   children?: never;
@@ -38,36 +34,29 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const [top, { width, height }] = useMeasure<HTMLDivElement>();
   const frame = React.useRef<HTMLDivElement>(null);
 
-  const processes = React.useRef<(() => void)[]>([]);
-
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
   const [mazeNumber, setMazeNumber] = React.useState(0);
-  const [step, setStep] = React.useState(0);
+
+  const [mode, setMode] = useQueryState('mode', parseAsString.withDefault('demo'));
 
   const [mazeName, setMazeName] = React.useState('');
   const [generatorName, setGeneratorName] = React.useState('');
   const [solverName, setSolverName] = React.useState('');
-  const [pluginName, setPluginName] = React.useState('');
 
-  const [playMode, setPlayMode] = React.useState<PlayMode>('fast');
-  const [playGenerator, setPlayGenerator] = React.useState<PlayMode>('fast');
-  const [playSolver, setPlaySolver] = React.useState<PlayMode>('fast');
-
-  const [maze, setMaze] = React.useState<Maze>();
-  const [generator, setGenerator] = React.useState<MazeGenerator>();
-  const [solver, setSolver] = React.useState<MazeSolver>();
-  const [generatorStep, setGeneratorStep] = React.useState<Iterator<void>>();
-  const [solverStep, setSolverStep] = React.useState<Iterator<void>>();
-  const [generatorSpeed, setGeneratorSpeed] = React.useState(1);
-  const [solverSpeed, setSolverSpeed] = React.useState(1);
+  const [phasePlayMode, setPhasePlayMode] = React.useState<{ [P in Phase]?: PlayMode }>({
+    generate: 'fast',
+    solve: 'fast',
+    observe: 'refresh',
+  });
 
   const [drawing, setDrawing] = React.useState<CanvasDrawing>();
 
-  const [selectedMaze, setSelectedMaze] = React.useState<string>();
-  const [selectedGenerator, setSelectedGenerator] = React.useState<string>();
-  const [selectedSolver, setSelectedSolver] = React.useState<string>();
+  const [geometryProducer, setGeometryProducer] = React.useState<GeometryProducer>();
+  const [generatorProducer, setGeneratorProducer] = React.useState<GeneratorProducer>();
+  const [solverProducer, setSolverProducer] = React.useState<SolverProducer>();
+  const [humanProducer, setHumanProducer] = React.useState<SolverProducer>();
 
-  const [phase, setPhase] = React.useState<Phase>('maze');
+  const [runner, setRunner] = React.useState<Runner>();
 
   React.useEffect(() => {
     if (width > 0 && height > 0) {
@@ -91,416 +80,138 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         setDrawing(drawingMaze);
       }
     }
-  }, [width, height, mazeNumber]);
+  }, [width, height]);
 
   React.useEffect(() => {
-    if (drawing) {
-      let mazeMaker: (props: MazeProperties) => Maze;
-      if (selectedMaze) {
-        mazeMaker = mazeChoices.find((mc) => mc.name === selectedMaze)!.value!;
-        setMazeName(selectedMaze);
-      } else {
-        const { name: mName, value } = chooser(mazes);
-        mazeMaker = value!;
-        setMazeName(mName);
-      }
+    // cspell: words solpro
+    const solpro = mode === 'game' ? humanProducer : solverProducer;
 
-      let generatorMaker: (props: MazeGeneratorProperties) => MazeGenerator;
-      if (selectedGenerator) {
-        generatorMaker = generatorChoices.find((gc) => gc.name === selectedGenerator)!.value!;
-        setGeneratorName(selectedGenerator);
-      } else {
-        const { name: gName, value } = chooser(generators);
-        generatorMaker = value!;
-        setGeneratorName(gName);
-      }
+    if (drawing && geometryProducer && generatorProducer && solpro) {
+      const { maker: mazeMaker, title: geometryTitle } = geometryProducer();
+      setMazeName(geometryTitle);
 
-      let solverMaker: (props: MazeSolverProperties) => MazeSolver;
-      if (selectedSolver) {
-        solverMaker = solverChoices.find((gc) => gc.name === selectedSolver)!.value!;
-        setSolverName(selectedSolver);
-      } else {
-        const { name: sName, value } = chooser(solvers);
-        solverMaker = value!;
-        setSolverName(sName);
-      }
+      const { maker: generatorMaker, title: generatorTitle } = generatorProducer();
+      setGeneratorName(generatorTitle);
 
-      const { name: pName, value: plugin } = chooser(plugins);
-      setPluginName(pName);
+      const { maker: solverMaker, title: solverTitle } = solpro();
+      setSolverName(solverTitle);
 
-      const m = mazeMaker({ plugin, drawing });
-      m.reset();
-      const g = generatorMaker({ maze: m });
-      const s = solverMaker({ maze: m });
+      // const piChoice = chooser(plugins);
+      // if(piChoice) {
+      //   plugin
+      // }
+      // const { name: plugName, value: plugin } = chooser(plugins);
+      // setPluginName(plugName);
 
-      setMaze(m);
-      setGenerator(g);
-      setGeneratorSpeed(g.speed);
-      setSolver(s);
-      setSolverSpeed(s.speed);
-
-      //getReady to start the maze
-
-      setTimeout(() => {
-        setPhase('maze');
+      setRunner((r) => {
+        r?.abort();
+        return new Runner({
+          mazeMaker,
+          generatorMaker,
+          solverMaker,
+          plugin: undefined,
+          drawing,
+          mode: phasePlayMode,
+        });
       });
     }
-  }, [selectedMaze, selectedGenerator, selectedSolver, drawing, mazeNumber]);
-
-  const kill = React.useCallback(() => {
-    for (const p of processes.current) {
-      p();
-    }
-  }, []);
-
-  const runner = React.useCallback(
-    async (play: PlayMode, iterator: Iterator<void>, speed: number): Promise<boolean> => {
-      kill();
-
-      let run: () => Promise<boolean>;
-
-      switch (play) {
-        case 'fast': {
-          let stop = false;
-          const killer = (): void => {
-            stop = true;
-          };
-          processes.current.push(killer);
-
-          run = async (): Promise<boolean> => {
-            while (
-              await animate(() => {
-                for (let i = 0; i < speed; ++i) {
-                  if (stop) {
-                    return false;
-                  }
-                  if (iterator.next().done) {
-                    return false;
-                  }
-                }
-                return !stop;
-              })
-            ) {
-              if (stop) {
-                break;
-              }
-            }
-
-            // eslint-disable-next-line unicorn/prefer-array-index-of
-            const index = processes.current.findIndex((p) => p === killer);
-            if (index >= 0) {
-              processes.current.splice(index, 1);
-            }
-            return !stop;
-          };
-          break;
-        }
-
-        case 'pause':
-        case 'play':
-        case 'step': {
-          run = async (): Promise<boolean> =>
-            animate(() => {
-              if (iterator.next().done) {
-                return true;
-              }
-              return false;
-            });
-          break;
-        }
-
-        case 'instant': {
-          // eslint-disable-next-line @typescript-eslint/require-await
-          run = async (): Promise<boolean> => {
-            const d = maze!.attachDrawing();
-            while (!iterator.next().done) {
-              //     //
-            }
-
-            maze!.attachDrawing(d);
-            return true;
-          };
-          break;
-        }
-
-        // no default
-      }
-
-      return run();
-    },
-    [kill, maze],
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, drawing, mazeNumber]);
 
   React.useEffect(() => {
-    if (maze && generator && solver) {
-      switch (phase) {
-        case 'maze': {
-          maze.draw();
-          setPhase('generate');
-          setPlayMode(playGenerator);
-          setGeneratorStep(generator.run());
-          break;
-        }
-
-        case 'generate': {
-          void runner(playMode, generatorStep!, generatorSpeed).then((finished) => {
-            if (finished) {
-              maze.addTermini();
-              maze.draw();
-
-              setPhase('braid');
-            } else if (playMode === 'play') {
-              setTimeout(() => setStep((s) => s + 1), 50);
-            }
-          });
-
-          break;
-        }
-
-        case 'braid': {
-          // maze.braid();
-          setPhase('solve');
-          setPlayMode(playSolver);
-          setSolverStep(solver.solve());
-          break;
-        }
-
-        case 'solve': {
-          void runner(playMode, solverStep!, solverSpeed).then((finished) => {
-            if (finished) {
-              setPhase('done');
-            } else if (playMode === 'play') {
-              setTimeout(() => {
-                setStep((s) => s + 1);
-              }, 50);
-            }
-          });
-          break;
-        }
-
-        case 'done': {
-          if (maze.solution.length > 0) {
-            maze.drawSolution();
-          }
-
-          setTimeout(() => {
-            setMazeNumber((n) => n + 1);
-          }, 10000);
-          break;
-        }
-
-        // no default
-      }
+    if (runner) {
+      void runner
+        .execute()
+        .then(() => {
+          setMazeNumber((n) => n + 1);
+        })
+        .catch(() => {});
     }
-  }, [
-    playMode,
-    phase,
-    step,
-    maze,
-    generator,
-    generatorStep,
-    generatorSpeed,
-    solver,
-    solverStep,
-    solverSpeed,
-    runner,
-    playGenerator,
-    playSolver,
-  ]);
+  }, [runner]);
 
-  const handleMazeChange = React.useCallback((value: string) => {
-    setSelectedMaze(value === '(undefined)' ? undefined : value);
+  const handleGeometryChange = React.useCallback((producer: GeometryProducer) => {
+    setGeometryProducer(() => producer);
   }, []);
 
-  const handleGeneratorChange = React.useCallback((value: string) => {
-    setSelectedGenerator(value === '(undefined)' ? undefined : value);
+  const handleGeneratorChange = React.useCallback((producer: GeneratorProducer) => {
+    setGeneratorProducer(() => producer);
   }, []);
 
-  const handleSolverChange = React.useCallback((value: string) => {
-    setSelectedSolver(value === '(undefined)' ? undefined : value);
+  const handleSolverChange = React.useCallback((producer: SolverProducer) => {
+    setSolverProducer(() => producer);
   }, []);
 
-  const handlePause = React.useCallback(() => {
-    kill();
-    setTimeout(() => {
-      setPlayMode('pause');
-    });
-  }, [kill]);
-
-  const handleStep = React.useCallback(() => {
-    kill();
-    setTimeout(() => {
-      setPlayMode('step');
-      setStep((s) => s + 1);
-    });
-  }, [kill]);
-
-  const handlePlay = React.useCallback(() => {
-    kill();
-    setTimeout(() => {
-      setPlayMode('play');
-      setStep((s) => s + 1);
-    });
-  }, [kill]);
-
-  const handleFast = React.useCallback(() => {
-    kill();
-    setTimeout(() => {
-      setPlayMode('fast');
-      setStep((s) => s + 1);
-    });
-  }, [kill]);
-
-  const handleInstant = React.useCallback(() => {
-    kill();
-    setTimeout(() => {
-      setPlayMode('instant');
-      setStep((s) => s + 1);
-    });
-  }, [kill]);
-
-  const handleRefresh = React.useCallback(() => {
-    kill();
-    setTimeout(() => {
-      setMazeNumber((n) => n + 1);
-    });
-  }, [kill]);
-
-  const handlePlayGeneratorChange = React.useCallback((value: PlayMode) => {
-    setPlayGenerator(value);
+  const handleHumanChange = React.useCallback((producer: SolverProducer) => {
+    setHumanProducer(() => producer);
   }, []);
 
-  const handlePlaySolverChange = React.useCallback((value: PlayMode) => {
-    setPlaySolver(value);
-  }, []);
+  const handlePhasePlayModeChange = React.useCallback(
+    (phase: Phase, value: PlayMode) => {
+      if (runner) {
+        runner.phasePlayMode[phase] = value;
+      }
+      setPhasePlayMode((prev) => ({ ...prev, [phase]: value }));
+    },
+    [runner],
+  );
+
+  const handleModeChange = React.useCallback(
+    (_event: React.MouseEvent<HTMLElement>, newMode: 'demo' | 'game' | 'custom') => {
+      void setMode(newMode);
+    },
+    [setMode],
+  );
 
   return (
     <div className={css.mazeMaker}>
       <div ref={top} className={css.maze}>
         {width > 0 && height > 0 && (
           <div ref={frame} className={css.title}>
-            Maze Shape:&nbsp;
-            {toCapitalWordCase(toHumanCase(mazeName))}
-            &nbsp;|&nbsp;Generator:&nbsp;
-            {toCapitalWordCase(toHumanCase(generatorName))}
-            &nbsp;|&nbsp; Solver:&nbsp;
-            {toCapitalWordCase(toHumanCase(solverName))}
-            {pluginName !== '' && (
-              <span>&nbsp;|&nbsp; Mask:&nbsp;{toCapitalWordCase(toHumanCase(pluginName))}</span>
-            )}
+            <span className={css.text}>Geometry:</span>
+            <span className={css.option}>{mazeName}</span>
+            <span className={css.text}>Generator:</span>
+            <span className={css.option}>{generatorName}</span>
+            <span className={css.text}>Solver:</span>
+            <span className={css.option}>{solverName}</span>
           </div>
         )}
       </div>
       <div className={css.panel}>
-        <fieldset>
-          <legend>Maze Geometry</legend>
-          <Select
-            label="Algorthim"
-            value={selectedMaze ?? '(undefined)'}
-            onChange={handleMazeChange}
-          >
-            <MenuItem key="(undefined)" value="(undefined)">
-              (random)
-            </MenuItem>
-            {mazeChoices.map((m) => (
-              <MenuItem key={m.name} value={m.name}>
-                {m.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </fieldset>
-        <fieldset>
-          <legend>Maze Generator</legend>
-          <Select
-            label="Algorthim"
-            value={selectedGenerator ?? '(undefined)'}
+        <ToggleButtonGroup
+          className={css.toggles}
+          color="primary"
+          value={mode}
+          exclusive
+          onChange={handleModeChange}
+        >
+          <ToggleButton value="demo">DEMO</ToggleButton>
+          <ToggleButton value="game">GAME</ToggleButton>
+          <ToggleButton value="custom">CUSTOM</ToggleButton>
+        </ToggleButtonGroup>
+        <div className={css.settings}>
+          <GeometrySection
+            className={clsx(mode === 'demo' && css.hidden)}
+            onChange={handleGeometryChange}
+          />
+          <GeneratorSection
+            className={clsx(mode === 'demo' && css.hidden)}
             onChange={handleGeneratorChange}
-          >
-            <MenuItem key="(undefined)" value="(undefined)">
-              (random)
-            </MenuItem>
-            {generatorChoices.map((m) => (
-              <MenuItem key={m.name} value={m.name}>
-                {m.name}
-              </MenuItem>
-            ))}
-          </Select>
-          <Select<PlayMode>
-            label="Maze Generator Initial Speed"
-            value={playGenerator}
-            onChange={handlePlayGeneratorChange}
-          >
-            <MenuItem key="pause" value="pause">
-              <IoPause />
-            </MenuItem>
-            <MenuItem key="play" value="play">
-              <IoPlay />
-            </MenuItem>
-            <MenuItem key="fast" value="fast">
-              <IoPlayForward />
-            </MenuItem>
-            <MenuItem key="instant" value="instant">
-              <IoPlaySkipForward />
-            </MenuItem>
-          </Select>
-        </fieldset>
-        <fieldset>
-          <legend>Maze Solver</legend>
-
-          <Select
-            label="Algorthim"
-            value={selectedSolver ?? '(undefined)'}
+          />
+          <SolverSection
+            className={clsx(mode !== 'custom' && css.hidden)}
             onChange={handleSolverChange}
-          >
-            <MenuItem key="(undefined)" value="(undefined)">
-              (random)
-            </MenuItem>
-            {solverChoices.map((m) => (
-              <MenuItem key={m.name} value={m.name}>
-                {m.name}
-              </MenuItem>
-            ))}
-          </Select>
-          <Select
-            label="Maze Solver Initial Speed"
-            value={playSolver}
-            onChange={handlePlaySolverChange}
-          >
-            <MenuItem key="pause" value="pause">
-              <IoPause />
-            </MenuItem>
-            <MenuItem key="play" value="play">
-              <IoPlay />
-            </MenuItem>
-            <MenuItem key="fast" value="fast">
-              <IoPlayForward />
-            </MenuItem>
-            <MenuItem key="instant" value="instant">
-              <IoPlaySkipForward />
-            </MenuItem>
-          </Select>
-        </fieldset>
-        <div className={css.gap} />
-        <div>
-          <button type="button" onClick={handlePause}>
-            <IoPause />
-          </button>
-          <button type="button" onClick={handleStep}>
-            <IoFootsteps />
-          </button>
-          <button type="button" onClick={handlePlay}>
-            <IoPlay />
-          </button>
-          <button type="button" onClick={handleFast}>
-            <IoPlayForward />
-          </button>
-          <button type="button" onClick={handleInstant}>
-            <IoPlaySkipForward />
-          </button>
-          <button type="button" onClick={handleRefresh}>
-            <IoRefresh />
-          </button>
+          />
+          <HumanSection
+            className={clsx(mode !== 'game' && css.hidden)}
+            onChange={handleHumanChange}
+            runner={runner}
+          />
         </div>
+        {mode === 'game' && <GameControls runner={runner} />}
+        {mode === 'custom' && (
+          <CustomControls runner={runner} onPhasePlayModeChange={handlePhasePlayModeChange} />
+        )}
+        <Messages runner={runner} />
       </div>
     </div>
   );

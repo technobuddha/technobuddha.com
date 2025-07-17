@@ -5,7 +5,14 @@ const config = {
   lint: {
     rules: {
       '@typescript-eslint/no-redundant-type-constituents': { rule: 'off' },
-      '@typescript-eslint/no-confusing-void-expression': { rule: 'off' }
+      '@typescript-eslint/no-confusing-void-expression': { rule: 'off' },
+      '@typescript-eslint/method-signature-style': { rule: 'off' },
+      'no-shadow': { rule: 'off' },
+      '@typescript-eslint/no-shadow': { rule: 'off' },
+      'class-methods-use-this': { rule: 'off' },
+      '@typescript-eslint/class-methods-use-this': { rule: 'off' },
+      'require-await': { rule: 'off' },
+      '@typescript-eslint/require-await': { rule: 'off' },
     },
   },
   directories: {

@@ -2,34 +2,38 @@ import React from 'react';
 
 import { MenuItem, NumberField, Select } from '#control';
 
-import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
-import { MazeFactory } from '../factory/maze-factory.ts';
+import { CanvasDrawing } from '../drawing/index.ts';
 import {
   BrickMaze,
   CircularMaze,
   CubicMaze,
+  type Direction,
+  DotMaze,
   HexagonMaze,
   type Maze,
   type MazeProperties,
-  OctogonMaze,
+  OctagonDiamond,
+  OctagonSquare,
   PentagonMaze,
+  type Pillar,
   SquareMaze,
   TriangleMaze,
   WedgeMaze,
   ZetaMaze,
 } from '../geometry/index.ts';
-import { WeaveMaze } from '../geometry/weave-maze.ts';
+import { Runner } from '../runner/index.ts';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
-  weave: (props) => new WeaveMaze(props),
   circular: (props) => new CircularMaze(props),
   cubic: (props) => new CubicMaze(props),
+  dot: (props) => new DotMaze(props),
   pentagon: (props) => new PentagonMaze(props),
   brick: (props) => new BrickMaze(props),
   square: (props) => new SquareMaze(props),
   triangle: (props) => new TriangleMaze(props),
   hexagon: (props) => new HexagonMaze(props),
-  octogon: (props) => new OctogonMaze(props),
+  octagonDiamond: (props) => new OctagonDiamond(props),
+  octagonSquare: (props) => new OctagonSquare(props),
   wedge: (props) => new WedgeMaze(props),
   zeta: (props) => new ZetaMaze(props),
 };
@@ -45,8 +49,8 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
   const [show, setShow] = React.useState('moves');
   const [x, setX] = React.useState(0);
   const [y, setY] = React.useState(0);
-  const [wall, setWall] = React.useState('a');
-  const [pillar, setPillar] = React.useState('ab');
+  const [wall, setWall] = React.useState<Direction>('a');
+  const [pillar, setPillar] = React.useState<Pillar>('ab');
   const [maze, setMaze] = React.useState<Maze>();
   const [errors, setErrors] = React.useState<string[]>([]);
   const [cellSize, setCellSize] = React.useState<number>();
@@ -73,11 +77,11 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
   }, []);
 
   const handleWallChange = React.useCallback((value: string): void => {
-    setWall(value);
+    setWall(value as Direction);
   }, []);
 
   const handlePillarChange = React.useCallback((value: string): void => {
-    setPillar(value);
+    setPillar(value as Pillar);
   }, []);
 
   const handleRemoveWalls = React.useCallback(() => {
@@ -111,13 +115,13 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
     if (canvasMaze.current) {
       const contextMaze = new CanvasDrawing(canvasMaze.current);
 
-      const factory = new MazeFactory({ drawing: contextMaze, cellSize, wallSize });
-
-      const runner = factory.create(mazes[selectedMaze]);
-
-      void runner.run().then((m) => {
-        setMaze(m);
+      const runner = new Runner({
+        mazeMaker: (props) => mazes[selectedMaze]({ cellSize, wallSize, ...props }),
+        drawing: contextMaze,
       });
+
+      setMaze(runner.maze);
+      runner.draw();
     }
   }, [selectedMaze, cellSize, wallSize]);
 
@@ -143,7 +147,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
               const w = maze.nexus({ x: i, y: j }).walls;
 
               if (pillar[0] in w && pillar[1] in w) {
-                maze.drawPillar({ x: i, y: j, pillar }, 'magenta');
+                maze.drawPillar({ x: i, y: j }, pillar, 'magenta');
               }
             }
           }
@@ -163,21 +167,22 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
         default: {
           maze.drawX(maze.drawCell({ x, y }), 'red');
-          const moves = maze.neighbors({ x, y });
+          const moves = maze.moves({ x, y }, { wall: 'all' });
           for (const move of moves) {
-            if (maze.inMaze(move)) {
-              switch (show) {
-                case 'moves': {
-                  maze.drawText(maze.drawCell(move), move.direction, 'cyan');
-                  break;
-                }
-                case 'paths': {
-                  maze.drawPath(maze.drawCell({ ...move, direction: maze.opposite(move) }), 'cyan');
-                  break;
-                }
-
-                // no default
+            switch (show) {
+              case 'moves': {
+                maze.drawText(maze.drawCell(move.target), move.direction, 'cyan');
+                break;
               }
+              case 'paths': {
+                maze.drawPath(
+                  maze.drawCell({ ...move.target, direction: maze.opposite(move.target.facing) }),
+                  'cyan',
+                );
+                break;
+              }
+
+              // no default
             }
           }
           break;
@@ -191,45 +196,43 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
     if (maze) {
       for (const cell of maze.cellsInMaze()) {
-        for (const direction of Object.keys(maze.nexus(cell).walls)) {
+        for (const direction of Object.keys(maze.nexus(cell).walls) as Direction[]) {
           const move = maze.move(cell, direction);
-          if (move) {
-            if (maze.inMaze(move)) {
-              const back = maze.move(move, maze.opposite(move));
-              if (back) {
-                if (cell.x !== back.x || cell.y !== back.y) {
-                  err.push(
-                    `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move)} }; back = { x: ${back.x}, y: ${back.y}}`,
-                  );
-                }
-              } else {
+          if (maze.inMaze(move)) {
+            const back = maze.move(move, maze.opposite(move.facing));
+            if (back) {
+              if (cell.x !== back.x || cell.y !== back.y) {
                 err.push(
-                  `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move)} }; back = NULL`,
+                  `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move.facing)} }; back = { x: ${back.x}, y: ${back.y}}`,
                 );
               }
+            } else {
+              err.push(
+                `{ x: ${cell.x}, y: ${cell.y}, direction: ${direction}} = { x: ${move.x}, y: ${move.y}, direction: ${maze.opposite(move.facing)} }; back = NULL`,
+              );
+            }
 
-              const rt = maze.rightTurn(move);
-              const lt = maze.leftTurn(move);
+            const rt = maze.rightTurn(move);
+            const lt = maze.leftTurn(move);
 
-              const ltr = [...lt.slice(0, -1).reverse(), lt.at(-1)];
+            const ltr = [...lt.slice(0, -1).reverse(), lt.at(-1)];
 
-              if (rt.some((t, i) => t !== ltr.at(i))) {
-                err.push(
-                  `{ x: ${move.x}, y: ${move.y}, direction: ${move.direction}}: rt[${rt.join(',')}] != lt[${lt.join(';')} --- ${ltr.join(',')}]`,
-                );
-              }
+            if (rt.some((t, i) => t !== ltr.at(i))) {
+              err.push(
+                `{ x: ${move.x}, y: ${move.y}, facing: ${move.facing}}: rt[${rt.join(',')}] != lt[${lt.join(';')} --- ${ltr.join(',')}]`,
+              );
             }
           }
         }
       }
 
       for (const cell of maze.cellsInMaze()) {
-        for (const move of maze.neighbors(cell)) {
-          const back = maze.move(move, maze.opposite(move));
+        for (const move of maze.moves(cell, { wall: 'all' })) {
+          const back = maze.move(move.target, maze.opposite(move.target.facing));
           if (back) {
             if (cell.x !== back.x || cell.y !== back.y) {
               err.push(
-                `{ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}} = { x: ${move.x}, y: ${move.y} } back = { x: ${back.x}, y: ${back.y}, ${maze.opposite(move)} }`,
+                `{ x: ${cell.x}, y: ${cell.y}, direction: ${move.direction}} = { x: ${move.target.x}, y: ${move.target.y} } back = { x: ${back.x}, y: ${back.y}, ${maze.opposite(move.target.facing)} }`,
               );
             }
           } else {

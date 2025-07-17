@@ -1,0 +1,102 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
+import { type Matrix } from '../matrix.ts';
+
+export const matrix: Matrix = {
+  // bridge: {
+  //   pieces: 1,
+  //   layouts: {
+  //     0: [
+  //       { path: ['a'] },
+  //       { path: ['b'] },
+  //       { path: ['c'] },
+  //       { path: ['d'] },
+  //       { path: ['e'] },
+  //       { path: ['f'] },
+  //       { path: ['g'] },
+  //       { path: ['h'] },
+  //     ],
+  //   },
+  // },
+  directions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+  pillars: ['ab', 'bc', 'cd', 'de', 'ef', 'fg', 'gh', 'ha'],
+  wall: {
+    0: { a: true, b: true, c: true, d: true, e: true, f: true, g: true, h: true },
+  },
+  opposite: {
+    direction: {
+      a: 'E',
+      b: 'F',
+      c: 'G',
+      d: 'H',
+      e: 'A',
+      f: 'B',
+      g: 'C',
+      h: 'D',
+    },
+    facing: {
+      A: 'e',
+      B: 'f',
+      C: 'g',
+      D: 'h',
+      E: 'a',
+      F: 'b',
+      G: 'c',
+      H: 'd',
+    },
+  },
+  rightTurn: {
+    A: ['d', 'c', 'b', 'a', 'h', 'g', 'f', 'e'],
+    B: ['e', 'd', 'c', 'b', 'a', 'h', 'g', 'f'],
+    C: ['f', 'e', 'd', 'c', 'b', 'a', 'h', 'g'],
+    D: ['g', 'f', 'e', 'd', 'c', 'b', 'a', 'h'],
+    E: ['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a'],
+    F: ['a', 'h', 'g', 'f', 'e', 'd', 'c', 'b'],
+    G: ['b', 'a', 'h', 'g', 'f', 'e', 'd', 'c'],
+    H: ['c', 'b', 'a', 'h', 'g', 'f', 'e', 'd'],
+  },
+  leftTurn: {
+    A: ['f', 'g', 'h', 'a', 'b', 'c', 'd', 'e'],
+    B: ['g', 'h', 'a', 'b', 'c', 'd', 'e', 'f'],
+    C: ['h', 'a', 'b', 'c', 'd', 'e', 'f', 'g'],
+    D: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+    E: ['b', 'c', 'd', 'e', 'f', 'g', 'h', 'a'],
+    F: ['c', 'd', 'e', 'f', 'g', 'h', 'a', 'b'],
+    G: ['d', 'e', 'f', 'g', 'h', 'a', 'b', 'c'],
+    H: ['e', 'f', 'g', 'h', 'a', 'b', 'c', 'd'],
+  },
+  straight: {
+    A: ['a', 'bh', 'cg', 'df', 'e'],
+    B: ['b', 'ac', 'dh', 'eg', 'f'],
+    C: ['c', 'bd', 'ae', 'fh', 'g'],
+    D: ['d', 'ce', 'bf', 'ag', 'h'],
+    E: ['e', 'df', 'cg', 'bh', 'a'],
+    F: ['f', 'eg', 'dh', 'ca', 'b'],
+    G: ['g', 'fh', 'ea', 'db', 'c'],
+    H: ['h', 'ag', 'bf', 'ce', 'd'],
+  },
+  move: {
+    0: {
+      a: { x: +0, y: -1 },
+      b: { x: +1, y: -1 },
+      c: { x: +1, y: +0 },
+      d: { x: +1, y: +1 },
+      e: { x: +0, y: +1 },
+      f: { x: -1, y: +1 },
+      g: { x: -1, y: +0 },
+      h: { x: -1, y: -1 },
+    },
+  },
+  preferred: {
+    0: ['c', 'd', 'e'],
+  },
+  angle: {
+    a: 270,
+    b: 315,
+    c: 0,
+    d: 45,
+    e: 90,
+    f: 135,
+    g: 180,
+    h: 225,
+  },
+};

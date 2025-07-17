@@ -1,20 +1,21 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { toCapitalWordCase, toHumanCase } from '@technobuddha/library';
 import { Size } from '@technobuddha/size';
 
 import { useUserInterface } from '#context/user-interface';
 
-import { CanvasDrawing } from '../drawing/canvas-drawing.ts';
-import { MazeFactory } from '../factory/maze-factory.ts';
-import { type Maze, type MazeProperties } from '../geometry/maze.ts';
-import { SquareMaze } from '../geometry/square-maze.ts';
-import { chooser } from '../library/chooser.ts';
-import { generators, solvers } from '../library/mazes.ts';
+import { CanvasDrawing } from '../drawing/index.ts';
+import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
+import { type Maze, type MazeProperties } from '../geometry/index.ts';
+import { chooser } from '../library/index.ts';
+import { Runner } from '../runner/index.ts';
+import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
+
+import { generators, mazes, solvers } from './mazes.ts';
 
 import css from './maze-background.module.css';
 
-type MazeBackgroundProps = {
+export type MazeBackgroundProps = {
   readonly maskColor?: string;
   readonly children: React.ReactNode;
 };
@@ -48,30 +49,38 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
   const { setFooter } = useUserInterface();
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
   const grid = React.useRef<HTMLDivElement | null>(null);
-  const [redraw, setRedraw] = React.useState(0);
+  const [mazeNumber, setMazeNumber] = React.useState(0);
+  const [runner, setRunner] = React.useState<Runner>();
 
   React.useEffect(() => {
     if (canvasMaze.current && grid.current) {
       const drawing = new CanvasDrawing(canvasMaze.current);
       drawing.clear();
 
-      const factory = new MazeFactory({ drawing, maskColor, cellSize: 15 });
+      const {
+        props: { geometry: Geometry, ...mazeProps },
+        title: mazeName,
+      } = chooser(mazes)!;
+      const {
+        props: { generator: Generator, ...generatorProps },
+        title: generatorName,
+      } = chooser(generators)!;
+      const {
+        props: { solver: Solver, ...solverProps },
+        title: solverName,
+      } = chooser(solvers)!;
 
-      const selectedMaze = (props: MazeProperties): Maze => new SquareMaze(props);
-      const { name: generatorName, value: selectedGenerator } = chooser(generators);
-      const { name: solverName, value: selectedSolver } = chooser(solvers);
-
-      const crect = canvasMaze.current.getBoundingClientRect();
+      const cRect = canvasMaze.current.getBoundingClientRect();
       const rects = Array.from(grid.current.children).flatMap((child) =>
         Array.from(child.children).map((grandChild) => grandChild.getBoundingClientRect()),
       );
 
       function plugin(maze: Maze): void {
         for (const rect of rects) {
-          const top = Math.floor((rect.top - crect.top) / maze.cellSize - 0.5);
-          const left = Math.floor((rect.left - crect.left) / maze.cellSize - 0.5);
-          const right = Math.floor((rect.right - crect.left) / maze.cellSize);
-          const bottom = Math.floor((rect.bottom - crect.top) / maze.cellSize);
+          const top = Math.floor((rect.top - cRect.top) / maze.cellSize - 0.5);
+          const left = Math.floor((rect.left - cRect.left) / maze.cellSize - 0.5);
+          const right = Math.floor((rect.right - cRect.left) / maze.cellSize);
+          const bottom = Math.floor((rect.bottom - cRect.top) / maze.cellSize);
 
           for (const cell of maze.cellsInMaze()) {
             if (cell.x >= left && cell.x <= right && cell.y >= top && cell.y <= bottom) {
@@ -83,22 +92,47 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
 
       setFooter(
         <div id="maze" className={css.legend}>
+          <span>Geometry:</span>
+          <span>{mazeName}</span>
           <span>Generator:</span>
-          <span>{toCapitalWordCase(toHumanCase(generatorName))}</span>
+          <span>{generatorName}</span>
           <span>Solver:</span>
-          <span>{toCapitalWordCase(toHumanCase(solverName))}</span>
+          <span>{solverName}</span>
         </div>,
       );
 
-      const runner = factory.create(selectedMaze, selectedGenerator, plugin, selectedSolver);
+      const selectedMaze = (props: MazeProperties): Maze =>
+        new Geometry({ ...props, ...mazeProps });
+      const selectedGenerator = (props: MazeGeneratorProperties): MazeGenerator =>
+        new Generator({ ...props, ...generatorProps });
+      const selectedSolver = (props: MazeSolverProperties): MazeSolver =>
+        // TODO [2025-07-25]: Fix this type error
+        //@ts-expect-error detection problem
+        new Solver({ ...props, ...solverProps });
 
-      void runner.run().then(() => {
-        setTimeout(() => {
-          setRedraw((x) => x + 1);
-        }, 10000);
+      setRunner((r) => {
+        r?.abort();
+        return new Runner({
+          mazeMaker: selectedMaze,
+          generatorMaker: selectedGenerator,
+          solverMaker: selectedSolver,
+          plugin,
+          drawing,
+        });
       });
     }
-  }, [redraw, boxHeight, boxWidth, maskColor, setFooter]);
+  }, [boxHeight, boxWidth, maskColor, setFooter, mazeNumber]);
+
+  React.useEffect(() => {
+    if (runner) {
+      void runner
+        .execute()
+        .then(() => {
+          setMazeNumber((n) => n + 1);
+        })
+        .catch(() => {});
+    }
+  }, [runner]);
 
   return (
     <div className={css.mazeBackground} style={{ width: boxWidth, height: boxHeight }}>

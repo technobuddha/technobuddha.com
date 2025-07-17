@@ -12,6 +12,7 @@ import css from './select.module.css';
 export type SelectProps<T = string> = {
   readonly value: T;
   readonly label?: string;
+  readonly disabled?: boolean;
   onChange?(this: void, value: T): void;
   readonly children?: React.ReactNode;
   // readonly className?: string;
@@ -23,6 +24,7 @@ export type SelectProps<T = string> = {
 export function Select<T = string>({
   value,
   label,
+  disabled,
   onChange,
   children,
 }: SelectProps<T>): React.ReactNode {
@@ -43,6 +45,7 @@ export function Select<T = string>({
         id={selectId}
         labelId={labelId}
         label={label}
+        disabled={disabled}
         value={value}
         onChange={handleChange}
         inputProps={{

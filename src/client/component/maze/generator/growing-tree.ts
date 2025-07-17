@@ -1,17 +1,14 @@
-import { create2DArray } from '@technobuddha/library';
-
-import { type Cell } from '../geometry/maze.ts';
+import { type Cell } from '../geometry/index.ts';
 
 import { MazeGenerator, type MazeGeneratorProperties } from './maze-generator.ts';
 
 export type Method = 'newest' | 'oldest' | 'middle' | 'random';
 
-type GrowingTreeProperties = MazeGeneratorProperties & {
+export type GrowingTreeProperties = MazeGeneratorProperties & {
   method?: Method | Record<Method, number>;
 };
 
 export class GrowingTree extends MazeGenerator {
-  private readonly visited: boolean[][];
   private readonly list: Cell[];
   private readonly method: Method | Record<Method, number>;
 
@@ -19,9 +16,11 @@ export class GrowingTree extends MazeGenerator {
     super(props);
 
     this.method = method;
-    this.visited = create2DArray(this.maze.width, this.maze.height, false);
     this.list = [this.start];
-    this.visited[this.start.x][this.start.y] = true;
+
+    this.player = 0;
+    this.createPlayer({ start: this.start });
+    this.visit();
   }
 
   private selectMethod(): Method {
@@ -54,25 +53,28 @@ export class GrowingTree extends MazeGenerator {
       }
       case 'random':
       default: {
-        return Math.floor(this.random() * this.list.length);
+        return this.randomNumber(this.list.length);
       }
     }
   }
 
-  public *generate(): Generator<void> {
+  public async *generate(): AsyncGenerator<void> {
     while (this.list.length > 0) {
       const index = this.selectCell(this.selectMethod());
-      this.currentCell = this.list[index];
+      const currentCell = this.list[index];
 
-      const cell = this.randomPick(
-        this.maze.neighbors(this.currentCell).filter((c) => !this.visited[c.x][c.y]),
+      const next = this.randomPick(
+        this.maze
+          .moves(currentCell, { wall: true })
+          .filter(({ target }) => !this.isVisited(target)),
       );
 
-      if (cell) {
-        yield this.maze.removeWall(this.currentCell, cell.direction);
-        this.visited[cell.x][cell.y] = true;
+      if (next) {
+        this.maze.removeWall(currentCell, next.direction);
+        yield;
 
-        this.list.push(cell);
+        this.visit({ cell: next.target });
+        this.list.push(next.target);
       } else {
         this.list.splice(index, 1);
       }

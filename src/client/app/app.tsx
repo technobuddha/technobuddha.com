@@ -8,6 +8,7 @@ import { theme, ThemeProvider } from '#context/mui';
 import { Router } from '#context/router';
 import { SnackbarProvider } from '#context/snackbar';
 import { UserInterfaceProvider } from '#context/user-interface';
+import ModalContainer from 'react-modal-promise';
 
 import { AppLoading } from './app-loading.tsx';
 
@@ -21,6 +22,7 @@ export const App: React.FC = () => (
               <Router>
                 <UserInterfaceProvider>
                   <Framework />
+                  <ModalContainer />
                 </UserInterfaceProvider>
               </Router>
             </AuthenticationProvider>

@@ -4,10 +4,7 @@
 // 🚨
 import { app } from '@technobuddha/project';
 
-/**
- * @import { type Linter } from 'eslint';
- * @type {Linter.Config[]}
- */
+/* @type {(import('eslint').Linter.Config[]} */
 const config = [
   // scripts/tsconfig.json
   app.lint({
@@ -59,6 +56,13 @@ const config = [
   app.lint({ files: ['*.config.js'], ignores: [], environment: 'node' }),
   // tsconfig.json
   app.lint({ files: ['*.config.ts'], ignores: [], environment: 'node' }),
+  // .archive/tsconfig.json
+  app.lint({
+    files: ['.archive/**/*.ts'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: '.archive/tsconfig.json',
+  }),
 ];
 
 export default config;

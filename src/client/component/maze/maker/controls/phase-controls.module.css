@@ -1,8 +1,8 @@
 .phase-controls {
   width: 100%;
   display: flex;
-  flexdirection: column;
-  alignitems: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .stepper {

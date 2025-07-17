@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip } from '@mui/material';
 import { IoTrash } from 'react-icons/io5';
 
-import { type Runner } from '../runner.ts';
+import { type Runner } from '../../runner/runner.ts';
 
 import css from './messages.module.css';
 

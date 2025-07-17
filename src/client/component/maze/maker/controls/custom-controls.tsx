@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-handler-names */
 import React from 'react';
 
-import { type Phase } from '../phase.ts';
-import { type PlayMode } from '../play-mode.tsx';
-import { type Runner } from '../runner.ts';
+import { type Phase } from '../../runner/phase.ts';
+import { type PlayMode } from '../../runner/play-mode.tsx';
+import { type Runner } from '../../runner/runner.ts';
 
 import { PhaseControls } from './phase-controls.tsx';
 import { PlayControls } from './play-controls.tsx';

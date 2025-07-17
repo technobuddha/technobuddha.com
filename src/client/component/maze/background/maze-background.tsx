@@ -9,10 +9,9 @@ import { MazeFactory } from '../factory/index.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
 import { type Maze, type MazeProperties } from '../geometry/index.ts';
 import { chooser } from '../library/index.ts';
-import { generators, solvers } from '../maker/index.ts';
 import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
-import { mazes } from './mazes.ts';
+import { generators, mazes, solvers } from './mazes.ts';
 
 import css from './maze-background.module.css';
 
@@ -78,17 +77,17 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         title: solverName,
       } = chooser(solvers)!;
 
-      const crect = canvasMaze.current.getBoundingClientRect();
+      const cRect = canvasMaze.current.getBoundingClientRect();
       const rects = Array.from(grid.current.children).flatMap((child) =>
         Array.from(child.children).map((grandChild) => grandChild.getBoundingClientRect()),
       );
 
       function plugin(maze: Maze): void {
         for (const rect of rects) {
-          const top = Math.floor((rect.top - crect.top) / maze.cellSize - 0.5);
-          const left = Math.floor((rect.left - crect.left) / maze.cellSize - 0.5);
-          const right = Math.floor((rect.right - crect.left) / maze.cellSize);
-          const bottom = Math.floor((rect.bottom - crect.top) / maze.cellSize);
+          const top = Math.floor((rect.top - cRect.top) / maze.cellSize - 0.5);
+          const left = Math.floor((rect.left - cRect.left) / maze.cellSize - 0.5);
+          const right = Math.floor((rect.right - cRect.left) / maze.cellSize);
+          const bottom = Math.floor((rect.bottom - cRect.top) / maze.cellSize);
 
           for (const cell of maze.cellsInMaze()) {
             if (cell.x >= left && cell.x <= right && cell.y >= top && cell.y <= bottom) {
@@ -114,8 +113,8 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
       const selectedGenerator = (props: MazeGeneratorProperties): MazeGenerator =>
         new Generator({ ...props, ...generatorProps });
       const selectedSolver = (props: MazeSolverProperties): MazeSolver =>
-        // TODO [2025-07-15]: Fix this type error
-        //@ts-expect-error detection screwup
+        // TODO [2025-07-25]: Fix this type error
+        //@ts-expect-error detection problem
         new Solver({ ...props, ...solverProps });
 
       const runner = factory.create(selectedMaze, selectedGenerator, plugin, selectedSolver);

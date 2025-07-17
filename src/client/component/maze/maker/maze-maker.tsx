@@ -7,6 +7,7 @@ import { useMeasure } from 'react-use';
 import { CanvasDrawing } from '../drawing/index.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
 import { type Maze, type MazeProperties } from '../geometry/index.ts';
+import { type Phase, type PlayMode, Runner } from '../runner/index.ts';
 import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
 import { CustomControls } from './controls/custom-controls.tsx';
@@ -16,9 +17,6 @@ import { GeometrySection } from './controls/geometry-section.tsx';
 import { HumanSection } from './controls/human-section.tsx';
 import { Messages } from './controls/messages.tsx';
 import { SolverSection } from './controls/solver-section.tsx';
-import { type Phase } from './phase.ts';
-import { type PlayMode } from './play-mode.tsx';
-import { Runner } from './runner.ts';
 
 import css from './maze-maker.module.css';
 

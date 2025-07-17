@@ -5,7 +5,7 @@ import { Checkbox } from '#control';
 import { Human, type MazeSolverProperties } from '../../solver/index.ts';
 
 import { type SolverProducer } from '../maze-maker.tsx';
-import { type Runner } from '../runner.ts';
+import { type Runner } from '../../runner/runner.ts';
 
 import { Section } from './section.tsx';
 

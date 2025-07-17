@@ -32,8 +32,8 @@ const mazes: Record<string, (props: MazeProperties) => Maze> = {
   square: (props) => new SquareMaze(props),
   triangle: (props) => new TriangleMaze(props),
   hexagon: (props) => new HexagonMaze(props),
-  octodiamond: (props) => new OctagonDiamond(props),
-  octosquare: (props) => new OctagonSquare(props),
+  octagonDiamond: (props) => new OctagonDiamond(props),
+  octagonSquare: (props) => new OctagonSquare(props),
   wedge: (props) => new WedgeMaze(props),
   zeta: (props) => new ZetaMaze(props),
 };

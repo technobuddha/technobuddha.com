@@ -6,8 +6,8 @@ import { RiArrowTurnBackLine, RiArrowUpLine, RiRestartLine } from 'react-icons/r
 
 import { type Human } from '../../solver/index.ts';
 
-import { playModeIcons } from '../play-mode.tsx';
-import { type Runner } from '../runner.ts';
+import { playModeIcons } from '../../runner/play-mode.tsx';
+import { type Runner } from '../../runner/runner.ts';
 
 import css from './movement-controls.module.css';
 

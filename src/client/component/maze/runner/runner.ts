@@ -4,7 +4,7 @@ import { type Maze, type MazeProperties } from '../geometry/index.ts';
 import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
 import { type Phase } from './phase.ts';
-import { type PlayMode } from './play-mode.ts';
+import { type PlayMode } from './play-mode.tsx';
 
 type MazeMaker = (props: MazeProperties) => Maze;
 type GeneratorMaker = (props: MazeGeneratorProperties) => MazeGenerator;

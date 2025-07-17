@@ -3,7 +3,6 @@ import React from 'react';
 import { MenuItem, NumberField, Select } from '#control';
 
 import { CanvasDrawing } from '../drawing/index.ts';
-import { MazeFactory } from '../factory/index.ts';
 import {
   BrickMaze,
   CircularMaze,
@@ -22,6 +21,7 @@ import {
   WedgeMaze,
   ZetaMaze,
 } from '../geometry/index.ts';
+import { Runner } from '../runner/index.ts';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   circular: (props) => new CircularMaze(props),
@@ -115,13 +115,13 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
     if (canvasMaze.current) {
       const contextMaze = new CanvasDrawing(canvasMaze.current);
 
-      const factory = new MazeFactory({ drawing: contextMaze, cellSize, wallSize });
-
-      const runner = factory.create(mazes[selectedMaze]);
-
-      void runner.run().then((m) => {
-        setMaze(m);
+      const runner = new Runner({
+        mazeMaker: (props) => mazes[selectedMaze]({ cellSize, wallSize, ...props }),
+        drawing: contextMaze,
       });
+
+      setMaze(runner.maze);
+      runner.draw();
     }
   }, [selectedMaze, cellSize, wallSize]);
 

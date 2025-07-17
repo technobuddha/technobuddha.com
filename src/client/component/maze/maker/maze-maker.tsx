@@ -83,11 +83,6 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   }, [width, height]);
 
   React.useEffect(() => {
-    if (timer.current) {
-      clearTimeout(timer.current);
-      timer.current = undefined;
-    }
-
     // cspell: words solpro
     const solpro = mode === 'game' ? humanProducer : solverProducer;
 
@@ -123,14 +118,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, drawing, mazeNumber]);
 
-  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
   React.useEffect(() => {
-    if (timer.current) {
-      clearTimeout(timer.current);
-      timer.current = undefined;
-    }
-
     if (runner) {
       void runner
         .execute()

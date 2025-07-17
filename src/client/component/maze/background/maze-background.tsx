@@ -5,10 +5,10 @@ import { Size } from '@technobuddha/size';
 import { useUserInterface } from '#context/user-interface';
 
 import { CanvasDrawing } from '../drawing/index.ts';
-import { MazeFactory } from '../factory/index.ts';
 import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
 import { type Maze, type MazeProperties } from '../geometry/index.ts';
 import { chooser } from '../library/index.ts';
+import { Runner } from '../runner/index.ts';
 import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
 
 import { generators, mazes, solvers } from './mazes.ts';
@@ -49,20 +49,13 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
   const { setFooter } = useUserInterface();
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
   const grid = React.useRef<HTMLDivElement | null>(null);
-  const [redraw, setRedraw] = React.useState(0);
+  const [mazeNumber, setMazeNumber] = React.useState(0);
+  const [runner, setRunner] = React.useState<Runner>();
 
   React.useEffect(() => {
     if (canvasMaze.current && grid.current) {
       const drawing = new CanvasDrawing(canvasMaze.current);
       drawing.clear();
-
-      const factory = new MazeFactory({
-        drawing,
-        color: { mask: maskColor },
-        cellSize: 16,
-        voidSize: 0,
-        wallSize: 1,
-      });
 
       const {
         props: { geometry: Geometry, ...mazeProps },
@@ -117,15 +110,29 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         //@ts-expect-error detection problem
         new Solver({ ...props, ...solverProps });
 
-      const runner = factory.create(selectedMaze, selectedGenerator, plugin, selectedSolver);
-
-      void runner.run().then(() => {
-        setTimeout(() => {
-          setRedraw((x) => x + 1);
-        }, 10000);
+      setRunner((r) => {
+        r?.abort();
+        return new Runner({
+          mazeMaker: selectedMaze,
+          generatorMaker: selectedGenerator,
+          solverMaker: selectedSolver,
+          plugin,
+          drawing,
+        });
       });
     }
-  }, [redraw, boxHeight, boxWidth, maskColor, setFooter]);
+  }, [boxHeight, boxWidth, maskColor, setFooter, mazeNumber]);
+
+  React.useEffect(() => {
+    if (runner) {
+      void runner
+        .execute()
+        .then(() => {
+          setMazeNumber((n) => n + 1);
+        })
+        .catch(() => {});
+    }
+  }, [runner]);
 
   return (
     <div className={css.mazeBackground} style={{ width: boxWidth, height: boxHeight }}>

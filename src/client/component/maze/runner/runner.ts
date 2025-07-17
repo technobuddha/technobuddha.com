@@ -13,8 +13,8 @@ type Plugin = (this: void, maze: Maze) => void;
 
 type RunnerProperties = {
   readonly mazeMaker: MazeMaker;
-  readonly generatorMaker: GeneratorMaker;
-  readonly solverMaker: SolverMaker;
+  readonly generatorMaker?: GeneratorMaker;
+  readonly solverMaker?: SolverMaker;
   readonly plugin?: Plugin;
   readonly drawing?: Drawing;
   readonly mode?: { [P in Phase]?: PlayMode };
@@ -24,8 +24,8 @@ let id = 0;
 
 export class Runner extends EventTarget {
   public readonly maze: Maze;
-  public readonly generator: MazeGenerator;
-  public readonly solver: MazeSolver;
+  public readonly generator?: MazeGenerator;
+  public readonly solver?: MazeSolver;
   public mode: PlayMode = 'pause';
   public phase: Phase = 'maze';
   public readonly id: number;
@@ -53,9 +53,10 @@ export class Runner extends EventTarget {
     this.id = id++;
 
     this.maze = mazeMaker({ drawing, plugin });
+    // TODO [2025-07-20]: Remove this reset
     this.maze.reset();
-    this.generator = generatorMaker({ maze: this.maze });
-    this.solver = solverMaker({ maze: this.maze });
+    this.generator = generatorMaker?.({ maze: this.maze });
+    this.solver = solverMaker?.({ maze: this.maze });
 
     this.phasePlayMode = {
       maze: 'play',
@@ -302,15 +303,16 @@ export class Runner extends EventTarget {
     }
   }
 
+  public draw(): void {
+    if (this.maze) {
+      this.maze.draw();
+    }
+  }
+
   public abort(): void {
     this.playing = false;
     this.aborted = true;
 
     this.solver?.dispose();
-  }
-
-  public exit(): void {
-    this.switchPhase('exit');
-    this.dispatchEvent(new CustomEvent('command', {}));
   }
 }

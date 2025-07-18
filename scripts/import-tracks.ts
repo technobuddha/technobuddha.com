@@ -35,9 +35,7 @@ function parsePartOfSet(text: string | null | undefined): {
     }
   }
 
-  if (!title) {
-    title = null;
-  }
+  title ??= null;
 
   return { disc, set, title };
 }
@@ -60,6 +58,7 @@ void (async function main() {
     await t.none('TRUNCATE track_new;');
 
     for (const file of ['/media/music/tracks.mldata']) {
+      //cspell:ignore mldata
       // eslint-disable-next-line new-cap
       const lineReader = new nReadLines(file);
 

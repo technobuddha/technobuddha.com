@@ -12,21 +12,5 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
-  "files.encoding": "utf8",
-  "cSpell.words": [
-    "Backtracker",
-    "colorjs",
-    "Dijkstras",
-    "dodgerblue",
-    "Fibonaccis",
-    "Greyscale",
-    "Kruskals",
-    "nuqs",
-    "oklch",
-    "preferreds",
-    "Technobuddha",
-    "Trémaux",
-    "Uturn",
-    "Wilsons"
-  ]
+  "files.encoding": "utf8"
 }

@@ -36,7 +36,6 @@ void (async function main() {
       await Promise.all(
         Object.keys(en)
           .filter((key) => isNil(t[key]))
-          // eslint-disable-next-line @typescript-eslint/require-await
           .map(async (key) => translate(key, lng)),
       ).then((results) => {
         for (const result of results) {
@@ -74,6 +73,7 @@ void (async function main() {
       //   fallbackKey: (_ns, text) => text,
       // },
 
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       lngs: i18next.supportedLngs || undefined,
       ns: i18next.ns,
       defaultLng: 'en',

@@ -259,9 +259,9 @@ export abstract class MazeGenerator extends Random {
       if (move) {
         this.maze.removeWall(cell, move.direction);
         yield;
-        const nindex = deadEnds.findIndex((c) => this.maze.isSame(c, move.target));
-        if (nindex >= 0) {
-          deadEnds.splice(nindex, 1);
+        const nIndex = deadEnds.findIndex((c) => this.maze.isSame(c, move.target));
+        if (nIndex >= 0) {
+          deadEnds.splice(nIndex, 1);
         }
       }
     }
@@ -347,7 +347,7 @@ export abstract class MazeGenerator extends Random {
 
         const next = bridge.pop()!;
         let prev = current;
-        const opath = new Set(path);
+        const oPath = new Set(path);
         const tunnels: { [direction in Direction]?: (CellFacing & { from: CellFacing })[] } = {};
         const xBridge = [prev, ...bridge, next];
 
@@ -357,7 +357,7 @@ export abstract class MazeGenerator extends Random {
             .filter(
               (t) =>
                 !path.includes(t.direction) &&
-                !opath.has(t.direction) &&
+                !oPath.has(t.direction) &&
                 xBridge.every((x) => !this.maze.isSame(t.target, x)),
             )) {
             if (!(traversal.direction in tunnels)) {

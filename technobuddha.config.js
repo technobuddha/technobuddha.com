@@ -36,6 +36,9 @@ const config = {
     'src/config': {
       environment: 'node',
     },
+    'src/maze': {
+      environment: 'browser',
+    },
     'src/server': {
       environment: 'node',
       tsconfig: {

@@ -1,5 +1,5 @@
 import { Ajv, type ErrorObject } from 'ajv';
-import { type OpenAPIV3_1 as OpenAPI } from 'openapi-types';
+import { type OpenAPIV3_1 as OpenAPI } from 'openapi-types'; // cspell:ignore APIV
 import { type JsonValue } from 'type-fest';
 
 function errmsg(e: ErrorObject): string {

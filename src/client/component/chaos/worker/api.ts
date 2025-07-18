@@ -17,7 +17,7 @@ function mandelbrot(
   let yMax = yMaximum;
 
   const counts: number[][] = [];
-  const histo = Array.from<number>({ length: iterations }).fill(0);
+  const histogram = Array.from<number>({ length: iterations }).fill(0);
 
   const desiredWidth = xMax - xMin;
   const desiredHeight = yMax - yMin;
@@ -51,13 +51,13 @@ function mandelbrot(
       }
 
       if (iteration < iterations) {
-        const logzn = Math.log(x * x + y * y) / 2;
-        const nu = Math.log2(logzn / Math.LN2);
+        const logZn = Math.log(x * x + y * y) / 2;
+        const nu = Math.log2(logZn / Math.LN2);
 
         const count = iteration + 1 - nu;
         counts[i][j] = count;
         if (count < iterations - 1) {
-          histo[Math.floor(count)]++;
+          histogram[Math.floor(count)]++;
         }
       } else {
         counts[i][j] = iterations;
@@ -69,12 +69,12 @@ function mandelbrot(
 
   let total = 0;
   for (let i = 0; i < iterations; ++i) {
-    total += histo[i];
+    total += histogram[i];
   }
 
   let h = 0;
   for (let i = 0; i < iterations; ++i) {
-    h += histo[i] / total;
+    h += histogram[i] / total;
     hues[i] = h;
   }
 

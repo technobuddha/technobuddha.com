@@ -1,3 +1,4 @@
+// cspell:words Meeple
 import React from 'react';
 import { GiMeepleGroup, GiMusicalKeyboard, GiMusicalScore, GiMusicSpell } from 'react-icons/gi';
 

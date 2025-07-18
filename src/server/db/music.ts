@@ -48,6 +48,7 @@ type GetNewAlbumsPick = 'artist' | 'album' | 'collectionGroupId' | 'year' | 'gen
 type GetNewAlbumsInput = Pick<DBTrack, SnakeCase<GetNewAlbumsPick>> & { title: string[] };
 export type GetNewAlbums = Pick<Track, GetNewAlbumsPick> & { title: string[] };
 export async function getNewAlbums(): Promise<GetNewAlbums[]> {
+  // cspell:ignore LPAD
   return db
     .manyOrNone<GetNewAlbumsInput>(
       `

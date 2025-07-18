@@ -1,3 +1,5 @@
+// cspell:words LUTETIA, SIWA, MATHILDE, GEOGRAPHOS, TOUTATIS, OTAWARA, ITOKAWA, BENNU, HAUMEA, GONGGONG, INTERAMNIA, KALLIOPE, MAKEMAKE
+
 /* eslint-disable react/no-this-in-sfc */
 import React from 'react';
 
@@ -12,8 +14,8 @@ export const NBody: React.FC = () => {
     const AU = 1.49598e11; //Astronomical Unit (distance between earth in sun)
     const G = 6.6743015e-11; //Constant of Gravity
     const DAY = 24 * 60 * 60;
-    const TIMESCALE = 1000;
-    const GRAVITYSCALE = 100;
+    const TIME_SCALE = 1000;
+    const GRAVITY_SCALE = 100;
 
     const centerX = div.current!.offsetWidth / 2;
     const centerY = div.current!.offsetHeight / 2;
@@ -73,7 +75,7 @@ export const NBody: React.FC = () => {
       public thumb: unknown;
 
       public trails: HTMLDivElement[];
-      public trailptr: number;
+      public trailPointer: number;
 
       public name: string;
 
@@ -108,7 +110,7 @@ export const NBody: React.FC = () => {
             div.current!.append(trail);
             return trail;
           });
-        this.trailptr = 0;
+        this.trailPointer = 0;
         this.name = name;
       }
 
@@ -130,11 +132,11 @@ export const NBody: React.FC = () => {
         const x = Math.round(centerX + (this.position.x * 250) / AU);
         const y = Math.round(centerY - (this.position.y * 250) / AU);
 
-        this.trails[this.trailptr].style.visibility = 'visible';
-        this.trails[this.trailptr].style.left = `${x}px`;
-        this.trails[this.trailptr].style.top = `${y}px`;
+        this.trails[this.trailPointer].style.visibility = 'visible';
+        this.trails[this.trailPointer].style.left = `${x}px`;
+        this.trails[this.trailPointer].style.top = `${y}px`;
 
-        this.trailptr = (this.trailptr + 1) % 100;
+        this.trailPointer = (this.trailPointer + 1) % 100;
 
         this.element.style.visibility = 'visible';
         this.element.style.left = `${x}px`;
@@ -154,17 +156,17 @@ export const NBody: React.FC = () => {
     }
 
     function MoveAll(): void {
-      for (let i = 0; i < TIMESCALE; i++) {
+      for (let i = 0; i < TIME_SCALE; i++) {
         for (const body1 of bodies) {
           for (const body2 of bodies) {
             if (body1 !== body2) {
-              body1.velocity.accelerate(body1.gravity(body2).times(GRAVITYSCALE));
+              body1.velocity.accelerate(body1.gravity(body2).times(GRAVITY_SCALE));
             }
           }
         }
 
         for (const body of bodies) {
-          body.move(GRAVITYSCALE);
+          body.move(GRAVITY_SCALE);
         }
       }
 

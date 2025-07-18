@@ -11,8 +11,8 @@ export function translation(app: Application, logger: Logger): void {
     const translationWorker = new TranslationWorker(logger);
 
     app.post('/locales/*', (req, res) => {
-      const [, , , nsfile] = req.url.split('/');
-      const [ns] = nsfile.split('.');
+      const [, , , nsFile] = req.url.split('/');
+      const [ns] = nsFile.split('.');
 
       translationWorker.enqueue(ns, req.body);
       res.end();

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json",
+  "version": "0.2",
+  "ignorePaths": ["**/*.svg", "./locales/**/*.*", "./dist/**/*.*"],
+  "dictionaryDefinitions": [
+    {
+      "name": "technobuddha",
+      "path": "./.cspell/technobuddha.dic",
+      "description": "Technobuddha specific words",
+      "addWords": true
+    },
+    {
+      "name": "more-npm",
+      "path": "./.cspell/npm.dic",
+      "description": "Additional npm package names",
+      "addWords": true
+    },
+    {
+      "name": "more-fonts",
+      "path": "./.cspell/fonts.dic",
+      "description": "Additional font package names",
+      "addWords": true
+    },
+    {
+      "name": "maze",
+      "path": "./.cspell/maze.dic",
+      "addWords": true
+    }
+  ],
+  "dictionaries": ["technobuddha", "more-npm", "more-fonts", "maze"],
+  "words": [
+    "abcabcabc",
+    "citext",
+    "dodgerblue",
+    "errmsg",
+    "fluffle",
+    "grayscale",
+    "Greyscale",
+    "letsencrypt",
+    "oklch",
+    "ossp",
+    "pgcrypto",
+    "preferreds",
+    "rgba",
+    "stylesheet",
+    "timestamptz",
+    "Unreachables",
+    "xaxis",
+    "yaxis"
+  ],
+  "ignoreWords": [],
+  "import": []
+}

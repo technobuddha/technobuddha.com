@@ -3,13 +3,12 @@ import React from 'react';
 import { Size } from '@technobuddha/size';
 
 import { useUserInterface } from '#context/user-interface';
-
-import { CanvasDrawing } from '../drawing/index.ts';
-import { type MazeGenerator, type MazeGeneratorProperties } from '../generator/index.ts';
-import { type Maze, type MazeProperties } from '../geometry/index.ts';
-import { chooser } from '../library/index.ts';
-import { Runner } from '../runner/index.ts';
-import { type MazeSolver, type MazeSolverProperties } from '../solver/index.ts';
+import { CanvasDrawing } from '#maze/drawing';
+import { type MazeGenerator, type MazeGeneratorProperties } from '#maze/generator';
+import { type Maze, type MazeProperties } from '#maze/geometry';
+import { chooser } from '#maze/library';
+import { Runner } from '#maze/runner';
+import { type MazeSolver, type MazeSolverProperties } from '#maze/solver';
 
 import { generators, mazes, solvers } from './mazes.ts';
 

@@ -49,7 +49,8 @@
       "#server/*": ["./src/server/*/index.ts"],
       "#util*": ["./src/util*"],
       "#settings*": ["./src/settings*"],
-      "#config*": ["./src/config*"]
+      "#config*": ["./src/config*"],
+      "#maze/*": ["./src/maze/*/index.ts"]
     }
   }
 }

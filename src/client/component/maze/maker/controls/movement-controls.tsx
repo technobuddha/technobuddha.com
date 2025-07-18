@@ -4,10 +4,8 @@ import { memoize } from 'lodash-es';
 import { GiExitDoor } from 'react-icons/gi';
 import { RiArrowTurnBackLine, RiArrowUpLine, RiRestartLine } from 'react-icons/ri';
 
-import { type Human } from '../../solver/index.ts';
-
-import { playModeIcons } from '../../runner/play-mode.tsx';
-import { type Runner } from '../../runner/runner.ts';
+import { playModeIcons, type Runner } from '#maze/runner';
+import { type Human } from '#maze/solver';
 
 import css from './movement-controls.module.css';
 

@@ -8,7 +8,7 @@ import {
   Prims,
   RecursiveBacktracker,
   Wilsons,
-} from '../generator/index.ts';
+} from '#maze/generator';
 import {
   BrickMaze,
   CircularMaze,
@@ -25,7 +25,7 @@ import {
   TriangleMaze,
   WedgeMaze,
   ZetaMaze,
-} from '../geometry/index.ts';
+} from '#maze/geometry';
 import {
   Chain,
   FibonaccisRabbits,
@@ -33,7 +33,7 @@ import {
   type MazeSolver,
   type MazeSolverProperties,
   Roboto,
-} from '../solver/index.ts';
+} from '#maze/solver';
 
 type GeometrySelection = {
   title: string;

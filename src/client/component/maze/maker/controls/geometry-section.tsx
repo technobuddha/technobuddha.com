@@ -2,8 +2,7 @@ import React from 'react';
 import { randomWeightedPick } from '@technobuddha/library';
 
 import { MenuItem, Select } from '#control';
-
-import { type MazeProperties } from '../../geometry/index.ts';
+import { type MazeProperties } from '#maze/geometry';
 
 import { type GeometryProducer } from '../maze-maker.tsx';
 import { debugs, distances, geometries, wraparounds } from '../selection.ts';

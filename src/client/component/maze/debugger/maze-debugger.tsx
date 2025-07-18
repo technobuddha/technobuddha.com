@@ -1,8 +1,7 @@
 import React from 'react';
 
 import { MenuItem, NumberField, Select } from '#control';
-
-import { CanvasDrawing } from '../drawing/index.ts';
+import { CanvasDrawing } from '#maze/drawing';
 import {
   BrickMaze,
   CircularMaze,
@@ -20,8 +19,8 @@ import {
   TriangleMaze,
   WedgeMaze,
   ZetaMaze,
-} from '../geometry/index.ts';
-import { Runner } from '../runner/index.ts';
+} from '#maze/geometry';
+import { Runner } from '#maze/runner';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   circular: (props) => new CircularMaze(props),

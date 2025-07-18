@@ -6,5 +6,10 @@
   "compilerOptions": { "composite": true, "types": ["vite/client"], "lib": ["esnext", "dom"] },
   "include": ["**/*.tsx", "**/*.ts"],
   "exclude": [],
-  "references": [{ "path": "../api" }, { "path": "../settings" }, { "path": "../server" }]
+  "references": [
+    { "path": "../api" },
+    { "path": "../maze" },
+    { "path": "../settings" },
+    { "path": "../server" }
+  ]
 }

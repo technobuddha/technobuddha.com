@@ -3474,9 +3474,9 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@technobuddha/project@npm:0.0.178":
-  version: 0.0.178
-  resolution: "@technobuddha/project@npm:0.0.178"
+"@technobuddha/project@npm:0.0.179":
+  version: 0.0.179
+  resolution: "@technobuddha/project@npm:0.0.179"
   dependencies:
     "@eslint/js": "npm:9.26.0"
     "@inquirer/prompts": "npm:7.5.0"
@@ -3524,7 +3524,7 @@ __metadata:
     watch: "npm:1.0.2"
   bin:
     tbproject: dist/bin/tbproject
-  checksum: 10c0/6c50e95b4d952aa35bffd1e4f72ad29dd3a4b3a9873f222b1c05a273e0a4e98e978b0562af00beaf4de4091b63ce7979463081ee39e0b2ff5f17f31f29ae23fe
+  checksum: 10c0/4b9d2444f30efe075bdfca4848fea9bdbc7e72c95d676f90f5fc4a4f7ab1c7690c503e9d3c3b6c60b0264af27c82e66c240129404be6a47b169080b1ea3cba40
   languageName: node
   linkType: hard
 
@@ -13052,7 +13052,7 @@ __metadata:
     "@technobuddha/datagrid": "npm:1.2.12"
     "@technobuddha/library": "npm:1.9.19"
     "@technobuddha/openapi": "link:../@technobuddha/openapi/"
-    "@technobuddha/project": "npm:0.0.178"
+    "@technobuddha/project": "npm:0.0.179"
     "@technobuddha/react-hooks": "npm:1.6.2"
     "@technobuddha/size": "npm:1.9.8"
     "@types/browserslist-useragent": "npm:3.0.7"

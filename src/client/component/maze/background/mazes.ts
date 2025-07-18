@@ -13,9 +13,9 @@ import {
   type RecursiveBacktrackerProperties,
   Wilsons,
   type WilsonsProperties,
-} from '../generator/index.ts';
-import { SquareMaze, type SquareMazeProperties } from '../geometry/index.ts';
-import { type Choices } from '../library/index.ts';
+} from '#maze/generator';
+import { SquareMaze, type SquareMazeProperties } from '#maze/geometry';
+import { type Choices } from '#maze/library';
 import {
   Chain,
   type ChainProperties,
@@ -23,7 +23,7 @@ import {
   type FillerProperties,
   Roboto,
   type RobotoProperties,
-} from '../solver/index.ts';
+} from '#maze/solver';
 
 type PropsMazeGeometry = { geometry: typeof SquareMaze } & SquareMazeProperties;
 

@@ -4,8 +4,16 @@
 // 🚨
 import { app } from '@technobuddha/project';
 
-/* @type {(import('eslint').Linter.Config[]} */
+// eslint-disable-next-line tsdoc/syntax
+/** @type {import('eslint').Linter.Config[]} */
 const config = [
+  // .archive/tsconfig.json
+  app.lint({
+    files: ['.archive/**/*.ts'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: '.archive/tsconfig.json',
+  }),
   // scripts/tsconfig.json
   app.lint({
     files: ['scripts/**/*.ts'],
@@ -36,6 +44,13 @@ const config = [
     environment: 'node',
     tsConfig: 'src/config/tsconfig.json',
   }),
+  // src/maze/tsconfig.json
+  app.lint({
+    files: ['src/maze/**/*.ts'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: 'src/maze/tsconfig.json',
+  }),
   // src/server/tsconfig.json
   app.lint({
     files: ['src/server/**/*.ts'],
@@ -56,13 +71,6 @@ const config = [
   app.lint({ files: ['*.config.js'], ignores: [], environment: 'node' }),
   // tsconfig.json
   app.lint({ files: ['*.config.ts'], ignores: [], environment: 'node' }),
-  // .archive/tsconfig.json
-  app.lint({
-    files: ['.archive/**/*.ts'],
-    ignores: [],
-    environment: 'node',
-    tsConfig: '.archive/tsconfig.json',
-  }),
 ];
 
 export default config;

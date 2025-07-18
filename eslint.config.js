@@ -48,8 +48,16 @@ const config = [
   app.lint({
     files: ['src/maze/**/*.ts'],
     ignores: [],
-    environment: 'node',
+    environment: 'browser',
     tsConfig: 'src/maze/tsconfig.json',
+  }),
+  // src/maze/tsconfig.json
+  app.lint({
+    files: ['src/maze/**/*.tsx'],
+    ignores: [],
+    environment: 'browser',
+    tsConfig: 'src/maze/tsconfig.json',
+    react: true,
   }),
   // src/server/tsconfig.json
   app.lint({

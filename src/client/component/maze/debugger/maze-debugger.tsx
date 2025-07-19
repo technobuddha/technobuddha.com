@@ -92,7 +92,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
   const handleCreateCells = React.useCallback(() => {
     if (maze) {
-      maze.createCells();
+      maze.createNexus();
       maze.draw();
     }
   }, [maze]);

@@ -105,10 +105,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
       const selectedGenerator = (props: MazeGeneratorProperties): MazeGenerator =>
         new Generator({ ...props, ...generatorProps });
       const selectedSolver = (props: MazeSolverProperties): MazeSolver =>
-        // TODO [2025-07-25]: Fix this type error
-        //@ts-expect-error detection problem
-        new Solver({ ...props, ...solverProps });
-
+        new Solver({ ...props, robots: [], ...solverProps });
       setRunner((r) => {
         r?.abort();
         return new Runner({

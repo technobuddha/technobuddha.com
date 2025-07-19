@@ -12,8 +12,7 @@ import {
 import { toCapitalCase } from '@technobuddha/library';
 import { create, type InstanceProps } from 'react-modal-promise';
 
-import { type Phase } from '../runner/phase.ts';
-import { type PlayMode, playModeIcons, playModes } from '../runner/play-mode.tsx';
+import { type Phase, type PlayMode, playModeIcons, playModes } from '#maze/runner';
 
 export type PhasePlayModeDialogProps = InstanceProps<PlayMode | undefined, void> & {
   readonly children?: never;

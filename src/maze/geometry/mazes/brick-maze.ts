@@ -214,7 +214,7 @@ export class BrickMaze extends Maze {
       { x: x2, y: y3 },
     ];
 
-    return largestInscribedRectangle(interior, { squareOnly: true });
+    return largestInscribedRectangle(interior);
   }
 
   public drawX(cell: Cell, color = this.color.blocked): void {

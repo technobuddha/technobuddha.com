@@ -4,8 +4,8 @@ import { randomWeightedPick } from '@technobuddha/library';
 import { MenuItem, Select } from '#control';
 import { type MazeProperties } from '#maze/geometry';
 
-import { type GeometryProducer } from '../maze-maker.tsx';
-import { debugs, distances, geometries, wraparounds } from '../selection.ts';
+import { type GeometryProducer } from './maze-maker.tsx';
+import { debugs, distances, geometries, wraparounds } from './selection.ts';
 
 import { Section } from './section.tsx';
 import { fixUndefined, restoreUndefined, UNDEFINED } from './undefined.ts';

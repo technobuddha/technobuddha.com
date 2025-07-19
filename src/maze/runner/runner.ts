@@ -53,6 +53,7 @@ export class Runner extends EventTarget {
     this.id = id++;
 
     this.maze = mazeMaker({ drawing, plugin });
+    this.maze.reset();
 
     this.generator = generatorMaker?.({ maze: this.maze });
     this.solver = solverMaker?.({ maze: this.maze });

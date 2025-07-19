@@ -212,8 +212,8 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         {mode === 'custom' && (
           <CustomControls runner={runner} onPhasePlayModeChange={handlePhasePlayModeChange} />
         )}
+        {mode === 'custom' && <ExportControls runner={runner} />}
         <Messages runner={runner} />
-        <ExportControls runner={runner} />
       </div>
     </div>
   );

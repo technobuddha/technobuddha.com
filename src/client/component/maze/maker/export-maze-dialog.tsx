@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/consistent-destructuring */
 import React from 'react';
 import {
   Button,
@@ -14,11 +13,21 @@ import {
 } from '@mui/material';
 import { create, type InstanceProps } from 'react-modal-promise';
 
-import { Checkbox } from '#control';
-import { CanvasDrawing } from '#maze/drawing';
+import { Checkbox, MenuItem, Select } from '#control';
+import { type ShowDistances } from '#maze/geometry';
 import { type Runner } from '#maze/runner';
 
 import { Preview } from './preview.tsx';
+
+import css from './export-maze-dialog.module.css';
+
+type FileFormat = 'png' | 'jpg' | 'gif';
+
+const mimeTypes: Record<FileFormat, string> = {
+  png: 'image/png',
+  jpg: 'image/jpeg',
+  gif: 'image/gif',
+};
 
 export type ExportMazeDialogProps = InstanceProps<void, void> & {
   readonly runner: Runner;
@@ -30,9 +39,12 @@ export const ExportMazeDialog: React.FC<ExportMazeDialogProps> = ({
   isOpen,
   onResolve,
 }) => {
-  const [showSolution, setShowSolution] = React.useState(false);
+  const [showSolution, setShowSolution] = React.useState(true);
   const [transparentBackground, setTransparentBackground] = React.useState(false);
-  const [format, setFormat] = React.useState<'png' | 'jpg' | 'gif'>('png');
+  const [format, setFormat] = React.useState<FileFormat>('png');
+  const [showDistances, setShowDistances] = React.useState<ShowDistances>(
+    runner.maze.showDistances ?? 'none',
+  );
 
   const handleSolutionChange = React.useCallback((checked: boolean) => {
     setShowSolution(checked);
@@ -42,8 +54,12 @@ export const ExportMazeDialog: React.FC<ExportMazeDialogProps> = ({
     setTransparentBackground(checked);
   }, []);
 
+  const handleShowDistancesChange = React.useCallback((value: ShowDistances) => {
+    setShowDistances(value);
+  }, []);
+
   const handleFormatChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormat(event.target.value as 'png' | 'jpg' | 'gif');
+    setFormat(event.target.value as FileFormat);
     if (event.target.value === 'jpg') {
       setTransparentBackground(false); // JPG does not support transparency
     }
@@ -63,30 +79,9 @@ export const ExportMazeDialog: React.FC<ExportMazeDialogProps> = ({
           canvas.width = drawing.width;
           canvas.height = drawing.height;
 
-          const draw = maze.attachDrawing(new CanvasDrawing(canvas));
+          maze.export({ canvas, showSolution, transparentBackground, showDistances });
 
-          const bg = maze.color.void;
-          if (transparentBackground) {
-            maze.color.void = 'transparent';
-          }
-
-          maze.draw();
-
-          if (showSolution) {
-            maze.drawSolution();
-          }
-
-          if (transparentBackground) {
-            maze.color.void = bg;
-          }
-
-          maze.attachDrawing(draw);
-
-          const dataUrl = canvas.toDataURL(
-            format === 'jpg' ? 'image/jpeg'
-            : format === 'gif' ? 'image/gif'
-            : 'image/png',
-          );
+          const dataUrl = canvas.toDataURL(mimeTypes[format]);
 
           const a = document.createElement('a');
           a.download = `maze.${format}`;
@@ -97,23 +92,24 @@ export const ExportMazeDialog: React.FC<ExportMazeDialogProps> = ({
         }
       }
     }
-  }, [onResolve, runner, showSolution, transparentBackground, format]);
+  }, [runner, showSolution, transparentBackground, showDistances, format, onResolve]);
 
   return (
     <Dialog open={isOpen}>
       <DialogTitle>Export Maze</DialogTitle>
       <DialogContent>
-        <div>
+        <div className={css.exportMazeDialog}>
           {Boolean(runner) && (
             <div>
               <Preview
                 runner={runner}
                 showSolution={showSolution}
                 transparentBackground={transparentBackground}
+                showDistances={showDistances}
               />
             </div>
           )}
-          <div>
+          <div className={css.options}>
             <Checkbox
               label="Show Solution"
               checked={showSolution}
@@ -127,6 +123,17 @@ export const ExportMazeDialog: React.FC<ExportMazeDialogProps> = ({
               onChange={handleTransparentBackgroundChange}
               color="primary"
             />
+            <Select
+              label="Show Distances"
+              value={showDistances}
+              onChange={handleShowDistancesChange}
+            >
+              <MenuItem value="none">None</MenuItem>
+              <MenuItem value="greyscale">Greyscale</MenuItem>
+              <MenuItem value="primary">Primary</MenuItem>
+              <MenuItem value="color">Color</MenuItem>
+              <MenuItem value="spectrum">Spectrum</MenuItem>
+            </Select>
           </div>
           <div>
             <FormControl>

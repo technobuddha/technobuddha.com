@@ -1,7 +1,7 @@
 import React from 'react';
 import { ceil } from '@technobuddha/library';
 
-import { CanvasDrawing } from '#maze/drawing';
+import { type ShowDistances } from '#maze/geometry';
 import { type Runner } from '#maze/runner';
 
 import css from './preview.module.css';
@@ -10,12 +10,14 @@ export type PreviewProps = {
   readonly runner: Runner;
   readonly showSolution?: boolean;
   readonly transparentBackground?: boolean;
+  readonly showDistances?: ShowDistances;
 };
 
 export const Preview: React.FC<PreviewProps> = ({
   runner,
   showSolution = false,
   transparentBackground = false,
+  showDistances = 'none',
 }) => {
   const { maze } = runner;
   const canvas = React.useRef<HTMLCanvasElement>(null);
@@ -23,7 +25,7 @@ export const Preview: React.FC<PreviewProps> = ({
   const { width, height, scale } = React.useMemo(() => {
     const drawing = maze.drawing!;
     const major = Math.max(drawing.width, drawing.height);
-    const scale = 500 / major;
+    const scale = 480 / major;
 
     return {
       width: ceil(drawing.width * scale),
@@ -34,27 +36,17 @@ export const Preview: React.FC<PreviewProps> = ({
 
   React.useEffect(() => {
     if (canvas.current && maze) {
-      const draw = maze.attachDrawing(new CanvasDrawing(canvas.current, { zoom: scale }));
-
-      const bg = maze.color.void;
-      if (transparentBackground) {
-        maze.color.void = 'transparent';
-      }
-
-      maze.draw();
-
-      if (showSolution) {
-        maze.drawSolution();
-      }
-      if (transparentBackground) {
-        maze.color.void = bg;
-      }
-
-      maze.attachDrawing(draw);
+      maze.export({
+        canvas: canvas.current,
+        scale,
+        showSolution,
+        transparentBackground,
+        showDistances,
+      });
     }
 
     return undefined;
-  }, [maze, scale, showSolution, transparentBackground]);
+  }, [maze, scale, showSolution, transparentBackground, showDistances]);
 
   return (
     <div className={css.preview}>

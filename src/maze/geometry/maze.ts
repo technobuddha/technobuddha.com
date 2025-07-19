@@ -9,7 +9,7 @@ import {
   translate,
 } from '@technobuddha/library';
 
-import { type Drawing } from '../drawing/index.ts';
+import { CanvasDrawing, type Drawing } from '../drawing/index.ts';
 import { type MazeGenerator } from '../generator/index.ts';
 import { alpha, logger, lookAhead } from '../library/index.ts';
 
@@ -429,7 +429,7 @@ export abstract class Maze extends MazeGeometry {
     // }
   }
 
-  public drawDistances(point = this.entrance): void {
+  public drawDistances(method = this.showDistances, point = this.entrance): void {
     if (this.drawing) {
       const { maxDistance, distances } = this.analyze(point);
 
@@ -451,7 +451,7 @@ export abstract class Maze extends MazeGeometry {
           } else {
             const grey = (1 - distance / maxDistance) * 0.35 + 0.15;
 
-            switch (this.showDistances) {
+            switch (method) {
               case 'none': {
                 color = this.color.cell;
                 break;
@@ -494,9 +494,9 @@ export abstract class Maze extends MazeGeometry {
     }
   }
 
-  public drawSolution(color = this.color.solution): void {
+  public drawSolution(color = this.color.solution, method = this.showDistances): void {
     if (this.drawing) {
-      this.drawDistances();
+      this.drawDistances(method);
       this.drawPaths(this.solution, color);
       this.drawCell(this.exit);
       this.drawPath({ ...this.exit, direction: this.opposite(this.exit.facing) }, color);
@@ -832,4 +832,41 @@ export abstract class Maze extends MazeGeometry {
     }));
   }
   //#endregion
+  //#region Export
+  public export({
+    canvas = document.createElement('canvas'),
+    showSolution = false,
+    transparentBackground = false,
+    showDistances = this.showDistances,
+    scale = 1,
+  }: {
+    canvas: HTMLCanvasElement;
+    showSolution?: boolean;
+    transparentBackground?: boolean;
+    showDistances?: ShowDistances;
+    scale?: number;
+  }): void {
+    if (this.drawing) {
+      const draw = this.attachDrawing(new CanvasDrawing(canvas, { scale }));
+
+      const bg = this.color.void;
+      if (transparentBackground) {
+        this.color.void = 'transparent';
+      }
+
+      if (showSolution) {
+        this.clear();
+        this.drawSolution(this.color.solution, showDistances);
+      } else {
+        this.draw();
+        this.drawDistances(showDistances);
+      }
+
+      if (transparentBackground) {
+        this.color.void = bg;
+      }
+
+      this.attachDrawing(draw);
+    }
+  }
 }

@@ -2,7 +2,9 @@ import React from 'react';
 import { FaRegWindowClose } from 'react-icons/fa';
 
 import { type SnackbarKey } from '#context/snackbar';
-import { Button, IconButton } from '#control';
+import { IconButton } from '#control';
+
+import css from './close-button.module.css';
 
 export type CloseButtonProps = {
   readonly snackbarKey: SnackbarKey;
@@ -16,8 +18,8 @@ export const CloseButton: React.FC<CloseButtonProps> = ({ snackbarKey, closeSnac
   }, [closeSnackbar, snackbarKey]);
 
   return (
-    <IconButton onClick={handleClick}>
-      <FaRegWindowClose />
+    <IconButton className={css.iconButton} onClick={handleClick}>
+      <FaRegWindowClose className={css.icon} />
     </IconButton>
   );
 };

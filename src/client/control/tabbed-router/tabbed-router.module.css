@@ -10,4 +10,10 @@
     height: 100%;
     padding: mui-spacing(1) 0 0 0;
   }
+
+  .tab {
+    :global(.MuiTab-icon) {
+      font-size: 1.5rem;
+    }
+  }
 }

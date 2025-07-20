@@ -44,7 +44,7 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
         <div className={css.title}>Messages</div>
         <Tooltip title="Clear messages" placement="top">
           <IconButton onClick={handleClear}>
-            <IoTrash size="1em" />
+            <IoTrash />
           </IconButton>
         </Tooltip>
       </div>

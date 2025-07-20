@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+import ModalContainer from 'react-modal-promise';
 
 import { Framework } from '#client/framework/index.js';
 import { APIProvider } from '#context/api';
@@ -8,7 +9,6 @@ import { theme, ThemeProvider } from '#context/mui';
 import { Router } from '#context/router';
 import { SnackbarProvider } from '#context/snackbar';
 import { UserInterfaceProvider } from '#context/user-interface';
-import ModalContainer from 'react-modal-promise';
 
 import { AppLoading } from './app-loading.tsx';
 

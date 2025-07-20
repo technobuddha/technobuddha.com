@@ -44,26 +44,26 @@ export const MovementControls: React.FC<MovementControlsProps> = ({ runner }) =>
         <div className={css.col}>
           <Tooltip title="Change Direction">
             <Button onClick={handleCommand('ArrowLeft')}>
-              <RiRestartLine size="1em" />
+              <RiRestartLine />
             </Button>
           </Tooltip>
         </div>
         <div className={css.col}>
           <Tooltip title="Move Forward">
             <Button onClick={handleCommand('ArrowUp')}>
-              <RiArrowUpLine size="1em" />
+              <RiArrowUpLine />
             </Button>
           </Tooltip>
           <Tooltip title="Move Backward">
             <Button onClick={handleCommand('ArrowDown')}>
-              <RiArrowTurnBackLine size="1em" />
+              <RiArrowTurnBackLine />
             </Button>
           </Tooltip>
         </div>
         <div className={css.col}>
           <Tooltip title="Exit Maze">
             <Button onClick={handleCommand('Escape')}>
-              <GiExitDoor size="1em" />
+              <GiExitDoor />
             </Button>
           </Tooltip>
         </div>

@@ -1,4 +1,3 @@
-// import Color                from '#component/color';
 import React from 'react';
 import { Link, Typography } from '@mui/material';
 import { type IconType } from 'react-icons';

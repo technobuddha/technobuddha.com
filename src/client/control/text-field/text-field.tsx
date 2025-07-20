@@ -6,6 +6,8 @@ import {
   type TextFieldProps as MuiTextFieldProps,
 } from '@mui/material';
 
+import css from './text-field.module.css';
+
 export type TextFieldProps = {
   readonly className?: string;
   readonly id?: string;
@@ -70,12 +72,12 @@ export const TextField: React.FC<TextFieldProps> = ({
     () => ({
       input: {
         startAdornment: (
-          <InputAdornment position="start">
+          <InputAdornment className={css.adornment} position="start">
             {startAdornment ?? <Box width={52} height={52} />}
           </InputAdornment>
         ),
         endAdornment: (
-          <InputAdornment position="end">
+          <InputAdornment className={css.adornment} position="end">
             {endAdornment ?? <Box width={52} height={52} />}
           </InputAdornment>
         ),

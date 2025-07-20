@@ -16,6 +16,9 @@ import { components } from '#settings/components.jsx';
 
 const expansionTimeout = 1250;
 
+// TODO: [2025-07-31] - makeStyles is deprecated, use styled components or sx prop...
+// OR fix type errors;
+
 const useStyles = makeStyles((theme) => {
   const drawerClosedWidth = theme.typography.pxToRem(24 + Number.parseInt(theme.spacing(2)) * 2);
   const drawerOpenedWidth = '25vw';

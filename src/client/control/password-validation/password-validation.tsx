@@ -169,7 +169,7 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
   React.useEffect(() => {
     authentication
       .checkPasswordStrength(myPassword, userInputs)
-      .then(({ payload: { score, warning } }) => {
+      .then(({ score, warning }) => {
         const uCount = myPassword.match(/\p{Lu}/gu)?.length ?? 0;
         const lCount = myPassword.match(/\p{Ll}/gu)?.length ?? 0;
         const dCount = myPassword.match(/\p{N}/gu)?.length ?? 0;

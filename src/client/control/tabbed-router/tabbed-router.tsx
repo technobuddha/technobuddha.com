@@ -51,6 +51,8 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({ path, tabs }) => {
 
   const tab = tabs.find((t) => t.route === subpath);
 
+  // TODO [2025-07-31]: scrollButtons support
+
   if (tab) {
     return (
       <div className={css.tabbedRouter}>
@@ -59,13 +61,13 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({ path, tabs }) => {
             value={subpath}
             onChange={handleChange}
             variant="scrollable"
-            scrollButtons="on"
+            // scrollButtons="on"
             indicatorColor="primary"
             textColor="primary"
           >
             {/* eslint-disable-next-line @typescript-eslint/naming-convention */}
             {tabs.map(({ label, icon: Icon, route }) => (
-              <Tab key={route} value={route} label={label} icon={Icon} />
+              <Tab className={css.tab} key={route} value={route} label={label} icon={Icon} />
             ))}
           </Tabs>
         </AppBar>

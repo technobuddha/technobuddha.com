@@ -1,5 +1,6 @@
 export * from './geometry.ts';
 export * from './maze.ts';
+export * from './maze-geometry.ts';
 export * from './mazes/brick-maze.ts';
 export * from './mazes/circular-maze.ts';
 export * from './mazes/cubic-maze.ts';

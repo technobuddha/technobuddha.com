@@ -1,0 +1,7 @@
+.export-maze-dialog {
+  .options {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+}

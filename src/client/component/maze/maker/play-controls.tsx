@@ -1,8 +1,7 @@
 import React from 'react';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
-import { type PlayMode, playModeIcons, playModes } from '../../runner/play-mode.tsx';
-import { type Runner } from '../../runner/runner.ts';
+import { type PlayMode, playModeIcons, playModes, type Runner } from '#maze/runner';
 
 import css from './play-controls.module.css';
 

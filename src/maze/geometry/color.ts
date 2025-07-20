@@ -1,20 +1,20 @@
 export type MazeColors = {
-  readonly void: string;
-  readonly cell: string;
-  readonly wall: string;
-  readonly mask: string;
-  readonly entrance: string;
-  readonly exit: string;
-  readonly tunnel: string;
-  readonly solution: string;
-  readonly scanned: string;
-  readonly avatar: string;
-  readonly pruned: string;
-  readonly path: string;
-  readonly blocked: string;
-  readonly error: string;
-  readonly bridge: string;
-  readonly text: string;
+  void: string;
+  cell: string;
+  wall: string;
+  mask: string;
+  entrance: string;
+  exit: string;
+  tunnel: string;
+  solution: string;
+  scanned: string;
+  avatar: string;
+  pruned: string;
+  path: string;
+  blocked: string;
+  error: string;
+  bridge: string;
+  text: string;
 };
 
 export const defaultColors: NonNullable<MazeColors> = {

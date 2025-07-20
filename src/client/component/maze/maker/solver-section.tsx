@@ -4,8 +4,8 @@ import { randomWeightedPick } from '@technobuddha/library';
 import { MenuItem, Select } from '#control';
 import { type MazeSolverProperties } from '#maze/solver';
 
-import { type SolverProducer } from '../maze-maker.tsx';
-import { solvers } from '../selection.ts';
+import { type SolverProducer } from './maze-maker.tsx';
+import { solvers } from './selection.ts';
 
 import { Section } from './section.tsx';
 import { fixUndefined, restoreUndefined, UNDEFINED } from './undefined.ts';

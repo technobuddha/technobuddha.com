@@ -2,10 +2,9 @@ import React from 'react';
 import { Button, Step, StepLabel, Stepper } from '@mui/material';
 import { memoize } from 'lodash-es';
 
-import { type Phase, phases } from '../../runner/phase.ts';
-import { phasePlayModeDialog } from '../phase-play-mode-dialog.tsx';
-import { type PlayMode, playModeIcons } from '../../runner/play-mode.tsx';
-import { type Runner } from '../../runner/runner.ts';
+import { type Phase, phases, type PlayMode, playModeIcons, type Runner } from '#maze/runner';
+
+import { phasePlayModeDialog } from './phase-play-mode-dialog.tsx';
 
 import css from './phase-controls.module.css';
 

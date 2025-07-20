@@ -1,9 +1,7 @@
 /* eslint-disable react/jsx-handler-names */
 import React from 'react';
 
-import { type Phase } from '../../runner/phase.ts';
-import { type PlayMode } from '../../runner/play-mode.tsx';
-import { type Runner } from '../../runner/runner.ts';
+import { type Phase, type PlayMode, type Runner } from '#maze/runner';
 
 import { PhaseControls } from './phase-controls.tsx';
 import { PlayControls } from './play-controls.tsx';

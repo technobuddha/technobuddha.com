@@ -10,13 +10,14 @@ import { type Maze, type MazeProperties } from '#maze/geometry';
 import { type Phase, type PlayMode, Runner } from '#maze/runner';
 import { type MazeSolver, type MazeSolverProperties } from '#maze/solver';
 
-import { CustomControls } from './controls/custom-controls.tsx';
-import { GameControls } from './controls/game-controls.tsx';
-import { GeneratorSection } from './controls/generator-section.tsx';
-import { GeometrySection } from './controls/geometry-section.tsx';
-import { HumanSection } from './controls/human-section.tsx';
-import { Messages } from './controls/messages.tsx';
-import { SolverSection } from './controls/solver-section.tsx';
+import { CustomControls } from './custom-controls.tsx';
+import { ExportControls } from './export.tsx';
+import { GameControls } from './game-controls.tsx';
+import { GeneratorSection } from './generator-section.tsx';
+import { GeometrySection } from './geometry-section.tsx';
+import { HumanSection } from './human-section.tsx';
+import { Messages } from './messages.tsx';
+import { SolverSection } from './solver-section.tsx';
 
 import css from './maze-maker.module.css';
 
@@ -211,6 +212,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         {mode === 'custom' && (
           <CustomControls runner={runner} onPhasePlayModeChange={handlePhasePlayModeChange} />
         )}
+        {mode === 'custom' && <ExportControls runner={runner} />}
         <Messages runner={runner} />
       </div>
     </div>

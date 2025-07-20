@@ -4,10 +4,9 @@ import { randomWeightedPick } from '@technobuddha/library';
 import { MenuItem, Select } from '#control';
 import { type MazeGeneratorProperties } from '#maze/generator';
 
-import { type GeneratorProducer } from '../maze-maker.tsx';
-import { braids, generators } from '../selection.ts';
-
+import { type GeneratorProducer } from './maze-maker.tsx';
 import { Section } from './section.tsx';
+import { braids, generators } from './selection.ts';
 import { fixUndefined, restoreUndefined, UNDEFINED } from './undefined.ts';
 
 type GeneratorSectionProps = {

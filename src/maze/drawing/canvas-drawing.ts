@@ -1,31 +1,48 @@
 import { type Cartesian, type Rect, toRadians } from '@technobuddha/library';
 
-import { Drawing } from './drawing.ts';
+import { type ClearOptions, Drawing } from './drawing.ts';
+
+export type CanvasDrawingOptions = {
+  scale?: number;
+};
 
 export class CanvasDrawing extends Drawing {
   private readonly canvas: CanvasRenderingContext2D;
+  private readonly scale: number;
 
-  public constructor(element: HTMLCanvasElement) {
+  public constructor(element: HTMLCanvasElement, { scale = 1 }: CanvasDrawingOptions = {}) {
     const context = element.getContext('2d')!;
     if (context) {
       super(context.canvas.width, context.canvas.height);
 
+      this.scale = scale;
       this.canvas = context;
     } else {
       throw new Error('Failed to get 2D context');
     }
   }
 
-  public clear(color = 'transparent', originX = 0, originY = 0): void {
+  public clear(color = 'transparent', { originX = 0, originY = 0 }: ClearOptions = {}): void {
     this.canvas.setTransform(1, 0, 0, 1, 0, 0);
+    this.canvas.scale(this.scale, this.scale);
     this.canvas.imageSmoothingEnabled = false;
     this.canvas.imageSmoothingQuality = 'high';
 
     if (color === 'transparent') {
-      this.canvas.clearRect(0, 0, this.canvas.canvas.width, this.canvas.canvas.height);
+      this.canvas.clearRect(
+        0,
+        0,
+        this.canvas.canvas.width / this.scale,
+        this.canvas.canvas.height / this.scale,
+      );
     } else {
       this.canvas.fillStyle = color;
-      this.canvas.fillRect(0, 0, this.canvas.canvas.width, this.canvas.canvas.height);
+      this.canvas.fillRect(
+        0,
+        0,
+        this.canvas.canvas.width / this.scale,
+        this.canvas.canvas.height / this.scale,
+      );
     }
 
     this.canvas.translate(originX, originY);

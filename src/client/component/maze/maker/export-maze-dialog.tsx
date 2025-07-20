@@ -1,18 +1,8 @@
 import React from 'react';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-} from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { create, type InstanceProps } from 'react-modal-promise';
 
-import { Button, Checkbox, MenuItem, Select } from '#control';
+import { Button, Checkbox, MenuItem, Radio, RadioGroup, Select } from '#control';
 import { type ShowDistances } from '#maze/geometry';
 import { type Runner } from '#maze/runner';
 
@@ -135,19 +125,17 @@ export const ExportMazeDialog: React.FC<ExportMazeDialogProps> = ({
             </Select>
           </div>
           <div>
-            <FormControl>
-              <FormLabel id="export-format-label">Export Format</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="export-format-label"
-                value={format}
-                onChange={handleFormatChange}
-              >
-                <FormControlLabel value="png" control={<Radio />} label="png" />
-                <FormControlLabel value="jpg" control={<Radio />} label="jpg" />
-                <FormControlLabel value="gif" control={<Radio />} label="gif" />
-              </RadioGroup>
-            </FormControl>
+            <RadioGroup
+              label="Export Format"
+              row
+              aria-labelledby="export-format-label"
+              value={format}
+              onChange={handleFormatChange}
+            >
+              <Radio value="png" label="png" />
+              <Radio value="jpg" label="jpg" />
+              <Radio value="gif" label="gif" />
+            </RadioGroup>
           </div>
         </div>
       </DialogContent>

@@ -4,6 +4,7 @@ import { Box as MuiBox, type BoxProps as MuiBoxProps } from '@mui/material';
 export type BoxProps = {
   readonly style?: MuiBoxProps['style'];
   readonly className?: MuiBoxProps['className'];
+  readonly component?: MuiBoxProps['component'];
 
   readonly marginTop?: MuiBoxProps['marginTop'];
   readonly marginRight?: MuiBoxProps['marginRight'];
@@ -16,6 +17,8 @@ export type BoxProps = {
   readonly flexDirection?: MuiBoxProps['flexDirection'];
 
   readonly onKeyUp?: MuiBoxProps['onKeyUp'];
+  readonly onMouseOver?: MuiBoxProps['onMouseOver'];
+  readonly onMouseLeave?: MuiBoxProps['onMouseLeave'];
 
   readonly children?: MuiBoxProps['children'];
 };

@@ -10,6 +10,16 @@ export { Failure, type FailureProps } from './failure/index.ts';
 export { IconButton, type IconButtonProps } from './icon-button/index.ts';
 export { LinearProgress, type LinearProgressProps } from './linear-progress/index.ts';
 export { Link, type LinkProps } from './link/index.ts';
+export {
+  List,
+  ListItem,
+  ListItemIcon,
+  type ListItemIconProps,
+  type ListItemProps,
+  ListItemText,
+  type ListItemTextProps,
+  type ListProps,
+} from './list/index.ts';
 export { NotFound, type NotFoundProps } from './not-found/index.ts';
 export { NumberField, type NumberFieldProps } from './number-field/index.ts';
 export { Paper, type PaperProps } from './paper/index.ts';

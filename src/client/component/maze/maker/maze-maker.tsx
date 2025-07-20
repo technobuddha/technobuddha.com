@@ -1,9 +1,9 @@
 import React from 'react';
-import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import clsx from 'clsx';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useMeasure } from 'react-use';
 
+import { ToggleButton, ToggleButtonGroup } from '#control';
 import { CanvasDrawing } from '#maze/drawing';
 import { type MazeGenerator, type MazeGeneratorProperties } from '#maze/generator';
 import { type Maze, type MazeProperties } from '#maze/geometry';

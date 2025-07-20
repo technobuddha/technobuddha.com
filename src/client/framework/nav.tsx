@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import clsx from 'clsx';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 
@@ -7,7 +7,7 @@ import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { makeStyles } from '#context/mui';
 import { useLocation, useNavigate } from '#context/router';
-import { IconButton } from '#control';
+import { Box, IconButton } from '#control';
 import { components } from '#settings/components.jsx';
 
 const expansionTimeout = 1250;

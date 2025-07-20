@@ -10,6 +10,7 @@ export { LinearProgress, type LinearProgressProps } from './linear-progress/inde
 export { Link, type LinkProps } from './link/index.ts';
 export { NotFound, type NotFoundProps } from './not-found/index.ts';
 export { NumberField, type NumberFieldProps } from './number-field/index.ts';
+export { Paper, type PaperProps } from './paper/index.ts';
 export { PasswordField, type PasswordFieldProps } from './password-field/index.ts';
 export { PasswordValidation, type PasswordValidationProps } from './password-validation/index.ts';
 export { Radio, RadioGroup, type RadioGroupProps, type RadioProps } from './radio/index.ts';

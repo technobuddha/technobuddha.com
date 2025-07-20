@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { LinearProgress } from '@mui/material';
 import { useDerivedState } from '@technobuddha/react-hooks';
 import { Size } from '@technobuddha/size';
 
 import { useTranslation } from '#context/i18n';
+import { LinearProgress } from '#control';
 
 import { chaos } from './worker/index.ts';
 

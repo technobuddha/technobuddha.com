@@ -1,7 +1,6 @@
 import React from 'react';
-import { Box } from '@mui/material';
 
-import { Typography } from '#control';
+import { Box, Typography } from '#control';
 
 import css from './service-notification.module.css';
 

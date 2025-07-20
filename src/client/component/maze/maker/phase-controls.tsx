@@ -1,8 +1,7 @@
 import React from 'react';
-import { Step, StepLabel, Stepper } from '@mui/material';
 import { memoize } from 'lodash-es';
 
-import { Button } from '#control';
+import { Button, Step, StepLabel, Stepper } from '#control';
 import { type Phase, phases, type PlayMode, playModeIcons, type Runner } from '#maze/runner';
 
 import { phasePlayModeDialog } from './phase-play-mode-dialog.tsx';

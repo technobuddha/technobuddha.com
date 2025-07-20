@@ -1,4 +1,5 @@
 export { Alert, type AlertProps } from './alert/index.ts';
+export { Box, type BoxProps } from './box/index.ts';
 export { Button, type ButtonProps } from './button/index.ts';
 export { Checkbox, type CheckboxProps } from './checkbox/index.ts';
 export { CircularProgress } from './circular-progress/index.ts';
@@ -14,6 +15,14 @@ export { PasswordValidation, type PasswordValidationProps } from './password-val
 export { Radio, RadioGroup, type RadioGroupProps, type RadioProps } from './radio/index.ts';
 export { SearchInput, type SearchInputProps } from './search-input/index.ts';
 export { MenuItem, Select, type SelectProps } from './select/index.ts';
+export {
+  Step,
+  StepLabel,
+  type StepLabelProps,
+  Stepper,
+  type StepperProps,
+  type StepProps,
+} from './stepper/index.ts';
 export { TabbedRouter, type TabbedRouterProps } from './tabbed-router/index.ts';
 export { TextField, type TextFieldProps } from './text-field/index.ts';
 export {

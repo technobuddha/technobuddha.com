@@ -1,12 +1,11 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { Box } from '@mui/material';
 import { create2DArray, nbsp, numberToLetter } from '@technobuddha/library';
 import { useDerivedState } from '@technobuddha/react-hooks';
 import clsx from 'clsx';
 import { range } from 'lodash-es';
 
-import { MenuItem, Select, Typography } from '#control';
+import { Box, MenuItem, Select, Typography } from '#control';
 
 import css from './knight.module.css';
 

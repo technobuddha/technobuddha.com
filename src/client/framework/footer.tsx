@@ -1,8 +1,8 @@
 import React from 'react';
-import { AppBar, Box } from '@mui/material';
+import { AppBar } from '@mui/material';
 
 import { useUserInterface } from '#context/user-interface';
-import { Typography } from '#control';
+import { Box, Typography } from '#control';
 
 import packageJson from '../../../package.json' with { type: 'json' };
 

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box } from '@mui/material';
 import clsx from 'clsx';
 
 import { useTranslation } from '#context/i18n';
 import { Route, Routes } from '#context/router';
+import { Box } from '#control';
 import { components } from '#settings/components.jsx';
 
 import css from './main.module.css';

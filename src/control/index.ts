@@ -2,6 +2,7 @@ export { Alert, type AlertProps } from './alert/index.ts';
 export { AppBar, type AppBarProps } from './app-bar/index.ts';
 export { Box, type BoxProps } from './box/index.ts';
 export { Button, type ButtonProps } from './button/index.ts';
+export { Card, CardContent, type CardContentProps, type CardProps } from './card/index.ts';
 export { Checkbox, type CheckboxProps } from './checkbox/index.ts';
 export { CircularProgress } from './circular-progress/index.ts';
 export { DelayedLoading } from './delayed-loading/index.ts';

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Card, CardContent } from '@mui/material';
 import clsx from 'clsx';
 
-import { Typography } from '#control';
+import { Card, CardContent, Typography } from '#control';
 
 import css from './section.module.css';
 

@@ -1,14 +1,12 @@
 import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
+import { AppBar, Box } from '@mui/material';
 import { MdAccountCircle } from 'react-icons/md';
 
 import { useAuthentication } from '#context/authentication';
 // import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useNavigate } from '#context/router';
+import { IconButton, Typography } from '#control';
 import { authenticationSettings } from '#settings/authentication';
 
 import css from './header.module.css';

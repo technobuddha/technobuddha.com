@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { empty, nbsp } from '@technobuddha/library';
 import { escapeRegExp, zip } from 'lodash-es';
 import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
@@ -7,7 +7,7 @@ import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 import { useAPI } from '#context/api';
 import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
-import { PasswordField } from '#control';
+import { PasswordField, Typography } from '#control';
 
 import css from './password-validation.module.css';
 
@@ -254,7 +254,7 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
             </Box>
             <Box height={40}>
               {Boolean(passwordWarning) && (
-                <Typography color="error" variant="caption" component="div">
+                <Typography color="error" variant="caption">
                   {passwordWarning}
                 </Typography>
               )}

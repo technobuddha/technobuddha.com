@@ -1,11 +1,11 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { MdEmail } from 'react-icons/md';
 
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useLocation, useNavigate } from '#context/router';
-import { Alert, Button, PasswordField, TextField } from '#control';
+import { Alert, Button, PasswordField, TextField, Typography } from '#control';
 
 import css from './login.module.css';
 

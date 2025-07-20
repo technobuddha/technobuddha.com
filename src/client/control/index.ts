@@ -14,5 +14,6 @@ export { SearchInput, type SearchInputProps } from './search-input/index.ts';
 export { MenuItem, Select, type SelectProps } from './select/index.ts';
 export { TabbedRouter, type TabbedRouterProps } from './tabbed-router/index.ts';
 export { TextField, type TextFieldProps } from './text-field/index.ts';
+export { Typography, type TypographyProps } from './typography/index.ts';
 export { Wait, type WaitProps } from './wait/index.ts';
 export { Watermark, type WatermarkProps } from './watermark/index.ts';

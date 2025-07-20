@@ -1,10 +1,9 @@
 import React from 'react';
-import { Typography } from '@mui/material';
 import { email as emailRegExp, empty } from '@technobuddha/library';
 import { MdEmail } from 'react-icons/md';
 
 import { useTranslation } from '#context/i18n';
-import { Button, TextField } from '#control';
+import { Button, TextField, Typography } from '#control';
 
 export type LoginMode = 'login' | 'forgotPassword' | 'signUp';
 export type LoginState = { mode: LoginMode };

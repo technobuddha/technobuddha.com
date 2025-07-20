@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 
 import { useTranslation } from '#context/i18n';
 import { useLocation } from '#context/router';
-import { Link, Watermark } from '#control';
+import { Link, Typography, Watermark } from '#control';
 import { authenticationSettings } from '#settings/authentication';
 
 import { ForgotPassword } from './forgot-password.tsx';

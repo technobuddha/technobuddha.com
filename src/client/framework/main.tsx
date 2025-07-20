@@ -1,5 +1,5 @@
 import React from 'react';
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import clsx from 'clsx';
 
 import { useTranslation } from '#context/i18n';

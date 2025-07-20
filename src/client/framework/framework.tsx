@@ -1,5 +1,5 @@
 import React from 'react';
-import CssBaseLine from '@mui/material/CssBaseline';
+import { CssBaseline } from '@mui/material';
 
 import { Authentication } from '#client/authentication';
 import { Navigate, Route, Routes } from '#context/router';
@@ -14,7 +14,7 @@ import css from './framework.module.css';
 
 export const Framework: React.FC = () => (
   <>
-    <CssBaseLine />
+    <CssBaseline />
     <div className={css.userInterface}>
       <Routes>
         <Route path="/forgot-password" element={<Authentication />} />

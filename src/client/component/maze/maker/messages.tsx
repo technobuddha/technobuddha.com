@@ -1,8 +1,7 @@
 import React from 'react';
-import { Tooltip } from '@mui/material';
 import { IoTrash } from 'react-icons/io5';
 
-import { IconButton } from '#control';
+import { IconButton, Tooltip } from '#control';
 import { type Runner } from '#maze/runner';
 
 import css from './messages.module.css';

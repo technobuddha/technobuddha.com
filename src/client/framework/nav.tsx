@@ -1,10 +1,5 @@
 import React from 'react';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { Box, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import clsx from 'clsx';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 
@@ -12,6 +7,7 @@ import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { makeStyles } from '#context/mui';
 import { useLocation, useNavigate } from '#context/router';
+import { IconButton } from '#control';
 import { components } from '#settings/components.jsx';
 
 const expansionTimeout = 1250;

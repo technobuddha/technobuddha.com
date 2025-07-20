@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,7 +10,7 @@ import {
 import { toCapitalCase } from '@technobuddha/library';
 import { create, type InstanceProps } from 'react-modal-promise';
 
-import { Typography } from '#control';
+import { Button, Typography } from '#control';
 import { type Phase, type PlayMode, playModeIcons, playModes } from '#maze/runner';
 
 export type PhasePlayModeDialogProps = InstanceProps<PlayMode | undefined, void> & {

@@ -16,6 +16,7 @@ export { PasswordValidation, type PasswordValidationProps } from './password-val
 export { Radio, RadioGroup, type RadioGroupProps, type RadioProps } from './radio/index.ts';
 export { SearchInput, type SearchInputProps } from './search-input/index.ts';
 export { MenuItem, Select, type SelectProps } from './select/index.ts';
+export { Slider, type SliderProps } from './slider/index.ts';
 export {
   Step,
   StepLabel,

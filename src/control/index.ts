@@ -1,4 +1,5 @@
 export { Alert, type AlertProps } from './alert/index.ts';
+export { AppBar, type AppBarProps } from './app-bar/index.ts';
 export { Box, type BoxProps } from './box/index.ts';
 export { Button, type ButtonProps } from './button/index.ts';
 export { Checkbox, type CheckboxProps } from './checkbox/index.ts';

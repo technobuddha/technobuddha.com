@@ -30,11 +30,14 @@ const config = {
     'src/client': {
       environment: 'vite-client',
       tsconfig: {
-        references: ['src/api', 'src/maze', 'src/settings', 'src/server'],
+        references: ['src/api', 'src/control', 'src/maze', 'src/settings', 'src/server'],
       },
     },
     'src/config': {
       environment: 'node',
+    },
+    'src/control': {
+      environment: 'browser',
     },
     'src/maze': {
       environment: 'browser',
@@ -59,7 +62,7 @@ const config = {
           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
           '#api/*': ['./src/api/*/index.ts'],
           '#context/*': ['./src/client/context/*/index.ts'],
-          '#control': ['./src/client/control/index.ts'],
+          '#control': ['./src/control/index.ts'],
           '#component*': ['./src/client/component/*/index.ts'],
           '#client*': ['./src/client*'],
           '#server/*': ['./src/server/*/index.ts'],

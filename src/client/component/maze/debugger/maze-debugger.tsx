@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { MenuItem, NumberField, Select } from '#control';
+import { Button, MenuItem, NumberField, Select } from '#control';
 import { CanvasDrawing } from '#maze/drawing';
 import {
   BrickMaze,
@@ -331,12 +331,12 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
           </Select>
         )}
         <br />
-        <button type="button" onClick={handleRemoveWalls}>
+        <Button type="button" onClick={handleRemoveWalls}>
           Remove walls
-        </button>
-        <button type="button" onClick={handleCreateCells}>
+        </Button>
+        <Button type="button" onClick={handleCreateCells}>
           Create walls
-        </button>
+        </Button>
       </div>
       <div style={{ flexGrow: 1 }}>
         <div style={{ height: '100%', overflowY: 'auto' }}>

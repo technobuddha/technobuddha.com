@@ -1,8 +1,8 @@
 import React from 'react';
-import Button from '@mui/material/Button';
 import { FaRegWindowClose } from 'react-icons/fa';
 
 import { type SnackbarKey } from '#context/snackbar';
+import { Button, IconButton } from '#control';
 
 export type CloseButtonProps = {
   readonly snackbarKey: SnackbarKey;
@@ -16,8 +16,8 @@ export const CloseButton: React.FC<CloseButtonProps> = ({ snackbarKey, closeSnac
   }, [closeSnackbar, snackbarKey]);
 
   return (
-    <Button onClick={handleClick}>
+    <IconButton onClick={handleClick}>
       <FaRegWindowClose />
-    </Button>
+    </IconButton>
   );
 };

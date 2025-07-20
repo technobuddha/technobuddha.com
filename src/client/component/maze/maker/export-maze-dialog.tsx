@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,7 +12,7 @@ import {
 } from '@mui/material';
 import { create, type InstanceProps } from 'react-modal-promise';
 
-import { Checkbox, MenuItem, Select } from '#control';
+import { Button, Checkbox, MenuItem, Select } from '#control';
 import { type ShowDistances } from '#maze/geometry';
 import { type Runner } from '#maze/runner';
 
@@ -154,7 +153,9 @@ export const ExportMazeDialog: React.FC<ExportMazeDialogProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCancel}>Cancel</Button>
-        <Button onClick={handleNothing}>Save</Button>
+        <Button variant="contained" onClick={handleNothing}>
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { email as emailRegExp, empty } from '@technobuddha/library';
 import { MdEmail, MdPerson } from 'react-icons/md';
@@ -7,7 +7,7 @@ import { MdEmail, MdPerson } from 'react-icons/md';
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useNavigate } from '#context/router';
-import { Alert, Checkbox, Link, PasswordValidation, TextField } from '#control';
+import { Alert, Button, Checkbox, Link, PasswordValidation, TextField } from '#control';
 import { authenticationSettings } from '#settings/authentication';
 
 export const SignUp: React.FC = () => {

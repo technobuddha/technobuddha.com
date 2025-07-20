@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from '@mui/material';
 
+import { Button } from '#control';
 import { type Phase, type Runner } from '#maze/runner';
 
 import { exportMazeDialog } from './export-maze-dialog.tsx';

@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { memoize } from 'lodash-es';
 import { GiExitDoor } from 'react-icons/gi';
 import { RiArrowTurnBackLine, RiArrowUpLine, RiRestartLine } from 'react-icons/ri';
 
+import { Button } from '#control';
 import { playModeIcons, type Runner } from '#maze/runner';
 import { type Human } from '#maze/solver';
 
@@ -42,34 +43,32 @@ export const MovementControls: React.FC<MovementControlsProps> = ({ runner }) =>
       <div className={css.human}>
         <div className={css.col}>
           <Tooltip title="Change Direction">
-            <Button variant="outlined" color="primary" onClick={handleCommand('ArrowLeft')}>
+            <Button onClick={handleCommand('ArrowLeft')}>
               <RiRestartLine size="1em" />
             </Button>
           </Tooltip>
         </div>
         <div className={css.col}>
           <Tooltip title="Move Forward">
-            <Button variant="outlined" color="primary" onClick={handleCommand('ArrowUp')}>
+            <Button onClick={handleCommand('ArrowUp')}>
               <RiArrowUpLine size="1em" />
             </Button>
           </Tooltip>
           <Tooltip title="Move Backward">
-            <Button variant="outlined" color="primary" onClick={handleCommand('ArrowDown')}>
+            <Button onClick={handleCommand('ArrowDown')}>
               <RiArrowTurnBackLine size="1em" />
             </Button>
           </Tooltip>
         </div>
         <div className={css.col}>
           <Tooltip title="Exit Maze">
-            <Button variant="outlined" color="primary" onClick={handleCommand('Escape')}>
+            <Button onClick={handleCommand('Escape')}>
               <GiExitDoor size="1em" />
             </Button>
           </Tooltip>
         </div>
         <div className={css.col}>
-          <Button variant="outlined" color="primary" onClick={handleRefresh}>
-            {playModeIcons.refresh}
-          </Button>
+          <Button onClick={handleRefresh}>{playModeIcons.refresh}</Button>
         </div>
       </div>
     </div>

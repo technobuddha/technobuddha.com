@@ -1,8 +1,10 @@
 export { Alert, type AlertProps } from './alert/index.ts';
+export { Button, type ButtonProps } from './button/index.ts';
 export { Checkbox, type CheckboxProps } from './checkbox/index.ts';
 export { CircularProgress } from './circular-progress/index.ts';
 export { DelayedLoading } from './delayed-loading/index.ts';
 export { Failure, type FailureProps } from './failure/index.ts';
+export { IconButton, type IconButtonProps } from './icon-button/index.ts';
 export { Link, type LinkProps } from './link/index.ts';
 export { NotFound, type NotFoundProps } from './not-found/index.ts';
 export { NumberField, type NumberFieldProps } from './number-field/index.ts';

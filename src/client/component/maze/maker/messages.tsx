@@ -2,7 +2,8 @@ import React from 'react';
 import { Tooltip } from '@mui/material';
 import { IoTrash } from 'react-icons/io5';
 
-import { type Runner } from '../../runner/runner.ts';
+import { IconButton } from '#control';
+import { type Runner } from '#maze/runner';
 
 import css from './messages.module.css';
 
@@ -42,9 +43,9 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
       <div className={css.header}>
         <div className={css.title}>Messages</div>
         <Tooltip title="Clear messages" placement="top">
-          <button type="button" onClick={handleClear}>
+          <IconButton onClick={handleClear}>
             <IoTrash size="1em" />
-          </button>
+          </IconButton>
         </Tooltip>
       </div>
       <div className={css.scroll}>

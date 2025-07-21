@@ -7,7 +7,6 @@ import { type MazeGeneratorProperties } from '#maze/generator';
 import { type GeneratorProducer } from './maze-maker.tsx';
 import { Section } from './section.tsx';
 import { braids, generators } from './selection.ts';
-import { fixUndefined, restoreUndefined, UNDEFINED } from './undefined.ts';
 
 type GeneratorSectionProps = {
   readonly className?: string;
@@ -34,10 +33,9 @@ export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, o
   }, []);
 
   const handleGeneratorChange = React.useCallback((value: string) => {
-    const title = restoreUndefined(value);
-    setGenerator(title);
+    setGenerator(value);
 
-    const g = generators.find((g) => g.title === title);
+    const g = generators.find((g) => g.title === value);
     if (g && g.variations.length === 1) {
       setVariation(g.variations[0].title);
     } else {
@@ -46,11 +44,11 @@ export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, o
   }, []);
 
   const handleVariationChange = React.useCallback((value: string) => {
-    setVariation(restoreUndefined(value));
+    setVariation(value);
   }, []);
 
   const handleBraidChange = React.useCallback((value: string) => {
-    setBraid(restoreUndefined(value));
+    setBraid(value);
   }, []);
 
   React.useEffect(() => {
@@ -84,10 +82,12 @@ export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, o
   return (
     <Section className={className} title="Generator">
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem' }}>
-        <Select label="Algorithm" value={fixUndefined(generator)} onChange={handleGeneratorChange}>
-          <MenuItem key={UNDEFINED} value={UNDEFINED}>
-            (random)
-          </MenuItem>
+        <Select
+          label="Algorithm"
+          allowUndefined="(random)"
+          value={generator}
+          onChange={handleGeneratorChange}
+        >
           {generators
             .sort((a, b) => a.title.localeCompare(b.title))
             .map((m) => (
@@ -99,12 +99,10 @@ export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, o
         <Select
           label="Variation"
           disabled={!generator}
-          value={fixUndefined(variation)}
+          allowUndefined="(random)"
+          value={variation}
           onChange={handleVariationChange}
         >
-          <MenuItem key={UNDEFINED} value={UNDEFINED}>
-            (random)
-          </MenuItem>
           {generators
             .find((g) => g.title === generator)
             ?.variations.sort((a, b) => a.title.localeCompare(b.title))
@@ -115,10 +113,7 @@ export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, o
             ))}
         </Select>
       </div>
-      <Select label="Braid" value={fixUndefined(braid)} onChange={handleBraidChange}>
-        <MenuItem key={UNDEFINED} value={UNDEFINED}>
-          (random)
-        </MenuItem>
+      <Select label="Braid" value={braid} allowUndefined="(random)" onChange={handleBraidChange}>
         {braids.map((m) => (
           <MenuItem key={m.title} value={m.title}>
             {m.title}

@@ -5,10 +5,8 @@ import { MenuItem, Select } from '#control';
 import { type MazeSolverProperties } from '#maze/solver';
 
 import { type SolverProducer } from './maze-maker.tsx';
-import { solvers } from './selection.ts';
-
 import { Section } from './section.tsx';
-import { fixUndefined, restoreUndefined, UNDEFINED } from './undefined.ts';
+import { solvers } from './selection.ts';
 
 type SolverSectionProps = {
   readonly className?: string;
@@ -34,10 +32,9 @@ export const SolverSection: React.FC<SolverSectionProps> = ({ className, onChang
   }, []);
 
   const handleSolverChange = React.useCallback((value: string) => {
-    const title = restoreUndefined(value);
-    setSolver(title);
+    setSolver(value);
 
-    const g = solvers.find((g) => g.title === title);
+    const g = solvers.find((g) => g.title === value);
 
     if (g && g.variations.length === 1) {
       setVariation(g.variations[0].title);
@@ -47,7 +44,7 @@ export const SolverSection: React.FC<SolverSectionProps> = ({ className, onChang
   }, []);
 
   const handleVariationChange = React.useCallback((value: string) => {
-    setVariation(restoreUndefined(value));
+    setVariation(value);
   }, []);
 
   React.useEffect(() => {
@@ -75,10 +72,12 @@ export const SolverSection: React.FC<SolverSectionProps> = ({ className, onChang
   return (
     <Section className={className} title="Solver">
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem' }}>
-        <Select label="Algorithm" value={fixUndefined(solver)} onChange={handleSolverChange}>
-          <MenuItem key={UNDEFINED} value={UNDEFINED}>
-            (random)
-          </MenuItem>
+        <Select
+          label="Algorithm"
+          allowUndefined="(random)"
+          value={solver}
+          onChange={handleSolverChange}
+        >
           {solvers
             .sort((a, b) => a.title.localeCompare(b.title))
             .map((m) => (
@@ -90,12 +89,10 @@ export const SolverSection: React.FC<SolverSectionProps> = ({ className, onChang
         <Select
           label="Variation"
           disabled={!solver}
-          value={fixUndefined(variation)}
+          allowUndefined="(random)"
+          value={variation}
           onChange={handleVariationChange}
         >
-          <MenuItem key={UNDEFINED} value={UNDEFINED}>
-            (random)
-          </MenuItem>
           {solvers
             .find((s) => s.title === solver)
             ?.variations.sort((a, b) => a.title.localeCompare(b.title))

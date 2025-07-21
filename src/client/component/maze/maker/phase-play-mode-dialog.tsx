@@ -1,9 +1,17 @@
 import React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { toCapitalCase } from '@technobuddha/library';
 import { create, type InstanceProps } from 'react-modal-promise';
 
-import { Button, ToggleButton, ToggleButtonGroup, Typography } from '#control';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from '#control';
 import { type Phase, type PlayMode, playModeIcons, playModes } from '#maze/runner';
 
 export type PhasePlayModeDialogProps = InstanceProps<PlayMode | undefined, void> & {

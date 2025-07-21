@@ -1,8 +1,18 @@
 import React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { create, type InstanceProps } from 'react-modal-promise';
 
-import { Button, Checkbox, MenuItem, Radio, RadioGroup, Select } from '#control';
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  Select,
+} from '#control';
 import { type ShowDistances } from '#maze/geometry';
 import { type Runner } from '#maze/runner';
 

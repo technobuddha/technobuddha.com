@@ -1,5 +1,6 @@
 import React from 'react';
-import Typography from '@mui/material/Typography';
+
+import { Typography } from '#control';
 
 import css from './theme.module.css';
 

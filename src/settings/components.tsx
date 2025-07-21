@@ -1,6 +1,4 @@
-// import Color                from '#component/color';
 import React from 'react';
-import { Link, Typography } from '@mui/material';
 import { type IconType } from 'react-icons';
 import {
   GiChessKnight,
@@ -25,6 +23,7 @@ import { Music } from '#component/music';
 import { NBody } from '#component/n-body';
 import { Theme } from '#component/theme';
 import { type TFunction } from '#context/i18n';
+import { Link, Typography } from '#control';
 
 export type Component = {
   active: boolean;
@@ -59,11 +58,11 @@ export const components: (t: TFunction) => Component[] = (t) => [
           {t(
             'The maze generator and solver can be seen in the background, you can get more interesting mazes on the',
           )}{' '}
-          <Link href="/maze">{t('Mazes Page')}</Link>
+          <Link to="/maze">{t('Mazes Page')}</Link>
         </Typography>
         <Typography>
           {t('The source code for this website can be found on')}{' '}
-          <Link href="https://github.com/technobuddha/technobuddha.com">GitHub</Link>
+          <Link to="https://github.com/technobuddha/technobuddha.com">GitHub</Link>
         </Typography>
       </div>
     ),
@@ -125,16 +124,16 @@ export const components: (t: TFunction) => Component[] = (t) => [
     description: (
       <div>
         <Typography>
-          {t('The')} <Link href="https://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot set</Link>{' '}
+          {t('The')} <Link to="https://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot set</Link>{' '}
           {t('is a')}{' '}
-          <Link href="https://en.wikipedia.org/wiki/Fractal_curve">{t('fractal curve')}</Link>{' '}
+          <Link to="https://en.wikipedia.org/wiki/Fractal_curve">{t('fractal curve')}</Link>{' '}
           {t('created by a simple mathematical equation. It demonstrates')}{' '}
-          <Link href="https://en.wikipedia.org/wiki/Chaos_theory">{t('Chaos theory')}</Link>{' '}
+          <Link to="https://en.wikipedia.org/wiki/Chaos_theory">{t('Chaos theory')}</Link>{' '}
           {t('by showing how small changes in a non-linear system can lead to large differences.')}
         </Typography>
         <Typography>
           {t('This implementation uses a')}{' '}
-          <Link href="https://en.wikipedia.org/wiki/Web_worker">{t('web worker')}</Link>{' '}
+          <Link to="https://en.wikipedia.org/wiki/Web_worker">{t('web worker')}</Link>{' '}
           {t(
             'to offload the huge amount of calculations needed to render the set to another thread. Otherwise the entire user interface would lock up while the set is being computed.',
           )}
@@ -156,15 +155,14 @@ export const components: (t: TFunction) => Component[] = (t) => [
       <>
         <Typography>
           {t('A')}{' '}
-          <Link href="https://en.wikipedia.org/wiki/Cellular_automaton">
+          <Link to="https://en.wikipedia.org/wiki/Cellular_automaton">
             {t('cellular automaton')}
           </Link>{' '}
           {t('devised by the British mathematician')}{' '}
-          <Link href="https://en.wikipedia.org/wiki/John_Horton_Conway">John Horton Conway</Link>{' '}
+          <Link to="https://en.wikipedia.org/wiki/John_Horton_Conway">John Horton Conway</Link>{' '}
           {t('in 1970.')}
           {t('It is a')}{' '}
-          <Link href="https://en.wikipedia.org/wiki/Zero-player_game">{t('zero-player game')}</Link>
-          ,
+          <Link to="https://en.wikipedia.org/wiki/Zero-player_game">{t('zero-player game')}</Link>,
           {t(
             'meaning that its evolution is determined by its initial state, requiring no further input.',
           )}
@@ -172,13 +170,13 @@ export const components: (t: TFunction) => Component[] = (t) => [
             'One interacts with the Game of Life by creating an initial configuration and observing how it evolves.',
           )}
           {t('It is')}{' '}
-          <Link href="https://en.wikipedia.org/wiki/Turing_complete">{t('Turing complete')}</Link>{' '}
+          <Link to="https://en.wikipedia.org/wiki/Turing_complete">{t('Turing complete')}</Link>{' '}
           {t('and can simulate an')}{' '}
-          <Link href="https://en.wikipedia.org/wiki/Von_Neumann_universal_constructor">
+          <Link to="https://en.wikipedia.org/wiki/Von_Neumann_universal_constructor">
             {t('universal constructor')}
           </Link>{' '}
           {t('or any other')}{' '}
-          <Link href="https://en.wikipedia.org/wiki/Turing_machine">{t('Turing machine')}</Link>.
+          <Link to="https://en.wikipedia.org/wiki/Turing_machine">{t('Turing machine')}</Link>.
         </Typography>
         <Typography>
           {t(
@@ -204,11 +202,9 @@ export const components: (t: TFunction) => Component[] = (t) => [
     description: (
       <Typography>
         {t('Take a lot of data from')}{' '}
-        <Link href="https://ssd.jpl.nasa.gov/horizons/app.html#/">
-          {t("JPL's Horizons System")}
-        </Link>{' '}
+        <Link to="https://ssd.jpl.nasa.gov/horizons/app.html#/">{t("JPL's Horizons System")}</Link>{' '}
         {t('and plug that into the basic mathematical equations for gravity, and you get a')}{' '}
-        <Link href="https://en.wikipedia.org/wiki/N-body_simulation">{t('N-body simulation')}</Link>
+        <Link to="https://en.wikipedia.org/wiki/N-body_simulation">{t('N-body simulation')}</Link>
       </Typography>
     ),
     location: '/nbody',

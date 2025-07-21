@@ -5,10 +5,8 @@ import { MenuItem, Select } from '#control';
 import { type MazeProperties } from '#maze/geometry';
 
 import { type GeometryProducer } from './maze-maker.tsx';
-import { debugs, distances, geometries, wraparounds } from './selection.ts';
-
 import { Section } from './section.tsx';
-import { fixUndefined, restoreUndefined, UNDEFINED } from './undefined.ts';
+import { debugs, distances, geometries, wraparounds } from './selection.ts';
 
 type GeometrySectionProps = {
   readonly className?: string;
@@ -38,10 +36,9 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
   }, []);
 
   const handleGeometryChange = React.useCallback((value: string) => {
-    const title = restoreUndefined(value);
-    const g = geometries.find((g) => g.title === title);
+    const g = geometries.find((g) => g.title === value);
 
-    setGeometry(title);
+    setGeometry(value);
 
     if (g && g.variations.length === 1) {
       setVariation(g.variations[0].title);
@@ -57,23 +54,23 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
   }, []);
 
   const handleVariationChange = React.useCallback((value: string) => {
-    setVariation(restoreUndefined(value));
+    setVariation(value);
   }, []);
 
   const handleSizeChange = React.useCallback((value: string) => {
-    setSize(restoreUndefined(value));
+    setSize(value);
   }, []);
 
   const handleDebugChange = React.useCallback((value: string) => {
-    setDebug(restoreUndefined(value));
+    setDebug(value);
   }, []);
 
   const handleWraparoundChange = React.useCallback((value: string) => {
-    setWraparound(restoreUndefined(value));
+    setWraparound(value);
   }, []);
 
   const handleDistanceChange = React.useCallback((value: string) => {
-    setDistance(restoreUndefined(value));
+    setDistance(value);
   }, []);
 
   React.useEffect(() => {
@@ -133,10 +130,12 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
   return (
     <Section className={className} title="Geometry">
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem' }}>
-        <Select label="Shape" value={fixUndefined(geometry)} onChange={handleGeometryChange}>
-          <MenuItem key={UNDEFINED} value={UNDEFINED}>
-            (random)
-          </MenuItem>
+        <Select
+          label="Shape"
+          allowUndefined="(random)"
+          value={geometry}
+          onChange={handleGeometryChange}
+        >
           {geometries
             .sort((a, b) => a.title.localeCompare(b.title))
             .map((m) => (
@@ -148,12 +147,10 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
         <Select
           label="Variation"
           disabled={!geometry}
-          value={fixUndefined(variation)}
+          allowUndefined="(random)"
+          value={variation}
           onChange={handleVariationChange}
         >
-          <MenuItem key={UNDEFINED} value={UNDEFINED}>
-            (random)
-          </MenuItem>
           {geometries
             .find((g) => g.title === geometry)
             ?.variations.sort((a, b) => a.title.localeCompare(b.title))
@@ -166,12 +163,10 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
         <Select
           label="Size"
           disabled={!geometry}
-          value={fixUndefined(size)}
+          allowUndefined="(random)"
+          value={size}
           onChange={handleSizeChange}
         >
-          <MenuItem key={UNDEFINED} value={UNDEFINED}>
-            (random)
-          </MenuItem>
           {geometries
             .find((g) => g.title === geometry)
             ?.sizes.map((m) => (
@@ -184,12 +179,10 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem' }}>
         <Select
           label="Wraparound"
-          value={fixUndefined(wraparound)}
+          allowUndefined="(random)"
+          value={wraparound}
           onChange={handleWraparoundChange}
         >
-          <MenuItem key={UNDEFINED} value={UNDEFINED}>
-            (random)
-          </MenuItem>
           {wraparounds.map((m) => (
             <MenuItem key={m.title} value={m.title}>
               {m.title}
@@ -198,22 +191,17 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
         </Select>
         <Select
           label="Show Distances"
-          value={fixUndefined(distance)}
+          allowUndefined="(random)"
+          value={distance}
           onChange={handleDistanceChange}
         >
-          <MenuItem key={UNDEFINED} value={UNDEFINED}>
-            (random)
-          </MenuItem>
           {distances.map((m) => (
             <MenuItem key={m.title} value={m.title}>
               {m.title}
             </MenuItem>
           ))}
         </Select>
-        <Select label="Debug" value={fixUndefined(debug)} onChange={handleDebugChange}>
-          <MenuItem key={UNDEFINED} value={UNDEFINED}>
-            (random)
-          </MenuItem>
+        <Select label="Debug" allowUndefined="(random)" value={debug} onChange={handleDebugChange}>
           {debugs.map((m) => (
             <MenuItem key={m.title} value={m.title}>
               {m.title}

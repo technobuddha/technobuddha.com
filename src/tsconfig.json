@@ -10,6 +10,7 @@
     { "path": "api" },
     { "path": "client" },
     { "path": "config" },
+    { "path": "control" },
     { "path": "maze" },
     { "path": "server" },
     { "path": "settings" }

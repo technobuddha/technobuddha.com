@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Step, StepLabel, Stepper } from '@mui/material';
 import { memoize } from 'lodash-es';
 
+import { Button, Step, StepLabel, Stepper } from '#control';
 import { type Phase, phases, type PlayMode, playModeIcons, type Runner } from '#maze/runner';
 
 import { phasePlayModeDialog } from './phase-play-mode-dialog.tsx';
@@ -59,7 +59,11 @@ export const PhaseControls: React.FC<PhaseControlsProps> = ({ runner, onPhasePla
         {myPhases.map((phase) => (
           <Step className={css.step} key={phase} active={phase === runner?.phase}>
             <StepLabel className={css.label}>
-              <Button className={css.button} onClick={handlePhasePlayModeChange(phase)}>
+              <Button
+                variant="text"
+                className={css.button}
+                onClick={handlePhasePlayModeChange(phase)}
+              >
                 <div className={css.content}>
                   <div className={css.icon}>
                     {

@@ -1,6 +1,7 @@
 import React from 'react';
-import Slider from '@mui/material/Slider';
-import { type RGB, toRGB } from '@technobuddha/color';
+import { type ColorSpecification, type RGB, toRGB } from '@technobuddha/color';
+
+import { Slider } from '#control';
 
 import css from './color-space.module.css';
 
@@ -21,13 +22,9 @@ export function ColorSpace<T extends string>({
   color,
   onChange,
 }: ColorSpaceProps<T>): React.ReactElement {
-  const handleChange =
-    (key: T) =>
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    (_: React.ChangeEvent<{}>, value: number | number[] | undefined) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onChange?.(toRGB({ ...color, [key]: value as number } as any));
-    };
+  const handleChange = (key: T) => (_: Event, value: number | number[]) => {
+    onChange?.(toRGB({ ...color, [key]: value as number } as ColorSpecification));
+  };
 
   return (
     <div className={css.colorSpace}>

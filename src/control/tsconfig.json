@@ -1,0 +1,9 @@
+// 🚨
+// 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
+// 🚨
+{
+  "compilerOptions": { "composite": true, "types": [], "lib": ["esnext", "dom"] },
+  "extends": "../tsconfig.json",
+  "include": ["**/*.tsx", "**/*.ts"],
+  "exclude": []
+}

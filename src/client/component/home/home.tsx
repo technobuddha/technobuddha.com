@@ -1,11 +1,11 @@
 import React from 'react';
-import { Typography } from '@mui/material';
 
 import { MazeBackground } from '#component/maze';
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
 import { useNavigate } from '#context/router';
+import { Typography } from '#control';
 import { type Component, components } from '#settings/components.tsx';
 
 import Logo from './logo.svg?react';

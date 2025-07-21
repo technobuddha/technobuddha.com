@@ -1,0 +1,19 @@
+.tabbed-router {
+  flex-grow: 1;
+  width: 100%;
+  background-color: mui-theme(palette-background-paper);
+  display: flex;
+  flex-direction: column;
+
+  .panel {
+    width: 100%;
+    height: 100%;
+    padding: mui-spacing(1) 0 0 0;
+  }
+
+  .tab {
+    :global(.MuiTab-icon) {
+      font-size: 1.5rem;
+    }
+  }
+}

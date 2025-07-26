@@ -1,41 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
 import { type Matrix } from '../matrix.ts';
 
-type Keys = 'opposite' | 'move' | 'rightTurn' | 'leftTurn' | 'straight';
+type Keys = 'bridge' | 'opposite' | 'move' | 'rightTurn' | 'leftTurn' | 'straight';
 
 export type MatrixMain = Omit<Matrix, Keys>;
 export type MatrixPart = Pick<Matrix, Keys>;
 
 export const matrix: MatrixMain = {
-  // bridge: {
-  //   connect: {
-  //     a: 'e',
-  //     b: 'f',
-  //     c: 'g',
-  //     d: 'h',
-  //     e: 'a',
-  //     f: 'b',
-  //     g: 'c',
-  //     h: 'd',
-  //     i: 'k',
-  //     j: 'l',
-  //     k: 'i',
-  //     l: 'j',
-  //   },
-  //   layouts: {
-  //     0: [
-  //       { path: ['a'] },
-  //       { path: ['b', 'i'], pieces: 2 },
-  //       { path: ['c'] },
-  //       { path: ['d', 'j'], pieces: 2 },
-  //       { path: ['e'] },
-  //       { path: ['f', 'k'], pieces: 2 },
-  //       { path: ['g'] },
-  //       { path: ['h', 'l'], pieces: 2 },
-  //     ],
-  //     1: [{ path: ['i', 'b'] }, { path: ['j', 'd'] }, { path: ['k', 'f'] }, { path: ['l', 'h'] }],
-  //   },
-  // },
   directions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'],
   pillars: [
     'ab',
@@ -87,6 +58,40 @@ export const matrix: MatrixMain = {
 };
 
 export const matrixDiamond: MatrixPart = {
+  bridge: {
+    connect: {
+      a: 'e',
+      b: 'f',
+      c: 'g',
+      d: 'h',
+      e: 'a',
+      f: 'b',
+      g: 'c',
+      h: 'd',
+      i: 'k',
+      j: 'l',
+      k: 'i',
+      l: 'j',
+    },
+    layouts: {
+      0: [
+        { path: ['a'], rear: ['e'] },
+        { path: ['b', 'i'], rear: ['f', 'k'] },
+        { path: ['c'], rear: ['g'] },
+        { path: ['d', 'j'], rear: ['h', 'l'] },
+        { path: ['e'], rear: ['a'] },
+        { path: ['f', 'k'], rear: ['b', 'i'] },
+        { path: ['g'], rear: ['c'] },
+        { path: ['h', 'l'], rear: ['d', 'j'] },
+      ],
+      1: [
+        { path: ['i', 'b'], rear: ['k', 'f'] },
+        { path: ['j', 'd'], rear: ['l', 'h'] },
+        { path: ['k', 'f'], rear: ['i', 'b'] },
+        { path: ['l', 'h'], rear: ['j', 'd'] },
+      ],
+    },
+  },
   opposite: {
     direction: {
       a: 'E',
@@ -180,6 +185,40 @@ export const matrixDiamond: MatrixPart = {
 };
 
 export const matrixSquare: MatrixPart = {
+  bridge: {
+    connect: {
+      a: 'e',
+      b: 'f',
+      c: 'g',
+      d: 'h',
+      e: 'a',
+      f: 'b',
+      g: 'c',
+      h: 'd',
+      m: 'o',
+      n: 'p',
+      o: 'm',
+      p: 'n',
+    },
+    layouts: {
+      0: [
+        { path: ['a', 'm'], rear: ['e', 'o'] },
+        { path: ['b'], rear: ['f'] },
+        { path: ['c', 'n'], rear: ['g', 'p'] },
+        { path: ['d'], rear: ['h'] },
+        { path: ['e', 'o'], rear: ['a', 'm'] },
+        { path: ['f'], rear: ['b'] },
+        { path: ['g', 'p'], rear: ['c', 'n'] },
+        { path: ['h'], rear: ['d'] },
+      ],
+      1: [
+        { path: ['m', 'a'], rear: ['o', 'e'] },
+        { path: ['n', 'c'], rear: ['p', 'g'] },
+        { path: ['o', 'e'], rear: ['m', 'a'] },
+        { path: ['p', 'g'], rear: ['n', 'c'] },
+      ],
+    },
+  },
   opposite: {
     direction: {
       a: 'O',

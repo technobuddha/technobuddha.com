@@ -39,7 +39,7 @@ export class Filler extends MazeSolver {
             !this.deadEnds[target.x][target.y] ||
             this.maze.isSame(target, exit) ||
             this.maze.isSame(target, entrance),
-        ).length === 1
+        ).length <= 1
     );
   }
 
@@ -48,8 +48,6 @@ export class Filler extends MazeSolver {
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): AsyncGenerator<void> {
-    const walls = this.maze.backup();
-
     while (true) {
       const deadEnds = this.randomShuffle(
         this.maze.cellsInMaze().filter((cell) => this.isDeadEnd(cell, entrance, exit)),
@@ -104,7 +102,5 @@ export class Filler extends MazeSolver {
     }
 
     this.maze.solution = this.maze.makePath(path);
-
-    this.maze.restore(walls);
   }
 }

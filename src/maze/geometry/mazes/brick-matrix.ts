@@ -3,7 +3,6 @@ import { type Matrix } from '../matrix.ts';
 
 export const matrix: Matrix = {
   bridge: {
-    pieces: 1,
     connect: {
       a: 'e',
       b: 'd',
@@ -14,20 +13,20 @@ export const matrix: Matrix = {
     },
     layouts: {
       0: [
-        { path: ['a', 'b'], connect: { c: 'f', f: 'c' } },
-        { path: ['b', 'a'], connect: { c: 'f', f: 'c' } },
-        { path: ['d', 'e'], connect: { c: 'f', f: 'c' } },
-        { path: ['e', 'd'], connect: { c: 'f', f: 'c' } },
-        { path: ['c'], connect: { a: 'e', e: 'a', b: 'd', d: 'b' } },
-        { path: ['f'], connect: { a: 'e', e: 'a', b: 'd', d: 'b' } },
+        { path: ['a', 'b'], rear: ['e', 'd'], connect: { c: 'f', f: 'c' } },
+        { path: ['b', 'a'], rear: ['d', 'e'], connect: { c: 'f', f: 'c' } },
+        { path: ['d', 'e'], rear: ['b', 'a'], connect: { c: 'f', f: 'c' } },
+        { path: ['e', 'd'], rear: ['a', 'b'], connect: { c: 'f', f: 'c' } },
+        { path: ['c'], rear: ['f'], connect: { a: 'e', e: 'a', b: 'd', d: 'b' } },
+        { path: ['f'], rear: ['c'], connect: { a: 'e', e: 'a', b: 'd', d: 'b' } },
       ],
       1: [
-        { path: ['a', 'b'], connect: { c: 'f', f: 'c' } },
-        { path: ['b', 'a'], connect: { c: 'f', f: 'c' } },
-        { path: ['d', 'e'], connect: { c: 'f', f: 'c' } },
-        { path: ['e', 'd'], connect: { c: 'f', f: 'c' } },
-        { path: ['c'], connect: { a: 'e', e: 'a', b: 'd', d: 'b' } },
-        { path: ['f'], connect: { a: 'e', e: 'a', b: 'd', d: 'b' } },
+        { path: ['a', 'b'], rear: ['e', 'd'], connect: { c: 'f', f: 'c' } },
+        { path: ['b', 'a'], rear: ['d', 'e'], connect: { c: 'f', f: 'c' } },
+        { path: ['d', 'e'], rear: ['b', 'a'], connect: { c: 'f', f: 'c' } },
+        { path: ['e', 'd'], rear: ['a', 'b'], connect: { c: 'f', f: 'c' } },
+        { path: ['c'], rear: ['f'], connect: { a: 'e', e: 'a', b: 'd', d: 'b' } },
+        { path: ['f'], rear: ['c'], connect: { a: 'e', e: 'a', b: 'd', d: 'b' } },
       ],
     },
   },

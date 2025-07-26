@@ -7,7 +7,7 @@ import {
   toRadians,
 } from '@technobuddha/library';
 
-import { type Cell, type CellDirection, type Kind, type Pillar } from '../geometry.ts';
+import { type Cell, type Direction, type Kind, type Pillar } from '../geometry.ts';
 import { type DrawingSizes, Maze, type MazeProperties } from '../maze.ts';
 
 import { matrix } from './cubic-matrix.ts';
@@ -191,12 +191,12 @@ export class CubicMaze extends Maze {
     }
   }
 
-  public drawFloor(cell: Cell, color = this.color.cell): void {
+  public eraseCell(cell: Cell, color = this.color.void): void {
     if (this.drawing) {
       switch (this.cellKind(cell)) {
         case 0:
         case 3: {
-          const { x0, x1, x4, x5, y0, y4, yc, yd, ym, yn, yv, yz } = this.cellOffsets(cell);
+          const { x0, x5, y0, yc, yn, yz } = this.cellOffsets(cell);
 
           this.drawing.polygon(
             [
@@ -205,8 +205,55 @@ export class CubicMaze extends Maze {
               { x: x5, y: yz },
               { x: x0, y: yn },
             ],
-            this.color.void,
+            color,
           );
+
+          break;
+        }
+
+        case 1:
+        case 4: {
+          const { x0, x9, xi, y0, y9, yi } = this.cellOffsets(cell);
+
+          this.drawing.polygon(
+            [
+              { x: x9, y: y0 },
+              { x: xi, y: y9 },
+              { x: x9, y: yi },
+              { x: x0, y: y9 },
+            ],
+            color,
+          );
+          break;
+        }
+
+        case 2:
+        case 5: {
+          const { x0, x5, y0, yc, yn, yz } = this.cellOffsets(cell);
+
+          this.drawing.polygon(
+            [
+              { x: x0, y: yc },
+              { x: x5, y: y0 },
+              { x: x5, y: yn },
+              { x: x0, y: yz },
+            ],
+            color,
+          );
+          break;
+        }
+
+        // no default
+      }
+    }
+  }
+
+  public drawFloor(cell: Cell, color = this.color.cell): void {
+    if (this.drawing) {
+      switch (this.cellKind(cell)) {
+        case 0:
+        case 3: {
+          const { x1, x4, y4, yd, ym, yv } = this.cellOffsets(cell);
 
           this.drawing.polygon(
             [
@@ -222,17 +269,8 @@ export class CubicMaze extends Maze {
 
         case 1:
         case 4: {
-          const { x0, x2, x9, xg, xi, y0, y2, y9, yg, yi } = this.cellOffsets(cell);
+          const { x2, x9, xg, y2, y9, yg } = this.cellOffsets(cell);
 
-          this.drawing.polygon(
-            [
-              { x: x9, y: y0 },
-              { x: xi, y: y9 },
-              { x: x9, y: yi },
-              { x: x0, y: y9 },
-            ],
-            this.color.void,
-          );
           this.drawing.polygon(
             [
               { x: x9, y: y2 },
@@ -247,17 +285,8 @@ export class CubicMaze extends Maze {
 
         case 2:
         case 5: {
-          const { x0, x1, x4, x5, y0, y4, yc, yd, ym, yn, yv, yz } = this.cellOffsets(cell);
+          const { x1, x4, y4, yd, ym, yv } = this.cellOffsets(cell);
 
-          this.drawing.polygon(
-            [
-              { x: x0, y: yc },
-              { x: x5, y: y0 },
-              { x: x5, y: yn },
-              { x: x0, y: yz },
-            ],
-            this.color.void,
-          );
           this.drawing.polygon(
             [
               { x: x1, y: yd },
@@ -275,10 +304,10 @@ export class CubicMaze extends Maze {
     }
   }
 
-  public drawWall(cell: CellDirection, color = this.color.wall): void {
+  public drawWall(cell: Cell, direction: Direction, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-      switch (cell.direction) {
+      switch (direction) {
         case 'a': {
           const { x2, x3, y5, y8, yb, yf } = this.cellOffsets(cell);
           this.drawing.polygon(
@@ -635,10 +664,15 @@ export class CubicMaze extends Maze {
     }
   }
 
-  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
+  public drawPassage(
+    cell: Cell,
+    direction: Direction,
+    wallColor = this.color.wall,
+    cellColor = this.color.cell,
+  ): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-      switch (cell.direction) {
+      switch (direction) {
         // Kind 1,3
 
         case 'a': {
@@ -650,7 +684,7 @@ export class CubicMaze extends Maze {
               { x: x2, y: y5 },
               { x: x1, y: y4 },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -659,7 +693,7 @@ export class CubicMaze extends Maze {
               { x: x3, y: yb },
               { x: x2, y: y5 },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -668,7 +702,7 @@ export class CubicMaze extends Maze {
               { x: x4, y: yd },
               { x: x3, y: yb },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -682,7 +716,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: yh },
               { x: x4, y: yg },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -691,7 +725,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: yt },
               { x: x4, y: ys },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -700,7 +734,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: yx },
               { x: x4, y: yv },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -714,7 +748,7 @@ export class CubicMaze extends Maze {
               { x: x2, y: yq },
               { x: x1, y: yp },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -723,7 +757,7 @@ export class CubicMaze extends Maze {
               { x: x3, y: yw },
               { x: x2, y: yq },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -732,7 +766,7 @@ export class CubicMaze extends Maze {
               { x: x4, y: yy },
               { x: x3, y: yw },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -746,7 +780,7 @@ export class CubicMaze extends Maze {
               { x: x1, y: y7 },
               { x: x0, y: y6 },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -755,7 +789,7 @@ export class CubicMaze extends Maze {
               { x: x1, y: yj },
               { x: x0, y: yi },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -764,7 +798,7 @@ export class CubicMaze extends Maze {
               { x: x1, y: ym },
               { x: x0, y: yl },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -781,7 +815,7 @@ export class CubicMaze extends Maze {
               { x: xb, y: y4 },
               { x: x9, y: y2 },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -790,7 +824,7 @@ export class CubicMaze extends Maze {
               { x: xe, y: y7 },
               { x: xb, y: y4 },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -799,7 +833,7 @@ export class CubicMaze extends Maze {
               { x: xg, y: y9 },
               { x: xe, y: y7 },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -814,7 +848,7 @@ export class CubicMaze extends Maze {
               { x: xc, y: yf },
               { x: xa, y: yh },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -823,7 +857,7 @@ export class CubicMaze extends Maze {
               { x: xf, y: yc },
               { x: xc, y: yf },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -832,7 +866,7 @@ export class CubicMaze extends Maze {
               { x: xh, y: ya },
               { x: xf, y: yc },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -847,7 +881,7 @@ export class CubicMaze extends Maze {
               { x: x3, y: yc },
               { x: x1, y: ya },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -856,7 +890,7 @@ export class CubicMaze extends Maze {
               { x: x6, y: yf },
               { x: x3, y: yc },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -865,7 +899,7 @@ export class CubicMaze extends Maze {
               { x: x8, y: yh },
               { x: x6, y: yf },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -880,7 +914,7 @@ export class CubicMaze extends Maze {
               { x: x3, y: y6 },
               { x: x1, y: y8 },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -889,7 +923,7 @@ export class CubicMaze extends Maze {
               { x: x6, y: y3 },
               { x: x3, y: y6 },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -898,7 +932,7 @@ export class CubicMaze extends Maze {
               { x: x8, y: y1 },
               { x: x6, y: y3 },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -914,7 +948,7 @@ export class CubicMaze extends Maze {
               { x: x2, y: yb },
               { x: x1, y: yd },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -923,7 +957,7 @@ export class CubicMaze extends Maze {
               { x: x3, y: y5 },
               { x: x2, y: yb },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -932,7 +966,7 @@ export class CubicMaze extends Maze {
               { x: x4, y: y4 },
               { x: x3, y: y5 },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -946,7 +980,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: y6 },
               { x: x4, y: y7 },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -955,7 +989,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: yi },
               { x: x4, y: yj },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -964,7 +998,7 @@ export class CubicMaze extends Maze {
               { x: x5, y: yl },
               { x: x4, y: ym },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -978,7 +1012,7 @@ export class CubicMaze extends Maze {
               { x: x2, y: yw },
               { x: x1, y: yy },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -987,7 +1021,7 @@ export class CubicMaze extends Maze {
               { x: x3, y: yq },
               { x: x2, y: yw },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -996,7 +1030,7 @@ export class CubicMaze extends Maze {
               { x: x4, y: yp },
               { x: x3, y: yq },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -1010,7 +1044,7 @@ export class CubicMaze extends Maze {
               { x: x1, y: yg },
               { x: x0, y: yh },
             ],
-            color,
+            wallColor,
           );
           this.drawing.polygon(
             [
@@ -1019,7 +1053,7 @@ export class CubicMaze extends Maze {
               { x: x1, y: ys },
               { x: x0, y: yt },
             ],
-            this.color.cell,
+            cellColor,
           );
           this.drawing.polygon(
             [
@@ -1028,7 +1062,7 @@ export class CubicMaze extends Maze {
               { x: x1, y: yv },
               { x: x0, y: yx },
             ],
-            color,
+            wallColor,
           );
           break;
         }

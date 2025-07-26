@@ -45,8 +45,8 @@
     flex-basis: 20%;
     display: flex;
     flex-direction: column;
-    background: '#888888';
-    padding: 1rem;
+    background-color: '#888888';
+    padding: 0.5rem;
 
     .toggles {
       display: flex;
@@ -56,6 +56,8 @@
 
       button {
         flex: 1;
+        font-size: 0.75rem;
+        padding: 0;
       }
     }
 

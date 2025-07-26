@@ -5,7 +5,12 @@ export const matrix: Matrix = {
   bridge: {
     pieces: 1,
     layouts: {
-      0: [{ path: ['n'] }, { path: ['e'] }, { path: ['w'] }, { path: ['s'] }],
+      0: [
+        { path: ['n'], rear: ['s'] },
+        { path: ['e'], rear: ['w'] },
+        { path: ['w'], rear: ['e'] },
+        { path: ['s'], rear: ['n'] },
+      ],
     },
     connect: { n: 's', e: 'w', w: 'e', s: 'n' },
   },

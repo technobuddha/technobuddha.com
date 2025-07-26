@@ -9,6 +9,7 @@ import {
 import {
   type Cell,
   type CellDirection,
+  type Direction,
   type Kind,
   type MoveOffset,
   type Pillar,
@@ -271,25 +272,38 @@ export class CircularMaze extends Maze {
     return { cx, cy, r0, r1, r2, r3, r4, r5 };
   }
 
-  public drawFloor(cell: Cell, color = this.color.cell): void {
+  public eraseCell(cell: Cell, color = this.color.void): void {
     if (this.drawing) {
       const cols = this.zones[cell.y];
       if (cols === 1) {
         const { cx, cy, r5 } = this.cellOffsets(cell);
         this.drawing.circle({ x: cx, y: cy }, r5, color);
       } else {
-        const { cx, cy, r0, r1, r4, r5, a0, a1, af, ag } = this.cellOffsets(cell);
+        const { cx, cy, r0, r5, a0, ag } = this.cellOffsets(cell);
 
-        this.drawing.arc(cx, cy, r0, r5, a0, ag, this.color.void);
+        this.drawing.arc(cx, cy, r0, r5, a0, ag, color);
+      }
+    }
+  }
+
+  public drawFloor(cell: Cell, color = this.color.cell): void {
+    if (this.drawing) {
+      const cols = this.zones[cell.y];
+      if (cols === 1) {
+        const { cx, cy, r4 } = this.cellOffsets(cell);
+        this.drawing.circle({ x: cx, y: cy }, r4, color);
+      } else {
+        const { cx, cy, r1, r4, a1, af } = this.cellOffsets(cell);
+
         this.drawing.arc(cx, cy, r1, r4, a1, af, color);
       }
     }
   }
 
-  public drawWall(cell: CellDirection, color = this.color.wall): void {
+  public drawWall(cell: Cell, direction: Direction, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-      switch (cell.direction) {
+      switch (direction) {
         case 'a': {
           const { cx, cy, r3, r4, a4, ac } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r3, r4, a4, ac, color);
@@ -341,14 +355,23 @@ export class CircularMaze extends Maze {
           break;
         }
         case 'e': {
-          const { cx, cy, r3, r4, a4, a6 } = this.cellOffsets(cell);
-          this.drawing.arc(cx, cy, r3, r4, a4, a6, color);
+          const { cx, cy, r3, r4, a4, a6, a8 } = this.cellOffsets(cell);
+
+          if (this.isSame({ x: 0, y: 0 }, cell)) {
+            this.drawing.arc(cx, cy, r3, r4, a4, a8, color);
+          } else {
+            this.drawing.arc(cx, cy, r3, r4, a4, a6, color);
+          }
           break;
         }
 
         case 'f': {
-          const { cx, cy, r3, r4, aa, ac } = this.cellOffsets(cell);
-          this.drawing.arc(cx, cy, r3, r4, aa, ac, color);
+          const { cx, cy, r3, r4, a8, aa, ac } = this.cellOffsets(cell);
+          if (this.isSame({ x: 0, y: 0 }, cell)) {
+            this.drawing.arc(cx, cy, r3, r4, a8, ac, color);
+          } else {
+            this.drawing.arc(cx, cy, r3, r4, aa, ac, color);
+          }
           break;
         }
 
@@ -357,13 +380,13 @@ export class CircularMaze extends Maze {
     }
   }
 
-  public drawPillar({ x, y }: Cell, pillar: Pillar, color = this.color.wall): void {
+  public drawPillar(cell: Cell, pillar: Pillar, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
       switch (pillar) {
         case 'ab':
         case 'fb': {
-          const { cx, cy, r3, r4, a1, a4 } = this.cellOffsets({ x, y });
+          const { cx, cy, r3, r4, a1, a4 } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r3, r4, a1, a4, color);
           break;
         }
@@ -371,7 +394,7 @@ export class CircularMaze extends Maze {
         case 'bc':
         case 'bh':
         case 'bg': {
-          const { cx, cy, r1, r2, a3, a5 } = this.cellOffsets({ x, y });
+          const { cx, cy, r1, r2, a3, a5 } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r1, r2, a3, a5, color);
           break;
         }
@@ -379,21 +402,25 @@ export class CircularMaze extends Maze {
         case 'cd':
         case 'gd':
         case 'hd': {
-          const { cx, cy, r1, r2, ab, ad } = this.cellOffsets({ x, y });
+          const { cx, cy, r1, r2, ab, ad } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r1, r2, ab, ad, color);
           break;
         }
 
         case 'da':
         case 'de': {
-          const { cx, cy, r3, r4, ac, af } = this.cellOffsets({ x, y });
+          const { cx, cy, r3, r4, ac, af } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r3, r4, ac, af, color);
           break;
         }
 
         case 'ef': {
-          const { cx, cy, r3, r4, a6, aa } = this.cellOffsets({ x, y });
+          const { cx, cy, r3, r4, a4, a6, aa, ac } = this.cellOffsets(cell);
           this.drawing.arc(cx, cy, r3, r4, a6, aa, color);
+
+          if (this.isSame({ x: 0, y: 0 }, cell)) {
+            this.drawing.arc(cx, cy, r3, r4, ac, a4, color);
+          }
           break;
         }
 
@@ -402,53 +429,58 @@ export class CircularMaze extends Maze {
     }
   }
 
-  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
+  public drawPassage(
+    cell: Cell,
+    direction: Direction,
+    wallColor = this.color.wall,
+    cellColor = this.color.cell,
+  ): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-      switch (cell.direction) {
+      switch (direction) {
         case 'a': {
           const { cx, cy, r4, r5, a1, a4, ac, af } = this.cellOffsets(cell);
-          this.drawing.arc(cx, cy, r4, r5, a1, a4, color);
-          this.drawing.arc(cx, cy, r4, r5, a4, ac, this.color.cell);
-          this.drawing.arc(cx, cy, r4, r5, ac, af, color);
+          this.drawing.arc(cx, cy, r4, r5, a1, a4, wallColor);
+          this.drawing.arc(cx, cy, r4, r5, a4, ac, cellColor);
+          this.drawing.arc(cx, cy, r4, r5, ac, af, wallColor);
 
           break;
         }
         case 'b': {
           const { cx, cy, r1, r2, r3, r4, ae, af, ag } = this.cellOffsets(cell);
-          this.drawing.arc(cx, cy, r1, r2, ae, ag, color);
-          this.drawing.arc(cx, cy, r2, r4, af, ag, this.color.cell);
-          this.drawing.arc(cx, cy, r3, r4, af, ag, color);
+          this.drawing.arc(cx, cy, r1, r2, ae, ag, wallColor);
+          this.drawing.arc(cx, cy, r2, r4, af, ag, cellColor);
+          this.drawing.arc(cx, cy, r3, r4, af, ag, wallColor);
           break;
         }
         case 'c':
         case 'g':
         case 'h': {
           const { cx, cy, r0, r1, a3, a5, ab, ad } = this.cellOffsets(cell);
-          this.drawing.arc(cx, cy, r0, r1, a3, a5, color);
-          this.drawing.arc(cx, cy, r0, r1, a5, ab, this.color.cell);
-          this.drawing.arc(cx, cy, r0, r1, ab, ad, color);
+          this.drawing.arc(cx, cy, r0, r1, a3, a5, wallColor);
+          this.drawing.arc(cx, cy, r0, r1, a5, ab, cellColor);
+          this.drawing.arc(cx, cy, r0, r1, ab, ad, wallColor);
           break;
         }
         case 'd': {
           const { cx, cy, r1, r2, r3, r4, a0, a2, a5 } = this.cellOffsets(cell);
-          this.drawing.arc(cx, cy, r1, r2, a0, a5, color);
-          this.drawing.arc(cx, cy, r2, r3, a0, a2, this.color.cell);
-          this.drawing.arc(cx, cy, r3, r4, a0, a2, color);
+          this.drawing.arc(cx, cy, r1, r2, a0, a5, wallColor);
+          this.drawing.arc(cx, cy, r2, r3, a0, a2, cellColor);
+          this.drawing.arc(cx, cy, r3, r4, a0, a2, wallColor);
           break;
         }
         case 'e': {
           const { cx, cy, r4, r5, a1, a4, a6, a7 } = this.cellOffsets(cell);
-          this.drawing.arc(cx, cy, r4, r5, a1, a4, color);
-          this.drawing.arc(cx, cy, r4, r5, a4, a6, this.color.cell);
-          this.drawing.arc(cx, cy, r4, r5, a6, a7, color);
+          this.drawing.arc(cx, cy, r4, r5, a1, a4, wallColor);
+          this.drawing.arc(cx, cy, r4, r5, a4, a6, cellColor);
+          this.drawing.arc(cx, cy, r4, r5, a6, a7, wallColor);
           break;
         }
         case 'f': {
           const { cx, cy, r4, r5, a9, aa, ac, af } = this.cellOffsets(cell);
-          this.drawing.arc(cx, cy, r4, r5, a9, aa, color);
-          this.drawing.arc(cx, cy, r4, r5, aa, ac, this.color.cell);
-          this.drawing.arc(cx, cy, r4, r5, ac, af, color);
+          this.drawing.arc(cx, cy, r4, r5, a9, aa, wallColor);
+          this.drawing.arc(cx, cy, r4, r5, aa, ac, cellColor);
+          this.drawing.arc(cx, cy, r4, r5, ac, af, wallColor);
           break;
         }
 

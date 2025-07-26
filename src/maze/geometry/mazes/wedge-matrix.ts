@@ -6,10 +6,22 @@ export const matrix: Matrix = {
     pieces: 2,
     connect: { a: 'f', c: 'e', e: 'c', f: 'a', h: 'j', i: 'k', j: 'h', k: 'i' },
     layouts: {
-      0: [{ path: ['a', 'g', 'j', 'd'] }, { path: ['c', 'l', 'i', 'd'] }],
-      1: [{ path: ['e', 'g', 'k', 'b'] }, { path: ['f', 'l', 'h', 'b'] }],
-      2: [{ path: ['h', 'b', 'f', 'l'] }, { path: ['i', 'd', 'c', 'l'] }],
-      3: [{ path: ['j', 'd', 'a', 'g'] }, { path: ['k', 'b', 'f', 'l'] }],
+      0: [
+        { path: ['a', 'g', 'j', 'd'], rear: ['h', 'l', 'f', 'b'] },
+        { path: ['c', 'l', 'i', 'd'], rear: ['k', 'g', 'e', 'b'] },
+      ],
+      1: [
+        { path: ['e', 'g', 'k', 'b'], rear: ['i', 'l', 'c', 'd'] },
+        { path: ['f', 'l', 'h', 'b'], rear: ['j', 'g', 'a', 'd'] },
+      ],
+      2: [
+        { path: ['h', 'b', 'f', 'l'], rear: ['a', 'd', 'j', 'g'] },
+        { path: ['i', 'd', 'c', 'l'], rear: ['e', 'b', 'k', 'g'] },
+      ],
+      3: [
+        { path: ['j', 'd', 'a', 'g'], rear: ['f', 'b', 'h', 'l'] },
+        { path: ['k', 'b', 'e', 'g'], rear: ['c', 'd', 'i', 'l'] },
+      ],
     },
   },
   directions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'],

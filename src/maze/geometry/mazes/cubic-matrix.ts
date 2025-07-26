@@ -2,6 +2,29 @@
 import { type Matrix } from '../matrix.ts';
 
 export const matrix: Matrix = {
+  bridge: {
+    connect: {},
+    layouts: {
+      0: [
+        { path: ['a', 'e'], rear: ['g', 'c'], connect: { b: 'd', d: 'b', f: 'h', h: 'f' } },
+        { path: ['b', 'j'], rear: ['l', 'd'], connect: { a: 'c', d: 'a', i: 'k', k: 'i' } },
+        { path: ['c', 'g'], rear: ['e', 'a'], connect: { b: 'd', d: 'b', f: 'h', h: 'f' } },
+        { path: ['d', 'l'], rear: ['j', 'b'], connect: { a: 'c', d: 'a', i: 'k', k: 'i' } },
+      ],
+      1: [
+        { path: ['e', 'a'], rear: ['c', 'g'], connect: { b: 'd', d: 'b', f: 'h', h: 'f' } },
+        { path: ['f', 'k'], rear: ['l', 'h'], connect: { a: 'c', c: 'a', e: 'g', g: 'e' } },
+        { path: ['g', 'c'], rear: ['e', 'a'], connect: { b: 'd', d: 'b', f: 'h', h: 'f' } },
+        { path: ['h', 'l'], rear: ['k', 'f'], connect: { a: 'c', c: 'a', e: 'g', g: 'e' } },
+      ],
+      2: [
+        { path: ['i', 'h'], rear: ['f', 'k'], connect: { e: 'g', g: 'e', j: 'l', k: 'j' } },
+        { path: ['j', 'b'], rear: ['d', 'l'], connect: { a: 'c', c: 'a', i: 'k', k: 'i' } },
+        { path: ['k', 'f'], rear: ['h', 'i'], connect: { e: 'g', g: 'e', j: 'l', k: 'j' } },
+        { path: ['l', 'd'], rear: ['b', 'g'], connect: { a: 'c', c: 'a', e: 'g', g: 'e' } },
+      ],
+    },
+  },
   directions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'],
   pillars: ['ab', 'bc', 'cd', 'da', 'ef', 'fg', 'gh', 'he', 'ij', 'jk', 'kl', 'li'],
   wall: {
@@ -145,7 +168,7 @@ export const matrix: Matrix = {
     g: 150,
     h: 210,
     i: 270,
-    j: 315,
+    j: 0,
     k: 90,
     l: 150,
   },

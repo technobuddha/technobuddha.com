@@ -5,9 +5,14 @@ export const matrix: Matrix = {
   bridge: {
     pieces: 1,
     layouts: {
-      0: [{ path: ['a'] }, { path: ['b'] }, { path: ['c'] }, { path: ['d'] }],
-      1: [{ path: ['a'] }],
-      2: [{ path: ['a'] }],
+      0: [
+        { path: ['a'], rear: ['c'] },
+        { path: ['b'], rear: ['d'] },
+        { path: ['c'], rear: ['a'] },
+        { path: ['d'], rear: ['b'] },
+      ],
+      1: [{ path: ['a'], rear: ['c', 'g'] }],
+      2: [{ path: ['a'], rear: ['c', 'h'] }],
       3: [],
       4: [],
       5: [],

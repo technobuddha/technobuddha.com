@@ -2,26 +2,6 @@
 import { type Matrix } from '../matrix.ts';
 
 export const matrix: Matrix = {
-  // bridge: {
-  //   pieces: 1,
-  //   // connect: { b: 'e', e: 'b', k: 'm', m: 'k', t: 'r', r: 't', g: 'h', h: 'g', n: 'o', o: 'n' },
-  //   connect: { t: 'r', r: 't', b: 'e', e: 'b', f: 'i', i: 'f', k: 'm', m: 'k' },
-  //   layouts: {
-  //     0: [
-  //       { path: ['c', 'n', 's', 'i', 'm'] },
-  //       // { path: ['d', 'p', 's', 'i', 'm'] },
-  //       { path: ['b', 'h', 'q', 'l', 'r'] },
-
-  //       // { path: ['a', 'k', 'f', 'q', 'o'] },
-  //       // { path: ['e', 't', 'o', 'd', 'j'] },
-  //     ],
-  //     1: [
-  //       // { path: ['h', 'o', 'l', 'r', 's'] }
-  //     ],
-  //     2: [],
-  //     3: [],
-  //   },
-  // },
   directions: [
     'a',
     'b',

@@ -10,8 +10,7 @@ import {
 } from '@technobuddha/library';
 
 import { CanvasDrawing, type Drawing } from '../drawing/index.ts';
-import { type MazeGenerator } from '../generator/index.ts';
-import { alpha, logger, lookAhead } from '../library/index.ts';
+import { inverse, logger, lookAhead } from '../library/index.ts';
 
 import { type Bridge } from './bridges.ts';
 import { defaultColors, type MazeColors } from './color.ts';
@@ -104,10 +103,7 @@ export abstract class Maze extends MazeGeometry {
   public drawing: MazeProperties['drawing'];
   public readonly color: NonNullable<Required<MazeColors>>;
   //#endregion
-  //#region Hooks
-  public hookPreGeneration: ((generator: MazeGenerator) => void) | undefined = undefined;
-  public hookPostGeneration: ((generator: MazeGenerator) => void) | undefined = undefined;
-  //#endregion
+
   //#region Construction
   public constructor(
     {
@@ -398,6 +394,7 @@ export abstract class Maze extends MazeGeometry {
   public drawMasks(): void {
     if (this.drawing) {
       for (const cell of this.cellsUnderMask()) {
+        this.eraseCell(cell, this.color.void);
         this.drawFloor(cell, this.color.mask);
       }
     }
@@ -609,12 +606,19 @@ export abstract class Maze extends MazeGeometry {
   //#endregion
   //#region Cell Drawing
   protected cellColor(cell: Cell, color: string): string {
-    return (
-      this.isSame(cell, this.entrance) ? this.color.entrance
-      : this.isSame(cell, this.exit) ? this.color.exit
-      : this.nexus(cell).bridge ? this.color.bridge
-      : color
-    );
+    if (this.isSame(cell, this.entrance)) {
+      return this.color.entrance;
+    }
+
+    if (this.isSame(cell, this.exit)) {
+      return this.color.exit;
+    }
+
+    if (color === this.color.cell && this.nexus(cell).elevated) {
+      return this.color.bridge;
+    }
+
+    return color;
   }
 
   public drawCell<T extends Cell>(
@@ -622,14 +626,16 @@ export abstract class Maze extends MazeGeometry {
     cellColor = this.color.cell,
     wallColor = this.color.wall,
   ): T {
+    this.eraseCell(cell);
     this.drawFloor(cell, this.cellColor(cell, cellColor));
+
+    if (this.nexus(cell).bridge) {
+      this.drawText(cell, '○', 'white');
+    }
 
     this.drawWalls(cell, wallColor);
     this.drawPillars(cell, wallColor);
 
-    // if (this.nexus(cell).bridge) {
-    // this.drawText(cell, '◯', 'white');
-    // } else
     if (this.showCoordinates) {
       this.drawText(cell, cell.x === 0 ? cell.y.toString() : cell.x.toString());
     } else if (this.showKind) {
@@ -639,29 +645,27 @@ export abstract class Maze extends MazeGeometry {
     return cell;
   }
 
-  public drawWalls(cell: Cell, color = this.color.wall): void {
+  public drawWalls(cell: Cell, wallColor = this.color.wall, cellColor = this.color.cell): void {
     const nexus = this.nexus(cell);
-    const { walls, tunnels, barriers } = nexus;
+    const { walls, barriers, elevated } = nexus;
 
     for (const direction of this.directions) {
-      if (walls[direction] === true) {
-        if (tunnels[direction]) {
-          const move = this.traverse(cell, direction);
-          if (this.inMaze(move) && !this.nexus(move).walls[this.opposite(move.facing)]) {
-            this.drawBridge({ ...cell, direction });
-            continue;
-          }
-        }
-        this.drawWall({ ...cell, direction }, color);
-      } else if (barriers[direction]) {
-        this.drawWall({ ...cell, direction }, color);
+      if (walls[direction] === true || barriers[direction]) {
+        this.drawWall(cell, direction, wallColor);
       } else if (walls[direction] === false) {
         const move = this.traverse(cell, direction);
-        if (this.inMaze(move) && this.nexus(move).tunnels[direction]) {
-          this.drawTunnel({ ...cell, direction });
-          continue;
+        if (
+          this.inMaze(move) &&
+          this.nexus(move).tunnels[this.opposite(move.facing)] &&
+          this.nexus(move).walls[this.opposite(move.facing)] === true
+        ) {
+          this.drawTunnel(cell, direction);
+        } else if (elevated) {
+          this.drawWall(cell, direction, this.color.bridge);
+          this.drawPassage(cell, direction, this.color.wall, this.color.bridge);
+        } else {
+          this.drawPassage(cell, direction, wallColor, cellColor);
         }
-        this.drawPassage({ ...cell, direction }, color);
       }
     }
   }
@@ -670,8 +674,7 @@ export abstract class Maze extends MazeGeometry {
     const { walls } = this.nexus(cell);
 
     for (const pillar of this.pillars) {
-      if (pillar[0] in walls || pillar[1] in walls) {
-        // if (walls[pillar[0] as Direction] === true || walls[pillar[1] as Direction] === true) {
+      if (pillar[0] in walls && pillar[1] in walls) {
         this.drawPillar(cell, pillar, color);
       }
     }
@@ -685,20 +688,21 @@ export abstract class Maze extends MazeGeometry {
     }
   }
 
-  public drawBridge(cell: CellDirection, color = this.color.wall): void {
-    if (this.drawing) {
-      this.drawWall(cell, color);
-      this.drawPassage(cell, color);
-    }
+  public drawTunnel(
+    cell: Cell,
+    direction: Direction,
+    wallColor = this.color.wall,
+    tunnelColor = this.color.tunnel,
+  ): void {
+    this.drawPassage(cell, direction, wallColor, tunnelColor);
   }
 
-  public drawTunnel(cell: CellDirection, color = this.color.wall): void {
-    this.drawPassage(cell, color);
-  }
-
-  public drawPassage(_cell: CellDirection, _color: string = this.color.wall): void {
-    // Most mazes don't have to draw a door, it just the lack of a wall.
-  }
+  public abstract drawPassage(
+    cell: Cell,
+    direction: Direction,
+    wallColor: string,
+    cellColor: string,
+  ): void;
 
   public drawPath(cell: CellDirection, color = this.color.path): void {
     if (this.drawing) {
@@ -716,7 +720,7 @@ export abstract class Maze extends MazeGeometry {
   public drawPaths(cells: CellTunnel[], color = this.color.path): void {
     if (this.drawing) {
       for (const cell of cells) {
-        this.drawPath(cell, cell.tunnel ? alpha(color, 0.75) : color);
+        this.drawPath(cell, cell.tunnel ? inverse(color) : color);
       }
     }
   }
@@ -788,8 +792,10 @@ export abstract class Maze extends MazeGeometry {
   }
 
   protected abstract offsets(kind: Kind): Record<string, number>;
+
+  public abstract eraseCell(cell: Cell, color?: string): void;
   public abstract drawFloor(cell: Cell, color?: string): void;
-  public abstract drawWall(cell: CellDirection, color?: string): void;
+  public abstract drawWall(cell: Cell, direction: Direction, color?: string): void;
   public abstract drawPillar(cell: Cell, pillar: Pillar, color?: string): void;
   public abstract drawX(cell: Cell, color?: string): void;
   //#endregion
@@ -799,17 +805,27 @@ export abstract class Maze extends MazeGeometry {
 
     const cells = this.cellsInMaze(allOrder);
 
+    let cell: Cell | undefined = undefined;
     switch (zone) {
       case 'edge': {
-        return cells.find((cell) => this.moves(cell, { wall: 'all', inMaze: false }).length > 0)!;
+        cell = cells.find((cell) => this.moves(cell, { wall: 'all', inMaze: false }).length > 0);
+        break;
       }
 
       case 'interior': {
-        return cells.find((cell) => this.moves(cell, { wall: 'all', inMaze: false }).length === 0)!;
+        cell = cells.find((cell) => this.moves(cell, { wall: 'all', inMaze: false }).length === 0);
+        break;
       }
 
       // no default
     }
+
+    if (cell) {
+      return cell;
+    }
+
+    this.sendMessage(`Unable to find cell matching criteria "${p}"`);
+    return this.randomCell();
   }
 
   private parseSpecification(pd: Cell | Location): Cell {

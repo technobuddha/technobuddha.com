@@ -1,12 +1,6 @@
 import { type Cartesian, modulo, type Rect } from '@technobuddha/library';
 
-import {
-  type Cell,
-  type CellDirection,
-  type Direction,
-  type Kind,
-  type Pillar,
-} from '../geometry.ts';
+import { type Cell, type Direction, type Kind, type Pillar } from '../geometry.ts';
 import { type DrawingSizes, Maze, type MazeProperties } from '../maze.ts';
 
 import { matrix } from './dot-matrix.ts';
@@ -132,11 +126,17 @@ export class DotMaze extends Maze {
     return cell;
   }
 
+  public eraseCell(cell: Cell, color = this.color.void): void {
+    if (this.drawing) {
+      const { x0, xe, y0, ye } = this.cellOffsets(cell);
+      this.drawing.rect({ x: x0, y: y0 }, { x: xe, y: ye }, color);
+    }
+  }
+
   public override drawFloor(cell: Cell, color = this.color.cell): void {
     if (this.drawing) {
-      const { x0, x1, xd, xe, y0, y1, yd, ye } = this.cellOffsets(cell);
+      const { x1, xd, y1, yd } = this.cellOffsets(cell);
 
-      this.drawing.rect({ x: x0, y: y0 }, { x: xe, y: ye }, this.color.void);
       this.drawing.rect({ x: x1, y: y1 }, { x: xd, y: yd }, color);
     }
   }
@@ -148,10 +148,10 @@ export class DotMaze extends Maze {
     }
   }
 
-  public override drawWall(cell: CellDirection, color = this.color.wall): void {
+  public drawWall(cell: Cell, direction: Direction, color = this.color.wall): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-      switch (cell.direction) {
+      switch (direction) {
         case 'a': {
           const { x6, x8, y1, y5 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x6, y: y1 }, { x: x8, y: y5 }, color);
@@ -238,10 +238,15 @@ export class DotMaze extends Maze {
     }
   }
 
-  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
+  public drawPassage(
+    cell: Cell,
+    direction: Direction,
+    wallColor = this.color.wall,
+    cellColor = this.color.cell,
+  ): void {
     if (this.drawing) {
       // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-      switch (cell.direction) {
+      switch (direction) {
         case 'a': {
           const { x3, x6, x8, xb, y0, y1 } = this.cellOffsets(cell);
           this.drawing.polygon(
@@ -251,10 +256,10 @@ export class DotMaze extends Maze {
               { x: x6, y: y1 },
               { x: x3, y: y1 },
             ],
-            color,
+            wallColor,
           );
 
-          this.drawing.rect({ x: x6, y: y0 }, { x: x8, y: y1 }, this.color.cell);
+          this.drawing.rect({ x: x6, y: y0 }, { x: x8, y: y1 }, cellColor);
 
           this.drawing.polygon(
             [
@@ -263,7 +268,7 @@ export class DotMaze extends Maze {
               { x: xb, y: y1 },
               { x: x8, y: y1 },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -278,10 +283,10 @@ export class DotMaze extends Maze {
               { x: xd, y: y6 },
               { x: xd, y: y3 },
             ],
-            color,
+            wallColor,
           );
 
-          this.drawing.rect({ x: xd, y: y6 }, { x: xe, y: y8 }, this.color.cell);
+          this.drawing.rect({ x: xd, y: y6 }, { x: xe, y: y8 }, cellColor);
 
           this.drawing.polygon(
             [
@@ -290,7 +295,7 @@ export class DotMaze extends Maze {
               { x: xd, y: yb },
               { x: xd, y: y8 },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -305,10 +310,10 @@ export class DotMaze extends Maze {
               { x: x6, y: yd },
               { x: x3, y: yd },
             ],
-            color,
+            wallColor,
           );
 
-          this.drawing.rect({ x: x6, y: yd }, { x: x8, y: ye }, this.color.cell);
+          this.drawing.rect({ x: x6, y: yd }, { x: x8, y: ye }, cellColor);
 
           this.drawing.polygon(
             [
@@ -317,7 +322,7 @@ export class DotMaze extends Maze {
               { x: xb, y: ye },
               { x: x8, y: ye },
             ],
-            color,
+            wallColor,
           );
           break;
         }
@@ -332,10 +337,10 @@ export class DotMaze extends Maze {
               { x: x1, y: y6 },
               { x: x1, y: y3 },
             ],
-            color,
+            wallColor,
           );
 
-          this.drawing.rect({ x: x0, y: y6 }, { x: x1, y: y8 }, this.color.cell);
+          this.drawing.rect({ x: x0, y: y6 }, { x: x1, y: y8 }, cellColor);
 
           this.drawing.polygon(
             [
@@ -344,7 +349,7 @@ export class DotMaze extends Maze {
               { x: x1, y: yb },
               { x: x1, y: y8 },
             ],
-            color,
+            wallColor,
           );
           break;
         }

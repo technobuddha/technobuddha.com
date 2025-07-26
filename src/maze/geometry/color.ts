@@ -32,6 +32,6 @@ export const defaultColors: NonNullable<MazeColors> = {
   error: 'oklch(0.8664 0.294827 142.4953)',
   path: 'oklch(0.8145 0.1672 83.88)',
   tunnel: 'oklch(0.9544 0.0637 196.13)',
-  bridge: 'oklch(0.25 0 0)',
+  bridge: 'oklch(0.44 0.025 240)',
   text: 'oklch(1 0 0)',
 };

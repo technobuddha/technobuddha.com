@@ -1,7 +1,11 @@
 {
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json",
   "version": "0.2",
-  "ignorePaths": ["**/*.svg", "./locales/**/*.*", "./dist/**/*.*"],
+  "ignorePaths": [
+    "**/*.svg",
+    "./locales/**/*.*",
+    "./dist/**/*.*"
+  ],
   "dictionaryDefinitions": [
     {
       "name": "technobuddha",
@@ -27,7 +31,12 @@
       "addWords": true
     }
   ],
-  "dictionaries": ["technobuddha", "more-npm", "more-fonts", "maze"],
+  "dictionaries": [
+    "technobuddha",
+    "more-npm",
+    "more-fonts",
+    "maze"
+  ],
   "words": [
     "abcabcabc",
     "citext",
@@ -42,6 +51,8 @@
     "pgcrypto",
     "preferreds",
     "rgba",
+    "saddlebrown",
+    "sandybrown",
     "stylesheet",
     "timestamptz",
     "Unreachables",

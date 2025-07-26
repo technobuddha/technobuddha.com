@@ -5,6 +5,7 @@ import { type CellFacing, type Direction } from './geometry.ts';
 type Directional<T> = Partial<Record<Direction, T | false | undefined>>;
 export type Wall = Directional<true>;
 export type Tunnels = Directional<CellFacing>;
+export type Via = Directional<CellFacing[]>;
 
 export type Offsets = Record<string, number>;
 
@@ -13,8 +14,8 @@ export type NexusProperties = {
   y: number;
   walls: Wall;
   tunnels: Tunnels;
+  via: Via;
   barriers: Wall;
-  bridge?: boolean;
   mask?: boolean;
   distance?: number;
   rect: Rect;
@@ -25,8 +26,10 @@ export class Nexus {
   public readonly y: number;
   public readonly walls: Wall;
   public readonly tunnels: Tunnels;
+  public readonly via: Via;
   public readonly barriers: Wall;
-  public bridge: boolean;
+  public bridge: number | undefined;
+  public elevated = false;
   public mask: boolean;
   public distance: number;
   public rect: Rect;
@@ -36,8 +39,8 @@ export class Nexus {
     y,
     walls,
     tunnels,
+    via,
     barriers,
-    bridge = false,
     mask = false,
     distance = Infinity,
     rect,
@@ -46,8 +49,8 @@ export class Nexus {
     this.y = y;
     this.walls = walls;
     this.tunnels = tunnels;
+    this.via = via;
     this.barriers = barriers;
-    this.bridge = bridge;
     this.mask = mask;
     this.distance = distance;
     this.rect = rect;
@@ -59,6 +62,10 @@ export class Nexus {
 
   public tunnelDirections(): Direction[] {
     return Object.keys(this.tunnels) as Direction[];
+  }
+
+  public viaDirections(): Direction[] {
+    return Object.keys(this.via) as Direction[];
   }
 
   public hasWall(direction: Direction): boolean {

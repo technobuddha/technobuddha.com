@@ -70,7 +70,7 @@ export const geometries: GeometrySelection[] = [
     title: 'Circular',
     weight: 1,
     variations: [
-      { title: 'Circle', weight: 1, maker: (props) => new CircularMaze(props) },
+      { title: 'Circular', weight: 1, maker: (props) => new CircularMaze(props) },
       {
         title: 'Center Exit',
         weight: 1,
@@ -93,8 +93,9 @@ export const geometries: GeometrySelection[] = [
       },
     ],
     sizes: [
-      { title: 'Circular', weight: 1, cellSize: 18, wallSize: 1, voidSize: 1 },
-      { title: 'Large', weight: 1, cellSize: 24, wallSize: 2, voidSize: 2 },
+      { title: 'Circular', weight: 1, cellSize: 18, wallSize: 2, voidSize: 2 },
+      { title: 'Large', weight: 1, cellSize: 30, wallSize: 3, voidSize: 3 },
+      { title: 'Small', weight: 1, cellSize: 14, wallSize: 1, voidSize: 1 },
     ],
   },
   {
@@ -116,7 +117,7 @@ export const geometries: GeometrySelection[] = [
     title: 'Hexagon',
     weight: 1,
     variations: [{ title: 'Hexagon', weight: 1, maker: (props) => new HexagonMaze(props) }],
-    sizes: [{ title: 'Hexagon', weight: 1, cellSize: 36, wallSize: 2, voidSize: 1 }],
+    sizes: [{ title: 'Hexagon', weight: 1, cellSize: 40, wallSize: 2, voidSize: 2 }],
   },
   {
     title: 'Octagon',
@@ -125,7 +126,7 @@ export const geometries: GeometrySelection[] = [
       { title: 'Diamond', weight: 1, maker: (props) => new OctagonDiamond(props) },
       { title: 'Square', weight: 1, maker: (props) => new OctagonSquare(props) },
     ],
-    sizes: [{ title: 'Octagon', weight: 1, cellSize: 40, wallSize: 1, voidSize: 1 }],
+    sizes: [{ title: 'Octagon', weight: 1, cellSize: 48, wallSize: 3, voidSize: 2 }],
   },
   {
     title: 'Pentagon',
@@ -140,12 +141,13 @@ export const geometries: GeometrySelection[] = [
       {
         title: 'Square',
         weight: 1,
-        maker: (props) => new SquareMaze({ entrance: 'random edge', ...props }),
+        maker: (props) => new SquareMaze(props),
       },
     ],
     sizes: [
       { weight: 1, title: 'Square', cellSize: 28, wallSize: 2, voidSize: 2 },
       { weight: 1, title: 'Tiny', cellSize: 12, wallSize: 1, voidSize: 0 },
+      { weight: 1, title: 'Tiny Weave', cellSize: 13, wallSize: 1, voidSize: 1 },
       {
         weight: 1,
         title: 'Large',
@@ -156,8 +158,8 @@ export const geometries: GeometrySelection[] = [
       {
         weight: 1,
         title: 'Mine',
-        cellSize: 20,
-        wallSize: 5,
+        cellSize: 24,
+        wallSize: 6,
         voidSize: 0,
       },
     ],
@@ -166,7 +168,10 @@ export const geometries: GeometrySelection[] = [
     title: 'Triangle',
     weight: 1,
     variations: [{ title: 'Triangle', weight: 1, maker: (props) => new TriangleMaze(props) }],
-    sizes: [{ title: 'Triangle', weight: 1, cellSize: 32, wallSize: 2, voidSize: 1 }],
+    sizes: [
+      { title: 'Triangle', weight: 1, cellSize: 32, wallSize: 2, voidSize: 1 },
+      { title: 'Weave', weight: 1, cellSize: 42, wallSize: 2, voidSize: 2 },
+    ],
   },
   {
     title: 'Wedge',
@@ -384,7 +389,7 @@ export const generators: GeneratorSelection[] = [
     weight: 0,
     variations: [
       {
-        title: 'Bridge Builder',
+        title: 'Weave',
         weight: 1,
         maker: (props) =>
           new RecursiveBacktracker({
@@ -392,7 +397,33 @@ export const generators: GeneratorSelection[] = [
             forced: 0.25,
             bridgeMinLength: 1,
             bridgeMaxLength: 1,
-            stepsAfterBridge: 1,
+            stepsAfterBridge: 0,
+            ...props,
+          }),
+      },
+      {
+        title: 'Long Bridges',
+        weight: 1,
+        maker: (props) =>
+          new RecursiveBacktracker({
+            strategy: ['bridge-builder'],
+            forced: 0.25,
+            bridgeMinLength: 5,
+            bridgeMaxLength: 15,
+            stepsAfterBridge: 5,
+            ...props,
+          }),
+      },
+      {
+        title: 'One Huge Bridge',
+        weight: 1,
+        maker: (props) =>
+          new RecursiveBacktracker({
+            strategy: ['bridge-builder'],
+            forced: 0.25,
+            bridgeMinLength: 15,
+            bridgeMaxLength: Infinity,
+            stepsAfterBridge: Infinity,
             ...props,
           }),
       },

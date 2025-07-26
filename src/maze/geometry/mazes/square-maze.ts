@@ -1,6 +1,7 @@
-import { type Cartesian, largestInscribedRectangle, type Rect } from '@technobuddha/library';
+/* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
+import { type Cartesian, type Rect } from '@technobuddha/library';
 
-import { type Cell, type CellDirection, type Kind, type Pillar } from '../geometry.ts';
+import { type Cell, type Direction, type Kind, type Pillar } from '../geometry.ts';
 import { type DrawingSizes, Maze, type MazeProperties } from '../maze.ts';
 
 import { matrix } from './square-matrix.ts';
@@ -50,20 +51,25 @@ export class SquareMaze extends Maze {
     return { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 };
   }
 
-  public override drawFloor(cell: Cell, color = this.color.cell): void {
+  public eraseCell(cell: Cell, color = this.color.void): void {
     if (this.drawing) {
-      const { x0, x1, x4, x5, y0, y1, y4, y5 } = this.cellOffsets(cell);
-      this.drawing.rect({ x: x0, y: y0 }, { x: x5, y: y5 }, this.color.void);
+      const { x0, x5, y0, y5 } = this.cellOffsets(cell);
+      this.drawing.rect({ x: x0, y: y0 }, { x: x5, y: y5 }, color);
+    }
+  }
+
+  public drawFloor(cell: Cell, color = this.color.cell): void {
+    if (this.drawing) {
+      const { x1, x4, y1, y4 } = this.cellOffsets(cell);
       this.drawing.rect({ x: x1, y: y1 }, { x: x4, y: y4 }, color);
     }
   }
 
-  public override drawWall(cell: CellDirection, color = this.color.wall): void {
+  public drawWall(cell: Cell, direction: Direction, color = this.color.wall): void {
     if (this.drawing) {
       const { x1, x2, x3, x4, y1, y2, y3, y4 } = this.cellOffsets(cell);
 
-      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-      switch (cell.direction) {
+      switch (direction) {
         case 'n': {
           this.drawing.rect({ x: x2, y: y1 }, { x: x3, y: y2 }, color);
           break;
@@ -86,34 +92,38 @@ export class SquareMaze extends Maze {
     }
   }
 
-  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
+  public drawPassage(
+    cell: Cell,
+    direction: Direction,
+    wallColor = this.color.wall,
+    cellColor = this.color.cell,
+  ): void {
     if (this.drawing) {
       const { x0, x1, x2, x3, x4, x5, y0, y1, y2, y3, y4, y5 } = this.cellOffsets(cell);
 
-      // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-      switch (cell.direction) {
+      switch (direction) {
         case 'n': {
-          this.drawing.rect({ x: x1, y: y1 }, { x: x2, y: y0 }, color);
-          this.drawing.rect({ x: x2, y: y1 }, { x: x3, y: y0 }, this.color.cell);
-          this.drawing.rect({ x: x3, y: y1 }, { x: x4, y: y0 }, color);
+          this.drawing.rect({ x: x1, y: y1 }, { x: x2, y: y0 }, wallColor);
+          this.drawing.rect({ x: x2, y: y1 }, { x: x3, y: y0 }, cellColor);
+          this.drawing.rect({ x: x3, y: y1 }, { x: x4, y: y0 }, wallColor);
           break;
         }
         case 's': {
-          this.drawing.rect({ x: x1, y: y4 }, { x: x2, y: y5 }, color);
-          this.drawing.rect({ x: x2, y: y4 }, { x: x3, y: y5 }, this.color.cell);
-          this.drawing.rect({ x: x3, y: y4 }, { x: x4, y: y5 }, color);
+          this.drawing.rect({ x: x1, y: y4 }, { x: x2, y: y5 }, wallColor);
+          this.drawing.rect({ x: x2, y: y4 }, { x: x3, y: y5 }, cellColor);
+          this.drawing.rect({ x: x3, y: y4 }, { x: x4, y: y5 }, wallColor);
           break;
         }
         case 'e': {
-          this.drawing.rect({ x: x4, y: y1 }, { x: x5, y: y2 }, color);
-          this.drawing.rect({ x: x4, y: y2 }, { x: x5, y: y3 }, this.color.cell);
-          this.drawing.rect({ x: x4, y: y3 }, { x: x5, y: y4 }, color);
+          this.drawing.rect({ x: x4, y: y1 }, { x: x5, y: y2 }, wallColor);
+          this.drawing.rect({ x: x4, y: y2 }, { x: x5, y: y3 }, cellColor);
+          this.drawing.rect({ x: x4, y: y3 }, { x: x5, y: y4 }, wallColor);
           break;
         }
         case 'w': {
-          this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y2 }, color);
-          this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, this.color.cell);
-          this.drawing.rect({ x: x0, y: y3 }, { x: x1, y: y4 }, color);
+          this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y2 }, wallColor);
+          this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, cellColor);
+          this.drawing.rect({ x: x0, y: y3 }, { x: x1, y: y4 }, wallColor);
           break;
         }
 
@@ -126,17 +136,27 @@ export class SquareMaze extends Maze {
     if (this.drawing) {
       const { x1, x2, x3, x4, y1, y2, y3, y4 } = this.cellOffsets({ x, y });
 
-      if (pillar === 'nw') {
-        this.drawing.rect({ x: x1, y: y1 }, { x: x2, y: y2 }, color);
-      }
-      if (pillar === 'ne') {
-        this.drawing.rect({ x: x3, y: y1 }, { x: x4, y: y2 }, color);
-      }
-      if (pillar === 'sw') {
-        this.drawing.rect({ x: x1, y: y3 }, { x: x2, y: y4 }, color);
-      }
-      if (pillar === 'se') {
-        this.drawing.rect({ x: x3, y: y3 }, { x: x4, y: y4 }, color);
+      switch (pillar) {
+        case 'nw': {
+          this.drawing.rect({ x: x1, y: y1 }, { x: x2, y: y2 }, color);
+          break;
+        }
+
+        case 'ne': {
+          this.drawing.rect({ x: x3, y: y1 }, { x: x4, y: y2 }, color);
+          break;
+        }
+
+        case 'sw': {
+          this.drawing.rect({ x: x1, y: y3 }, { x: x2, y: y4 }, color);
+          break;
+        }
+
+        case 'se': {
+          this.drawing.rect({ x: x3, y: y3 }, { x: x4, y: y4 }, color);
+          break;
+        }
+        // no default
       }
     }
   }
@@ -153,13 +173,6 @@ export class SquareMaze extends Maze {
   protected getRect(cell: Cell): Rect {
     const { x1, x4, y1, y4 } = this.cellOffsets(cell);
 
-    const polygon = [
-      { x: x1, y: y1 },
-      { x: x4, y: y1 },
-      { x: x4, y: y4 },
-      { x: x1, y: y4 },
-    ];
-
-    return largestInscribedRectangle(polygon, { squareOnly: true });
+    return { x: x1, y: y1, width: x4 - x1, height: y4 - y1 };
   }
 }

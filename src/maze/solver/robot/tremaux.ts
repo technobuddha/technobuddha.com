@@ -47,7 +47,7 @@ export class TremauxRobot extends Robot {
   private drawMark(cell: Cell, direction: Direction): void {
     if (this.showMarks) {
       const m = this.marks[cell.x][cell.y][direction];
-      this.maze.drawWall({ ...cell, direction }, m === 1 ? this.markedColor : this.blockedColor);
+      this.maze.drawWall(cell, direction, m === 1 ? this.markedColor : this.blockedColor);
     }
   }
 

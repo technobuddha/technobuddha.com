@@ -6,6 +6,7 @@ import {
   toSquare,
 } from '@technobuddha/library';
 
+import { type MazeGenerator } from '#maze/generator';
 import { Random, type RandomProperties } from '#maze/random';
 
 import {
@@ -18,7 +19,7 @@ import {
   type MoveOffset,
 } from './geometry.ts';
 import { type BridgeMatrix, type Matrix } from './matrix.ts';
-import { Nexus, type Tunnels, type Wall } from './nexus.ts';
+import { Nexus, type Tunnels, type Via, type Wall } from './nexus.ts';
 
 export function isFacing(orientation: string): orientation is Facing {
   return /^[A-Z!]$/u.test(orientation);
@@ -79,6 +80,11 @@ export abstract class MazeGeometry extends Random {
 
   protected nexuses: Nexus[][] = [];
 
+  //#region Hooks
+  public hookPreGeneration: ((generator: MazeGenerator) => void) | undefined = undefined;
+  public hookPostGeneration: ((generator: MazeGenerator) => void) | undefined = undefined;
+  //#endregion
+
   public constructor(
     {
       width: requestedWidth,
@@ -129,6 +135,7 @@ export abstract class MazeGeometry extends Random {
           y,
           walls: this.initialWalls({ x, y }),
           tunnels: this.initialTunnels({ x, y }),
+          via: this.initialVia({ x, y }),
           barriers: this.initialBarriers({ x, y }),
           rect: toSquare(this.getRect({ x, y })),
         }),
@@ -148,6 +155,12 @@ export abstract class MazeGeometry extends Random {
   }
 
   public initialTunnels(cell: Cell): Tunnels {
+    return Object.fromEntries(
+      Object.keys(this.initialWalls(cell)).map((d) => [d as Direction, false]),
+    ) as Record<Direction, false>;
+  }
+
+  public initialVia(cell: Cell): Via {
     return Object.fromEntries(
       Object.keys(this.initialWalls(cell)).map((d) => [d as Direction, false]),
     ) as Record<Direction, false>;
@@ -434,11 +447,16 @@ export abstract class MazeGeometry extends Random {
     const tunnel: CellFacing[] = [];
 
     let target = this.traverse(cell, direction);
-    while (true) {
-      const portal =
-        this.inMaze(target) ? this.nexus(target).tunnels[this.opposite(target.facing)] : false;
+    while (this.inMaze(target)) {
+      const { tunnels, via } = this.nexus(target);
+      const facing = this.opposite(target.facing);
+
+      const portal = tunnels[facing];
       if (portal) {
         tunnel.push(target);
+        if (via[facing]) {
+          tunnel.push(...via[facing]);
+        }
         target = { ...portal };
       } else {
         break;

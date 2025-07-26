@@ -132,7 +132,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
           for (let i = 0; i < maze.width; ++i) {
             for (let j = 0; j < maze.height; ++j) {
               if (maze.nexus({ x: i, y: j }).walls[wall]) {
-                maze.drawWall({ x: i, y: j, direction: wall }, 'magenta');
+                maze.drawWall({ x: i, y: j }, wall, 'magenta');
               }
             }
           }

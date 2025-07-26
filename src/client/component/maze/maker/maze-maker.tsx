@@ -113,6 +113,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           plugin: undefined,
           drawing,
           mode: phasePlayMode,
+          name: geometryTitle,
         });
       });
     }

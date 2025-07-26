@@ -1,12 +1,12 @@
 .section {
-  margin-bottom: mui-spacing(1);
+  margin-bottom: mui-spacing(0.5);
 
   .content {
-    padding: mui-spacing(0.5) mui-spacing(1) mui-spacing(0.5) mui-spacing(1) !important;
+    padding: mui-spacing(0.5) !important;
 
     .header {
       color: mui-theme(palette-text-secondary);
-      font-size: 1rem;
+      font-size: 0.75rem;
     }
   }
 }

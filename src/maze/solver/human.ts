@@ -102,7 +102,7 @@ export class Human extends MazeSolver {
       ...move.target,
       direction: move.direction,
       branch: move.direction,
-      history: [move.target],
+      history: [cell, move.target],
     }));
 
     const cellPaths: CellPath[] = [];

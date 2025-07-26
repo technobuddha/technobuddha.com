@@ -7,7 +7,7 @@ import {
   type Rect,
 } from '@technobuddha/library';
 
-import { type Cell, type CellDirection, type Kind, type Pillar } from '../geometry.ts';
+import { type Cell, type Direction, type Kind, type Pillar } from '../geometry.ts';
 import { type DrawingSizes, Maze, type MazeProperties } from '../maze.ts';
 
 import { matrix } from './brick-matrix.ts';
@@ -62,18 +62,24 @@ export class BrickMaze extends Maze {
     return { x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, y0, y1, y2, y3, y4, y5 };
   }
 
+  public eraseCell(cell: Cell, color = this.color.void): void {
+    if (this.drawing) {
+      const { x0, x9, y0, y5 } = this.cellOffsets(cell);
+      this.drawing.rect({ x: x0, y: y0 }, { x: x9, y: y5 }, color);
+    }
+  }
+
   public drawFloor(cell: Cell, color = this.color.cell): void {
     if (this.drawing) {
-      const { x0, x1, x8, x9, y0, y1, y4, y5 } = this.cellOffsets(cell);
+      const { x1, x8, y1, y4 } = this.cellOffsets(cell);
 
-      this.drawing.rect({ x: x0, y: y0 }, { x: x9, y: y5 }, this.color.void);
       this.drawing.rect({ x: x1, y: y1 }, { x: x8, y: y4 }, color);
     }
   }
 
-  public drawWall(cell: CellDirection, color = this.color.wall): void {
+  public drawWall(cell: Cell, direction: Direction, color = this.color.wall): void {
     if (this.drawing) {
-      switch (cell.direction) {
+      switch (direction) {
         case 'a': {
           const { x2, x3, y1, y2 } = this.cellOffsets(cell);
           this.drawing.rect({ x: x2, y: y1 }, { x: x3, y: y2 }, color);
@@ -110,54 +116,59 @@ export class BrickMaze extends Maze {
     }
   }
 
-  public override drawPassage(cell: CellDirection, color = this.color.wall): void {
+  public drawPassage(
+    cell: Cell,
+    direction: Direction,
+    wallColor = this.color.wall,
+    cellColor = this.color.cell,
+  ): void {
     if (this.drawing) {
-      switch (cell.direction) {
+      switch (direction) {
         case 'a': {
           const { x1, x2, x3, x4, y0, y1 } = this.cellOffsets(cell);
-          this.drawing.rect({ x: x1, y: y0 }, { x: x2, y: y1 }, color);
-          this.drawing.rect({ x: x2, y: y0 }, { x: x3, y: y1 }, this.color.cell);
-          this.drawing.rect({ x: x3, y: y0 }, { x: x4, y: y1 }, color);
+          this.drawing.rect({ x: x1, y: y0 }, { x: x2, y: y1 }, wallColor);
+          this.drawing.rect({ x: x2, y: y0 }, { x: x3, y: y1 }, cellColor);
+          this.drawing.rect({ x: x3, y: y0 }, { x: x4, y: y1 }, wallColor);
           break;
         }
 
         case 'b': {
           const { x5, x6, x7, x8, y0, y1 } = this.cellOffsets(cell);
-          this.drawing.rect({ x: x5, y: y0 }, { x: x6, y: y1 }, color);
-          this.drawing.rect({ x: x6, y: y0 }, { x: x7, y: y1 }, this.color.cell);
-          this.drawing.rect({ x: x7, y: y0 }, { x: x8, y: y1 }, color);
+          this.drawing.rect({ x: x5, y: y0 }, { x: x6, y: y1 }, wallColor);
+          this.drawing.rect({ x: x6, y: y0 }, { x: x7, y: y1 }, cellColor);
+          this.drawing.rect({ x: x7, y: y0 }, { x: x8, y: y1 }, wallColor);
           break;
         }
 
         case 'c': {
           const { x8, x9, y1, y2, y3, y4 } = this.cellOffsets(cell);
-          this.drawing.rect({ x: x8, y: y1 }, { x: x9, y: y2 }, color);
-          this.drawing.rect({ x: x8, y: y2 }, { x: x9, y: y3 }, this.color.cell);
-          this.drawing.rect({ x: x8, y: y3 }, { x: x9, y: y4 }, color);
+          this.drawing.rect({ x: x8, y: y1 }, { x: x9, y: y2 }, wallColor);
+          this.drawing.rect({ x: x8, y: y2 }, { x: x9, y: y3 }, cellColor);
+          this.drawing.rect({ x: x8, y: y3 }, { x: x9, y: y4 }, wallColor);
           break;
         }
 
         case 'd': {
           const { x5, x6, x7, x8, y4, y5 } = this.cellOffsets(cell);
-          this.drawing.rect({ x: x5, y: y4 }, { x: x6, y: y5 }, color);
-          this.drawing.rect({ x: x6, y: y4 }, { x: x7, y: y5 }, this.color.cell);
-          this.drawing.rect({ x: x7, y: y4 }, { x: x8, y: y5 }, color);
+          this.drawing.rect({ x: x5, y: y4 }, { x: x6, y: y5 }, wallColor);
+          this.drawing.rect({ x: x6, y: y4 }, { x: x7, y: y5 }, cellColor);
+          this.drawing.rect({ x: x7, y: y4 }, { x: x8, y: y5 }, wallColor);
           break;
         }
 
         case 'e': {
           const { x1, x2, x3, x4, y4, y5 } = this.cellOffsets(cell);
-          this.drawing.rect({ x: x1, y: y4 }, { x: x2, y: y5 }, color);
-          this.drawing.rect({ x: x2, y: y4 }, { x: x3, y: y5 }, this.color.cell);
-          this.drawing.rect({ x: x3, y: y4 }, { x: x4, y: y5 }, color);
+          this.drawing.rect({ x: x1, y: y4 }, { x: x2, y: y5 }, wallColor);
+          this.drawing.rect({ x: x2, y: y4 }, { x: x3, y: y5 }, cellColor);
+          this.drawing.rect({ x: x3, y: y4 }, { x: x4, y: y5 }, wallColor);
           break;
         }
 
         case 'f': {
           const { x0, x1, y1, y2, y3, y4 } = this.cellOffsets(cell);
-          this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y2 }, color);
-          this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, this.color.cell);
-          this.drawing.rect({ x: x0, y: y3 }, { x: x1, y: y4 }, color);
+          this.drawing.rect({ x: x0, y: y1 }, { x: x1, y: y2 }, wallColor);
+          this.drawing.rect({ x: x0, y: y2 }, { x: x1, y: y3 }, cellColor);
+          this.drawing.rect({ x: x0, y: y3 }, { x: x1, y: y4 }, wallColor);
           break;
         }
 

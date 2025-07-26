@@ -18,6 +18,7 @@ type RunnerProperties = {
   readonly plugin?: Plugin;
   readonly drawing?: Drawing;
   readonly mode?: { [P in Phase]?: PlayMode };
+  readonly name?: string;
 };
 
 let id = 0;
@@ -47,6 +48,7 @@ export class Runner extends EventTarget {
     plugin,
     drawing,
     mode,
+    name,
   }: RunnerProperties) {
     super();
 
@@ -57,6 +59,12 @@ export class Runner extends EventTarget {
 
     this.generator = generatorMaker?.({ maze: this.maze });
     this.solver = solverMaker?.({ maze: this.maze });
+
+    if (name) {
+      setTimeout(() => {
+        this.maze.sendMessage(name, 'black');
+      }, 1000);
+    }
 
     this.phasePlayMode = {
       maze: 'play',

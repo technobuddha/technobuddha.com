@@ -2,21 +2,21 @@
 import { type Matrix } from '../matrix.ts';
 
 export const matrix: Matrix = {
-  // bridge: {
-  //   pieces: 1,
-  //   layouts: {
-  //     0: [
-  //       { path: ['a'] },
-  //       { path: ['b'] },
-  //       { path: ['c'] },
-  //       { path: ['d'] },
-  //       { path: ['e'] },
-  //       { path: ['f'] },
-  //       { path: ['g'] },
-  //       { path: ['h'] },
-  //     ],
-  //   },
-  // },
+  bridge: {
+    connect: { a: 'e', c: 'g', e: 'a', g: 'c' },
+    layouts: {
+      0: [
+        { path: ['a'], rear: ['e'] },
+        { path: ['b'], rear: ['f'] },
+        { path: ['c'], rear: ['g'] },
+        { path: ['d'], rear: ['h'] },
+        { path: ['e'], rear: ['a'] },
+        { path: ['f'], rear: ['b'] },
+        { path: ['g'], rear: ['c'] },
+        { path: ['h'], rear: ['d'] },
+      ],
+    },
+  },
   directions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
   pillars: ['ab', 'bc', 'cd', 'de', 'ef', 'fg', 'gh', 'ha'],
   wall: {

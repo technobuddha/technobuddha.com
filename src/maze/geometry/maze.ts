@@ -69,11 +69,12 @@ export type MazeProperties = MazeGeometryProperties & {
   readonly entrance?: Cell | CellDirection | Location;
   readonly exit?: Cell | CellDirection | Location;
 
+  readonly showDistances?: ShowDistances;
   readonly color?: Partial<MazeColors>;
 
-  readonly showDistances?: ShowDistances;
   readonly showCoordinates?: boolean;
   readonly showKind?: boolean;
+  readonly showBridges?: boolean;
 
   readonly plugin?: (this: void, maze: Maze) => void;
 };
@@ -96,6 +97,7 @@ export abstract class Maze extends MazeGeometry {
   public readonly showDistances: NonNullable<MazeProperties['showDistances']>;
   public readonly showCoordinates: NonNullable<MazeProperties['showCoordinates']>;
   public readonly showKind: NonNullable<MazeProperties['showKind']>;
+  public readonly showBridges: NonNullable<MazeProperties['showBridges']>;
 
   private readonly entranceSpec: MazeProperties['entrance'];
   private readonly exitSpec: MazeProperties['exit'];
@@ -117,6 +119,7 @@ export abstract class Maze extends MazeGeometry {
       showDistances = 'none',
       showCoordinates = false,
       showKind = false,
+      showBridges = false,
       plugin,
       ...props
     }: MazeProperties,
@@ -133,8 +136,10 @@ export abstract class Maze extends MazeGeometry {
     this.color = { ...defaultColors, ...color };
 
     this.showDistances = showDistances;
+
     this.showCoordinates = showCoordinates;
     this.showKind = showKind;
+    this.showBridges = showBridges;
 
     this.entranceSpec = entrance;
     this.exitSpec = exit;
@@ -395,7 +400,6 @@ export abstract class Maze extends MazeGeometry {
     if (this.drawing) {
       for (const cell of this.cellsUnderMask()) {
         this.eraseCell(cell, this.color.void);
-        this.drawFloor(cell, this.color.mask);
       }
     }
   }
@@ -629,10 +633,6 @@ export abstract class Maze extends MazeGeometry {
     this.eraseCell(cell);
     this.drawFloor(cell, this.cellColor(cell, cellColor));
 
-    if (this.nexus(cell).bridge) {
-      this.drawText(cell, '○', 'white');
-    }
-
     this.drawWalls(cell, wallColor);
     this.drawPillars(cell, wallColor);
 
@@ -640,6 +640,8 @@ export abstract class Maze extends MazeGeometry {
       this.drawText(cell, cell.x === 0 ? cell.y.toString() : cell.x.toString());
     } else if (this.showKind) {
       this.drawText(cell, this.cellKind(cell).toString());
+    } else if (this.showBridges && this.nexus(cell).bridge) {
+      this.drawText(cell, '○', 'white');
     }
 
     return cell;

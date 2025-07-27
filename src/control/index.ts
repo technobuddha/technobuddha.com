@@ -5,6 +5,7 @@ export { Button, type ButtonProps } from './button/index.ts';
 export { Card, CardContent, type CardContentProps, type CardProps } from './card/index.ts';
 export { Checkbox, type CheckboxProps } from './checkbox/index.ts';
 export { CircularProgress } from './circular-progress/index.ts';
+export { ColorPicker, type ColorPickerProps } from './color-picker/index.ts';
 export { DelayedLoading } from './delayed-loading/index.ts';
 export {
   Dialog,

@@ -1,0 +1,12 @@
+.color-picker {
+  zoom: 1.5;
+}
+
+.swatch {
+  background-color: #888888;
+  padding: 0.5rem;
+}
+
+.picker {
+  padding-left: 1rem;
+}

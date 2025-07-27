@@ -112,14 +112,14 @@ export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, o
               </MenuItem>
             ))}
         </Select>
+        <Select label="Braid" value={braid} allowUndefined="(random)" onChange={handleBraidChange}>
+          {braids.map((m) => (
+            <MenuItem key={m.title} value={m.title}>
+              {m.title}
+            </MenuItem>
+          ))}
+        </Select>
       </div>
-      <Select label="Braid" value={braid} allowUndefined="(random)" onChange={handleBraidChange}>
-        {braids.map((m) => (
-          <MenuItem key={m.title} value={m.title}>
-            {m.title}
-          </MenuItem>
-        ))}
-      </Select>
     </Section>
   );
 };

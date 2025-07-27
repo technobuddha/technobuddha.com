@@ -181,34 +181,6 @@ export const geometries: GeometrySelection[] = [
   },
 ];
 
-type DebugSelection = {
-  title: string;
-  weight: number;
-  showCoordinates: boolean;
-  showKind: boolean;
-};
-
-export const debugs: DebugSelection[] = [
-  {
-    title: 'None',
-    weight: 1,
-    showCoordinates: false,
-    showKind: false,
-  },
-  {
-    title: 'Coordinates',
-    weight: 0,
-    showCoordinates: true,
-    showKind: false,
-  },
-  {
-    title: 'Kind',
-    weight: 0,
-    showCoordinates: false,
-    showKind: true,
-  },
-];
-
 type GeneratorSelection = {
   title: string;
   weight: number;

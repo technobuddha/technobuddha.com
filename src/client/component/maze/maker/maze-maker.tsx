@@ -14,15 +14,18 @@ import { CustomControls } from './custom-controls.tsx';
 import { ExportControls } from './export.tsx';
 import { GameControls } from './game-controls.tsx';
 import { GeneratorSection } from './generator-section.tsx';
-import { GeometrySection } from './geometry-section.tsx';
+import { GeometrySection } from './geometry-section/index.ts';
 import { HumanSection } from './human-section.tsx';
 import { Messages } from './messages.tsx';
 import { SolverSection } from './solver-section.tsx';
 
 import css from './maze-maker.module.css';
 
-export type Producer<Object, Props> = () => { maker: (props: Props) => Object; title: string };
-export type GeometryProducer = Producer<Maze, MazeProperties>;
+export type Producer<Object, Props, Additional = never> = () => {
+  maker: (props: Props) => Object;
+  title: string;
+} & Additional;
+export type GeometryProducer = Producer<Maze, MazeProperties, { announceMaze: boolean }>;
 export type GeneratorProducer = Producer<MazeGenerator, MazeGeneratorProperties>;
 export type SolverProducer = Producer<MazeSolver, MazeSolverProperties>;
 export type BraidingProducer = () => { maker: () => number; title: string };
@@ -88,7 +91,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     const solpro = mode === 'game' ? humanProducer : solverProducer;
 
     if (drawing && geometryProducer && generatorProducer && solpro) {
-      const { maker: mazeMaker, title: geometryTitle } = geometryProducer();
+      const { maker: mazeMaker, title: geometryTitle, announceMaze } = geometryProducer();
       setMazeName(geometryTitle);
 
       const { maker: generatorMaker, title: generatorTitle } = generatorProducer();
@@ -113,7 +116,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           plugin: undefined,
           drawing,
           mode: phasePlayMode,
-          name: geometryTitle,
+          name: announceMaze ? geometryTitle : undefined,
         });
       });
     }

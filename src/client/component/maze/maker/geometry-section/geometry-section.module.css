@@ -1,0 +1,18 @@
+.geometry-section {
+  .row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+
+    .item {
+      flex: 0;
+      flex-basis: 33%;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 0.5rem;
+    }
+  }
+}

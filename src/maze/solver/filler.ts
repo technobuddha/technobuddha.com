@@ -32,14 +32,12 @@ export class Filler extends MazeSolver {
       !this.deadEnds[cell.x][cell.y] &&
       !this.maze.isSame(cell, entrance) &&
       !this.maze.isSame(cell, exit) &&
-      this.maze
-        .moves(cell, { wall: false })
-        .filter(
-          ({ target }) =>
-            !this.deadEnds[target.x][target.y] ||
-            this.maze.isSame(target, exit) ||
-            this.maze.isSame(target, entrance),
-        ).length <= 1
+      this.maze.moves(cell, { wall: false }).filter(
+        ({ target }) => !this.deadEnds[target.x][target.y],
+        // ||
+        // this.maze.isSame(target, exit) ||
+        // this.maze.isSame(target, entrance),
+      ).length <= 1
     );
   }
 
@@ -59,20 +57,28 @@ export class Filler extends MazeSolver {
       for (let deadEnd of deadEnds) {
         if (this.method === 'dead-end') {
           this.deadEnds[deadEnd.x][deadEnd.y] = true;
-          // this.maze.drawX(deadEnd, markedColor);
           this.maze.drawCell(deadEnd, markedColor);
           yield;
         } else {
           while (true) {
             const moves = this.maze
               .moves(deadEnd, { wall: false })
-              .filter(({ target }) => !this.deadEnds[target.x][target.y]);
-            if (moves.length === 1) {
+              .filter(
+                ({ target }) =>
+                  !this.deadEnds[target.x][target.y] ||
+                  this.maze.isSame(target, exit) ||
+                  this.maze.isSame(target, entrance),
+              );
+            if (moves.length <= 1) {
               this.deadEnds[deadEnd.x][deadEnd.y] = true;
-              // this.maze.drawX(deadEnd, markedColor);
               this.maze.drawCell(deadEnd, markedColor);
-              deadEnd = moves[0].target;
               yield;
+
+              if (moves[0].target) {
+                deadEnd = moves[0].target;
+              } else {
+                break;
+              }
             } else {
               break;
             }

@@ -135,7 +135,7 @@ export abstract class MazeGenerator extends Random {
   }
   //#endregion
   //#region Run
-  private trouble = false;
+  // private trouble = false;
   public async *run(): AsyncGenerator<void> {
     // console.clear();
     this.maze.hookPreGeneration?.(this);
@@ -398,7 +398,7 @@ export abstract class MazeGenerator extends Random {
 
           if (key2) {
             if (tunnels[key1]?.length !== tunnels[key2]?.length) {
-              this.trouble = true;
+              // this.trouble = true;
               if (tunnels[key1] && tunnels[key2]) {
                 logger.error(
                   `@{${current.x},${current.y}} Tunnel length mismatch for ${key1} and ${key2}`,
@@ -504,27 +504,6 @@ export abstract class MazeGenerator extends Random {
         this.maze.nexus(cell).elevated = true;
       }
     }
-  }
-  //#endregion
-  //#region Unreachables
-  protected fixUnreachables(): void {
-    // while (true) {
-    //   const { unreachable } = this.maze.analyze({ x: 0, y: 0 });
-    //   if (unreachable.length === 0) {
-    //     break;
-    //   }
-    //   const [cell] = unreachable;
-    //   const hole = this.randomPick(this.maze.moves(cell, { wall: true }));
-    //   if (hole) {
-    //     logger.log(
-    //       `Fixing unreachable cell at ${cell.x},${cell.y} by removing wall ${hole.direction}`,
-    //     );
-    //     this.maze.removeWall(hole.target, hole.direction);
-    //   } else {
-    //     logger.warn(`Masking off unreachable cell at ${cell.x},${cell.y}`);
-    //     this.maze.nexus(cell).mask = true;
-    //   }
-    // }
   }
   //#endregion
 }

@@ -4,10 +4,10 @@ import clsx from 'clsx';
 import { GiPalette, GiSpottedBug } from 'react-icons/gi';
 
 import { IconButton, MenuItem, Select } from '#control';
-import { defaultColors, MazeColors, type MazeProperties } from '#maze/geometry';
+import { defaultColors, type MazeColors, type MazeProperties } from '#maze/geometry';
 
 import { type GeometryProducer } from '../maze-maker.tsx';
-import { Section } from '../section.tsx';
+import { Section } from '../section/index.ts';
 import { distances, geometries, wraparounds } from '../selection.ts';
 
 import { type Debug, defaultDebug } from './debug.ts';

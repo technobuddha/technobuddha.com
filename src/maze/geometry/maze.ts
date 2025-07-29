@@ -75,6 +75,7 @@ export type MazeProperties = MazeGeometryProperties & {
   readonly showCoordinates?: boolean;
   readonly showKind?: boolean;
   readonly showBridges?: boolean;
+  readonly showUnreachables?: boolean;
 
   readonly plugin?: (this: void, maze: Maze) => void;
 };
@@ -98,6 +99,7 @@ export abstract class Maze extends MazeGeometry {
   public readonly showCoordinates: NonNullable<MazeProperties['showCoordinates']>;
   public readonly showKind: NonNullable<MazeProperties['showKind']>;
   public readonly showBridges: NonNullable<MazeProperties['showBridges']>;
+  public readonly showUnreachables: boolean;
 
   private readonly entranceSpec: MazeProperties['entrance'];
   private readonly exitSpec: MazeProperties['exit'];
@@ -120,6 +122,7 @@ export abstract class Maze extends MazeGeometry {
       showCoordinates = false,
       showKind = false,
       showBridges = false,
+      showUnreachables = false,
       plugin,
       ...props
     }: MazeProperties,
@@ -140,6 +143,7 @@ export abstract class Maze extends MazeGeometry {
     this.showCoordinates = showCoordinates;
     this.showKind = showKind;
     this.showBridges = showBridges;
+    this.showUnreachables = showUnreachables;
 
     this.entranceSpec = entrance;
     this.exitSpec = exit;
@@ -408,9 +412,13 @@ export abstract class Maze extends MazeGeometry {
     const { unreachable } = this.analyze(this.entrance);
 
     if (unreachable.length > 0) {
+      this.sendMessage(`There are ${unreachable.length} unreachable cells`);
       logger.error(`Unreachable cells: `, unreachable);
-      for (const cell of unreachable) {
-        this.drawCell(cell, this.color.error);
+
+      if (this.showUnreachables) {
+        for (const cell of unreachable) {
+          this.drawCell(cell, this.color.error);
+        }
       }
     }
 

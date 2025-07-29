@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { type Phase } from '../../runner/phase.ts';
-import { type Runner } from '../../runner/runner.ts';
+import { type Phase, type Runner } from '#maze/runner';
 
 import { MovementControls } from './movement-controls.tsx';
 

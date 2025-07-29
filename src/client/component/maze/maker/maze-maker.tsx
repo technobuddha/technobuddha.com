@@ -10,18 +10,18 @@ import { type Maze, type MazeProperties } from '#maze/geometry';
 import { type Phase, type PlayMode, Runner } from '#maze/runner';
 import { type MazeSolver, type MazeSolverProperties } from '#maze/solver';
 
-import { CustomControls } from './custom-controls.tsx';
-import { ExportControls } from './export.tsx';
-import { GameControls } from './game-controls.tsx';
-import { GeneratorSection } from './generator-section.tsx';
+import { CustomControls } from './custom-controls/index.ts';
+import { ExportControls } from './export/index.ts';
+import { GameControls } from './game-controls/index.ts';
+import { GeneratorSection } from './generator-section/index.ts';
 import { GeometrySection } from './geometry-section/index.ts';
-import { HumanSection } from './human-section.tsx';
-import { Messages } from './messages.tsx';
-import { SolverSection } from './solver-section.tsx';
+import { HumanSection } from './human-section/index.ts';
+import { Messages } from './messages/messages.tsx';
+import { SolverSection } from './solver-section/index.ts';
 
 import css from './maze-maker.module.css';
 
-export type Producer<Object, Props, Additional = never> = () => {
+export type Producer<Object, Props, Additional = unknown> = () => {
   maker: (props: Props) => Object;
   title: string;
 } & Additional;
@@ -116,7 +116,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
           plugin: undefined,
           drawing,
           mode: phasePlayMode,
-          name: announceMaze ? geometryTitle : undefined,
+          name: announceMaze ? `${geometryTitle} | ${generatorTitle} | ${solverTitle}` : undefined,
         });
       });
     }

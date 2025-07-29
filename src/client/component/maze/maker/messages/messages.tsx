@@ -1,10 +1,17 @@
 import React from 'react';
+import clsx from 'clsx';
 import { IoTrash } from 'react-icons/io5';
 
 import { IconButton, Tooltip } from '#control';
+import { type MessageCallback, type MessageOptions } from '#maze/random';
 import { type Runner } from '#maze/runner';
 
 import css from './messages.module.css';
+
+type History = {
+  message: string;
+  time: number;
+} & MessageOptions;
 
 type MessagesProps = {
   readonly runner: Runner | undefined;
@@ -12,28 +19,21 @@ type MessagesProps = {
 };
 
 export const Messages: React.FC<MessagesProps> = ({ runner }) => {
-  const [messages, setMessages] = React.useState<
-    { message: string; color?: string; time: number }[]
-  >([]);
+  const [history, setHistory] = React.useState<History[]>([]);
 
-  const handleMessage = React.useCallback((event: Event) => {
-    if (event instanceof CustomEvent) {
-      const message = {
-        ...(event.detail as { message: string; color?: string }),
-        time: Date.now(),
-      };
-      setMessages((prevMessages) => [message, ...prevMessages]);
-    }
+  const handleMessage = React.useCallback<MessageCallback>((message, props) => {
+    const historic = { message, ...props, time: Date.now() };
+    setHistory((prevMessages) => [historic, ...prevMessages]);
   }, []);
 
   const handleClear = React.useCallback(() => {
-    setMessages([]);
+    setHistory([]);
   }, []);
 
   React.useEffect(() => {
-    runner?.maze.addEventListener('message', handleMessage);
+    runner?.maze.listenMessages(handleMessage);
     return () => {
-      runner?.maze.removeEventListener('message', handleMessage);
+      runner?.maze.ignoreMessages(handleMessage);
     };
   }, [runner, handleMessage]);
 
@@ -48,15 +48,15 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
         </Tooltip>
       </div>
       <div className={css.scroll}>
-        {messages.map((message) => (
-          <div className={css.message} key={message.time}>
+        {history.map((message) => (
+          <div className={clsx(css.message, message.announce && css.announce)} key={message.time}>
             <div
               className={css.color}
               style={{
                 backgroundColor: message.color,
               }}
             />
-            <div>{message.message}</div>
+            <div className={css.text}>{message.message}</div>
           </div>
         ))}
       </div>

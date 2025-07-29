@@ -35,6 +35,8 @@ export class Human extends MazeSolver {
   protected readonly visited: boolean[][];
   protected readonly deadEnd: boolean[][];
 
+  private readonly eventTarget = new EventTarget();
+
   public constructor({ options, ...props }: HumanProperties) {
     super(props);
 
@@ -57,7 +59,7 @@ export class Human extends MazeSolver {
   private initializeKeyboardHandler(): (event: KeyboardEvent) => void {
     // eslint-disable-next-line unicorn/consistent-function-scoping
     const handler = (event: KeyboardEvent): void => {
-      this.dispatchEvent(new CustomEvent('keydown', { detail: event.key }));
+      this.eventTarget.dispatchEvent(new CustomEvent('keydown', { detail: event.key }));
     };
     document.addEventListener('keydown', handler);
     return handler;
@@ -80,8 +82,12 @@ export class Human extends MazeSolver {
       };
 
       ac.signal.addEventListener('abort', onAbort);
-      this.addEventListener('keydown', onKeyDown);
+      this.eventTarget.addEventListener('keydown', onKeyDown);
     });
+  }
+
+  public sendKey(key: string): void {
+    this.eventTarget.dispatchEvent(new CustomEvent('keydown', { detail: key }));
   }
   //#endregion
 

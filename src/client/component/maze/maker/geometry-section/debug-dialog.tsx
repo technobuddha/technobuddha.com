@@ -14,6 +14,8 @@ import {
 
 import { type Debug, shows } from './debug.ts';
 
+import css from './debug-dialog.module.css';
+
 function findShow(showBridges: boolean, showCoordinates: boolean, showKind: boolean): string {
   return (
     shows.find(
@@ -44,6 +46,7 @@ export const DebugDialog: React.FC<DebugDialogProps> = ({ value, isOpen, onResol
     findShow(value.showBridges, value.showCoordinates, value.showKind),
   );
   const [announceMaze, setAnnounceMaze] = React.useState(value.announceMaze);
+  const [showUnreachables, setShowUnreachables] = React.useState(value.showUnreachables);
 
   const handleShowChange = React.useCallback((newValue: string) => {
     setShow(newValue);
@@ -56,19 +59,26 @@ export const DebugDialog: React.FC<DebugDialogProps> = ({ value, isOpen, onResol
     [setAnnounceMaze],
   );
 
+  const handleShowUnreachablesChange = React.useCallback(
+    (newValue: boolean) => {
+      setShowUnreachables(newValue);
+    },
+    [setShowUnreachables],
+  );
+
   const handleCancel = React.useCallback(() => {
     onReject();
   }, [onReject]);
 
   const handleSave = React.useCallback(() => {
-    onResolve({ ...parseShow(show), announceMaze });
-  }, [onResolve, show, announceMaze]);
+    onResolve({ ...parseShow(show), announceMaze, showUnreachables });
+  }, [onResolve, show, announceMaze, showUnreachables]);
 
   return (
     <Dialog open={isOpen}>
       <DialogTitle>Debug Settings</DialogTitle>
       <DialogContent>
-        <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+        <div className={css.content}>
           <Select label="Cell Identification" value={show} onChange={handleShowChange}>
             {shows.map((m) => (
               <MenuItem key={m.title} value={m.title}>
@@ -80,6 +90,11 @@ export const DebugDialog: React.FC<DebugDialogProps> = ({ value, isOpen, onResol
             checked={announceMaze}
             label="Announce maze in messages"
             onChange={handleAnnounceChange}
+          />
+          <Checkbox
+            checked={showUnreachables}
+            label="Show unreachable cells in maze"
+            onChange={handleShowUnreachablesChange}
           />
         </div>
       </DialogContent>

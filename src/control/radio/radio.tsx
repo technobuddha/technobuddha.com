@@ -9,7 +9,7 @@ import {
 export type RadioProps = {
   readonly value: string;
   readonly label: FormControlLabelProps['label'];
-  readonly checked: MuiRadioProps['checked'];
+  readonly checked?: MuiRadioProps['checked'];
   readonly onChange?: (checked: boolean, value: string) => void;
 
   readonly children?: never;

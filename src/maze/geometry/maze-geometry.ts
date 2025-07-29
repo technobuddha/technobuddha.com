@@ -5,9 +5,10 @@ import {
   type Rect,
   toSquare,
 } from '@technobuddha/library';
+``;
 
 import { type MazeGenerator } from '#maze/generator';
-import { Random, type RandomProperties } from '#maze/random';
+import { MessageController, type MessageControllerProperties } from '#maze/random';
 
 import {
   type Cell,
@@ -48,14 +49,14 @@ export type AllOrder =
   | 'right-bottom'
   | 'random';
 
-export type MazeGeometryProperties = RandomProperties & {
+export type MazeGeometryProperties = MessageControllerProperties & {
   readonly width?: number;
   readonly height?: number;
   readonly wrapHorizontal?: boolean;
   readonly wrapVertical?: boolean;
 };
 
-export abstract class MazeGeometry extends Random {
+export abstract class MazeGeometry extends MessageController {
   public width: NonNullable<MazeGeometryProperties['width']> = 25;
   public height: NonNullable<MazeGeometryProperties['height']> = 25;
   protected readonly requestedWidth: MazeGeometryProperties['width'];

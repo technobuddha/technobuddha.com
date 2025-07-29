@@ -4,11 +4,10 @@ export type RandomProperties = {
   random?: () => number;
 };
 
-export class Random extends EventTarget {
+export class Random {
   public readonly random: () => number;
 
   public constructor({ random = Math.random }: RandomProperties = {}) {
-    super();
     this.random = random;
   }
 
@@ -30,13 +29,5 @@ export class Random extends EventTarget {
 
   public randomNumber(max: number, min = 0): number {
     return Math.floor(this.random() * (max - min)) + min;
-  }
-
-  public sendMessage(message: string, color?: string): void {
-    this.dispatchEvent(
-      new CustomEvent('message', {
-        detail: { message, color },
-      }),
-    );
   }
 }

@@ -106,7 +106,9 @@ export const PaletteDialog: React.FC<PaletteDialogProps> = ({
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleDefault}>Reset to Default</Button>
+        <Button variant="text" onClick={handleDefault}>
+          Reset to Default
+        </Button>
         <Button onClick={handleCancel}>Cancel</Button>
         <Button onClick={handleSave}>Save</Button>
       </DialogActions>

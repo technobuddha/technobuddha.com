@@ -19,9 +19,7 @@ export const MovementControls: React.FC<MovementControlsProps> = ({ runner }) =>
   const handleCommand = React.useCallback(
     memoize((key: string) => (_event: React.MouseEvent<HTMLButtonElement>) => {
       const human = runner?.solver as Human;
-      if (human) {
-        human.dispatchEvent(new CustomEvent('keydown', { detail: key }));
-      }
+      human?.sendKey(key);
     }),
     [runner],
   );
@@ -32,9 +30,7 @@ export const MovementControls: React.FC<MovementControlsProps> = ({ runner }) =>
     }
 
     const human = runner?.solver as Human;
-    if (human) {
-      human.dispatchEvent(new CustomEvent('keydown', { detail: 'x' }));
-    }
+    human?.sendKey('x');
   }, [runner]);
 
   return (

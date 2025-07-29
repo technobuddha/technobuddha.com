@@ -87,7 +87,7 @@ export class Roboto extends MazeSolver {
       robot.execute();
     } catch (error) {
       if (error instanceof RobotError) {
-        this.maze.sendMessage(error.message, error.color);
+        this.maze.sendMessage(error.message, { color: error.color });
       } else {
         this.maze.sendMessage(`${robot.name} encountered an error: ${error}`);
       }
@@ -153,9 +153,9 @@ export class Roboto extends MazeSolver {
 
       if (this.robos.length > 1) {
         if (winners.length === 1) {
-          this.maze.sendMessage(`${winner.name} wins`, winner.color);
+          this.maze.sendMessage(`${winner.name} wins`, { color: winner.color });
         } else if (winners.length > 1) {
-          this.maze.sendMessage(`${winners.map((r) => r.name).join(', ')} tie`, 'white');
+          this.maze.sendMessage(`${winners.map((r) => r.name).join(', ')} tie`, { color: 'white' });
         }
       }
 

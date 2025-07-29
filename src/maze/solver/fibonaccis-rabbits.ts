@@ -93,7 +93,9 @@ export class FibonaccisRabbits extends MazeSolver {
         rabbit.cell = next;
 
         if (this.maze.isSame(next, exit)) {
-          this.maze.sendMessage(`${this.maxRabbits} rabbits solved the maze!`, this.rabbitColor);
+          this.maze.sendMessage(`${this.maxRabbits} rabbits solved the maze!`, {
+            color: this.rabbitColor,
+          });
           this.maze.solution = this.maze.makePath(this.maze.flatten(rabbit.history));
           return;
         }

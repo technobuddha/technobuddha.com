@@ -412,7 +412,7 @@ export abstract class Maze extends MazeGeometry {
     const { unreachable } = this.analyze(this.entrance);
 
     if (unreachable.length > 0) {
-      this.sendMessage(`There are ${unreachable.length} unreachable cells`);
+      this.sendMessage(`There are ${unreachable.length} unreachable cells`, { level: 'error' });
       logger.error(`Unreachable cells: `, unreachable);
 
       if (this.showUnreachables) {
@@ -649,7 +649,7 @@ export abstract class Maze extends MazeGeometry {
     } else if (this.showKind) {
       this.drawText(cell, this.cellKind(cell).toString());
     } else if (this.showBridges && this.nexus(cell).bridge) {
-      this.drawText(cell, '○', 'white');
+      this.drawText(cell, '○');
     }
 
     return cell;
@@ -834,7 +834,7 @@ export abstract class Maze extends MazeGeometry {
       return cell;
     }
 
-    this.sendMessage(`Unable to find cell matching criteria "${p}"`);
+    this.sendMessage(`Unable to find cell matching criteria "${p}"`, { level: 'warning' });
     return this.randomCell();
   }
 

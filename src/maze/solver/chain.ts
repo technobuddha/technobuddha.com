@@ -166,7 +166,7 @@ export class Chain extends Roboto {
           yield;
 
           if (this.robots.length === 0) {
-            this.maze.sendMessage('no solution found');
+            this.maze.sendMessage('No solution found', { level: 'warning' });
             return;
           }
 

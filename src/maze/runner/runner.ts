@@ -62,7 +62,7 @@ export class Runner extends EventTarget {
 
     if (name) {
       setTimeout(() => {
-        this.maze.sendMessage(name, { announce: true });
+        this.maze.sendMessage(name, { level: 'info' });
       }, 100);
     }
 

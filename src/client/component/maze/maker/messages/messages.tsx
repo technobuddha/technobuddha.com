@@ -48,17 +48,47 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
         </Tooltip>
       </div>
       <div className={css.scroll}>
-        {history.map((message) => (
-          <div className={clsx(css.message, message.announce && css.announce)} key={message.time}>
-            <div
-              className={css.color}
-              style={{
-                backgroundColor: message.color,
-              }}
-            />
-            <div className={css.text}>{message.message}</div>
-          </div>
-        ))}
+        {history.map((message) => {
+          switch (message.level) {
+            case 'error': {
+              return (
+                <div key={message.time} className={clsx(css.message, css.error)}>
+                  <div>🚨</div>
+                  <div className={css.text}>{message.message}</div>
+                </div>
+              );
+            }
+            case 'warning': {
+              return (
+                <div key={message.time} className={clsx(css.message, css.warning)}>
+                  <div>⚠️</div>
+                  <div className={css.text}>{message.message}</div>
+                </div>
+              );
+            }
+            case 'info': {
+              return (
+                <div key={message.time} className={clsx(css.message, css.info)}>
+                  <div className={css.text}>{message.message}</div>
+                </div>
+              );
+            }
+
+            default: {
+              return (
+                <div key={message.time} className={css.message}>
+                  <div
+                    className={css.color}
+                    style={{
+                      backgroundColor: message.color,
+                    }}
+                  />
+                  <div className={css.text}>{message.message}</div>
+                </div>
+              );
+            }
+          }
+        })}
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { type CellFacing } from '../geometry/index.ts';
+import { mix } from '../library/index.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 import { DrunkenRobot, type DrunkenRobotProperties } from './robot/drunkards-walk.ts';
@@ -89,7 +90,7 @@ export class Roboto extends MazeSolver {
       if (error instanceof RobotError) {
         this.maze.sendMessage(error.message, { color: error.color });
       } else {
-        this.maze.sendMessage(`${robot.name} encountered an error: ${error}`);
+        this.maze.sendMessage(`${robot.name} encountered an error: ${error}`, { level: 'error' });
       }
       this.killOneRobot(robot);
     }
@@ -113,7 +114,7 @@ export class Roboto extends MazeSolver {
     if (index >= 0) {
       this.robots.splice(index, 1);
     } else {
-      this.maze.sendMessage(`${robot.name} body not found`);
+      this.maze.sendMessage(`${robot.name} body not found`, { level: 'warning' });
     }
     robot.dispose();
   }
@@ -145,7 +146,7 @@ export class Roboto extends MazeSolver {
 
     if (this.robots.length === 0) {
       if (this.robos.length > 0) {
-        this.maze.sendMessage('no solution found');
+        this.maze.sendMessage('No solution found', { level: 'warning' });
       }
     } else {
       const winners = this.robots.filter((robot) => this.isProgramComplete(robot));
@@ -155,7 +156,9 @@ export class Roboto extends MazeSolver {
         if (winners.length === 1) {
           this.maze.sendMessage(`${winner.name} wins`, { color: winner.color });
         } else if (winners.length > 1) {
-          this.maze.sendMessage(`${winners.map((r) => r.name).join(', ')} tie`, { color: 'white' });
+          this.maze.sendMessage(`${winners.map((r) => r.name).join(', ')} tie`, {
+            color: mix(winners[0].color, winners[1].color),
+          });
         }
       }
 

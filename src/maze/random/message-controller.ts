@@ -1,8 +1,8 @@
-import { Random, RandomProperties } from './random';
+import { Random, type RandomProperties } from './random.ts';
 
 export type MessageOptions = {
   color?: string;
-  announce?: boolean;
+  level?: 'error' | 'warning' | 'info';
 };
 
 export type MessageCallback = (message: string, options: MessageOptions) => void;
@@ -18,16 +18,16 @@ export class MessageController extends Random {
     this.eventTarget = new EventTarget();
   }
 
-  public sendMessage(message: string, { color, announce }: MessageOptions = {}): void {
+  public sendMessage(message: string, { color, level }: MessageOptions = {}): void {
     this.eventTarget.dispatchEvent(
       new CustomEvent('message', {
-        detail: { message, color, announce },
+        detail: { message, color, level },
       }),
     );
   }
 
   public listenMessages(callback: MessageCallback): void {
-    const handler = (event: Event) => {
+    const handler = (event: Event): void => {
       const { message, ...options } = (event as CustomEvent).detail;
       callback(message, options);
     };

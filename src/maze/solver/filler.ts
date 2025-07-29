@@ -97,7 +97,7 @@ export class Filler extends MazeSolver {
         ({ target }) => !this.maze.isSame(prev, target) && !this.deadEnds[target.x][target.y],
       );
       if (moves.length === 0 || moves.length > 1) {
-        this.maze.sendMessage(`filler ${this.method} no solution found`);
+        this.maze.sendMessage(`filler ${this.method} no solution found`, { level: 'error' });
         return;
       }
 

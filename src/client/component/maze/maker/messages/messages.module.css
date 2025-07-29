@@ -34,11 +34,7 @@
         top: 0.25rem;
       }
 
-      &.announce {
-        .color {
-          display: none;
-        }
-
+      &.info {
         .text {
           width: 100%;
           font-size: 0.6rem;

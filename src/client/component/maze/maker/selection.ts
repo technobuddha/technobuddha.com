@@ -379,7 +379,7 @@ export const generators: GeneratorSelection[] = [
         maker: (props) =>
           new RecursiveBacktracker({
             strategy: ['bridge-builder'],
-            forced: 0.25,
+            // forced: 0.25,
             bridgeMinLength: 5,
             bridgeMaxLength: 15,
             stepsAfterBridge: 5,

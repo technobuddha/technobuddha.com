@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
 import { toTitleCase } from '@technobuddha/library';
 import { create, type InstanceProps } from 'react-modal-promise';
@@ -33,7 +32,6 @@ export const PaletteDialog: React.FC<PaletteDialogProps> = ({
 
   const handleSelectionChange = React.useCallback(
     (checked: boolean, value: string) => {
-      console.log(checked, value);
       if (checked) {
         setSelected(value as keyof MazeColors);
       }
@@ -67,42 +65,33 @@ export const PaletteDialog: React.FC<PaletteDialogProps> = ({
     <Dialog open={isOpen}>
       <DialogTitle>Palette Settings</DialogTitle>
       <DialogContent>
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <table>
-            <thead>
-              <th>Name</th>
-              <th>Color</th>
-              <th />
-            </thead>
-            <tbody>
-              {Object.entries(colors).map(([key, value], index) => (
-                <tr key={key}>
-                  <td>
-                    <Radio
-                      value={key}
-                      label={toTitleCase(key)}
-                      checked={key === selected}
-                      onChange={handleSelectionChange}
-                    />
-                  </td>
-                  <td className={css.swatch}>
-                    <Tooltip title={value} placement="top">
-                      <div style={{ backgroundColor: value }}>&nbsp;</div>
-                    </Tooltip>
-                  </td>
-                  {index === 0 && (
-                    <td className={css.picker} rowSpan={Object.keys(colors).length}>
-                      <ColorPicker
-                        className={css.colorPicker}
-                        value={colors[selected]}
-                        onChange={handleColorChange}
-                      />
-                    </td>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className={css.content}>
+          <div className={css.colors}>
+            {Object.entries(colors).map(([key, value]) => (
+              <div key={key} className={css.color}>
+                <div className={css.name}>
+                  <Radio
+                    value={key}
+                    label={toTitleCase(key)}
+                    checked={key === selected}
+                    onChange={handleSelectionChange}
+                  />
+                </div>
+                <div className={css.swatch}>
+                  <Tooltip title={value} placement="top">
+                    <div style={{ backgroundColor: value }}>&nbsp;</div>
+                  </Tooltip>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className={css.picker}>
+            <ColorPicker
+              className={css.colorPicker}
+              value={colors[selected]}
+              onChange={handleColorChange}
+            />
+          </div>
         </div>
       </DialogContent>
       <DialogActions>

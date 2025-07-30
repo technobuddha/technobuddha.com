@@ -1,1 +1,1 @@
-export { makeStyles, theme, ThemeProvider, useTheme } from './mui.ts';
+export { theme, ThemeProvider, useTheme } from './mui.ts';

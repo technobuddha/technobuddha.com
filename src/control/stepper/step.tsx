@@ -5,6 +5,7 @@ export type StepProps = {
   readonly style?: MuiStepProps['style'];
   readonly className?: MuiStepProps['className'];
   readonly active?: boolean;
+  readonly onClick?: MuiStepProps['onClick'];
 
   readonly children?: MuiStepProps['children'];
 };

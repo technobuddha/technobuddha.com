@@ -7,12 +7,17 @@
     .item {
       flex: 0;
       flex-basis: 33%;
+      justify-content: center;
     }
 
     .buttons {
       display: flex;
       flex-direction: row;
       gap: 0.5rem;
+
+      button {
+        font-size: 1.25rem;
+      }
     }
   }
 }

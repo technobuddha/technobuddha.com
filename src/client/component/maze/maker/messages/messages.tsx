@@ -6,6 +6,8 @@ import { IconButton, Tooltip } from '#control';
 import { type MessageCallback, type MessageOptions } from '#maze/random';
 import { type Runner } from '#maze/runner';
 
+import { Section } from '../section/index.ts';
+
 import css from './messages.module.css';
 
 type History = {
@@ -38,9 +40,8 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
   }, [runner, handleMessage]);
 
   return (
-    <div className={css.messages}>
+    <Section title="Messages" className={css.messages}>
       <div className={css.header}>
-        <div className={css.title}>Messages</div>
         <Tooltip title="Clear messages" placement="top">
           <IconButton onClick={handleClear}>
             <IoTrash />
@@ -90,6 +91,6 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
           }
         })}
       </div>
-    </div>
+    </Section>
   );
 };

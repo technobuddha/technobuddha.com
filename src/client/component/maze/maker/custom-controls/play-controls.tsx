@@ -3,6 +3,8 @@ import React from 'react';
 import { ToggleButton, ToggleButtonGroup } from '#control';
 import { type PlayMode, playModeIcons, playModes, type Runner } from '#maze/runner';
 
+import { Section } from '../section/index.ts';
+
 import css from './play-controls.module.css';
 
 export type PlayControlsProps = {
@@ -39,26 +41,28 @@ export const PlayControls: React.FC<PlayControlsProps> = ({ runner }) => {
   );
 
   return (
-    <ToggleButtonGroup
-      className={css.playControls}
-      color="primary"
-      value={mode}
-      exclusive
-      onChange={handleChange}
-    >
-      {playModes.map((pm) => (
-        <ToggleButton
-          key={pm}
-          value={pm}
-          disabled={
-            (runner?.phase === 'final' || runner?.phase === 'observe') &&
-            pm !== 'pause' &&
-            pm !== 'refresh'
-          }
-        >
-          {playModeIcons[pm]}
-        </ToggleButton>
-      ))}
-    </ToggleButtonGroup>
+    <Section title="Maze Controls">
+      <ToggleButtonGroup
+        className={css.playControls}
+        color="primary"
+        value={mode}
+        exclusive
+        onChange={handleChange}
+      >
+        {playModes.map((pm) => (
+          <ToggleButton
+            key={pm}
+            value={pm}
+            disabled={
+              (runner?.phase === 'final' || runner?.phase === 'observe') &&
+              pm !== 'pause' &&
+              pm !== 'refresh'
+            }
+          >
+            {playModeIcons[pm]}
+          </ToggleButton>
+        ))}
+      </ToggleButtonGroup>
+    </Section>
   );
 };

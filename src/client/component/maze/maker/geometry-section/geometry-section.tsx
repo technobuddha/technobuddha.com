@@ -3,8 +3,9 @@ import { randomWeightedPick } from '@technobuddha/library';
 import clsx from 'clsx';
 import { GiPalette, GiSpottedBug } from 'react-icons/gi';
 
-import { IconButton, MenuItem, Select } from '#control';
+import { IconButton, MenuItem, Select, Tooltip } from '#control';
 import { defaultColors, type MazeColors, type MazeProperties } from '#maze/geometry';
+import { useHMR } from '#maze/library';
 
 import { type GeometryProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';
@@ -30,19 +31,7 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
   const [debug, setDebug] = React.useState<Debug>(defaultDebug);
   const [color, setColor] = React.useState<MazeColors>(defaultColors);
   const [distance, setDistance] = React.useState<string>();
-  const [hmr, setHMR] = React.useState(0);
-
-  React.useEffect(() => {
-    const handleHMR = (): void => {
-      setHMR((prev) => prev + 1);
-    };
-
-    import.meta.hot?.on('vite:beforeUpdate', handleHMR);
-
-    return () => {
-      import.meta.hot?.off('vite:beforeUpdate', handleHMR);
-    };
-  }, []);
+  const hmr = useHMR();
 
   const handleShapeChange = React.useCallback((value: string) => {
     const g = geometries.find((g) => g.title === value);
@@ -222,7 +211,7 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
         </div>
         <div className={css.item}>
           <Select
-            label="Show Distances"
+            label="Distances"
             allowUndefined="(random)"
             value={distance}
             onChange={handleDistanceChange}
@@ -235,12 +224,16 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
           </Select>
         </div>
         <div className={clsx(css.item, css.buttons)}>
-          <IconButton onClick={handleDebug}>
-            <GiSpottedBug />
-          </IconButton>
-          <IconButton onClick={handlePalette}>
-            <GiPalette />
-          </IconButton>
+          <Tooltip title="Change Maze Colors">
+            <IconButton onClick={handlePalette}>
+              <GiPalette />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Add Diagnostics to the Maze">
+            <IconButton onClick={handleDebug}>
+              <GiSpottedBug />
+            </IconButton>
+          </Tooltip>
         </div>
       </div>
     </Section>

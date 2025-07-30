@@ -5,6 +5,7 @@ import { useDerivedState } from '@technobuddha/react-hooks';
 import { Size } from '@technobuddha/size';
 
 import { useTranslation } from '#context/i18n';
+import { enqueueSnackbar } from '#context/snackbar';
 import { LinearProgress } from '#control';
 
 import { chaos } from './worker/index.ts';
@@ -155,9 +156,8 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
         })
 
         .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err);
-        }); // TODO [2025-08-01]: use snackbar to show error
+          enqueueSnackbar({ message: err.message, variant: 'error' });
+        });
     } else {
       setTimeout(() => {
         const context = canvas.current!.getContext('2d')!;

@@ -51,8 +51,6 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({ path, tabs }) => {
 
   const tab = tabs.find((t) => t.route === subpath);
 
-  // TODO [2025-07-31]: scrollButtons support
-
   if (tab) {
     return (
       <div className={css.tabbedRouter}>
@@ -61,7 +59,7 @@ export const TabbedRouter: React.FC<TabbedRouterProps> = ({ path, tabs }) => {
             value={subpath}
             onChange={handleChange}
             variant="scrollable"
-            // scrollButtons="on"
+            scrollButtons="auto"
             indicatorColor="primary"
             textColor="primary"
           >

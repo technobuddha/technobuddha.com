@@ -33,18 +33,14 @@ export const NewAlbums: React.FC = () => {
       <div className={css.genre}>{datum.genre?.join('; ')}</div>
       <div className={css.subgenre}>{datum.subgenre?.join('; ')}</div>
       <div className={css.title}>
-        {/* eslint-disable-next-line react/no-array-index-key, @typescript-eslint/no-explicit-any */}
-        {datum.title?.sort().map((title: any, i: number) => <div key={i}>{title}</div>)}
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {datum.title?.sort().map((title: any, i: number) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={i}>{title}</div>
+        ))}
       </div>
     </div>
   );
-
-  // TODO [2025-12-31]: Figure out why translations are giving a type error if used directly
-  const artist = t('Artist');
-  const album = t('Album');
-  const year = t('Year');
-  const genre = t('Genre');
-  const subgenre = t('Style');
 
   if (dataset) {
     return (
@@ -52,11 +48,11 @@ export const NewAlbums: React.FC = () => {
         data={dataset}
         rowHeight={136}
         columns={[
-          { name: 'artist', header: artist, type: 'array', sortBy: ['artist', 'album'] },
-          { name: 'album', header: album, type: 'string', sortBy: ['album'] },
-          { name: 'year', header: year, type: 'number', sortBy: ['year'] },
-          { name: 'genre', header: genre, type: 'array', sortBy: ['genre', 'subgenre'] },
-          { name: 'subgenre', header: subgenre, type: 'array', sortBy: ['subgenre'] },
+          { name: 'artist', header: t('Artist'), type: 'array', sortBy: ['artist', 'album'] },
+          { name: 'album', header: t('Album'), type: 'string', sortBy: ['album'] },
+          { name: 'year', header: t('Year'), type: 'number', sortBy: ['year'] },
+          { name: 'genre', header: t('Genre'), type: 'array', sortBy: ['genre', 'subgenre'] },
+          { name: 'subgenre', header: t('Style'), type: 'array', sortBy: ['subgenre'] },
         ]}
         // eslint-disable-next-line react/jsx-no-bind
         rowRenderer={rowRenderer}

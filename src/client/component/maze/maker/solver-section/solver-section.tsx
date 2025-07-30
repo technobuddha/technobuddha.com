@@ -2,6 +2,7 @@ import React from 'react';
 import { randomWeightedPick } from '@technobuddha/library';
 
 import { MenuItem, Select } from '#control';
+import { useHMR } from '#maze/library';
 import { type MazeSolverProperties } from '#maze/solver';
 
 import { type SolverProducer } from '../maze-maker.tsx';
@@ -17,19 +18,7 @@ type SolverSectionProps = {
 export const SolverSection: React.FC<SolverSectionProps> = ({ className, onChange }) => {
   const [solver, setSolver] = React.useState<string>();
   const [variation, setVariation] = React.useState<string>();
-  const [hmr, setHMR] = React.useState(0);
-
-  React.useEffect(() => {
-    const handleHMR = (): void => {
-      setHMR((prev) => prev + 1);
-    };
-
-    import.meta.hot?.on('vite:beforeUpdate', handleHMR);
-
-    return () => {
-      import.meta.hot?.off('vite:beforeUpdate', handleHMR);
-    };
-  }, []);
+  const hmr = useHMR();
 
   const handleSolverChange = React.useCallback((value: string) => {
     setSolver(value);

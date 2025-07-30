@@ -40,7 +40,7 @@ const config = {
       environment: 'browser',
     },
     'src/maze': {
-      environment: 'browser',
+      environment: 'vite-client',
     },
     'src/server': {
       environment: 'node',

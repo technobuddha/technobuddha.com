@@ -1,11 +1,4 @@
-import { createTheme, type Theme as MuiTheme } from '@mui/material';
-
-export type Theme = MuiTheme & {
-  iconSize: number;
-  userInterface: {
-    headerHeight: string;
-  };
-};
+import { createTheme, type Theme } from '@mui/material';
 
 export const themeSettings = {
   palette: {
@@ -53,10 +46,4 @@ export const themeSettings = {
   },
 };
 
-export const theme: Theme = {
-  ...createTheme(themeSettings),
-  iconSize: 24,
-  userInterface: {
-    headerHeight: '40px',
-  },
-};
+export const theme: Theme = createTheme(themeSettings);

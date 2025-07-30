@@ -4,6 +4,9 @@ import { memoize } from 'lodash-es';
 import { Button, Step, StepLabel, Stepper } from '#control';
 import { type Phase, phases, type PlayMode, playModeIcons, type Runner } from '#maze/runner';
 
+import { Section } from '../section/index.ts';
+
+import { PhaseControlsHelp } from './phase-controls.help.tsx';
 import { phasePlayModeDialog } from './phase-play-mode-dialog.tsx';
 
 import css from './phase-controls.module.css';
@@ -17,6 +20,7 @@ export type PhaseControlsProps = {
 
 export const PhaseControls: React.FC<PhaseControlsProps> = ({ runner, onPhasePlayModeChange }) => {
   const [phase, setPhase] = React.useState<Phase | undefined>(runner?.phase);
+  const help = React.useMemo(() => <PhaseControlsHelp />, []);
 
   const myPhases = React.useMemo(
     () => phases.filter((phase) => phase !== 'maze' && phase !== 'observe' && phase !== 'exit'),
@@ -39,7 +43,7 @@ export const PhaseControls: React.FC<PhaseControlsProps> = ({ runner, onPhasePla
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handlePhasePlayModeChange = React.useCallback(
-    memoize((p: Phase) => (_event: React.MouseEvent<HTMLButtonElement>) => {
+    memoize((p: Phase) => () => {
       const phase = p === 'final' ? 'observe' : p;
 
       phasePlayModeDialog({ phase, value: runner?.phasePlayMode?.[phase] })
@@ -54,16 +58,17 @@ export const PhaseControls: React.FC<PhaseControlsProps> = ({ runner, onPhasePla
   const activeStep = phases.indexOf(phase ?? 'final') - 1;
 
   return (
-    <div className={css.phaseControls}>
+    <Section className={css.phaseControls} info={help} title="Phase">
       <Stepper className={css.stepper} activeStep={activeStep} alternativeLabel>
         {myPhases.map((phase) => (
-          <Step className={css.step} key={phase} active={phase === runner?.phase}>
+          <Step
+            key={phase}
+            onClick={handlePhasePlayModeChange(phase)}
+            className={css.step}
+            active={phase === runner?.phase}
+          >
             <StepLabel className={css.label}>
-              <Button
-                variant="text"
-                className={css.button}
-                onClick={handlePhasePlayModeChange(phase)}
-              >
+              <Button variant="text" className={css.button}>
                 <div className={css.content}>
                   <div className={css.icon}>
                     {
@@ -79,6 +84,6 @@ export const PhaseControls: React.FC<PhaseControlsProps> = ({ runner, onPhasePla
           </Step>
         ))}
       </Stepper>
-    </div>
+    </Section>
   );
 };

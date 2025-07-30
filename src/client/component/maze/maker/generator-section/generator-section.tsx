@@ -3,6 +3,7 @@ import { randomWeightedPick } from '@technobuddha/library';
 
 import { MenuItem, Select } from '#control';
 import { type MazeGeneratorProperties } from '#maze/generator';
+import { useHMR } from '#maze/library';
 
 import { type GeneratorProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';
@@ -18,19 +19,7 @@ export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, o
   const [generator, setGenerator] = React.useState<string>();
   const [variation, setVariation] = React.useState<string>();
   const [braid, setBraid] = React.useState<string>();
-  const [hmr, setHMR] = React.useState(0);
-
-  React.useEffect(() => {
-    const handleHMR = (): void => {
-      setHMR((prev) => prev + 1);
-    };
-
-    import.meta.hot?.on('vite:beforeUpdate', handleHMR);
-
-    return () => {
-      import.meta.hot?.off('vite:beforeUpdate', handleHMR);
-    };
-  }, []);
+  const hmr = useHMR();
 
   const handleGeneratorChange = React.useCallback((value: string) => {
     setGenerator(value);

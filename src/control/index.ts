@@ -18,6 +18,7 @@ export {
   type DialogTitleProps,
 } from './dialog/index.ts';
 export { Failure, type FailureProps } from './failure/index.ts';
+export { Help, type HelpProps } from './help/index.ts';
 export { IconButton, type IconButtonProps } from './icon-button/index.ts';
 export { LinearProgress, type LinearProgressProps } from './linear-progress/index.ts';
 export { Link, type LinkProps } from './link/index.ts';

@@ -1,14 +1,19 @@
 import React from 'react';
 import Popover from '@mui/material/Popover';
+import { clsx } from 'clsx';
 import { HiMiniInformationCircle } from 'react-icons/hi2';
 
-import { IconButton } from '#control';
+import { Box, IconButton } from '#control';
+
+import css from './help.module.css';
 
 export type HelpProps = {
+  readonly className?: string;
+  readonly style?: React.CSSProperties;
   readonly children?: React.ReactNode;
 };
 
-export const Help: React.FC<HelpProps> = ({ children }) => {
+export const Help: React.FC<HelpProps> = ({ className, style, children }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   const handleClick = React.useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -23,9 +28,9 @@ export const Help: React.FC<HelpProps> = ({ children }) => {
   const id = open ? 'simple-popover' : undefined;
 
   return (
-    <div>
-      <IconButton aria-describedby={id} onClick={handleClick}>
-        <HiMiniInformationCircle />
+    <Box className={clsx(css.help, className)} style={style}>
+      <IconButton aria-describedby={id} size="small" onClick={handleClick}>
+        <HiMiniInformationCircle className={css.icon} />
       </IconButton>
       <Popover
         id={id}
@@ -39,6 +44,6 @@ export const Help: React.FC<HelpProps> = ({ children }) => {
       >
         {children}
       </Popover>
-    </div>
+    </Box>
   );
 };

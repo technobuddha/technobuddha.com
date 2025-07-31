@@ -1,0 +1,9 @@
+.help {
+  button {
+    padding: 0;
+
+    .icon {
+      color: mui-theme(palette-common-black);
+    }
+  }
+}

@@ -1,8 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
-import { HiMiniInformationCircle } from 'react-icons/hi2';
 
-import { Box, Card, CardContent, Tooltip, Typography } from '#control';
+import { Box, Card, CardContent, Help, Typography } from '#control';
 
 import css from './section.module.css';
 
@@ -16,13 +15,7 @@ export const Section: React.FC<SectionProps> = ({ className, title, info, childr
   <Card className={clsx(css.section, className)} variant="outlined">
     <CardContent className={css.content}>
       <Box className={css.header}>
-        {Boolean(info) && (
-          <Tooltip title={info}>
-            <div className={css.info}>
-              <HiMiniInformationCircle />
-            </div>
-          </Tooltip>
-        )}
+        {Boolean(info) && <Help className={css.help}>{info}</Help>}
         <Typography className={css.title}>{title}</Typography>
       </Box>
       {children}

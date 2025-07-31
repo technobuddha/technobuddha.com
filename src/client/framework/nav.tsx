@@ -6,7 +6,7 @@ import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useLocation, useNavigate } from '#context/router';
 import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText } from '#control';
-import { components } from '#settings/components.jsx';
+import { pages } from '#settings/pages.jsx';
 
 import css from './nav.module.css';
 
@@ -22,8 +22,8 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
   const location = useLocation();
   const { t } = useTranslation();
   const { account } = useAuthentication();
-  const translatedComponents = React.useMemo(
-    () => components(t).filter((c) => c.active && (c.loggedIn === false || account != null)),
+  const translatedPages = React.useMemo(
+    () => pages(t).filter((c) => c.active && (c.loggedIn === false || account != null)),
     [t, account],
   );
 
@@ -80,15 +80,15 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
         onMouseLeave={handleMouseLeave}
       >
         <List>
-          {translatedComponents
+          {translatedPages
             ?.filter((c) => c.active)
-            .map((component, i) => {
-              const Icon = component.icon;
-              const current = location.pathname.startsWith(component.location);
+            .map((page, i) => {
+              const Icon = page.icon;
+              const current = location.pathname.startsWith(page.location);
 
               return (
                 // eslint-disable-next-line react/no-array-index-key
-                <ListItem onClick={handleListClick(component.location)} key={i}>
+                <ListItem onClick={handleListClick(page.location)} key={i}>
                   <ListItemIcon>
                     <Icon
                       className={clsx(css.icon, {
@@ -98,8 +98,8 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
                     />
                   </ListItemIcon>
                   <ListItemText
-                    primary={component.primary}
-                    secondary={component.secondary}
+                    primary={page.primary}
+                    secondary={page.secondary}
                     classes={{
                       root: css.listItemText,
                       primary: css.primary,

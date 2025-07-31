@@ -1,6 +1,8 @@
 import { type InitOptions } from 'i18next';
 
-const isDevelopment = import.meta.env.NODE_ENV !== 'production';
+const isDevelopment = true;
+// import.meta.env.NODE_ENV !== 'production';
+// TODO
 
 export default {
   fallbackLng: false,

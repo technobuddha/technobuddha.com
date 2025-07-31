@@ -13,19 +13,19 @@ import {
 } from 'react-icons/gi';
 import { HiColorSwatch } from 'react-icons/hi';
 
-import { Chaos } from '#component/chaos';
-import { Color } from '#component/color';
-import { Home } from '#component/home';
-import { Knight } from '#component/knight';
-import { Life } from '#component/life';
-import { MazeDebugger, MazeMaker } from '#component/maze';
-import { Music } from '#component/music';
-import { NBody } from '#component/n-body';
-import { Theme } from '#component/theme';
 import { type TFunction } from '#context/i18n';
 import { Link, Typography } from '#control';
+import { Chaos } from '#page/chaos';
+import { Color } from '#page/color';
+import { Home } from '#page/home';
+import { Knight } from '#page/knight';
+import { Life } from '#page/life';
+import { MazeDebugger, MazeMaker } from '#page/maze';
+import { Music } from '#page/music';
+import { NBody } from '#page/n-body';
+import { Theme } from '#page/theme';
 
-export type Component = {
+export type Page = {
   active: boolean;
   loggedIn: boolean;
   name: string;
@@ -39,7 +39,7 @@ export type Component = {
   todo?: string[];
 };
 
-export const components: (t: TFunction) => Component[] = (t) => [
+export const pages: (t: TFunction) => Page[] = (t) => [
   {
     active: true,
     loggedIn: false,

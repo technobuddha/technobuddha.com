@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { MazeBackground } from '#component/maze';
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
 import { useNavigate } from '#context/router';
 import { Typography } from '#control';
-import { type Component, components } from '#settings/components.tsx';
+import { MazeBackground } from '#page/maze';
+import { type Page, pages } from '#settings/pages.tsx';
 
 import Logo from './logo.svg?react';
 import { Spinner } from './spinner.tsx';
@@ -22,14 +22,14 @@ export const Home: React.FC<HomeProps> = () => {
   const { account } = useAuthentication();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const translatedComponents = React.useMemo(
-    () => components(t).filter((c) => c.active && (c.loggedIn === false || account != null)),
+  const translatedPages = React.useMemo(
+    () => pages(t).filter((c) => c.active && (c.loggedIn === false || account != null)),
     [t, account],
   );
 
   const handleClick = React.useCallback(
-    (component: Component) => {
-      void navigate(component.location);
+    (page: Page) => {
+      void navigate(page.location);
     },
     [navigate],
   );
@@ -54,7 +54,7 @@ export const Home: React.FC<HomeProps> = () => {
           </Typography>
         </div>
         <div className={css.wheelOfComponents}>
-          <Spinner components={translatedComponents} onClick={handleClick}>
+          <Spinner components={translatedPages} onClick={handleClick}>
             {({ primary, secondary, description }) => (
               <div className={css.component}>
                 <Typography variant="h4">{primary}</Typography>

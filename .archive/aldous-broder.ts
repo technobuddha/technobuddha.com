@@ -1,6 +1,6 @@
 import { create2DArray } from '@technobuddha/library';
 
-import { MazeGenerator, type MazeGeneratorProperties } from '../maze-generator.js';
+import { MazeGenerator, type MazeGeneratorProperties } from '../maze-generator.ts';
 
 export class AldousBroder extends MazeGenerator {
   private readonly visited: boolean[][] = [];

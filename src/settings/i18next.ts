@@ -1,10 +1,8 @@
 import { type InitOptions } from 'i18next';
 
-const isDevelopment = true;
-// import.meta.env.NODE_ENV !== 'production';
-// TODO
+const isDevelopment = import.meta?.env?.DEV ?? true;
 
-export default {
+export const i18nextInit = {
   fallbackLng: false,
   supportedLngs: ['en', 'chef'],
   nonExplicitSupportedLngs: false,

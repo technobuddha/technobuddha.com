@@ -1,1 +1,1 @@
-export { Framework } from './framework.js';
+export { Framework } from './framework.tsx';

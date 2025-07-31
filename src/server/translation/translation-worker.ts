@@ -3,7 +3,7 @@ import { clearTimeout, setTimeout } from 'node:timers';
 import { isNil, keys, omit } from 'lodash-es';
 import { type Logger } from 'winston';
 
-import i18next from '#settings/i18next';
+import { i18nextInit } from '#settings/i18next';
 
 import {
   readTranslations,
@@ -65,7 +65,7 @@ export class TranslationWorker {
 
     for (const ns of Object.keys(myQueue)) {
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      for (const lng of i18next.supportedLngs || []) {
+      for (const lng of i18nextInit.supportedLngs || []) {
         const currentTranslations = await readTranslations(lng, ns);
         const archiveTranslations = await readTranslations(lng, ns, 'archive');
         const promises = [] as Promise<TranslateReturn>[];

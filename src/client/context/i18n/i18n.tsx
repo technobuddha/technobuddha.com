@@ -4,9 +4,9 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import HttpApi from 'i18next-http-backend';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 
-import config from '#settings/i18next.js';
+import { i18nextInit } from '#settings/i18next';
 
-void i18next.use(LanguageDetector).use(HttpApi).use(initReactI18next).init(config);
+void i18next.use(LanguageDetector).use(HttpApi).use(initReactI18next).init(i18nextInit);
 
 type I18nProviderProps = {
   readonly children?: React.ReactNode;

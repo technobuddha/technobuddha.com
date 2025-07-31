@@ -3,7 +3,7 @@ import { isUndefined } from 'lodash-es';
 import { type Logger } from 'winston';
 import zxcvbn from 'zxcvbn';
 
-import { authenticationSettings } from '#settings/authentication.js';
+import { authenticationSettings } from '#settings/authentication.ts';
 
 import { cacheControl } from '../cache-control.ts';
 import {

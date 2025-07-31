@@ -16,7 +16,7 @@ import {
   type TranslateReturn,
   writeTranslations,
 } from '#server/translation';
-import i18next from '#settings/i18next';
+import { i18nextInit } from '#settings/i18next';
 
 function out(text: string | undefined): void {
   if (text) {
@@ -25,9 +25,12 @@ function out(text: string | undefined): void {
 }
 
 void (async function main() {
-  const foreign = i18next.supportedLngs ? i18next.supportedLngs.filter((lng) => lng !== 'en') : [];
+  const foreign =
+    i18nextInit.supportedLngs ? i18nextInit.supportedLngs.filter((lng) => lng !== 'en') : [];
 
-  for (const ns of isString(i18next.ns) ? [i18next.ns] : (i18next.ns ?? ['translation'])) {
+  for (const ns of isString(i18nextInit.ns) ?
+    [i18nextInit.ns]
+  : (i18nextInit.ns ?? ['translation'])) {
     const en = await readTranslations('en', ns, 'external');
 
     for (const lng of foreign) {
@@ -74,10 +77,10 @@ void (async function main() {
       // },
 
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      lngs: i18next.supportedLngs || undefined,
-      ns: i18next.ns,
+      lngs: i18nextInit.supportedLngs || undefined,
+      ns: i18nextInit.ns,
       defaultLng: 'en',
-      defaultNs: i18next.defaultNS,
+      defaultNs: i18nextInit.defaultNS,
       defaultValue: null,
       resource: {
         loadPath: path.join(paths.locales, '{{lng}}', '{{ns}}.external.json'),
@@ -85,10 +88,10 @@ void (async function main() {
         jsonIndent: 2,
         lineEnding: '\n',
       },
-      nsSeparator: i18next.nsSeparator,
-      keySeparator: i18next.keySeparator,
-      pluralSeparator: i18next.pluralSeparator,
-      contextSeparator: i18next.contextSeparator,
+      nsSeparator: i18nextInit.nsSeparator,
+      keySeparator: i18nextInit.keySeparator,
+      pluralSeparator: i18nextInit.pluralSeparator,
+      contextSeparator: i18nextInit.contextSeparator,
       contextDefaultValues: [],
       interpolation: {
         prefix: '{{',

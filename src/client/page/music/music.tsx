@@ -5,10 +5,10 @@ import { GiMeepleGroup, GiMusicalKeyboard, GiMusicalScore, GiMusicSpell } from '
 import { useTranslation } from '#context/i18n';
 import { TabbedRouter } from '#control';
 
-import { Artists } from './artists.js';
-import { Genres } from './genres.js';
-import { NewAlbums } from './new-albums.js';
-import { Tracks } from './tracks.js';
+import { Artists } from './artists.tsx';
+import { Genres } from './genres.tsx';
+import { NewAlbums } from './new-albums.tsx';
+import { Tracks } from './tracks.tsx';
 
 /**
  * GiMusicalKeyboard

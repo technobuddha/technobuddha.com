@@ -3,12 +3,12 @@ import { CssBaseline } from '@mui/material';
 
 import { Authentication } from '#client/authentication';
 import { Navigate, Route, Routes } from '#context/router';
-import { userInterfaceSettings } from '#settings/user-interface.js';
+import { userInterfaceSettings } from '#settings/user-interface.ts';
 
-import { Footer } from './footer.js';
-import { Header } from './header.js';
-import { Main } from './main.js';
-import { Nav } from './nav.js';
+import { Footer } from './footer.tsx';
+import { Header } from './header.tsx';
+import { Main } from './main.tsx';
+import { Nav } from './nav.tsx';
 
 import css from './framework.module.css';
 

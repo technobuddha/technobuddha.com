@@ -1,5 +1,5 @@
-import { type MazeGeneratorProperties } from '../maze-generator.js';
-import { MazeGenerator } from '../maze-generator.js';
+import { type MazeGeneratorProperties } from '../maze-generator.ts';
+import { MazeGenerator } from '../maze-generator.ts';
 
 export class TenPrint extends MazeGenerator {
   public constructor(props: MazeGeneratorProperties) {

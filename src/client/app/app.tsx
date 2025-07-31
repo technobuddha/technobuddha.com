@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import ModalContainer from 'react-modal-promise';
 
-import { Framework } from '#client/framework/index.js';
+import { Framework } from '#client/framework';
 import { APIProvider } from '#context/api';
 import { AuthenticationProvider } from '#context/authentication';
 import { IconProvider } from '#context/icon';

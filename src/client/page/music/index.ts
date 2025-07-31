@@ -1,1 +1,1 @@
-export { Music } from './music.js';
+export { Music } from './music.tsx';

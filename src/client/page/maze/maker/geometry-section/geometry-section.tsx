@@ -13,6 +13,7 @@ import { distances, geometries, wraparounds } from '../selection.ts';
 
 import { type Debug, defaultDebug } from './debug.ts';
 import { debugDialog } from './debug-dialog.tsx';
+import { GeometrySectionHelp } from './geometry-section.help.tsx';
 import { paletteDialog } from './palette-dialog.tsx';
 
 import css from './geometry-section.module.css';
@@ -140,7 +141,11 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
   }, [shape, variation, size, wraparound, distance, debug, color, onChange, hmr]);
 
   return (
-    <Section className={clsx(css.geometrySection, className)} title="Geometry">
+    <Section
+      className={clsx(css.geometrySection, className)}
+      title="Geometry"
+      info={<GeometrySectionHelp />}
+    >
       <div className={css.row}>
         <div className={css.item}>
           <Select

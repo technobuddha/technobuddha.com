@@ -4,9 +4,10 @@ comlink
 dotenvx
 isbot
 languagedetector
+letsencrypt
 Noti
 notistack
 nuqs
+popperjs
 readlines
 zxcvbn
-letsencrypt

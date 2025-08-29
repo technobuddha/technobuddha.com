@@ -681,10 +681,7 @@ export const solvers: SolverSelection[] = [
         maker: (props) =>
           new Roboto({
             ...props,
-            robots: [
-              { algorithm: 'pledge', color: 'lime', turn: 'right' },
-              { algorithm: 'wall-walking', turn: 'right', color: 'magenta' },
-            ],
+            robots: [{ algorithm: 'pledge', color: 'lime', turn: 'right' }],
           }),
       },
     ],

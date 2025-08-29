@@ -3,8 +3,8 @@ import React from 'react';
 
 import { type Phase, type PlayMode, type Runner } from '#maze/runner';
 
-import { PhaseControls } from './phase-controls.tsx';
-import { PlayControls } from './play-controls.tsx';
+import { PhaseControls } from '../phase-controls/index.ts';
+import { PlayControls } from '../play-controls/index.ts';
 
 import css from './custom-controls.module.css';
 

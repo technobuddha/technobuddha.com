@@ -1,5 +1,5 @@
 import React from 'react';
-import { toCapitalCase } from '@technobuddha/library';
+import { capitalize } from '@technobuddha/library';
 import { create, type InstanceProps } from 'react-modal-promise';
 
 import {
@@ -50,7 +50,7 @@ export const PhasePlayModeDialog: React.FC<PhasePlayModeDialogProps> = ({
 
   return (
     <Dialog open={isOpen}>
-      <DialogTitle>Phase {toCapitalCase(phase)}</DialogTitle>
+      <DialogTitle>Phase {capitalize(phase)}</DialogTitle>
       <DialogContent>
         <Typography>
           When the {phase === 'observe' ? 'final' : phase} phase is started, which play mode should

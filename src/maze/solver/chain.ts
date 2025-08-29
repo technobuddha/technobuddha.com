@@ -1,4 +1,4 @@
-import { CartesianSet, create2DArray } from '@technobuddha/library';
+import { type Cartesian, create2DArray, JSONSet } from '@technobuddha/library';
 
 import { type Cell, type CellFacing, type CellTunnel } from '../geometry/index.ts';
 
@@ -174,12 +174,14 @@ export class Chain extends Roboto {
             const chainPos = this.chain.findIndex((c) => this.maze.isSame(c, robot.location));
 
             if (chainPos > pos) {
-              const redraw = new CartesianSet(this.path);
+              const redraw = new JSONSet<Cartesian>(this.path);
 
               this.history = this.maze.flatten([...this.history, ...robot.path()]);
               this.path = this.maze.makePath(this.history);
 
-              redraw.add(this.path);
+              for (const p of this.path) {
+                redraw.add(p);
+              }
 
               for (const cell of redraw) {
                 this.restoreCell(cell);

@@ -9,6 +9,8 @@ import { type GeneratorProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';
 import { braids, generators } from '../selection.ts';
 
+import { GeneratorSectionHelp } from './generator-section.help.tsx';
+
 type GeneratorSectionProps = {
   readonly className?: string;
   readonly onChange?: (this: void, producer: GeneratorProducer) => void;
@@ -69,7 +71,7 @@ export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, o
   }, [generator, variation, braid, onChange, hmr]);
 
   return (
-    <Section className={className} title="Generator">
+    <Section className={className} title="Generator" info={<GeneratorSectionHelp />}>
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem' }}>
         <Select
           label="Algorithm"

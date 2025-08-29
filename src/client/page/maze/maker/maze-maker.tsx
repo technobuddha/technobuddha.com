@@ -11,6 +11,7 @@ import { type Phase, type PlayMode, Runner } from '#maze/runner';
 import { type MazeSolver, type MazeSolverProperties } from '#maze/solver';
 
 import { CustomControls } from './custom-controls/index.ts';
+import { DemoMode } from './demo-mode/index.ts';
 import { ExportControls } from './export/index.ts';
 import { GameControls } from './game-controls/index.ts';
 import { GeneratorSection } from './generator-section/index.ts';
@@ -21,16 +22,16 @@ import { SolverSection } from './solver-section/index.ts';
 
 import css from './maze-maker.module.css';
 
-export type Producer<Object, Props, Additional = unknown> = () => {
+export type Producer<Object, Props = never, Additional = unknown> = () => {
   maker: (props: Props) => Object;
   title: string;
 } & Additional;
 export type GeometryProducer = Producer<Maze, MazeProperties, { announceMaze: boolean }>;
 export type GeneratorProducer = Producer<MazeGenerator, MazeGeneratorProperties>;
 export type SolverProducer = Producer<MazeSolver, MazeSolverProperties>;
-export type BraidingProducer = () => { maker: () => number; title: string };
+export type BraidingProducer = Producer<number>;
 
-type MazeMakerProps = {
+export type MazeMakerProps = {
   children?: never;
 };
 
@@ -203,14 +204,11 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
             onChange={handleGeneratorChange}
           />
           <SolverSection
-            className={clsx(mode !== 'custom' && css.hidden)}
+            className={clsx(mode === 'demo' && css.hidden)}
             onChange={handleSolverChange}
           />
-          <HumanSection
-            className={clsx(mode !== 'game' && css.hidden)}
-            onChange={handleHumanChange}
-            runner={runner}
-          />
+          {mode === 'game' && <HumanSection onChange={handleHumanChange} runner={runner} />}
+          {mode === 'demo' && <DemoMode runner={runner} />}
         </div>
         {mode === 'game' && <GameControls runner={runner} />}
         {mode === 'custom' && (

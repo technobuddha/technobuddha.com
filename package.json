@@ -69,7 +69,7 @@
   "technobuddhaProject": {
     "version": "0.0.180",
     "created": "2020-04-01T04:20:42.690Z",
-    "updated": "2025-07-29T19:11:09.707Z"
+    "updated": "2025-07-31T22:07:26.648Z"
   },
   "type": "module",
   "engines": {
@@ -84,8 +84,8 @@
     "@react-router/node": "7.7.0",
     "@react-router/serve": "7.7.0",
     "@technobuddha/color": "0.3.2",
-    "@technobuddha/datagrid": "1.2.12",
-    "@technobuddha/library": "1.9.19",
+    "@technobuddha/datagrid": "1.2.13",
+    "@technobuddha/library": "1.9.27",
     "@technobuddha/react-hooks": "1.6.2",
     "@technobuddha/size": "1.9.8",
     "@types/browserslist-useragent": "3.0.7",

@@ -15,7 +15,11 @@ export const Section: React.FC<SectionProps> = ({ className, title, info, childr
   <Card className={clsx(css.section, className)} variant="outlined">
     <CardContent className={css.content}>
       <Box className={css.header}>
-        {Boolean(info) && <Help className={css.help}>{info}</Help>}
+        {Boolean(info) && (
+          <Help title={title} className={css.help}>
+            {info}
+          </Help>
+        )}
         <Typography className={css.title}>{title}</Typography>
       </Box>
       {children}

@@ -37,7 +37,10 @@ const config = {
       environment: 'node',
     },
     'src/control': {
-      environment: 'browser',
+      environment: 'vite-client',
+      tsconfig: {
+        references: ['src/client/context'],
+      }
     },
     'src/maze': {
       environment: 'vite-client',

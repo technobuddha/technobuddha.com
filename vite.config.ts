@@ -15,11 +15,41 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules/lodash') || id.includes('node_modules/@mui')) {
+          if (id.includes('node_modules')) {
+            if (id.includes('@mui')) {
+              return 'mui1';
+            }
+            if (
+              id.includes('@emotion') ||
+              id.includes('jss') ||
+              id.includes('notistack') ||
+              id.includes('@popperjs')
+            ) {
+              return 'mui2';
+            }
+            if (id.includes('@technobuddha')) {
+              return 'technobuddha';
+            }
+            if (id.includes('react-dom')) {
+              return 'react-dom';
+            }
+            if (id.includes('react')) {
+              return 'react';
+            }
+            if (id.includes('colorjs')) {
+              return 'color';
+            }
+            if (id.includes('lodash')) {
+              return 'lodash';
+            }
+
             return 'vendor';
-          } else if (id.includes('node_modules/react')) {
-            return 'react';
           }
+
+          if (id.includes('maze')) {
+            return 'maze';
+          }
+
           return undefined;
         },
       },

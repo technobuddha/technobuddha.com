@@ -5,6 +5,8 @@ import { type PlayMode, playModeIcons, playModes, type Runner } from '#maze/runn
 
 import { Section } from '../section/index.ts';
 
+import { PlayControlsHelp } from './play-controls.help.tsx';
+
 import css from './play-controls.module.css';
 
 export type PlayControlsProps = {
@@ -41,7 +43,7 @@ export const PlayControls: React.FC<PlayControlsProps> = ({ runner }) => {
   );
 
   return (
-    <Section title="Maze Controls">
+    <Section title="Maze Controls" info={<PlayControlsHelp />}>
       <ToggleButtonGroup
         className={css.playControls}
         color="primary"

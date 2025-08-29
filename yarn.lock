@@ -2041,46 +2041,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/core-downloads-tracker@npm:^6.4.11, @mui/core-downloads-tracker@npm:^6.5.0":
+"@mui/core-downloads-tracker@npm:^6.5.0":
   version: 6.5.0
   resolution: "@mui/core-downloads-tracker@npm:6.5.0"
   checksum: 10c0/dea763c8d4b4f9415d6c6ac3a04115d04c249461ce5635f0012a75b91c38f43c0d0411201664a77c7ff10ff11ea12a0bfeea6562ec22ceec6bac82478b6384c3
-  languageName: node
-  linkType: hard
-
-"@mui/material@npm:6.4.11":
-  version: 6.4.11
-  resolution: "@mui/material@npm:6.4.11"
-  dependencies:
-    "@babel/runtime": "npm:^7.26.0"
-    "@mui/core-downloads-tracker": "npm:^6.4.11"
-    "@mui/system": "npm:^6.4.11"
-    "@mui/types": "npm:~7.2.24"
-    "@mui/utils": "npm:^6.4.9"
-    "@popperjs/core": "npm:^2.11.8"
-    "@types/react-transition-group": "npm:^4.4.12"
-    clsx: "npm:^2.1.1"
-    csstype: "npm:^3.1.3"
-    prop-types: "npm:^15.8.1"
-    react-is: "npm:^19.0.0"
-    react-transition-group: "npm:^4.4.5"
-  peerDependencies:
-    "@emotion/react": ^11.5.0
-    "@emotion/styled": ^11.3.0
-    "@mui/material-pigment-css": ^6.4.11
-    "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
-    react: ^17.0.0 || ^18.0.0 || ^19.0.0
-    react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
-  peerDependenciesMeta:
-    "@emotion/react":
-      optional: true
-    "@emotion/styled":
-      optional: true
-    "@mui/material-pigment-css":
-      optional: true
-    "@types/react":
-      optional: true
-  checksum: 10c0/49640579e299ef650e6efe25ceb479fe2df8636ebebd00a9d1e7dd32d2cd3c81a99f093f4fb6de58a6463f2be4f5c93fb6331ded6085f0ebeea3a30629fe8ecb
   languageName: node
   linkType: hard
 
@@ -2160,37 +2124,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/styles@npm:6.4.11":
-  version: 6.4.11
-  resolution: "@mui/styles@npm:6.4.11"
-  dependencies:
-    "@babel/runtime": "npm:^7.26.0"
-    "@emotion/hash": "npm:^0.9.2"
-    "@mui/private-theming": "npm:^6.4.9"
-    "@mui/types": "npm:~7.2.24"
-    "@mui/utils": "npm:^6.4.9"
-    clsx: "npm:^2.1.1"
-    csstype: "npm:^3.1.3"
-    hoist-non-react-statics: "npm:^3.3.2"
-    jss: "npm:^10.10.0"
-    jss-plugin-camel-case: "npm:^10.10.0"
-    jss-plugin-default-unit: "npm:^10.10.0"
-    jss-plugin-global: "npm:^10.10.0"
-    jss-plugin-nested: "npm:^10.10.0"
-    jss-plugin-props-sort: "npm:^10.10.0"
-    jss-plugin-rule-value-function: "npm:^10.10.0"
-    jss-plugin-vendor-prefixer: "npm:^10.10.0"
-    prop-types: "npm:^15.8.1"
-  peerDependencies:
-    "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
-    react: ^17.0.0 || ^18.0.0 || ^19.0.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10c0/f0c768f9e58e2a26af5aeea1aba0cd165313e328530813ac94ddcfdfe1c5822fade6fdc40181279a0eb17f4a39b56d159617763ef721cf582734da87bac50d8f
-  languageName: node
-  linkType: hard
-
 "@mui/styles@npm:6.5.0":
   version: 6.5.0
   resolution: "@mui/styles@npm:6.5.0"
@@ -2222,7 +2155,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/system@npm:^6.4.11, @mui/system@npm:^6.5.0":
+"@mui/system@npm:^6.5.0":
   version: 6.5.0
   resolution: "@mui/system@npm:6.5.0"
   dependencies:
@@ -3428,14 +3361,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/datagrid@npm:1.2.12":
-  version: 1.2.12
-  resolution: "@technobuddha/datagrid@npm:1.2.12"
+"@technobuddha/datagrid@npm:1.2.13":
+  version: 1.2.13
+  resolution: "@technobuddha/datagrid@npm:1.2.13"
   dependencies:
     "@emotion/cache": "npm:11.14.0"
     "@emotion/react": "npm:11.14.0"
-    "@mui/material": "npm:6.4.11"
-    "@mui/styles": "npm:6.4.11"
+    "@mui/material": "npm:6.5.0"
+    "@mui/styles": "npm:6.5.0"
     "@technobuddha/library": "npm:1.9.3"
     "@technobuddha/react-hooks": "npm:1.6.1"
     "@technobuddha/size": "npm:1.9.8"
@@ -3446,16 +3379,16 @@ __metadata:
     react-icons: "npm:5.5.0"
     react-use: "npm:17.6.0"
     react-window: "npm:1.8.11"
-  checksum: 10c0/93f3283acab2e3e9d2eb149adaedb19085e91b51d6f55d8de74af279c863be9af4da2abe160e64ba5b062150ccb142c173fcef0747061b71131658d4d538a5e4
+  checksum: 10c0/9cde89075fc295df83bde53633862fc8f2d1cdb89962515bc8caaa4556195bc91822caadcf15d877c60ecd4600c2ba8f6bc8d1ac3fb95fb0ae79d0a02e51bd78
   languageName: node
   linkType: hard
 
-"@technobuddha/library@npm:1.9.19, @technobuddha/library@npm:^1.9.0, @technobuddha/library@npm:^1.9.4":
-  version: 1.9.19
-  resolution: "@technobuddha/library@npm:1.9.19"
+"@technobuddha/library@npm:1.9.27":
+  version: 1.9.27
+  resolution: "@technobuddha/library@npm:1.9.27"
   dependencies:
-    lodash-es: "npm:4.17.21"
-  checksum: 10c0/f1e7bd182877e1c2ee87202a7bc0943cfa0e983560085f7287e9ba1f1389a868c71380ad7a1c9b8296b3790a4d6b1be1ffcbe9b3309b975ae0e995b76d299eb5
+    typedoc-vitepress-theme: "npm:1.1.2"
+  checksum: 10c0/5d4a1cee6b704a0cbda61ebf4b3bdd49eaf485bb1aeb3478bf5b3023d2ae1c348c98c6a4460bedd6bbe6937f47683d7d60bad014a18291f14fb720794423d806
   languageName: node
   linkType: hard
 
@@ -3465,6 +3398,15 @@ __metadata:
   dependencies:
     lodash-es: "npm:4.17.21"
   checksum: 10c0/ddcf9a62461be5f64f5aec4d672b62e6588529bcef80971bc42a1734395dc82c7cf8f0037774098ebabe507d352e111ee8accc5cbad747eee16bcb0850731ee2
+  languageName: node
+  linkType: hard
+
+"@technobuddha/library@npm:^1.9.0, @technobuddha/library@npm:^1.9.4":
+  version: 1.9.19
+  resolution: "@technobuddha/library@npm:1.9.19"
+  dependencies:
+    lodash-es: "npm:4.17.21"
+  checksum: 10c0/f1e7bd182877e1c2ee87202a7bc0943cfa0e983560085f7287e9ba1f1389a868c71380ad7a1c9b8296b3790a4d6b1be1ffcbe9b3309b975ae0e995b76d299eb5
   languageName: node
   linkType: hard
 
@@ -13392,8 +13334,8 @@ __metadata:
     "@react-router/node": "npm:7.7.0"
     "@react-router/serve": "npm:7.7.0"
     "@technobuddha/color": "npm:0.3.2"
-    "@technobuddha/datagrid": "npm:1.2.12"
-    "@technobuddha/library": "npm:1.9.19"
+    "@technobuddha/datagrid": "npm:1.2.13"
+    "@technobuddha/library": "npm:1.9.27"
     "@technobuddha/openapi": "link:../@technobuddha/openapi/"
     "@technobuddha/project": "npm:0.0.180"
     "@technobuddha/react-hooks": "npm:1.6.2"
@@ -13787,6 +13729,15 @@ __metadata:
   version: 0.0.6
   resolution: "typedarray@npm:0.0.6"
   checksum: 10c0/6005cb31df50eef8b1f3c780eb71a17925f3038a100d82f9406ac2ad1de5eb59f8e6decbdc145b3a1f8e5836e17b0c0002fb698b9fe2516b8f9f9ff602d36412
+  languageName: node
+  linkType: hard
+
+"typedoc-vitepress-theme@npm:1.1.2":
+  version: 1.1.2
+  resolution: "typedoc-vitepress-theme@npm:1.1.2"
+  peerDependencies:
+    typedoc-plugin-markdown: ">=4.4.0"
+  checksum: 10c0/95273bd3f3cfe421a46ade21487ecdce44181a0a68fa7aa91f2b43e4953fe43793ea50a4231d363043c606e1cf4ef0289bbc53cd994551f1cf8a5f0476aee0ac
   languageName: node
   linkType: hard
 

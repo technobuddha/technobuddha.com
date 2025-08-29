@@ -2,11 +2,13 @@ import React from 'react';
 import clsx from 'clsx';
 import { IoTrash } from 'react-icons/io5';
 
-import { IconButton, Tooltip } from '#control';
+import { Box, IconButton, Tooltip } from '#control';
 import { type MessageCallback, type MessageOptions } from '#maze/random';
 import { type Runner } from '#maze/runner';
 
 import { Section } from '../section/index.ts';
+
+import { MessagesHelp } from './messages.help.tsx';
 
 import css from './messages.module.css';
 
@@ -21,7 +23,14 @@ type MessagesProps = {
 };
 
 export const Messages: React.FC<MessagesProps> = ({ runner }) => {
+  const box = React.useRef<HTMLDivElement>(null);
   const [history, setHistory] = React.useState<History[]>([]);
+
+  React.useEffect(() => {
+    if (box.current) {
+      box.current.scrollTop = box.current.scrollHeight;
+    }
+  }, [history]);
 
   const handleMessage = React.useCallback<MessageCallback>((message, props) => {
     const historic = { message, ...props, time: Date.now() };
@@ -40,57 +49,59 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
   }, [runner, handleMessage]);
 
   return (
-    <Section title="Messages" className={css.messages}>
-      <div className={css.header}>
-        <Tooltip title="Clear messages" placement="top">
-          <IconButton onClick={handleClear}>
-            <IoTrash />
-          </IconButton>
-        </Tooltip>
-      </div>
-      <div className={css.scroll}>
-        {history.map((message) => {
-          switch (message.level) {
-            case 'error': {
-              return (
-                <div key={message.time} className={clsx(css.message, css.error)}>
-                  <div>🚨</div>
-                  <div className={css.text}>{message.message}</div>
-                </div>
-              );
-            }
-            case 'warning': {
-              return (
-                <div key={message.time} className={clsx(css.message, css.warning)}>
-                  <div>⚠️</div>
-                  <div className={css.text}>{message.message}</div>
-                </div>
-              );
-            }
-            case 'info': {
-              return (
-                <div key={message.time} className={clsx(css.message, css.info)}>
-                  <div className={css.text}>{message.message}</div>
-                </div>
-              );
-            }
+    <Section title="Messages" className={css.messages} info={<MessagesHelp />}>
+      <Box className={css.container}>
+        <Box ref={box} className={css.scroll}>
+          {history.toReversed().map((message) => {
+            switch (message.level) {
+              case 'error': {
+                return (
+                  <Box key={message.time} className={clsx(css.message, css.error)}>
+                    <Box>🚨</Box>
+                    <Box className={css.text}>{message.message}</Box>
+                  </Box>
+                );
+              }
+              case 'warning': {
+                return (
+                  <Box key={message.time} className={clsx(css.message, css.warning)}>
+                    <Box>⚠️</Box>
+                    <Box className={css.text}>{message.message}</Box>
+                  </Box>
+                );
+              }
+              case 'info': {
+                return (
+                  <Box key={message.time} className={clsx(css.message, css.info)}>
+                    <Box className={css.text}>{message.message}</Box>
+                  </Box>
+                );
+              }
 
-            default: {
-              return (
-                <div key={message.time} className={css.message}>
-                  <div
-                    className={css.color}
-                    style={{
-                      backgroundColor: message.color,
-                    }}
-                  />
-                  <div className={css.text}>{message.message}</div>
-                </div>
-              );
+              default: {
+                return (
+                  <Box key={message.time} className={clsx(css.message, css.colored)}>
+                    <Box
+                      className={css.color}
+                      style={{
+                        backgroundColor: message.color,
+                      }}
+                    />
+                    <Box className={css.text}>{message.message}</Box>
+                  </Box>
+                );
+              }
             }
-          }
-        })}
-      </div>
+          })}
+        </Box>
+        <Box className={css.tools}>
+          <Tooltip title="Clear messages" placement="top">
+            <IconButton onClick={handleClear}>
+              <IoTrash />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
     </Section>
   );
 };

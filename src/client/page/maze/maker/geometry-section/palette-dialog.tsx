@@ -1,5 +1,5 @@
 import React from 'react';
-import { toTitleCase } from '@technobuddha/library';
+import { titleCase } from '@technobuddha/library';
 import { create, type InstanceProps } from 'react-modal-promise';
 
 import {
@@ -72,7 +72,7 @@ export const PaletteDialog: React.FC<PaletteDialogProps> = ({
                 <div className={css.name}>
                   <Radio
                     value={key}
-                    label={toTitleCase(key)}
+                    label={titleCase(key)}
                     checked={key === selected}
                     onChange={handleSelectionChange}
                   />

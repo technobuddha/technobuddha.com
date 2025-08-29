@@ -1,6 +1,7 @@
 import {
   type Cartesian,
   create2DArray,
+  lookAhead,
   type Rect,
   rotate,
   scale,
@@ -10,7 +11,7 @@ import {
 } from '@technobuddha/library';
 
 import { CanvasDrawing, type Drawing } from '../drawing/index.ts';
-import { inverse, logger, lookAhead } from '../library/index.ts';
+import { inverse, logger } from '../library/index.ts';
 
 import { type Bridge } from './bridges.ts';
 import { defaultColors, type MazeColors } from './color.ts';
@@ -544,7 +545,7 @@ export abstract class Maze extends MazeGeometry {
 
           path.push({ x: cell.x, y: cell.y, direction, tunnel: false });
           if (tunnel) {
-            for (const [tunnelCell, tunnelNext] of lookAhead(tunnel, next)) {
+            for (const [tunnelCell, tunnelNext] of lookAhead(tunnel, { last: next })) {
               const traverse = this.traverseTo(tunnelCell, tunnelNext);
               path.push({
                 x: tunnelCell.x,

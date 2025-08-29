@@ -9,6 +9,8 @@ import { type SolverProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';
 import { solvers } from '../selection.ts';
 
+import { SolverSectionHelp } from './solver-section.help.tsx';
+
 type SolverSectionProps = {
   readonly className?: string;
   readonly onChange?: (this: void, producer: SolverProducer) => void;
@@ -59,7 +61,7 @@ export const SolverSection: React.FC<SolverSectionProps> = ({ className, onChang
   }, [solver, variation, onChange, hmr]);
 
   return (
-    <Section className={className} title="Solver">
+    <Section className={className} title="Solver" info={<SolverSectionHelp />}>
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem' }}>
         <Select
           label="Algorithm"

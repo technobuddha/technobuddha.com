@@ -7,6 +7,8 @@ import { Human, type MazeSolverProperties } from '#maze/solver';
 import { type SolverProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';
 
+import { HumanSectionHelp } from './human-section.help.tsx';
+
 type HumanSectionProps = {
   readonly className?: string;
   readonly onChange?: (this: void, producer: SolverProducer) => void;
@@ -76,7 +78,7 @@ export const HumanSection: React.FC<HumanSectionProps> = ({ className, onChange,
   }, [finalDestination, markVisited, markDeadEnds, hideReverse, onChange, hmr]);
 
   return (
-    <Section className={className} title="human">
+    <Section className={className} title="Human" info={<HumanSectionHelp />}>
       <Checkbox
         label="Final Destination"
         checked={finalDestination}

@@ -1,6 +1,7 @@
 cheferize
 colorjs
 comlink
+dotenv
 dotenvx
 isbot
 languagedetector
@@ -10,4 +11,5 @@ notistack
 nuqs
 popperjs
 readlines
+vitepress
 zxcvbn

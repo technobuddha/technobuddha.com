@@ -4,7 +4,6 @@ import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-// TODO [08-01-2025]: Why is '.js' required here?
 import { theme } from './src/settings/mui-theme.js';
 
 export default defineConfig({

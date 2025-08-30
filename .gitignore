@@ -36,3 +36,6 @@ coverage
 
 #!.yarn/cache
 .pnp.*
+
+docs/.vitepress/dist
+docs/.vitepress/cache

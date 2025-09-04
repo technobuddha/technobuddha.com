@@ -1,4 +1,4 @@
 citext
+ossp
 pgcrypto
 timestamptz
-ossp

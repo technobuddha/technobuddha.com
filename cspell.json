@@ -1,8 +1,17 @@
+// 🚨
+// 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
+// 🚨
 {
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json",
   "version": "0.2",
-  "ignorePaths": ["**/*.svg", "./locales/**/*.*", "./dist/**/*.*"],
+  "ignorePaths": ["**/*.svg", "./locales/**/*.*", "./dist/**/*.*", "**/*.tsbuildinfo"],
   "dictionaryDefinitions": [
+    {
+      "name": "internal",
+      "path": "./.cspell/internal.dic",
+      "description": "Internal Project specific words",
+      "addWords": true
+    },
     {
       "name": "more-css",
       "path": "./.cspell/css.dic",
@@ -45,22 +54,16 @@
       "description": "Additional programming keywords",
       "addWords": true
     },
-
     {
       "name": "technobuddha",
       "path": "./.cspell/technobuddha.dic",
       "description": "Technobuddha specific words",
       "addWords": true
     },
-    {
-      "name": "maze",
-      "path": "./.cspell/maze.dic",
-      "addWords": true
-    }
   ],
   "dictionaries": [
+    "internal",
     "technobuddha",
-    "maze",
     "more-css",
     "more-color",
     "more-db",

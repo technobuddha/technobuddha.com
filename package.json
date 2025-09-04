@@ -34,7 +34,7 @@
     "@dotenvx/dotenvx": "1.48.0",
     "@react-router/dev": "7.7.0",
     "@technobuddha/openapi": "link:../@technobuddha/openapi/",
-    "@technobuddha/project": "0.0.180",
+    "@technobuddha/project": "0.99.1",
     "@types/cli-progress": "^3.11.6",
     "@types/cookie-parser": "^1.4.9",
     "@types/express": "^5.0.3",
@@ -74,17 +74,18 @@
     "vitepress": "1.6.4"
   },
   "technobuddhaProject": {
-    "version": "0.0.180",
+    "version": "0.99.1",
     "created": "2020-04-01T04:20:42.690Z",
-    "updated": "2025-07-31T22:07:26.648Z"
+    "updated": "2025-09-04T20:29:37.346Z"
   },
   "type": "module",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=24.0.0"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
+    "@giancosta86/typedoc-readonly": "1.0.1",
     "@google-cloud/translate": "9.2.0",
     "@mui/material": "6.5.0",
     "@mui/styles": "6.5.0",
@@ -133,6 +134,10 @@
     "react-use": "17.6.0",
     "read-package-up": "11.0.0",
     "response-time": "2.3.4",
+    "typedoc-plugin-coverage": "4.0.1",
+    "typedoc-plugin-markdown": "4.8.1",
+    "typedoc-plugin-mdn-links": "5.0.9",
+    "typedoc-vitepress-theme": "1.1.2",
     "uuid": "11.1.0",
     "vite-express": "0.21.1",
     "winston": "3.17.0",

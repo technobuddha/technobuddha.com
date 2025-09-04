@@ -77,6 +77,11 @@ const config = {
       },
     },
   },
+  git: {
+    ignore: [
+      'artwork'
+    ]
+  }
 };
 
 export default config;

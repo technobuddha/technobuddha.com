@@ -1,6 +1,7 @@
 import {
   type Cartesian,
-  create2DArray,
+  create2dArray,
+  lookAhead,
   type Rect,
   rotate,
   scale,
@@ -10,7 +11,7 @@ import {
 } from '@technobuddha/library';
 
 import { CanvasDrawing, type Drawing } from '../drawing/index.ts';
-import { inverse, logger, lookAhead } from '../library/index.ts';
+import { inverse, logger } from '../library/index.ts';
 
 import { type Bridge } from './bridges.ts';
 import { defaultColors, type MazeColors } from './color.ts';
@@ -69,11 +70,13 @@ export type MazeProperties = MazeGeometryProperties & {
   readonly entrance?: Cell | CellDirection | Location;
   readonly exit?: Cell | CellDirection | Location;
 
+  readonly showDistances?: ShowDistances;
   readonly color?: Partial<MazeColors>;
 
-  readonly showDistances?: ShowDistances;
   readonly showCoordinates?: boolean;
   readonly showKind?: boolean;
+  readonly showBridges?: boolean;
+  readonly showUnreachables?: boolean;
 
   readonly plugin?: (this: void, maze: Maze) => void;
 };
@@ -96,6 +99,8 @@ export abstract class Maze extends MazeGeometry {
   public readonly showDistances: NonNullable<MazeProperties['showDistances']>;
   public readonly showCoordinates: NonNullable<MazeProperties['showCoordinates']>;
   public readonly showKind: NonNullable<MazeProperties['showKind']>;
+  public readonly showBridges: NonNullable<MazeProperties['showBridges']>;
+  public readonly showUnreachables: boolean;
 
   private readonly entranceSpec: MazeProperties['entrance'];
   private readonly exitSpec: MazeProperties['exit'];
@@ -117,6 +122,8 @@ export abstract class Maze extends MazeGeometry {
       showDistances = 'none',
       showCoordinates = false,
       showKind = false,
+      showBridges = false,
+      showUnreachables = false,
       plugin,
       ...props
     }: MazeProperties,
@@ -133,8 +140,11 @@ export abstract class Maze extends MazeGeometry {
     this.color = { ...defaultColors, ...color };
 
     this.showDistances = showDistances;
+
     this.showCoordinates = showCoordinates;
     this.showKind = showKind;
+    this.showBridges = showBridges;
+    this.showUnreachables = showUnreachables;
 
     this.entranceSpec = entrance;
     this.exitSpec = exit;
@@ -235,7 +245,7 @@ export abstract class Maze extends MazeGeometry {
     unreachable: Cell[];
     loops: Loop[];
   } {
-    const distances = create2DArray(this.width, this.height, Infinity);
+    const distances = create2dArray(this.width, this.height, Infinity);
     const loops: Loop[] = [];
     const queue: Cell[] = [];
     queue.unshift(entrance);
@@ -281,8 +291,8 @@ export abstract class Maze extends MazeGeometry {
   }
 
   public solve(entrance: CellFacing = this.entrance, exit: CellFacing = this.exit): CellFacing[] {
-    const visited = create2DArray(this.width, this.height, false);
-    const parent: (CellFacing | undefined)[][] = create2DArray(this.width, this.height, undefined);
+    const visited = create2dArray(this.width, this.height, false);
+    const parent: (CellFacing | undefined)[][] = create2dArray(this.width, this.height, undefined);
     const queue: CellFacing[] = [entrance];
 
     visited[entrance.x][entrance.y] = true;
@@ -395,7 +405,6 @@ export abstract class Maze extends MazeGeometry {
     if (this.drawing) {
       for (const cell of this.cellsUnderMask()) {
         this.eraseCell(cell, this.color.void);
-        this.drawFloor(cell, this.color.mask);
       }
     }
   }
@@ -404,9 +413,13 @@ export abstract class Maze extends MazeGeometry {
     const { unreachable } = this.analyze(this.entrance);
 
     if (unreachable.length > 0) {
+      this.sendMessage(`There are ${unreachable.length} unreachable cells`, { level: 'error' });
       logger.error(`Unreachable cells: `, unreachable);
-      for (const cell of unreachable) {
-        this.drawCell(cell, this.color.error);
+
+      if (this.showUnreachables) {
+        for (const cell of unreachable) {
+          this.drawCell(cell, this.color.error);
+        }
       }
     }
 
@@ -532,7 +545,7 @@ export abstract class Maze extends MazeGeometry {
 
           path.push({ x: cell.x, y: cell.y, direction, tunnel: false });
           if (tunnel) {
-            for (const [tunnelCell, tunnelNext] of lookAhead(tunnel, next)) {
+            for (const [tunnelCell, tunnelNext] of lookAhead(tunnel, { last: next })) {
               const traverse = this.traverseTo(tunnelCell, tunnelNext);
               path.push({
                 x: tunnelCell.x,
@@ -629,10 +642,6 @@ export abstract class Maze extends MazeGeometry {
     this.eraseCell(cell);
     this.drawFloor(cell, this.cellColor(cell, cellColor));
 
-    if (this.nexus(cell).bridge) {
-      this.drawText(cell, '○', 'white');
-    }
-
     this.drawWalls(cell, wallColor);
     this.drawPillars(cell, wallColor);
 
@@ -640,6 +649,8 @@ export abstract class Maze extends MazeGeometry {
       this.drawText(cell, cell.x === 0 ? cell.y.toString() : cell.x.toString());
     } else if (this.showKind) {
       this.drawText(cell, this.cellKind(cell).toString());
+    } else if (this.showBridges && this.nexus(cell).bridge) {
+      this.drawText(cell, '○');
     }
 
     return cell;
@@ -824,7 +835,7 @@ export abstract class Maze extends MazeGeometry {
       return cell;
     }
 
-    this.sendMessage(`Unable to find cell matching criteria "${p}"`);
+    this.sendMessage(`Unable to find cell matching criteria "${p}"`, { level: 'warning' });
     return this.randomCell();
   }
 

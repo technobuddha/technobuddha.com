@@ -2,7 +2,7 @@ import { modulo } from '@technobuddha/library';
 
 import { type Cell, type CellFacing, type Maze, type Move } from '../../geometry/index.ts';
 import { darken, PathSet } from '../../library/index.ts';
-import { Random, type RandomProperties } from '../../random/index.ts';
+import { type MessageOptions, Random, type RandomProperties } from '../../random/index.ts';
 
 export type Program =
   | 'random'
@@ -270,8 +270,8 @@ export abstract class Robot extends Random implements Disposable {
 
   public abstract execute(): void;
 
-  public override sendMessage(message: string, color?: string): void {
-    this.maze.sendMessage(message, color);
+  public sendMessage(message: string, options: MessageOptions = {}): void {
+    this.maze.sendMessage(message, options);
   }
 
   public path(): CellFacing[] {

@@ -28,15 +28,34 @@ const config = [
     environment: 'node',
     tsConfig: 'src/api/tsconfig.json',
   }),
+  // src/client/context/tsconfig.json
+  app.lint({
+    files: ['src/client/context/**/*.tsx'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: 'src/client/context/tsconfig.json',
+    react: true,
+  }),
+  // src/client/context/tsconfig.json
+  app.lint({
+    files: ['src/client/context/**/*.ts'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: 'src/client/context/tsconfig.json',
+  }),
   // src/client/tsconfig.json
   app.lint({
     files: ['src/client/**/*.tsx'],
-    ignores: [],
+    ignores: ['src/client/context/**/*'],
     tsConfig: 'src/client/tsconfig.json',
     react: true,
   }),
   // src/client/tsconfig.json
-  app.lint({ files: ['src/client/**/*.ts'], ignores: [], tsConfig: 'src/client/tsconfig.json' }),
+  app.lint({
+    files: ['src/client/**/*.ts'],
+    ignores: ['src/client/context/**/*'],
+    tsConfig: 'src/client/tsconfig.json',
+  }),
   // src/config/tsconfig.json
   app.lint({
     files: ['src/config/*.ts'],
@@ -48,29 +67,17 @@ const config = [
   app.lint({
     files: ['src/control/**/*.tsx'],
     ignores: [],
-    environment: 'browser',
     tsConfig: 'src/control/tsconfig.json',
     react: true,
   }),
   // src/control/tsconfig.json
-  app.lint({
-    files: ['src/control/**/*.ts'],
-    ignores: [],
-    environment: 'browser',
-    tsConfig: 'src/control/tsconfig.json',
-  }),
+  app.lint({ files: ['src/control/**/*.ts'], ignores: [], tsConfig: 'src/control/tsconfig.json' }),
   // src/maze/tsconfig.json
-  app.lint({
-    files: ['src/maze/**/*.ts'],
-    ignores: [],
-    environment: 'browser',
-    tsConfig: 'src/maze/tsconfig.json',
-  }),
+  app.lint({ files: ['src/maze/**/*.ts'], ignores: [], tsConfig: 'src/maze/tsconfig.json' }),
   // src/maze/tsconfig.json
   app.lint({
     files: ['src/maze/**/*.tsx'],
     ignores: [],
-    environment: 'browser',
     tsConfig: 'src/maze/tsconfig.json',
     react: true,
   }),

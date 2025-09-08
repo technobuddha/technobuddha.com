@@ -1,0 +1,24 @@
+.section {
+  margin-bottom: mui-spacing(0.5);
+
+  .content {
+    padding: mui-spacing(0.5) !important;
+
+    .header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: mui-spacing(0.25);
+
+      .help {
+        position: relative;
+        top: -mui-spacing(0.25);
+      }
+
+      .title {
+        color: mui-theme(palette-text-secondary);
+        font-size: 0.75rem;
+      }
+    }
+  }
+}

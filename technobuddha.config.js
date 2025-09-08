@@ -2,19 +2,6 @@
 // eslint-disable-next-line tsdoc/syntax
 /** @type {import("@technobuddha/project").TechnobuddhaConfig} */
 const config = {
-  lint: {
-    rules: {
-      '@typescript-eslint/no-redundant-type-constituents': { rule: 'off' },
-      '@typescript-eslint/no-confusing-void-expression': { rule: 'off' },
-      '@typescript-eslint/method-signature-style': { rule: 'off' },
-      'no-shadow': { rule: 'off' },
-      '@typescript-eslint/no-shadow': { rule: 'off' },
-      'class-methods-use-this': { rule: 'off' },
-      '@typescript-eslint/class-methods-use-this': { rule: 'off' },
-      'require-await': { rule: 'off' },
-      '@typescript-eslint/require-await': { rule: 'off' },
-    },
-  },
   directories: {
     '.': {
       tsconfig: {
@@ -37,10 +24,13 @@ const config = {
       environment: 'node',
     },
     'src/control': {
-      environment: 'browser',
+      environment: 'vite-client',
+      tsconfig: {
+        references: ['src/client/context'],
+      }
     },
     'src/maze': {
-      environment: 'browser',
+      environment: 'vite-client',
     },
     'src/server': {
       environment: 'node',
@@ -63,7 +53,7 @@ const config = {
           '#api/*': ['./src/api/*/index.ts'],
           '#context/*': ['./src/client/context/*/index.ts'],
           '#control': ['./src/control/index.ts'],
-          '#component*': ['./src/client/component/*/index.ts'],
+          '#page/*': ['./src/client/page/*/index.ts'],
           '#client*': ['./src/client*'],
           '#server/*': ['./src/server/*/index.ts'],
           '#util*': ['./src/util*'],
@@ -74,6 +64,11 @@ const config = {
       },
     },
   },
+  git: {
+    ignore: [
+      'artwork'
+    ]
+  }
 };
 
 export default config;

@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 
 import { type Cell, type CellFacing } from '../../geometry/index.ts';
 
@@ -48,8 +48,8 @@ export class DijkstrasRobot extends Robot {
     this.avatarColor = avatarColor;
     this.prunedColor = prunedColor;
 
-    this.scanned = create2DArray<boolean>(maze.width, maze.height, false);
-    this.journal = create2DArray<Journal>(this.maze.width, this.maze.height, () => ({
+    this.scanned = create2dArray<boolean>(maze.width, maze.height, false);
+    this.journal = create2dArray<Journal>(this.maze.width, this.maze.height, () => ({
       distance: Infinity,
     }));
 

@@ -1,4 +1,7 @@
+import { conjoin, MersenneTwister, ordinal } from '@technobuddha/library';
+
 import { type CellFacing } from '../geometry/index.ts';
+import { mix } from '../library/index.ts';
 
 import { MazeSolver, type MazeSolverProperties } from './maze-solver.ts';
 import { DrunkenRobot, type DrunkenRobotProperties } from './robot/drunkards-walk.ts';
@@ -40,6 +43,7 @@ export type RobotoProperties = MazeSolverProperties & {
 };
 
 export class Roboto extends MazeSolver {
+  private readonly seed = Math.floor(Math.random() * 0x7fffffff);
   private readonly robos: Robo[] = [];
   protected readonly robots: Robot[] = [];
 
@@ -49,33 +53,38 @@ export class Roboto extends MazeSolver {
   }
 
   protected createRobot(robo: Robo, location: CellFacing): Robot {
+    // Ensure that all robots use the same random numbers.
+    const rng = new MersenneTwister(this.seed);
+    // cspell:ignore genrand
+    const random = rng.genrandReal3.bind(rng);
+
     switch (robo.algorithm) {
       case 'tremaux': {
-        return new TremauxRobot({ maze: this.maze, location, ...robo });
+        return new TremauxRobot({ random, maze: this.maze, location, ...robo });
       }
 
       case 'wall-walking': {
-        return new WallWalkingRobot({ maze: this.maze, location, ...robo });
+        return new WallWalkingRobot({ random, maze: this.maze, location, ...robo });
       }
 
       case 'backtracking': {
-        return new BacktrackingRobot({ maze: this.maze, location, ...robo });
+        return new BacktrackingRobot({ random, maze: this.maze, location, ...robo });
       }
 
       case 'random-mouse': {
-        return new RandomMouseRobot({ maze: this.maze, location, ...robo });
+        return new RandomMouseRobot({ random, maze: this.maze, location, ...robo });
       }
 
       case 'drunkards-walk': {
-        return new DrunkenRobot({ maze: this.maze, location, ...robo });
+        return new DrunkenRobot({ random, maze: this.maze, location, ...robo });
       }
 
       case 'dijkstras': {
-        return new DijkstrasRobot({ maze: this.maze, location, ...robo });
+        return new DijkstrasRobot({ random, maze: this.maze, location, ...robo });
       }
 
       case 'pledge': {
-        return new PledgeRobot({ maze: this.maze, location, ...robo });
+        return new PledgeRobot({ random, maze: this.maze, location, ...robo });
       }
 
       // no default
@@ -87,9 +96,9 @@ export class Roboto extends MazeSolver {
       robot.execute();
     } catch (error) {
       if (error instanceof RobotError) {
-        this.maze.sendMessage(error.message, error.color);
+        this.maze.sendMessage(error.message, { color: error.color });
       } else {
-        this.maze.sendMessage(`${robot.name} encountered an error: ${error}`);
+        this.maze.sendMessage(`${robot.name} encountered an error: ${error}`, { level: 'error' });
       }
       this.killOneRobot(robot);
     }
@@ -113,7 +122,7 @@ export class Roboto extends MazeSolver {
     if (index >= 0) {
       this.robots.splice(index, 1);
     } else {
-      this.maze.sendMessage(`${robot.name} body not found`);
+      this.maze.sendMessage(`${robot.name} body not found`, { level: 'warning' });
     }
     robot.dispose();
   }
@@ -130,36 +139,54 @@ export class Roboto extends MazeSolver {
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): AsyncGenerator<void> {
+    const players = this.robos.length;
+    let place = 0;
+
     this.killAllRobots();
     for (const robo of this.robos) {
       this.activateOneRobot(this.createRobot(robo, entrance));
     }
 
-    while (
-      this.robots.length > 0 &&
-      !this.robots.some((robot) => this.isProgramComplete(robot, exit))
-    ) {
+    while (this.robots.length > 0) {
       this.runAllRobots();
       yield;
-    }
 
-    if (this.robots.length === 0) {
-      if (this.robos.length > 0) {
-        this.maze.sendMessage('no solution found');
-      }
-    } else {
-      const winners = this.robots.filter((robot) => this.isProgramComplete(robot));
-      const [winner] = winners;
+      const winners = this.robots.filter((robot) => this.isProgramComplete(robot, exit));
+      if (winners.length > 0) {
+        const [winner] = winners;
 
-      if (this.robos.length > 1) {
-        if (winners.length === 1) {
-          this.maze.sendMessage(`${winner.name} wins`, winner.color);
-        } else if (winners.length > 1) {
-          this.maze.sendMessage(`${winners.map((r) => r.name).join(', ')} tie`, 'white');
+        if (place === 0) {
+          this.maze.solution = this.maze.makePath(winner.path());
+        }
+
+        if (players > 1) {
+          if (winners.length === 1) {
+            this.maze.sendMessage(`${winner.name} takes ${ordinal(++place)} place`, {
+              color: winner.color,
+            });
+          } else if (winners.length > 1) {
+            this.maze.sendMessage(
+              // eslint-disable-next-line @typescript-eslint/no-loop-func
+              `${winners.map((r) => r.name).join(', ')} tie for ${conjoin(winners.map(() => ordinal(++place)))} places`,
+              {
+                color: mix(winners[0].color, winners[1].color),
+              },
+            );
+          }
+        } else {
+          ++place;
+        }
+
+        for (const winner of winners) {
+          this.killOneRobot(winner);
         }
       }
+    }
 
-      this.maze.solution = this.maze.makePath(winner.path());
+    if (place === 0 && this.robots.length === 0) {
+      if (this.robos.length > 0) {
+        this.maze.sendMessage('No solution found', { level: 'warning' });
+      }
     }
   }
 }

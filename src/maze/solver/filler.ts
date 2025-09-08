@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 
 import { type Cell, type CellFacing } from '../geometry/index.ts';
 
@@ -24,7 +24,7 @@ export class Filler extends MazeSolver {
     this.markedColor = blockedColor;
     this.method = method;
 
-    this.deadEnds = create2DArray(this.maze.width, this.maze.height, false);
+    this.deadEnds = create2dArray(this.maze.width, this.maze.height, false);
   }
 
   private isDeadEnd(cell: Cell, entrance: Cell, exit: Cell): boolean {
@@ -32,14 +32,12 @@ export class Filler extends MazeSolver {
       !this.deadEnds[cell.x][cell.y] &&
       !this.maze.isSame(cell, entrance) &&
       !this.maze.isSame(cell, exit) &&
-      this.maze
-        .moves(cell, { wall: false })
-        .filter(
-          ({ target }) =>
-            !this.deadEnds[target.x][target.y] ||
-            this.maze.isSame(target, exit) ||
-            this.maze.isSame(target, entrance),
-        ).length <= 1
+      this.maze.moves(cell, { wall: false }).filter(
+        ({ target }) => !this.deadEnds[target.x][target.y],
+        // ||
+        // this.maze.isSame(target, exit) ||
+        // this.maze.isSame(target, entrance),
+      ).length <= 1
     );
   }
 
@@ -59,20 +57,28 @@ export class Filler extends MazeSolver {
       for (let deadEnd of deadEnds) {
         if (this.method === 'dead-end') {
           this.deadEnds[deadEnd.x][deadEnd.y] = true;
-          // this.maze.drawX(deadEnd, markedColor);
           this.maze.drawCell(deadEnd, markedColor);
           yield;
         } else {
           while (true) {
             const moves = this.maze
               .moves(deadEnd, { wall: false })
-              .filter(({ target }) => !this.deadEnds[target.x][target.y]);
-            if (moves.length === 1) {
+              .filter(
+                ({ target }) =>
+                  !this.deadEnds[target.x][target.y] ||
+                  this.maze.isSame(target, exit) ||
+                  this.maze.isSame(target, entrance),
+              );
+            if (moves.length <= 1) {
               this.deadEnds[deadEnd.x][deadEnd.y] = true;
-              // this.maze.drawX(deadEnd, markedColor);
               this.maze.drawCell(deadEnd, markedColor);
-              deadEnd = moves[0].target;
               yield;
+
+              if (moves[0].target) {
+                deadEnd = moves[0].target;
+              } else {
+                break;
+              }
             } else {
               break;
             }
@@ -91,7 +97,7 @@ export class Filler extends MazeSolver {
         ({ target }) => !this.maze.isSame(prev, target) && !this.deadEnds[target.x][target.y],
       );
       if (moves.length === 0 || moves.length > 1) {
-        this.maze.sendMessage(`filler ${this.method} no solution found`);
+        this.maze.sendMessage(`filler ${this.method} no solution found`, { level: 'error' });
         return;
       }
 

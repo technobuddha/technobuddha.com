@@ -54,6 +54,10 @@ export const Login: React.FC = () => {
     [handleLogin],
   );
 
+  const handleCancel = React.useCallback((): void => {
+    void navigate('/');
+  }, [navigate]);
+
   const handleKeyPress = React.useCallback(
     (event: React.KeyboardEvent<HTMLElement>): void => {
       if (isEnabled() && event.key === 'Enter') {
@@ -92,6 +96,9 @@ export const Login: React.FC = () => {
         fullWidth
       >
         {t('Log In')}
+      </Button>
+      <Button onClick={handleCancel} variant="text" fullWidth>
+        {t('Cancel')}
       </Button>
 
       {errorMessage != null && (

@@ -1,6 +1,10 @@
 
 Todo:
-  ☐ get the pledge bot working
-  ☐ login page needs to be able to get back to the home page
-  ☐ Filler failed on a Circular Bridge
+  ☐ Get the pledge bot working
+  ✔ login page needs to be able to get back to the home page @done(25-07-29 09:36)
   ☐ Figure out how to build bridges on the Pentagon Maze
+  ☐ Division Generator can make a non-perfect maze in a Circular maze with a center.
+  ✘ Wedge/Division/Filler not showing entrance arrow @cancelled(25-07-29 10:55)
+  ☐ Human is being aggressive about dead ends (it appears all mazes) painting self into a corner
+  ✔ Look at the Circular Paths, some of the arrows are not pointing the right way @done(25-07-28 13:02)
+  ☐ Figure out why the bridge builder stops building bridges

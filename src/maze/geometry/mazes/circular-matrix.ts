@@ -144,7 +144,7 @@ export const matrix: Matrix = {
     d: 270,
     e: 315,
     f: 45,
-    g: 90,
-    h: 90,
+    g: 180,
+    h: 180,
   },
 };

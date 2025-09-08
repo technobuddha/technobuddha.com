@@ -1,0 +1,38 @@
+.phase-controls {
+  /* width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; */
+}
+
+.stepper {
+  margin: mui-spacing(1) 0 mui-spacing(0.5) 0;
+  width: 100%;
+
+  .step {
+    .label {
+      .button {
+        padding: 0;
+
+        .content {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+
+          .icon {
+            font-size: 0.75rem;
+          }
+
+          .caption {
+            font-size: 1rem;
+            text-transform: none;
+          }
+        }
+      }
+
+      :global(.MuiStepLabel-label) {
+        margin: 0;
+      }
+    }
+  }
+}

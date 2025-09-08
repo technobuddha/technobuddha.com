@@ -1,9 +1,9 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 
-import { type Cell } from '../../geometry/maze.js';
+import { type Cell } from '../../geometry/maze.ts';
 
-import { type MazeGeneratorProperties } from '../maze-generator.js';
-import { MazeGenerator } from '../maze-generator.js';
+import { type MazeGeneratorProperties } from '../maze-generator.ts';
+import { MazeGenerator } from '../maze-generator.ts';
 
 export class ModifiedPrims extends MazeGenerator {
   private readonly visited: boolean[][];
@@ -13,10 +13,10 @@ export class ModifiedPrims extends MazeGenerator {
   public constructor(props: MazeGeneratorProperties) {
     super(props);
 
-    this.visited = create2DArray(this.maze.width, this.maze.height, false);
+    this.visited = create2dArray(this.maze.width, this.maze.height, false);
     this.activeCells = [this.start];
     this.visited[this.start.x][this.start.y] = true;
-    this.costs = create2DArray(this.maze.width, this.maze.height, this.random);
+    this.costs = create2dArray(this.maze.width, this.maze.height, this.random);
   }
 
   public override step(): boolean {

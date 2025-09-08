@@ -59,7 +59,6 @@ export class RecursiveBacktracker extends MazeGenerator {
           yield;
           this.visit({ cell: borderCell });
         } else {
-          this.fixUnreachables();
           return;
         }
       } else {

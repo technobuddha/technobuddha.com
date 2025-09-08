@@ -1,7 +1,7 @@
-import { type Cell, type CellDirection } from '../../geometry/maze.js';
+import { type Cell, type CellDirection } from '../../geometry/maze.ts';
 
-import { type MazeGeneratorProperties } from '../maze-generator.js';
-import { MazeGenerator } from '../maze-generator.js';
+import { type MazeGeneratorProperties } from '../maze-generator.ts';
+import { MazeGenerator } from '../maze-generator.ts';
 
 type Rect = { x: number; y: number; width: number; height: number };
 

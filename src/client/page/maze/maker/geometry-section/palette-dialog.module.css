@@ -1,0 +1,33 @@
+.content {
+  display: flex;
+  flex-direction: row;
+  height: 25rem;
+
+  .colors {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+
+    .color {
+      display: flex;
+      flex-direction: row;
+
+      .name {
+        width: 10rem;
+      }
+
+      .swatch {
+        width: 2.75rem;
+        background-color: oklch(0.63 0 0);
+        padding: 0.5rem;
+      }
+    }
+  }
+
+  .picker {
+    padding-left: 1rem;
+    .color-picker {
+      zoom: 1.5;
+    }
+  }
+}

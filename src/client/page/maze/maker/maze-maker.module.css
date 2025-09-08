@@ -1,0 +1,74 @@
+.maze-maker {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+
+  .maze {
+    flex-basis: 80%;
+    position: relative;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+
+    .title {
+      position: absolute;
+      z-index: 4;
+      top: 0;
+      left: 0;
+
+      .text {
+        margin: 0 0.5rem 0 1rem;
+      }
+
+      .text:not(:first-child):before {
+        content: '';
+        position: relative;
+        left: -0.5rem;
+        border-left: 1px solid white;
+      }
+
+      .option {
+        font-style: italic;
+      }
+    }
+
+    .canvas {
+      position: absolute;
+      top: 1.5rem;
+      left: 0.5rem;
+      z-index: 1;
+    }
+  }
+
+  .panel {
+    flex-basis: 20%;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    padding: 0.5rem;
+
+    .toggles {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      margin-bottom: mui-spacing(1);
+
+      button {
+        flex: 1;
+        font-size: 0.75rem;
+        padding: 0;
+      }
+    }
+
+    .settings {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 0.5rem;
+
+      .hidden {
+        display: none;
+      }
+    }
+  }
+}

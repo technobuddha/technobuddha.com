@@ -62,8 +62,8 @@ export class Runner extends EventTarget {
 
     if (name) {
       setTimeout(() => {
-        this.maze.sendMessage(name, 'black');
-      }, 1000);
+        this.maze.sendMessage(name, { level: 'info' });
+      }, 100);
     }
 
     this.phasePlayMode = {

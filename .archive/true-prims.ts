@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 
 import { type CellDirection, type Direction } from '../../geometry/maze.ts';
 
@@ -14,10 +14,10 @@ export class TruePrims extends MazeGenerator {
     super(props);
 
     this.currentCell = this.start;
-    this.visited = create2DArray(this.maze.width, this.maze.height, false);
+    this.visited = create2dArray(this.maze.width, this.maze.height, false);
     this.visited[this.currentCell.x][this.currentCell.y] = true;
 
-    this.costs = create2DArray<Record<Direction, number>>(
+    this.costs = create2dArray<Record<Direction, number>>(
       this.maze.width,
       this.maze.height,
       (x, y) =>

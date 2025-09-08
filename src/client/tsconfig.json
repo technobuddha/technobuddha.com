@@ -5,8 +5,9 @@
   "extends": "../tsconfig.json",
   "compilerOptions": { "composite": true, "types": ["vite/client"], "lib": ["esnext", "dom"] },
   "include": ["**/*.tsx", "**/*.ts"],
-  "exclude": [],
+  "exclude": ["context/**/*"],
   "references": [
+    { "path": "context" },
     { "path": "../api" },
     { "path": "../control" },
     { "path": "../maze" },

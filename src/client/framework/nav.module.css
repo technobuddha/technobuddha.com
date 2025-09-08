@@ -1,0 +1,62 @@
+.root {
+  --drawer-opened-width: 20vw;
+  --drawer-closed-width: 3.5rem;
+
+  width: var(--drawer-opened-width);
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .button-box {
+    height: mui-spacing(5);
+    padding-left: mui-spacing(0.5);
+    background-color: mui-theme(palette-primary-main);
+
+    .button-icon {
+      color: mui-theme(palette-common-white);
+    }
+  }
+
+  .menu {
+    z-index: mui-theme(zIndex-modal);
+    height: 100%;
+    background-color: mui-theme(palette-primary-dark);
+    overflow: hidden;
+    transition: width 300ms ease;
+
+    &.opened {
+      width: var(--drawer-opened-width);
+    }
+
+    &.closed {
+      width: var(--drawer-closed-width);
+    }
+  }
+
+  .list-item-text {
+    white-space: nowrap;
+    overflow: hidden;
+
+    .primary {
+      color: mui-theme(palette-primary-contrastText);
+    }
+
+    .secondary {
+      color: mui-theme(palette-common-white) !important;
+    }
+  }
+
+  .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+
+    &.current {
+      color: mui-theme(palette-secondary-light);
+    }
+
+    &.available {
+      color: mui-theme(palette-common-white);
+    }
+  }
+}

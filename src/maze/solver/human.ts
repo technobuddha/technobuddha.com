@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
-import { create2DArray, modulo } from '@technobuddha/library';
+import { create2dArray, modulo } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -35,11 +35,13 @@ export class Human extends MazeSolver {
   protected readonly visited: boolean[][];
   protected readonly deadEnd: boolean[][];
 
+  private readonly eventTarget = new EventTarget();
+
   public constructor({ options, ...props }: HumanProperties) {
     super(props);
 
-    this.visited = create2DArray(this.maze.width, this.maze.height, false);
-    this.deadEnd = create2DArray(this.maze.width, this.maze.height, false);
+    this.visited = create2dArray(this.maze.width, this.maze.height, false);
+    this.deadEnd = create2dArray(this.maze.width, this.maze.height, false);
 
     this.options = {
       finalDestination: true,
@@ -57,7 +59,7 @@ export class Human extends MazeSolver {
   private initializeKeyboardHandler(): (event: KeyboardEvent) => void {
     // eslint-disable-next-line unicorn/consistent-function-scoping
     const handler = (event: KeyboardEvent): void => {
-      this.dispatchEvent(new CustomEvent('keydown', { detail: event.key }));
+      this.eventTarget.dispatchEvent(new CustomEvent('keydown', { detail: event.key }));
     };
     document.addEventListener('keydown', handler);
     return handler;
@@ -80,8 +82,12 @@ export class Human extends MazeSolver {
       };
 
       ac.signal.addEventListener('abort', onAbort);
-      this.addEventListener('keydown', onKeyDown);
+      this.eventTarget.addEventListener('keydown', onKeyDown);
     });
+  }
+
+  public sendKey(key: string): void {
+    this.eventTarget.dispatchEvent(new CustomEvent('keydown', { detail: key }));
   }
   //#endregion
 

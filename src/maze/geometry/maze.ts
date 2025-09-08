@@ -1,6 +1,6 @@
 import {
   type Cartesian,
-  create2DArray,
+  create2dArray,
   lookAhead,
   type Rect,
   rotate,
@@ -245,7 +245,7 @@ export abstract class Maze extends MazeGeometry {
     unreachable: Cell[];
     loops: Loop[];
   } {
-    const distances = create2DArray(this.width, this.height, Infinity);
+    const distances = create2dArray(this.width, this.height, Infinity);
     const loops: Loop[] = [];
     const queue: Cell[] = [];
     queue.unshift(entrance);
@@ -291,8 +291,8 @@ export abstract class Maze extends MazeGeometry {
   }
 
   public solve(entrance: CellFacing = this.entrance, exit: CellFacing = this.exit): CellFacing[] {
-    const visited = create2DArray(this.width, this.height, false);
-    const parent: (CellFacing | undefined)[][] = create2DArray(this.width, this.height, undefined);
+    const visited = create2dArray(this.width, this.height, false);
+    const parent: (CellFacing | undefined)[][] = create2dArray(this.width, this.height, undefined);
     const queue: CellFacing[] = [entrance];
 
     visited[entrance.x][entrance.y] = true;

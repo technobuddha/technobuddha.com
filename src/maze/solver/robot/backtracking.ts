@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 
 import { type Cell } from '../../geometry/index.ts';
 
@@ -18,7 +18,7 @@ export class BacktrackingRobot extends Robot {
   public constructor({ maze, blocked, showMarks = false, ...props }: BacktrackingRobotProperties) {
     super({ maze, ...props });
     this.showMarks = showMarks;
-    this.blocked = blocked ?? create2DArray(this.maze.width, this.maze.height, false);
+    this.blocked = blocked ?? create2dArray(this.maze.width, this.maze.height, false);
   }
 
   public override redrawCell(cell: Cell, color?: string): void {

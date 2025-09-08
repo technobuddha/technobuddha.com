@@ -1,4 +1,4 @@
-import { create2DArray, modulo } from '@technobuddha/library';
+import { create2dArray, modulo } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -71,7 +71,7 @@ export abstract class MazeGenerator extends Random {
     this.bridgeMaxPieces = Math.max(max, min);
     this.stepsAfterBridge = stepsAfterBridge;
 
-    this.visited = create2DArray(this.maze.width, this.maze.height, false);
+    this.visited = create2dArray(this.maze.width, this.maze.height, false);
 
     this.start = start ?? this.maze.randomCell();
     this.speed = speed;

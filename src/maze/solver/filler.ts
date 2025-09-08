@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 
 import { type Cell, type CellFacing } from '../geometry/index.ts';
 
@@ -24,7 +24,7 @@ export class Filler extends MazeSolver {
     this.markedColor = blockedColor;
     this.method = method;
 
-    this.deadEnds = create2DArray(this.maze.width, this.maze.height, false);
+    this.deadEnds = create2dArray(this.maze.width, this.maze.height, false);
   }
 
   private isDeadEnd(cell: Cell, entrance: Cell, exit: Cell): boolean {

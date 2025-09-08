@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 import { range } from 'lodash-es';
 
 import { type Cell } from '../../geometry/maze.ts';
@@ -14,7 +14,7 @@ export class Ellers extends MazeGenerator {
     super(props);
 
     this.currentCell = { x: 0, y: 0 };
-    this.set = create2DArray<number | null>(this.maze.width, this.maze.height, null);
+    this.set = create2dArray<number | null>(this.maze.width, this.maze.height, null);
   }
 
   private merge(main: number | null, x: number, y: number): void {

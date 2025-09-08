@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 
 import { MazeGenerator, type MazeGeneratorProperties } from '../maze-generator.ts';
 
@@ -9,7 +9,7 @@ export class AldousBroder extends MazeGenerator {
   public constructor(props: MazeGeneratorProperties) {
     super(props);
     this.totalVisited = 0;
-    this.visited = create2DArray(this.maze.width, this.maze.height, false);
+    this.visited = create2dArray(this.maze.width, this.maze.height, false);
 
     this.currentCell = this.start;
     this.visited[this.currentCell.x][this.currentCell.y] = true;

@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 
 import { type Cell } from '../geometry/index.ts';
 
@@ -19,7 +19,7 @@ class Region {
   public constructor({ width, height }: RegionProperties) {
     this.width = width;
     this.height = height;
-    this.subregions = create2DArray(width, height, null);
+    this.subregions = create2dArray(width, height, null);
   }
 
   public cells(subregion = 'm'): Cell[] {

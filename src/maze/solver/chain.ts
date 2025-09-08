@@ -1,4 +1,4 @@
-import { type Cartesian, create2DArray, JSONSet } from '@technobuddha/library';
+import { type Cartesian, create2dArray, JSONSet } from '@technobuddha/library';
 
 import { type Cell, type CellFacing, type CellTunnel } from '../geometry/index.ts';
 
@@ -39,7 +39,7 @@ export class Chain extends Roboto {
     this.pathColor = pathColor;
     this.chainColor = chainColor;
 
-    this.blocked = create2DArray(maze.width, maze.height, false);
+    this.blocked = create2dArray(maze.width, maze.height, false);
 
     this.makeRobot =
       robot === 'wall-walking' ?

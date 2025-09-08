@@ -1,5 +1,5 @@
 import {
-  create2DArray,
+  create2dArray,
   manhattanDistance,
   modulo,
   type Rect,
@@ -127,7 +127,7 @@ export abstract class MazeGeometry extends MessageController {
   }
 
   public createNexus(): void {
-    this.nexuses = create2DArray(
+    this.nexuses = create2dArray(
       this.width,
       this.height,
       (x, y) =>
@@ -273,7 +273,7 @@ export abstract class MazeGeometry extends MessageController {
   //#endregion Direction
   //#region Cell Selection
   public allCells(order: AllOrder = 'top-left'): Cell[] {
-    const cells = create2DArray(this.width, this.height, (x, y) => ({ x, y })).flat();
+    const cells = create2dArray(this.width, this.height, (x, y) => ({ x, y })).flat();
 
     switch (order) {
       case 'top-left': {

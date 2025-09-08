@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 
 import { Robot, type RobotProperties } from './robot.ts';
 import { RobotError } from './robot-error.ts';
@@ -14,7 +14,7 @@ export class WallWalkingRobot extends Robot {
   public constructor({ turn = 'right', ...props }: WallWalkingRobotProperties) {
     const program = turn === 'right' ? 'right-wall' : 'left-wall';
     super({ program, ...props });
-    this.visits = create2DArray(this.maze.width, this.maze.height, 0);
+    this.visits = create2dArray(this.maze.width, this.maze.height, 0);
   }
 
   public execute(): void {

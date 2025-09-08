@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { create2DArray, nbsp, numberToLetter } from '@technobuddha/library';
+import { create2dArray, nbsp, numberToLetter } from '@technobuddha/library';
 import { useDerivedState } from '@technobuddha/react-hooks';
 import clsx from 'clsx';
 import { range } from 'lodash-es';
@@ -223,7 +223,7 @@ export const KnightSolver: React.FC<KnightSolverProps> = ({
   );
   const target = React.useMemo(() => new Square(finishX, finishY), [finishX, finishY]);
   const board = React.useMemo(() => {
-    const b = create2DArray<number | null>(width, height, null);
+    const b = create2dArray<number | null>(width, height, null);
     b[startX][startY] = 0;
     b[finishX][finishY] = null;
     return b;

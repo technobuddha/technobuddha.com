@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { clean, create2DArray, space, splitLines } from '@technobuddha/library';
+import { clean, create2dArray, space, splitLines } from '@technobuddha/library';
 import { useDerivedState } from '@technobuddha/react-hooks';
 import { Size } from '@technobuddha/size';
 
@@ -47,7 +47,7 @@ const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: Lif
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const history = React.useMemo(() => [] as boolean[][][], [width, height, start]);
   const [board, setBoard] = useDerivedState(() => {
-    const b = create2DArray(width, height, false);
+    const b = create2dArray(width, height, false);
 
     const lines = splitLines(clean(start, '\n'));
     const w = Math.max(...lines.map((line) => line.length));
@@ -149,7 +149,7 @@ const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: Lif
 
         setMove(1);
       } else {
-        const nextBoard = create2DArray(width, height, false);
+        const nextBoard = create2dArray(width, height, false);
         for (const [i, row] of board.entries()) {
           for (const [j, cell] of row.entries()) {
             const neighbors = MOVES.reduce((acc, [deltaX, deltaY]) => {

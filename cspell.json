@@ -25,18 +25,6 @@
       "addWords": true
     },
     {
-      "name": "more-npm",
-      "path": "./.cspell/npm.dic",
-      "description": "Additional npm package names",
-      "addWords": true
-    },
-    {
-      "name": "more-fonts",
-      "path": "./.cspell/fonts.dic",
-      "description": "Additional font package names",
-      "addWords": true
-    },
-    {
       "name": "more-db",
       "path": "./.cspell/db.dic",
       "description": "Additional database keywords",
@@ -47,6 +35,36 @@
       "path": "./.cspell/english.dic",
       "description": "Additional English words",
       "addWords": true
+    },
+    {
+      "name": "more-fonts",
+      "path": "./.cspell/fonts.dic",
+      "description": "Additional font package names",
+      "addWords": true
+    },
+    {
+      "name": "more-html",
+      "path": "./.cspell/html.dic",
+      "description": "HTML words",
+      "addWords": true,
+    },
+    {
+      "name": "more-math",
+      "path": "./.cspell/math.dic",
+      "description": "Math terms",
+      "addWords": true,
+    },
+    {
+      "name": "more-npm",
+      "path": "./.cspell/npm.dic",
+      "description": "Additional npm package names",
+      "addWords": true
+    },
+    {
+      "name": "more-numbers",
+      "path": "./.cspell/numbers.dic",
+      "description": "Math terms",
+      "addWords": true,
     },
     {
       "name": "more-programming",
@@ -60,17 +78,27 @@
       "description": "Technobuddha specific words",
       "addWords": true
     },
+    {
+      "name": "unicode",
+      "path": "./.cspell/unicode.dic",
+      "description": "Unicode names",
+      "addWords": true
+    },
   ],
   "dictionaries": [
     "internal",
-    "technobuddha",
     "more-css",
     "more-color",
     "more-db",
     "more-english",
     "more-fonts",
+    "more-html",
+    "more-math",
     "more-npm",
-    "more-programming"
+    "more-numbers",
+    "more-programming",
+    "technobuddha",
+    "unicode",
   ],
   "ignoreWords": [],
   "import": []

@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 
 import { type Cell, type Direction, type Move } from '../../geometry/index.ts';
 import { darken } from '../../library/index.ts';
@@ -32,7 +32,7 @@ export class TremauxRobot extends Robot {
     this.markedColor = darken(pathColor, 0.15);
     this.blockedColor = darken(blockedColor, 0.15);
 
-    this.marks = create2DArray(
+    this.marks = create2dArray(
       this.maze.width,
       this.maze.height,
       (x, y) =>

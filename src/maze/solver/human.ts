@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
-import { create2DArray, modulo } from '@technobuddha/library';
+import { create2dArray, modulo } from '@technobuddha/library';
 
 import {
   type Cell,
@@ -40,8 +40,8 @@ export class Human extends MazeSolver {
   public constructor({ options, ...props }: HumanProperties) {
     super(props);
 
-    this.visited = create2DArray(this.maze.width, this.maze.height, false);
-    this.deadEnd = create2DArray(this.maze.width, this.maze.height, false);
+    this.visited = create2dArray(this.maze.width, this.maze.height, false);
+    this.deadEnd = create2dArray(this.maze.width, this.maze.height, false);
 
     this.options = {
       finalDestination: true,

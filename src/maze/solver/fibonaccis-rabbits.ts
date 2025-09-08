@@ -1,4 +1,4 @@
-import { create2DArray } from '@technobuddha/library';
+import { create2dArray } from '@technobuddha/library';
 
 import { type CellFacing } from '../geometry/index.ts';
 
@@ -47,8 +47,8 @@ export class FibonaccisRabbits extends MazeSolver {
     entrance = this.maze.entrance,
     exit = this.maze.exit,
   } = {}): AsyncGenerator<void> {
-    const currentCount = create2DArray(this.maze.width, this.maze.height, 0);
-    const lastCount = create2DArray(this.maze.width, this.maze.height, 0);
+    const currentCount = create2dArray(this.maze.width, this.maze.height, 0);
+    const lastCount = create2dArray(this.maze.width, this.maze.height, 0);
     let rabbits: Rabbit[] = [{ cell: entrance, age: 0, tail: entrance, history: [entrance] }];
     currentCount[entrance.x][entrance.y]++;
 

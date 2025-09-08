@@ -1,5 +1,3 @@
-// cspell:ignore privkey, fullchain, Redirector
-
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import https from 'node:https';
@@ -45,7 +43,6 @@ export function listener(app: Express, logger: Logger): void {
           .listen(httpPort, () => logger.info(`HTTP Redirector listening on port ${httpPort}`));
 
         https
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
           .createServer(credentials, app)
           .listen(httpsPort, () => logger.info(`HTTPS Server listening on port ${httpsPort}`));
       } else {

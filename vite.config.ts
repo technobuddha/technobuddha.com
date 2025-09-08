@@ -13,44 +13,41 @@ export default defineConfig({
     assetsDir: 'core',
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('@mui')) {
-              return 'mui1';
-            }
-            if (
-              id.includes('@emotion') ||
-              id.includes('jss') ||
-              id.includes('notistack') ||
-              id.includes('@popperjs')
-            ) {
-              return 'mui2';
-            }
-            if (id.includes('@technobuddha')) {
-              return 'technobuddha';
-            }
-            if (id.includes('react-dom')) {
-              return 'react-dom';
-            }
-            if (id.includes('react')) {
-              return 'react';
-            }
-            if (id.includes('colorjs')) {
-              return 'color';
-            }
-            if (id.includes('lodash')) {
-              return 'lodash';
-            }
-
-            return 'vendor';
-          }
-
-          if (id.includes('maze')) {
-            return 'maze';
-          }
-
-          return undefined;
-        },
+        // manualChunks(id) {
+        //   if (id.includes('node_modules')) {
+        //     if (id.includes('@mui')) {
+        //       return 'mui1';
+        //     }
+        //     if (
+        //       id.includes('@emotion') ||
+        //       id.includes('jss') ||
+        //       id.includes('notistack') ||
+        //       id.includes('@popperjs')
+        //     ) {
+        //       return 'mui2';
+        //     }
+        //     if (id.includes('@technobuddha')) {
+        //       return 'technobuddha';
+        //     }
+        //     if (id.includes('react-dom')) {
+        //       return 'react-dom';
+        //     }
+        //     if (id.includes('react')) {
+        //       return 'react';
+        //     }
+        //     if (id.includes('colorjs')) {
+        //       return 'color';
+        //     }
+        //     if (id.includes('lodash')) {
+        //       return 'lodash';
+        //     }
+        //     return 'vendor';
+        //   }
+        //   //if (id.includes('maze')) {
+        //   //  return 'maze';
+        //   //}
+        //   return undefined;
+        // },
       },
     },
   },

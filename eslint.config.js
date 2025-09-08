@@ -7,13 +7,6 @@ import { app } from '@technobuddha/project';
 // eslint-disable-next-line tsdoc/syntax
 /** @type {import('eslint').Linter.Config[]} */
 const config = [
-  // .archive/tsconfig.json
-  app.lint({
-    files: ['.archive/**/*.ts'],
-    ignores: [],
-    environment: 'node',
-    tsConfig: '.archive/tsconfig.json',
-  }),
   // scripts/tsconfig.json
   app.lint({
     files: ['scripts/**/*.ts'],

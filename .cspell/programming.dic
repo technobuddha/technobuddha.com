@@ -12,6 +12,7 @@ embertest
 errmsg
 Foobie
 foobiebletch
+fullchain
 genrand
 lerp
 lngs
@@ -35,6 +36,7 @@ onpointerrawupdate
 onsearch
 pids
 pjvalue
+privkey
 proptypes
 prototypejs
 ROTR

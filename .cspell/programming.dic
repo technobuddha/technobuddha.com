@@ -3,6 +3,9 @@ activedescendant
 applescript
 asctime
 atomtest
+barbaz
+bazbar
+Bitap
 bletchfoobie
 chunkname
 codepaths
@@ -10,6 +13,8 @@ credentialless
 datagrid
 embertest
 errmsg
+fooba
+foobaz
 Foobie
 foobiebletch
 fullchain
@@ -45,6 +50,7 @@ setstate
 spinbutton
 stylesheet
 subarray
+subarrays
 SVGM
 textnodes
 timespan

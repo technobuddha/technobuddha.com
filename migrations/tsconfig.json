@@ -3,7 +3,13 @@
 // 🚨
 {
   "extends": "../tsconfig.base.json",
-  "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"], "noEmit": true },
+  "compilerOptions": {
+    "composite": true,
+    "types": ["node"],
+    "lib": ["esnext"],
+    "noEmit": true,
+    "allowJs": true
+  },
   "include": ["*.js"],
   "exclude": []
 }

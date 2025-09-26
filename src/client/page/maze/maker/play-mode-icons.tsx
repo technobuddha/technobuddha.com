@@ -7,8 +7,7 @@ import {
   IoRefresh,
 } from 'react-icons/io5';
 
-export const playModes = ['pause', 'step', 'play', 'fast', 'instant', 'refresh'] as const;
-export type PlayMode = (typeof playModes)[number];
+import { type PlayMode } from '#maze/runner';
 
 export const playModeIcons: Record<PlayMode, React.ReactNode> = {
   pause: <IoPause />,

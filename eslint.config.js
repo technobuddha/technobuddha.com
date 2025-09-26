@@ -18,37 +18,18 @@ const config = [
   app.lint({
     files: ['src/api/**/*.ts'],
     ignores: [],
-    environment: 'node',
+    environment: 'browser',
     tsConfig: 'src/api/tsconfig.json',
-  }),
-  // src/client/context/tsconfig.json
-  app.lint({
-    files: ['src/client/context/**/*.tsx'],
-    ignores: [],
-    environment: 'node',
-    tsConfig: 'src/client/context/tsconfig.json',
-    react: true,
-  }),
-  // src/client/context/tsconfig.json
-  app.lint({
-    files: ['src/client/context/**/*.ts'],
-    ignores: [],
-    environment: 'node',
-    tsConfig: 'src/client/context/tsconfig.json',
   }),
   // src/client/tsconfig.json
   app.lint({
     files: ['src/client/**/*.tsx'],
-    ignores: ['src/client/context/**/*'],
+    ignores: [],
     tsConfig: 'src/client/tsconfig.json',
     react: true,
   }),
   // src/client/tsconfig.json
-  app.lint({
-    files: ['src/client/**/*.ts'],
-    ignores: ['src/client/context/**/*'],
-    tsConfig: 'src/client/tsconfig.json',
-  }),
+  app.lint({ files: ['src/client/**/*.ts'], ignores: [], tsConfig: 'src/client/tsconfig.json' }),
   // src/config/tsconfig.json
   app.lint({
     files: ['src/config/*.ts'],

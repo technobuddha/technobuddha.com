@@ -1,6 +1,9 @@
 // 🚨
 // 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
 // 🚨
+// @ts-check
+/** @type import("cspell").CSpellSettings */
+const config =
 {
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json",
   "version": "0.2",
@@ -103,3 +106,5 @@
   "ignoreWords": [],
   "import": []
 }
+
+export default config;

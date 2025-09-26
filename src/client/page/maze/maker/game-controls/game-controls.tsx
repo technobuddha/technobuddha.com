@@ -4,9 +4,10 @@ import { GiExitDoor } from 'react-icons/gi';
 import { RiArrowTurnBackLine, RiArrowUpLine, RiRestartLine } from 'react-icons/ri';
 
 import { Button, Tooltip } from '#control';
-import { type Phase, playModeIcons, type Runner } from '#maze/runner';
+import { type Phase, type Runner } from '#maze/runner';
 import { type Human } from '#maze/solver';
 
+import { playModeIcons } from '../play-mode-icons.tsx';
 import { Section } from '../section/index.ts';
 
 import { GameControlsHelp } from './game-controls.help';
@@ -54,7 +55,7 @@ export const GameControls: React.FC<GameControlsProps> = ({ runner }) => {
   }, [runner]);
 
   return (
-    <Section title="Game Controls" className={css.gameControls} info={<GameControlsHelp />} >
+    <Section title="Game Controls" className={css.gameControls} info={<GameControlsHelp />}>
       {phase === 'solve' && (
         <div className={css.movementControls}>
           <div className={css.human}>

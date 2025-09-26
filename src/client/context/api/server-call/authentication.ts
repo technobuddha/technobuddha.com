@@ -7,7 +7,6 @@ import { type Account, type PasswordStrength } from '../schema.ts';
 
 const api = new AuthenticationAPI({ host: 'http://localhost:3000' });
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function readSession(): Promise<Account | null> {
   return api.readSession().then((response) => {
     switch (response.status) {
@@ -19,6 +18,7 @@ export async function readSession(): Promise<Account | null> {
         return null;
       }
 
+      case 500:
       default: {
         throw new FetchStatusError(response);
       }
@@ -26,7 +26,6 @@ export async function readSession(): Promise<Account | null> {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function createSession(email: string, password: string): Promise<Account | null> {
   return api.createSession({ body: { email, password } }).then((response) => {
     switch (response.status) {
@@ -38,6 +37,8 @@ export async function createSession(email: string, password: string): Promise<Ac
         return null;
       }
 
+      case 400:
+      case 500:
       default: {
         throw new FetchStatusError(response);
       }
@@ -45,7 +46,6 @@ export async function createSession(email: string, password: string): Promise<Ac
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function deleteSession(): Promise<void> {
   return api.deleteSession().then((response) => {
     switch (response.status) {
@@ -53,6 +53,7 @@ export async function deleteSession(): Promise<void> {
         return undefined;
       }
 
+      case 500:
       default: {
         throw new FetchStatusError(response);
       }
@@ -60,7 +61,6 @@ export async function deleteSession(): Promise<void> {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function checkPasswordStrength(
   password: string,
   userInputs: string[] = [],
@@ -70,6 +70,8 @@ export async function checkPasswordStrength(
       case 200: {
         return camelcaseKeys(response.payload);
       }
+
+      case 500:
       default: {
         throw new FetchStatusError(response);
       }
@@ -77,7 +79,6 @@ export async function checkPasswordStrength(
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function createAccount(
   first: string,
   last: string,
@@ -94,6 +95,7 @@ export async function createAccount(
         return null;
       }
 
+      case 500:
       default: {
         throw new FetchStatusError(response);
       }

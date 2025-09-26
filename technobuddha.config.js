@@ -14,6 +14,9 @@ const config = {
         references: ['src'],
       },
     },
+    'src/api': {
+      environment: 'browser',
+    },
     'src/client': {
       environment: 'vite-client',
       tsconfig: {
@@ -26,7 +29,7 @@ const config = {
     'src/control': {
       environment: 'vite-client',
       tsconfig: {
-        references: ['src/client/context'],
+        references: ['src/client'],
       }
     },
     'src/maze': {
@@ -34,9 +37,6 @@ const config = {
     },
     'src/server': {
       environment: 'node',
-      tsconfig: {
-        references: ['src/config', 'src/settings'],
-      },
     },
     'src/settings': {
       environment: 'universal',

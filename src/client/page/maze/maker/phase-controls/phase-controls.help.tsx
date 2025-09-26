@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { Box, Typography } from '#control';
-import { playModeIcons } from '#maze/runner';
+
+import { playModeIcons } from '../play-mode-icons.tsx';
 
 export const PhaseControlsHelp: React.FC = () => (
   <Box>

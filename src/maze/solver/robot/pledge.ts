@@ -49,8 +49,6 @@ export class PledgeRobot extends Robot {
 
   public execute(): void {
     while (true) {
-      console.log(this.mode, this.counter, this.location.facing);
-
       const moves = this.maze.moves(this.location, { wall: false });
 
       if (this.mode === 'straight') {

@@ -28,7 +28,7 @@ export const Header: React.FC<HeaderProps> = () => {
           {t('Technobuddha')}
         </Typography>
       </div>
-      {Boolean(authenticationSettings.login) && (
+      {authenticationSettings.login ?
         <Box className={css.controls}>
           <Box className={css.login}>
             {Boolean(account) && (
@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = () => {
             <MdAccountCircle className={css.authorization} />
           </IconButton>
         </Box>
-      )}
+      : null}
     </AppBar>
   );
 };

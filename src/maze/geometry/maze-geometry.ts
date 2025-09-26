@@ -5,7 +5,6 @@ import {
   type Rect,
   toSquare,
 } from '@technobuddha/library';
-``;
 
 import { type MazeGenerator } from '#maze/generator';
 import { MessageController, type MessageControllerProperties } from '#maze/random';

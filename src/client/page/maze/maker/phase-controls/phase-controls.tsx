@@ -2,8 +2,9 @@ import React from 'react';
 import { memoize } from 'lodash-es';
 
 import { Button, Step, StepLabel, Stepper } from '#control';
-import { type Phase, phases, type PlayMode, playModeIcons, type Runner } from '#maze/runner';
+import { type Phase, phases, type PlayMode, type Runner } from '#maze/runner';
 
+import { playModeIcons } from '../play-mode-icons.tsx';
 import { Section } from '../section/index.ts';
 
 import { PhaseControlsHelp } from './phase-controls.help.tsx';

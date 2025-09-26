@@ -1,2 +1,2 @@
-export * from './random.ts';
 export * from './message-controller.ts';
+export * from './random.ts';

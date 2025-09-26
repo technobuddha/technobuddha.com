@@ -3,7 +3,7 @@
 // 🚨
 {
   "extends": "../tsconfig.json",
-  "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"] },
+  "compilerOptions": { "composite": true, "types": [], "lib": ["esnext", "dom"] },
   "include": ["**/*.ts"],
   "exclude": []
 }

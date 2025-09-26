@@ -23,7 +23,7 @@ export const Home: React.FC<HomeProps> = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const translatedPages = React.useMemo(
-    () => pages(t).filter((c) => c.active && (c.loggedIn === false || account != null)),
+    () => pages(t).filter((c) => c.active && (!c.loggedIn || account != null)),
     [t, account],
   );
 

@@ -8,7 +8,6 @@ import { type Album, type Artist, type Genre, type Track } from '../schema.ts';
 
 const api = new MusicAPI({ host: 'http://localhost:3000' });
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function tracks(): Promise<Track[]> {
   return api.getTracks().then((response) => {
     switch (response.status) {
@@ -16,6 +15,8 @@ export async function tracks(): Promise<Track[]> {
         return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Track[]>;
       }
 
+      case 400:
+      case 500:
       default: {
         throw new FetchStatusError(response);
       }
@@ -23,7 +24,6 @@ export async function tracks(): Promise<Track[]> {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function newAlbums(): Promise<Album[]> {
   return api.getNewAlbums().then((response) => {
     switch (response.status) {
@@ -31,6 +31,8 @@ export async function newAlbums(): Promise<Album[]> {
         return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Album[]>;
       }
 
+      case 400:
+      case 500:
       default: {
         throw new FetchStatusError(response);
       }
@@ -38,7 +40,6 @@ export async function newAlbums(): Promise<Album[]> {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function artists(): Promise<Artist[]> {
   return api.getArtists().then((response) => {
     switch (response.status) {
@@ -46,6 +47,8 @@ export async function artists(): Promise<Artist[]> {
         return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Artist[]>;
       }
 
+      case 400:
+      case 500:
       default: {
         throw new FetchStatusError(response);
       }
@@ -53,13 +56,15 @@ export async function artists(): Promise<Artist[]> {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function genres(): Promise<Genre[]> {
   return api.getGenres().then((response) => {
     switch (response.status) {
       case 200: {
         return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Genre[]>;
       }
+
+      case 400:
+      case 500:
       default: {
         throw new FetchStatusError(response);
       }

@@ -23,7 +23,7 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
   const { t } = useTranslation();
   const { account } = useAuthentication();
   const translatedPages = React.useMemo(
-    () => pages(t).filter((c) => c.active && (c.loggedIn === false || account != null)),
+    () => pages(t).filter((c) => c.active && (!c.loggedIn || account != null)),
     [t, account],
   );
 

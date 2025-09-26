@@ -78,6 +78,7 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
                 );
               }
 
+              case undefined:
               default: {
                 return (
                   <Box key={message.time} className={clsx(css.message, css.colored)}>

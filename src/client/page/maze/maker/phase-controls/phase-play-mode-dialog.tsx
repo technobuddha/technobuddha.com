@@ -12,7 +12,9 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '#control';
-import { type Phase, type PlayMode, playModeIcons, playModes } from '#maze/runner';
+import { type Phase, type PlayMode, playModes } from '#maze/runner';
+
+import { playModeIcons } from '../play-mode-icons.tsx';
 
 export type PhasePlayModeDialogProps = InstanceProps<PlayMode | undefined, void> & {
   readonly children?: never;

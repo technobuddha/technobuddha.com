@@ -6,5 +6,5 @@
   "extends": "../tsconfig.json",
   "include": ["**/*.tsx", "**/*.ts"],
   "exclude": [],
-  "references": [{ "path": "../client/context" }]
+  "references": [{ "path": "../client" }]
 }

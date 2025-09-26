@@ -9,7 +9,6 @@
   "references": [
     { "path": "../api" },
     { "path": "../control" },
-    { "path": "../maze" },
     { "path": "../settings" },
     { "path": "../server" }
   ]

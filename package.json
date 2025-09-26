@@ -71,7 +71,7 @@
   "technobuddhaProject": {
     "version": "0.99.51",
     "created": "2020-04-01T04:20:42.690Z",
-    "updated": "2025-09-26T17:55:16.587Z"
+    "updated": "2025-09-26T18:52:11.111Z"
   },
   "type": "module",
   "engines": {
@@ -88,6 +88,7 @@
     "@technobuddha/color": "0.3.2",
     "@technobuddha/datagrid": "1.2.13",
     "@technobuddha/library": "1.9.56",
+    "@technobuddha/maze": "0.1.2",
     "@technobuddha/react-hooks": "1.6.3",
     "@technobuddha/size": "1.9.9",
     "@types/browserslist-useragent": "3.0.7",

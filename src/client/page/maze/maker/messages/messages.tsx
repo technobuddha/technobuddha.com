@@ -1,10 +1,9 @@
 import React from 'react';
+import { type MessageCallback, type MessageOptions, type Runner } from '@technobuddha/maze';
 import clsx from 'clsx';
 import { IoTrash } from 'react-icons/io5';
 
 import { Box, IconButton, Tooltip } from '#control';
-import { type MessageCallback, type MessageOptions } from '#maze/random';
-import { type Runner } from '#maze/runner';
 
 import { Section } from '../section/index.ts';
 

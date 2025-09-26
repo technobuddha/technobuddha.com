@@ -20,7 +20,7 @@ const config = {
     'src/client': {
       environment: 'vite-client',
       tsconfig: {
-        references: ['src/api', 'src/control', 'src/maze', 'src/settings', 'src/server'],
+        references: ['src/api', 'src/control', 'src/settings', 'src/server'],
       },
     },
     'src/config': {
@@ -31,9 +31,6 @@ const config = {
       tsconfig: {
         references: ['src/client'],
       }
-    },
-    'src/maze': {
-      environment: 'vite-client',
     },
     'src/server': {
       environment: 'node',
@@ -59,7 +56,6 @@ const config = {
           '#util*': ['./src/util*'],
           '#settings*': ['./src/settings*'],
           '#config*': ['./src/config*'],
-          '#maze/*': ['./src/maze/*/index.ts'],
         },
       },
     },

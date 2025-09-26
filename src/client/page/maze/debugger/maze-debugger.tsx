@@ -1,9 +1,7 @@
 import React from 'react';
-
-import { Button, MenuItem, NumberField, Select } from '#control';
-import { CanvasDrawing } from '#maze/drawing';
 import {
   BrickMaze,
+  CanvasDrawing,
   CircularMaze,
   CubicMaze,
   type Direction,
@@ -15,12 +13,14 @@ import {
   OctagonSquare,
   PentagonMaze,
   type Pillar,
+  Runner,
   SquareMaze,
   TriangleMaze,
   WedgeMaze,
   ZetaMaze,
-} from '#maze/geometry';
-import { Runner } from '#maze/runner';
+} from '@technobuddha/maze';
+
+import { Button, MenuItem, NumberField, Select } from '#control';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   circular: (props) => new CircularMaze(props),
@@ -196,9 +196,9 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
     if (maze) {
       for (const cell of maze.cellsInMaze()) {
         for (const direction of Object.keys(maze.nexus(cell).walls) as Direction[]) {
-          const move = maze.move(cell, direction);
+          const move = maze.walk(cell, direction).target;
           if (maze.inMaze(move)) {
-            const back = maze.move(move, maze.opposite(move.facing));
+            const back = maze.walk(move, maze.opposite(move.facing)).target;
             if (back) {
               if (cell.x !== back.x || cell.y !== back.y) {
                 err.push(
@@ -227,7 +227,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
 
       for (const cell of maze.cellsInMaze()) {
         for (const move of maze.moves(cell, { wall: 'all' })) {
-          const back = maze.move(move.target, maze.opposite(move.target.facing));
+          const back = maze.walk(move.target, maze.opposite(move.target.facing)).target;
           if (back) {
             if (cell.x !== back.x || cell.y !== back.y) {
               err.push(
@@ -314,7 +314,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         <br />
         {show === 'walls' && (
           <Select value={wall} label="Wall" onChange={handleWallChange}>
-            {maze?.directions.map((m) => (
+            {maze?.matrix.directions.map((m) => (
               <MenuItem key={m} value={m}>
                 {m}
               </MenuItem>
@@ -323,7 +323,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         )}
         {show === 'pillars' && (
           <Select value={pillar} label="Pillar" onChange={handlePillarChange}>
-            {maze?.pillars.map((m) => (
+            {maze?.matrix.pillars.map((m) => (
               <MenuItem key={m} value={m}>
                 {m}
               </MenuItem>

@@ -1,14 +1,19 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
+import { chooser } from '@technobuddha/maze';
+import {
+  CanvasDrawing,
+  type Maze,
+  type MazeGenerator,
+  type MazeGeneratorProperties,
+  type MazeProperties,
+  type MazeSolver,
+  type MazeSolverProperties,
+  Runner,
+} from '@technobuddha/maze';
 import { Size } from '@technobuddha/size';
 
 import { useUserInterface } from '#context/user-interface';
-import { CanvasDrawing } from '#maze/drawing';
-import { type MazeGenerator, type MazeGeneratorProperties } from '#maze/generator';
-import { type Maze, type MazeProperties } from '#maze/geometry';
-import { chooser } from '#maze/library';
-import { Runner } from '#maze/runner';
-import { type MazeSolver, type MazeSolverProperties } from '#maze/solver';
 
 import { generators, mazes, solvers } from './mazes.ts';
 

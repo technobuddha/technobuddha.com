@@ -1,5 +1,6 @@
 import React from 'react';
 import { titleCase } from '@technobuddha/library';
+import { defaultColors, type MazeColors } from '@technobuddha/maze';
 import { create, type InstanceProps } from 'react-modal-promise';
 
 import {
@@ -12,7 +13,6 @@ import {
   Radio,
   Tooltip,
 } from '#control';
-import { defaultColors, type MazeColors } from '#maze/geometry';
 
 import css from './palette-dialog.module.css';
 

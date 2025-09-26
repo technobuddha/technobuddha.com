@@ -1,39 +1,35 @@
 import {
-  Division,
-  GrowingTree,
-  HuntAndKill,
-  Kruskals,
-  type MazeGenerator,
-  type MazeGeneratorProperties,
-  Prims,
-  RecursiveBacktracker,
-  Wilsons,
-} from '#maze/generator';
-import {
   BrickMaze,
+  Chain,
   CircularMaze,
   CubicMaze,
+  Division,
   DotMaze,
+  FibonaccisRabbits,
+  Filler,
+  GrowingTree,
   HexagonMaze,
+  HuntAndKill,
+  Kruskals,
   type Maze,
+  type MazeGenerator,
+  type MazeGeneratorProperties,
   type MazeProperties,
+  type MazeSolver,
+  type MazeSolverProperties,
   OctagonDiamond,
   OctagonSquare,
   PentagonMaze,
+  Prims,
+  RecursiveBacktracker,
+  Roboto,
   type ShowDistances,
   SquareMaze,
   TriangleMaze,
   WedgeMaze,
+  Wilsons,
   ZetaMaze,
-} from '#maze/geometry';
-import {
-  Chain,
-  FibonaccisRabbits,
-  Filler,
-  type MazeSolver,
-  type MazeSolverProperties,
-  Roboto,
-} from '#maze/solver';
+} from '@technobuddha/maze';
 
 type GeometrySelection = {
   title: string;

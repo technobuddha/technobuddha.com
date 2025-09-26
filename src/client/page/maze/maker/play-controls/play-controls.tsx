@@ -1,7 +1,7 @@
 import React from 'react';
+import { type PlayMode, playModes, type Runner } from '@technobuddha/maze';
 
 import { ToggleButton, ToggleButtonGroup } from '#control';
-import { type PlayMode, playModes, type Runner } from '#maze/runner';
 
 import { playModeIcons } from '../play-mode-icons.tsx';
 import { Section } from '../section/index.ts';

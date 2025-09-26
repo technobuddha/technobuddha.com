@@ -1,8 +1,6 @@
 import React from 'react';
 import { ceil } from '@technobuddha/library';
-
-import { type ShowDistances } from '#maze/geometry';
-import { type Runner } from '#maze/runner';
+import { type Runner, type ShowDistances } from '@technobuddha/maze';
 
 import css from './preview.module.css';
 

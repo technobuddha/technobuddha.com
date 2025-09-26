@@ -1,6 +1,11 @@
 import {
+  Chain,
+  type ChainProperties,
+  type Choices,
   Division,
   type DivisionProperties,
+  Filler,
+  type FillerProperties,
   GrowingTree,
   type GrowingTreeProperties,
   HuntAndKill,
@@ -11,19 +16,13 @@ import {
   type PrimsProperties,
   RecursiveBacktracker,
   type RecursiveBacktrackerProperties,
-  Wilsons,
-  type WilsonsProperties,
-} from '#maze/generator';
-import { SquareMaze, type SquareMazeProperties } from '#maze/geometry';
-import { type Choices } from '#maze/library';
-import {
-  Chain,
-  type ChainProperties,
-  Filler,
-  type FillerProperties,
   Roboto,
   type RobotoProperties,
-} from '#maze/solver';
+  SquareMaze,
+  type SquareMazeProperties,
+  Wilsons,
+  type WilsonsProperties,
+} from '@technobuddha/maze';
 
 type PropsMazeGeometry = { geometry: typeof SquareMaze } & SquareMazeProperties;
 

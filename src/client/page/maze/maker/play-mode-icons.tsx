@@ -1,3 +1,4 @@
+import { type PlayMode } from '@technobuddha/maze';
 import {
   IoFootsteps,
   IoPause,
@@ -6,8 +7,6 @@ import {
   IoPlaySkipForward,
   IoRefresh,
 } from 'react-icons/io5';
-
-import { type PlayMode } from '#maze/runner';
 
 export const playModeIcons: Record<PlayMode, React.ReactNode> = {
   pause: <IoPause />,

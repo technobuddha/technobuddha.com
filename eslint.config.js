@@ -46,15 +46,6 @@ const config = [
   }),
   // src/control/tsconfig.json
   app.lint({ files: ['src/control/**/*.ts'], ignores: [], tsConfig: 'src/control/tsconfig.json' }),
-  // src/maze/tsconfig.json
-  app.lint({ files: ['src/maze/**/*.ts'], ignores: [], tsConfig: 'src/maze/tsconfig.json' }),
-  // src/maze/tsconfig.json
-  app.lint({
-    files: ['src/maze/**/*.tsx'],
-    ignores: [],
-    tsConfig: 'src/maze/tsconfig.json',
-    react: true,
-  }),
   // src/server/tsconfig.json
   app.lint({
     files: ['src/server/**/*.ts'],

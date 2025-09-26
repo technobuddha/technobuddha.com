@@ -3486,6 +3486,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@technobuddha/library@npm:2.0.3":
+  version: 2.0.3
+  resolution: "@technobuddha/library@npm:2.0.3"
+  checksum: 10c0/e55e62f2f000c065ae237ffd3301d004b2b957fb1c6d1590e594b5ce21865481f1e38093d43a499bced184acbc8039c79e117c5648539d65ada4934d69423854
+  languageName: node
+  linkType: hard
+
+"@technobuddha/maze@npm:0.1.2":
+  version: 0.1.2
+  resolution: "@technobuddha/maze@npm:0.1.2"
+  dependencies:
+    "@technobuddha/library": "npm:2.0.3"
+    colorjs.io: "npm:0.5.2"
+  checksum: 10c0/ee5f5c7c93c27dff997f8ca6539dc5c33780f234b7f44185cd920e617ce52753414fa13b4448d180913f39bb0ce44cf966f4c3eb19549124e523002348065630
+  languageName: node
+  linkType: hard
+
 "@technobuddha/openapi@link:../@technobuddha/openapi/::locator=technobuddha.com%40workspace%3A.":
   version: 0.0.0-use.local
   resolution: "@technobuddha/openapi@link:../@technobuddha/openapi/::locator=technobuddha.com%40workspace%3A."
@@ -12059,6 +12076,7 @@ __metadata:
     "@technobuddha/color": "npm:0.3.2"
     "@technobuddha/datagrid": "npm:1.2.13"
     "@technobuddha/library": "npm:1.9.56"
+    "@technobuddha/maze": "npm:0.1.2"
     "@technobuddha/openapi": "link:../@technobuddha/openapi/"
     "@technobuddha/project": "link:../@technobuddha/project"
     "@technobuddha/react-hooks": "npm:1.6.3"

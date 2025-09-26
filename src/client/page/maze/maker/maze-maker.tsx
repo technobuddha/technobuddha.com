@@ -1,14 +1,21 @@
 import React from 'react';
+import {
+  CanvasDrawing,
+  type Maze,
+  type MazeGenerator,
+  type MazeGeneratorProperties,
+  type MazeProperties,
+  type MazeSolver,
+  type MazeSolverProperties,
+  type Phase,
+  type PlayMode,
+  Runner,
+} from '@technobuddha/maze';
 import clsx from 'clsx';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useMeasure } from 'react-use';
 
 import { ToggleButton, ToggleButtonGroup } from '#control';
-import { CanvasDrawing } from '#maze/drawing';
-import { type MazeGenerator, type MazeGeneratorProperties } from '#maze/generator';
-import { type Maze, type MazeProperties } from '#maze/geometry';
-import { type Phase, type PlayMode, Runner } from '#maze/runner';
-import { type MazeSolver, type MazeSolverProperties } from '#maze/solver';
 
 import { CustomControls } from './custom-controls/index.ts';
 import { DemoMode } from './demo-mode/index.ts';

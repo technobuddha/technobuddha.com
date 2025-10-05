@@ -4,7 +4,6 @@
 // 🚨
 import { app } from '@technobuddha/project';
 
-// eslint-disable-next-line tsdoc/syntax
 /** @type {import('eslint').Linter.Config[]} */
 const config = [
   // scripts/tsconfig.json
@@ -65,7 +64,7 @@ const config = [
   // tsconfig.json
   app.lint({ files: ['*.config.js'], ignores: [], environment: 'node' }),
   // tsconfig.json
-  app.lint({ files: ['*.config.ts'], ignores: [], environment: 'node' }),
+  app.lint({ files: ['*.config.ts'], ignores: [], environment: 'node', tsConfig: 'tsconfig.json' }),
 ];
 
 export default config;

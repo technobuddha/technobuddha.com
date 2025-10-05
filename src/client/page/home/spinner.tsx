@@ -1,5 +1,5 @@
 import React from 'react';
-import { memoize } from 'lodash-es';
+import { memoize } from '@technobuddha/library';
 import { type IconType } from 'react-icons';
 
 import css from './spinner.module.css';
@@ -49,11 +49,14 @@ export function Spinner<T extends SpinnerComponent>({
 
   const articleStyle = React.useMemo(
     () =>
-      memoize<(i: number) => React.CSSProperties>((i) => ({
-        animationName: animationId,
-        animationDuration: `${components.length * speed}s`,
-        animationDelay: `${-(components.length - i - 1) * speed}s`,
-      })),
+      memoize(
+        (i: number) =>
+          ({
+            animationName: animationId,
+            animationDuration: `${components.length * speed}s`,
+            animationDelay: `${-(components.length - i - 1) * speed}s`,
+          }) as React.CSSProperties,
+      ),
     [speed, components.length, animationId],
   );
 

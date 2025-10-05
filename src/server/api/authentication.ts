@@ -1,9 +1,8 @@
 import { type Router, Router as router } from 'express';
-import { isUndefined } from 'lodash-es';
 import { type Logger } from 'winston';
 import zxcvbn from 'zxcvbn';
 
-import { authenticationSettings } from '#settings/authentication.ts';
+import { authenticationSettings } from '#settings/authentication';
 
 import { cacheControl } from '../cache-control.ts';
 import {
@@ -89,7 +88,7 @@ export function authentication(_logger: Logger): Router {
     .post('/check-password-strength', (req, res) => {
       const { password, userInputs } = req.body;
 
-      if (isUndefined(password)) {
+      if (password === undefined) {
         res.status(400).json('Request must include field "password"');
         return;
       }

@@ -1,6 +1,6 @@
 import React from 'react';
+import { memoize } from '@technobuddha/library';
 import { type Phase, phases, type PlayMode, type Runner } from '@technobuddha/maze';
-import { memoize } from 'lodash-es';
 
 import { Button, Step, StepLabel, Stepper } from '#control';
 

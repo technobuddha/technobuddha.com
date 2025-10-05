@@ -1,6 +1,6 @@
 import React from 'react';
+import { memoize } from '@technobuddha/library';
 import { type Human, type Phase, type Runner } from '@technobuddha/maze';
-import { memoize } from 'lodash-es';
 import { GiExitDoor } from 'react-icons/gi';
 import { RiArrowTurnBackLine, RiArrowUpLine, RiRestartLine } from 'react-icons/ri';
 

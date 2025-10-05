@@ -7,7 +7,7 @@ import mustacheExpress from 'mustache-express';
 import responseTime from 'response-time';
 import { type Logger } from 'winston';
 
-import { paths } from '#config/paths.ts';
+import { paths } from '#config';
 
 export function setup(app: Application, logger: Logger): void {
   app

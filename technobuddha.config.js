@@ -5,7 +5,7 @@ const config = {
   directories: {
     '.': {
       tsconfig: {
-        references: ['./src'],
+        references: ['src'],
       },
     },
     'scripts': {
@@ -34,6 +34,9 @@ const config = {
     },
     'src/server': {
       environment: 'node',
+      tsconfig: {
+        references: ['src/settings', 'src/config'],
+      }
     },
     'src/settings': {
       environment: 'universal',
@@ -55,7 +58,8 @@ const config = {
           '#server/*': ['./src/server/*/index.ts'],
           '#util*': ['./src/util*'],
           '#settings*': ['./src/settings*'],
-          '#config*': ['./src/config*'],
+          '#config': ['./src/config/index.ts'],
+          '#env': ['./src/config/env.ts'],
         },
       },
     },

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { empty, nbsp } from '@technobuddha/library';
-import { escapeRegExp, zip } from 'lodash-es';
+import { empty, nbsp, zipperMerge } from '@technobuddha/library';
 import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 
 import { useAPI } from '#context/api';
@@ -221,7 +220,7 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
         value={passwordConfirmation}
         helperText={validPasswordConfirmation ? nbsp : t('Passwords must match')}
         required
-        validation={new RegExp(`^${escapeRegExp(myPassword)}$`, 'u')}
+        validation={new RegExp(`^${RegExp.escape(myPassword)}$`, 'u')}
       />
       <Box className={css.validation}>
         {Boolean(strength) && (
@@ -262,7 +261,7 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
           </Box>
         )}
         <Box className={css.rules}>
-          {(zip(validationRules, pass) as [ValidationRule, boolean][])
+          {zipperMerge(validationRules, pass)
             .filter(([, ok]) => !showInvalidOnly && !ok)
             .map(([rule, ok], i) => (
               // eslint-disable-next-line react/no-array-index-key

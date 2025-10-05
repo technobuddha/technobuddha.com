@@ -5,7 +5,7 @@ import { type Application, /*type NextFunction,*/ type Request, type Response } 
 import express from 'express';
 import { type Logger } from 'winston';
 
-import { paths } from '#config/paths';
+import { paths } from '#config';
 import { browserSettings } from '#settings/browser';
 import { userInterfaceSettings } from '#settings/user-interface';
 

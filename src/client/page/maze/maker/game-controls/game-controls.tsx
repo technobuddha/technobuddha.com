@@ -11,7 +11,7 @@ import { Section } from '../section/index.ts';
 
 import { GameControlsHelp } from './game-controls.help';
 
-import css from './game-controls.module.css';
+import css from './game-controls.module.css' with { type: 'css' };
 
 type GameControlsProps = {
   readonly runner: Runner | undefined;

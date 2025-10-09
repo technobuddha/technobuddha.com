@@ -10,7 +10,7 @@ import { LinearProgress } from '#control';
 
 import { chaos } from './worker/index.ts';
 
-import css from './chaos.module.css';
+import css from './chaos.module.css' with { type: 'css' };
 
 type RGB = { r: number; g: number; b: number };
 

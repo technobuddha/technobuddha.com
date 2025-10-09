@@ -10,7 +10,7 @@ import { Header } from './header.tsx';
 import { Main } from './main.tsx';
 import { Nav } from './nav.tsx';
 
-import css from './framework.module.css';
+import css from './framework.module.css' with { type: 'css' };
 
 export const Framework: React.FC = () => (
   <>

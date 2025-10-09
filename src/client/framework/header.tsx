@@ -8,7 +8,7 @@ import { useNavigate } from '#context/router';
 import { AppBar, Box, IconButton, Typography } from '#control';
 import { authenticationSettings } from '#settings/authentication';
 
-import css from './header.module.css';
+import css from './header.module.css' with { type: 'css' };
 
 type HeaderProps = { children?: never };
 

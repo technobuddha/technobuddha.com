@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import { Link } from '../link/index.ts';
 
-import css from './not-found.module.css';
+import css from './not-found.module.css' with { type: 'css' };
 
 export type NotFoundProps = {
   readonly animated?: boolean;

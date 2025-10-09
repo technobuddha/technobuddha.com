@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { empty, nbsp, zipperMerge } from '@technobuddha/library';
+import { zxcvbn } from '@zxcvbn-ts/core';
 import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 
 import { useAPI } from '#context/api';
@@ -8,7 +9,9 @@ import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
 import { PasswordField, Typography } from '#control';
 
-import css from './password-validation.module.css';
+import { loadZxcvbnOptions } from './load-zxcvbn-options.ts';
+
+import css from './password-validation.module.css' with { type: 'css' };
 
 type ValidationRule = {
   text: string;
@@ -61,6 +64,13 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
   const [passwordScore, setPasswordScore] = React.useState(0);
   const [passwordWarning, setPasswordWarning] = React.useState(empty);
   const [pass, setPass] = React.useState<boolean[]>([]);
+  const [zxcvbnAvailable, setZxcvbnAvailable] = React.useState(false);
+
+  React.useEffect(() => {
+    void loadZxcvbnOptions().then(() => {
+      setZxcvbnAvailable(true);
+    });
+  }, []);
 
   const barColors = React.useMemo(
     () => [
@@ -166,32 +176,35 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
   }, []);
 
   React.useEffect(() => {
-    authentication
-      .checkPasswordStrength(myPassword, userInputs)
-      .then(({ score, warning }) => {
-        const uCount = myPassword.match(/\p{Lu}/gu)?.length ?? 0;
-        const lCount = myPassword.match(/\p{Ll}/gu)?.length ?? 0;
-        const dCount = myPassword.match(/\p{N}/gu)?.length ?? 0;
-        const sCount = myPassword.match(/[\p{P}\p{S}]/gu)?.length ?? 0;
-        const cCount =
-          (uCount > 0 ? 1 : 0) + (lCount > 0 ? 1 : 0) + (dCount > 0 ? 1 : 0) + (sCount > 0 ? 1 : 0);
+    if (zxcvbnAvailable) {
+      const {
+        score,
+        feedback: { warning },
+      } = zxcvbn(myPassword, userInputs);
+      const uCount = myPassword.match(/\p{Lu}/gu)?.length ?? 0;
+      const lCount = myPassword.match(/\p{Ll}/gu)?.length ?? 0;
+      const dCount = myPassword.match(/\p{N}/gu)?.length ?? 0;
+      const sCount = myPassword.match(/[\p{P}\p{S}]/gu)?.length ?? 0;
+      const cCount =
+        (uCount > 0 ? 1 : 0) + (lCount > 0 ? 1 : 0) + (dCount > 0 ? 1 : 0) + (sCount > 0 ? 1 : 0);
 
-        const test = validationRules.map((rule) =>
-          rule.test({ score, password: myPassword, uCount, lCount, dCount, sCount, cCount }),
-        );
+      const test = validationRules.map((rule) =>
+        rule.test({ score, password: myPassword, uCount, lCount, dCount, sCount, cCount }),
+      );
 
-        setPass(test);
-        setPasswordScore(score);
-        setPasswordWarning(warning);
+      setPass(test);
+      setPasswordScore(score);
+      setPasswordWarning(warning ?? empty);
 
-        onChange?.(myPassword, validPasswordConfirmation && test.every(Boolean));
-      })
-      .catch((err) => {
-        setPass([]);
-        setPasswordScore(0);
-        setPasswordWarning(err.toString());
-      });
+      onChange?.(myPassword, validPasswordConfirmation && test.every(Boolean));
+    } else {
+      setPass([]);
+      setPasswordScore(0);
+      setPasswordWarning(t('Loading password validation, please wait...'));
+    }
   }, [
+    t,
+    zxcvbnAvailable,
     myPassword,
     validPasswordConfirmation,
     userInputs,

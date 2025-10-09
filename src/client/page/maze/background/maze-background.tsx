@@ -17,7 +17,7 @@ import { useUserInterface } from '#context/user-interface';
 
 import { generators, mazes, solvers } from './mazes.ts';
 
-import css from './maze-background.module.css';
+import css from './maze-background.module.css' with { type: 'css' };
 
 export type MazeBackgroundProps = {
   readonly maskColor?: string;

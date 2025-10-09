@@ -31,7 +31,7 @@
     "@react-router/dev": "7.9.3",
     "@technobuddha/builder": "0.99.22",
     "@technobuddha/openapi": "link:../@technobuddha/openapi/",
-    "@technobuddha/project": "0.99.65",
+    "@technobuddha/project": "0.99.135",
     "@types/cli-progress": "^3.11.6",
     "@types/cookie-parser": "^1.4.9",
     "@types/express": "^5.0.3",
@@ -70,9 +70,9 @@
     "vitepress": "1.6.4"
   },
   "technobuddhaProject": {
-    "version": "0.99.65",
+    "version": "0.99.135",
     "created": "2020-04-01T04:20:42.690Z",
-    "updated": "2025-09-29T17:05:19.010Z"
+    "updated": "2025-10-08T12:56:30.371Z"
   },
   "type": "module",
   "engines": {
@@ -94,6 +94,9 @@
     "@technobuddha/size": "1.9.9",
     "@types/browserslist-useragent": "3.0.7",
     "@uiw/react-color": "2.8.0",
+    "@zxcvbn-ts/core": "3.0.4",
+    "@zxcvbn-ts/language-common": "3.0.4",
+    "@zxcvbn-ts/language-en": "3.0.2",
     "ajv": "8.17.1",
     "browserslist": "4.26.2",
     "browserslist-useragent": "4.0.0",

@@ -2,9 +2,10 @@
 // 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
 // 🚨
 {
-  "extends": "../tsconfig.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": { "composite": true, "types": ["vite/client"], "lib": ["esnext", "dom"] },
-  "include": ["**/*.tsx", "**/*.ts"],
+  "include": ["**/*.tsx", "**/*.d.ts", "**/*.ts", "../@types/**/*.d.ts"],
   "exclude": [],
   "references": [
     { "path": "../api" },

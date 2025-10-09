@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 import { Box, MenuItem, Select, Typography } from '#control';
 
-import css from './knight.module.css';
+import css from './knight.module.css' with { type: 'css' };
 
 const blackKnight = '♞';
 

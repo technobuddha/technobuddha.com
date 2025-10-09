@@ -11,6 +11,7 @@ chunkname
 codepaths
 credentialless
 datagrid
+diceware
 embertest
 errmsg
 fooba
@@ -19,6 +20,7 @@ Foobie
 foobiebletch
 fullchain
 genrand
+iotn
 lerp
 lngs
 LOGNAME
@@ -51,6 +53,8 @@ spinbutton
 stylesheet
 subarray
 subarrays
+subchild
+subdirs
 SVGM
 textnodes
 timespan

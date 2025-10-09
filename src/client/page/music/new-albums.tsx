@@ -6,7 +6,7 @@ import { type Album, useAPI } from '#context/api';
 import { useTranslation } from '#context/i18n';
 import { DelayedLoading } from '#control';
 
-import css from './new-albums.module.css';
+import css from './new-albums.module.css' with { type: 'css' };
 
 export const NewAlbums: React.FC = () => {
   const { t } = useTranslation();

@@ -11,7 +11,7 @@ import { type Page, pages } from '#settings/pages.tsx';
 import Logo from './logo.svg?react';
 import { Spinner } from './spinner.tsx';
 
-import css from './home.module.css';
+import css from './home.module.css' with { type: 'css' };
 
 export type HomeProps = {
   children?: never;

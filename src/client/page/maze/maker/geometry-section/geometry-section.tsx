@@ -16,7 +16,7 @@ import { debugDialog } from './debug-dialog.tsx';
 import { GeometrySectionHelp } from './geometry-section.help.tsx';
 import { paletteDialog } from './palette-dialog.tsx';
 
-import css from './geometry-section.module.css';
+import css from './geometry-section.module.css' with { type: 'css' };
 
 type GeometrySectionProps = {
   readonly className?: string;

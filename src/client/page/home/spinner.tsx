@@ -2,7 +2,7 @@ import React from 'react';
 import { memoize } from '@technobuddha/library';
 import { type IconType } from 'react-icons';
 
-import css from './spinner.module.css';
+import css from './spinner.module.css' with { type: 'css' };
 
 export type SpinnerComponent = {
   name: string;

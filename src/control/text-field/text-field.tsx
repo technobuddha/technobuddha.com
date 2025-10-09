@@ -6,7 +6,7 @@ import {
   type TextFieldProps as MuiTextFieldProps,
 } from '@mui/material';
 
-import css from './text-field.module.css';
+import css from './text-field.module.css' with { type: 'css' };
 
 export type TextFieldProps = {
   readonly className?: string;

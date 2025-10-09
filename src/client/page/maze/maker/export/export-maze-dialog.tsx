@@ -17,7 +17,7 @@ import {
 
 import { Preview } from './preview.tsx';
 
-import css from './export-maze-dialog.module.css';
+import css from './export-maze-dialog.module.css' with { type: 'css' };
 
 type FileFormat = 'png' | 'jpg' | 'gif';
 

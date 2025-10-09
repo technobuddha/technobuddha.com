@@ -9,7 +9,7 @@ import { ForgotPassword } from './forgot-password.tsx';
 import { Login } from './login.tsx';
 import { SignUp } from './sign-up.tsx';
 
-import css from './authentication.module.css';
+import css from './authentication.module.css' with { type: 'css' };
 
 export const Authentication: React.FC = () => {
   const { t } = useTranslation();

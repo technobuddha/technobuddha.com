@@ -3,7 +3,7 @@ import { type Phase, type Runner } from '@technobuddha/maze';
 
 import { Section } from '../section/index.ts';
 
-import css from './demo-mode.module.css';
+import css from './demo-mode.module.css' with { type: 'css' };
 
 export type DemoModeProps = {
   readonly runner: Runner | undefined;

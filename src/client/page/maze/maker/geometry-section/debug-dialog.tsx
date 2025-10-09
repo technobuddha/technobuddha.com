@@ -14,7 +14,7 @@ import {
 
 import { type Debug, shows } from './debug.ts';
 
-import css from './debug-dialog.module.css';
+import css from './debug-dialog.module.css' with { type: 'css' };
 
 function findShow(showBridges: boolean, showCoordinates: boolean, showKind: boolean): string {
   return (

@@ -3,7 +3,7 @@
 /* eslint-disable react/no-this-in-sfc */
 import React from 'react';
 
-import css from './n-body.module.css';
+import css from './n-body.module.css' with { type: 'css' };
 
 export const NBody: React.FC = () => {
   const div = React.useRef<HTMLDivElement>(null);

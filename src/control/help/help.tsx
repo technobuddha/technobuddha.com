@@ -8,7 +8,7 @@ import { RiCloseLargeLine } from 'react-icons/ri';
 import { useTranslation } from '#context/i18n';
 import { Box, IconButton, Tooltip, Typography } from '#control';
 
-import css from './help.module.css';
+import css from './help.module.css' with { type: 'css' };
 
 export type HelpProps = {
   readonly className?: string;

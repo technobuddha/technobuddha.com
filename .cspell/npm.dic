@@ -32,5 +32,6 @@ tsdoc
 typedoc
 Unidiff
 vitepress
+Vitest
 yarnrc
 zxcvbn

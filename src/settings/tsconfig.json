@@ -2,9 +2,10 @@
 // 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
 // 🚨
 {
-  "extends": "../tsconfig.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": { "composite": true, "types": [], "lib": ["esnext"] },
-  "include": ["*.ts", "*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "../@types/**/*.d.ts"],
   "exclude": [],
   "references": [{ "path": "../client" }]
 }

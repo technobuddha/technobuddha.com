@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import { Box, Card, CardContent, Help, Typography } from '#control';
 
-import css from './section.module.css';
+import css from './section.module.css' with { type: 'css' };
 
 type SectionProps = {
   readonly className?: string;

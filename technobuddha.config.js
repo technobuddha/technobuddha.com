@@ -5,14 +5,11 @@ const config = {
   directories: {
     '.': {
       tsconfig: {
-        references: ['src'],
+        references: ['src/settings'],
       },
     },
     'scripts': {
       environment: 'node',
-      tsconfig: {
-        references: ['src'],
-      },
     },
     'src/api': {
       environment: 'browser',
@@ -39,7 +36,7 @@ const config = {
       }
     },
     'src/settings': {
-      environment: 'universal',
+      environment: 'esnext',
       tsconfig: {
         references: ['src/client'],
       },

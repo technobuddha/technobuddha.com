@@ -2,9 +2,9 @@
 // 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
 // 🚨
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../tsconfig.base.json",
   "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"] },
-  "include": ["**/*.ts"],
-  "exclude": [],
-  "references": [{ "path": "../src" }]
+  "include": ["**/*.d.ts", "**/*.ts"],
+  "exclude": []
 }

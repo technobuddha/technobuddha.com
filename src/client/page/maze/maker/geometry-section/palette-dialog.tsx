@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from '#control';
 
-import css from './palette-dialog.module.css';
+import css from './palette-dialog.module.css' with { type: 'css' };
 
 export type PaletteDialogProps = InstanceProps<MazeColors, void> & {
   readonly value: MazeColors;

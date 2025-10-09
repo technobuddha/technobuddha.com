@@ -10,7 +10,7 @@ import {
   type SelectProps as MuiSelectProps,
 } from '@mui/material';
 
-import css from './select.module.css';
+import css from './select.module.css' with { type: 'css' };
 
 type SelectBase<T extends string | number> = {
   readonly label?: MuiSelectProps<T>['label'];

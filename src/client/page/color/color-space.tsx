@@ -3,7 +3,7 @@ import { type ColorSpecification, type RGB, toRGB } from '@technobuddha/color';
 
 import { Slider } from '#control';
 
-import css from './color-space.module.css';
+import css from './color-space.module.css' with { type: 'css' };
 
 type ColorSpaceProps<T extends string> = {
   readonly colorSpace: Record<T, Attributes>;

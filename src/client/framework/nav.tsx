@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from '#context/router';
 import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText } from '#control';
 import { pages } from '#settings/pages.jsx';
 
-import css from './nav.module.css';
+import css from './nav.module.css' with { type: 'css' };
 
 const expansionTimeout = 1250;
 

@@ -9,7 +9,7 @@ import { Section } from '../section/index.ts';
 
 import { MessagesHelp } from './messages.help.tsx';
 
-import css from './messages.module.css';
+import css from './messages.module.css' with { type: 'css' };
 
 type History = {
   message: string;

@@ -1838,6 +1838,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@eslint/js@npm:9.37.0":
+  version: 9.37.0
+  resolution: "@eslint/js@npm:9.37.0"
+  checksum: 10c0/84f98a6213522fc76ea104bd910f606136200bd918544e056a7a22442d3f9d5c3c5cd7f4cdf2499d49b1fa140155b87d597a1f16d01644920f05c228e9ca0378
+  languageName: node
+  linkType: hard
+
 "@eslint/object-schema@npm:^2.1.6":
   version: 2.1.6
   resolution: "@eslint/object-schema@npm:2.1.6"
@@ -3916,17 +3923,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/library@npm:2.0.22":
-  version: 2.0.22
-  resolution: "@technobuddha/library@npm:2.0.22"
-  checksum: 10c0/4d46881e1553cceef9926cff358d3af05f39e09cdd45f4be7f7fa52f6409025a769a49faf9cfd43054193ed1359daea53a6f5aa071265e757155d90f00cb34a1
-  languageName: node
-  linkType: hard
-
 "@technobuddha/library@npm:2.0.3":
   version: 2.0.3
   resolution: "@technobuddha/library@npm:2.0.3"
   checksum: 10c0/e55e62f2f000c065ae237ffd3301d004b2b957fb1c6d1590e594b5ce21865481f1e38093d43a499bced184acbc8039c79e117c5648539d65ada4934d69423854
+  languageName: node
+  linkType: hard
+
+"@technobuddha/library@npm:2.0.35":
+  version: 2.0.35
+  resolution: "@technobuddha/library@npm:2.0.35"
+  checksum: 10c0/773814e26aff74cfd56cb744379c757827f364b5430edaf7e6e06e0994d13f6f01a0ac6c7c8dc777fa559c74120367e029cbed35d2d3b64efcc4e80028120ec8
   languageName: node
   linkType: hard
 
@@ -3974,13 +3981,13 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@technobuddha/project@npm:0.99.65":
-  version: 0.99.65
-  resolution: "@technobuddha/project@npm:0.99.65"
+"@technobuddha/project@npm:0.99.135":
+  version: 0.99.135
+  resolution: "@technobuddha/project@npm:0.99.135"
   dependencies:
-    "@eslint/js": "npm:9.36.0"
+    "@eslint/js": "npm:9.37.0"
     "@inquirer/prompts": "npm:7.8.6"
-    "@technobuddha/library": "npm:2.0.22"
+    "@technobuddha/library": "npm:2.0.35"
     "@types/eslint": "npm:9.6.1"
     "@types/lodash-es": "npm:4.17.12"
     "@types/node": "npm:24.5.2"
@@ -4011,21 +4018,17 @@ __metadata:
     eslint-plugin-technobuddha: "npm:1.3.3"
     eslint-plugin-tsdoc: "npm:0.4.0"
     eslint-plugin-unicorn: "npm:61.0.2"
-    get-tsconfig: "npm:4.10.1"
     globals: "npm:16.4.0"
     ignore-walk: "npm:8.0.0"
     jest-extended: "npm:6.0.0"
     lodash-es: "npm:4.17.21"
     mustache: "npm:4.2.0"
-    package-up: "npm:5.0.0"
     react: "npm:19.1.1"
-    read-package-up: "npm:11.0.0"
     semver: "npm:7.7.2"
     typescript: "npm:5.9.2"
-    watch: "npm:1.0.2"
   bin:
-    tbproject: dist/tbproject/tbproject.js
-  checksum: 10c0/7a7236a1aadcf55971b5d011784fcafe6513565073aec44f92946d1bc7b313aef4f0d86f96890996a3c6b84006dc1d334dadcce8c7eff7796d5b604cce62b520
+    tbproject: dist/cli/tbproject.js
+  checksum: 10c0/59562d8fecae2a4b84fa501c2ff0395ec89fddd5f3f02457fd84d0dbe87c82cc32f9a6187dc93dcb20950bb5d9f2a0c9e98657a050b84a48f0a1cd769d31fb76
   languageName: node
   linkType: hard
 
@@ -5424,6 +5427,29 @@ __metadata:
   version: 1.9.5
   resolution: "@xobotyi/scrollbar-width@npm:1.9.5"
   checksum: 10c0/4ebc79e4f798e2a5e89a5122f8fc4a086f08a92a44ac020599c4fe20d105b7d76ba06c094260b5f386a75e7ce6f6c518d9fc295228b651296b99c4477f986ac4
+  languageName: node
+  linkType: hard
+
+"@zxcvbn-ts/core@npm:3.0.4":
+  version: 3.0.4
+  resolution: "@zxcvbn-ts/core@npm:3.0.4"
+  dependencies:
+    fastest-levenshtein: "npm:1.0.16"
+  checksum: 10c0/afe266635651303b9dbd0dad73ac9c76261b1d4d6fbb1d657a4d84d5552531346030d483e41b2a349940e11afdf439dcea94c5793faba8f9a9910eff104859e4
+  languageName: node
+  linkType: hard
+
+"@zxcvbn-ts/language-common@npm:3.0.4":
+  version: 3.0.4
+  resolution: "@zxcvbn-ts/language-common@npm:3.0.4"
+  checksum: 10c0/0dc6185c4289a876a236e498c4b1b4bd181a56f14068fb5610d7238918cab5ce56e08d5e8c7fe980cd28dbed57650defc202bc57bd1bffc302bb600aec4769c8
+  languageName: node
+  linkType: hard
+
+"@zxcvbn-ts/language-en@npm:3.0.2":
+  version: 3.0.2
+  resolution: "@zxcvbn-ts/language-en@npm:3.0.2"
+  checksum: 10c0/b5930a41d014c99f585721c9f14baa0bf4f538de5f444e752fa9e671e6aebd5844bc85b136ba8474753e288320cde33aa5a9c5888ab5f1f7ccb6de0f0dfcf7ba
   languageName: node
   linkType: hard
 
@@ -8830,6 +8856,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fastest-levenshtein@npm:1.0.16":
+  version: 1.0.16
+  resolution: "fastest-levenshtein@npm:1.0.16"
+  checksum: 10c0/7e3d8ae812a7f4fdf8cad18e9cde436a39addf266a5986f653ea0d81e0de0900f50c0f27c6d5aff3f686bcb48acbd45be115ae2216f36a6a13a7dbbf5cad878b
+  languageName: node
+  linkType: hard
+
 "fastest-stable-stringify@npm:^2.0.2":
   version: 2.0.2
   resolution: "fastest-stable-stringify@npm:2.0.2"
@@ -11957,15 +11990,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"package-up@npm:5.0.0":
-  version: 5.0.0
-  resolution: "package-up@npm:5.0.0"
-  dependencies:
-    find-up-simple: "npm:^1.0.0"
-  checksum: 10c0/539ca3cded589ed374b9f729a94a0e09f1ffa9e640037c557ac209293d56685c8a6cee1f6fe08585ed125335ec7276d10e9c556cfc6bb3258dcb99af32fd5cb5
-  languageName: node
-  linkType: hard
-
 "parent-module@npm:^1.0.0":
   version: 1.0.1
   resolution: "parent-module@npm:1.0.1"
@@ -14282,7 +14306,7 @@ __metadata:
     "@technobuddha/library": "npm:2.0.11"
     "@technobuddha/maze": "npm:0.1.2"
     "@technobuddha/openapi": "link:../@technobuddha/openapi/"
-    "@technobuddha/project": "npm:0.99.65"
+    "@technobuddha/project": "npm:0.99.135"
     "@technobuddha/react-hooks": "npm:1.6.5"
     "@technobuddha/size": "npm:1.9.9"
     "@types/browserslist-useragent": "npm:3.0.7"
@@ -14301,6 +14325,9 @@ __metadata:
     "@types/zxcvbn": "npm:^4.4.5"
     "@uiw/react-color": "npm:2.8.0"
     "@vitejs/plugin-react": "npm:5.0.4"
+    "@zxcvbn-ts/core": "npm:3.0.4"
+    "@zxcvbn-ts/language-common": "npm:3.0.4"
+    "@zxcvbn-ts/language-en": "npm:3.0.2"
     ajv: "npm:8.17.1"
     browserslist: "npm:4.26.2"
     browserslist-useragent: "npm:4.0.0"

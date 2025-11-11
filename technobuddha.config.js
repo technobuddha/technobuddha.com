@@ -10,6 +10,9 @@ const config = {
     },
     'scripts': {
       environment: 'node',
+      tsconfig: {
+        references: ['src/config', 'src/settings', 'src/server'],
+      }
     },
     'src/api': {
       environment: 'browser',

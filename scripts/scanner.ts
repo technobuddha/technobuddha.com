@@ -1,15 +1,15 @@
-#!/bin/env -S ts-node --prefer-ts-exts  -r ./config/env.ts -r tsconfig-paths/register
+#!/bin/env -S tsx -r ./src/config/env.ts
 import path from 'node:path';
 import stream from 'node:stream';
 
-import { isString } from '@technobuddha/library';
+import { isString, out } from '@technobuddha/library';
 import chalk from 'chalk';
 import { type I18NextScannerConfig } from 'i18next-scanner';
 import scanner from 'i18next-scanner';
 import typescriptTransform from 'i18next-scanner-typescript';
 import vfs from 'vinyl-fs';
 
-import { paths } from '#config';
+// import { paths } from '#config';
 import {
   readTranslations,
   translate,
@@ -17,12 +17,6 @@ import {
   writeTranslations,
 } from '#server/translation';
 import { i18nextInit } from '#settings/i18next';
-
-function out(text: string | undefined): void {
-  if (text) {
-    // process.stdout.write(text);
-  }
-}
 
 void (async function main() {
   const foreign =
@@ -58,7 +52,7 @@ void (async function main() {
     output: './',
     options: {
       debug: false,
-      removeUnusedKeys: false,
+      removeUnusedKeys: true,
       sort: false,
       attr: {
         list: ['data-i18n'],
@@ -66,7 +60,7 @@ void (async function main() {
       },
       func: {
         list: ['i18next.t', 'i18n.t', 't'],
-        extensions: ['.ts', '.tsx'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
       // trans: {
       //   component: 'Trans',
@@ -83,7 +77,8 @@ void (async function main() {
       defaultNs: i18nextInit.defaultNS,
       defaultValue: null,
       resource: {
-        loadPath: path.join(paths.locales, '{{lng}}', '{{ns}}.external.json'),
+        //loadPath: path.join(paths.locales, '{{lng}}', '{{ns}}.external.json'),
+        loadPath: path.join(process.cwd(), 'locales', '{{lng}}', '{{ns}}.json'),
         savePath: path.join('{{lng}}', '{{ns}}'),
         jsonIndent: 2,
         lineEnding: '\n',

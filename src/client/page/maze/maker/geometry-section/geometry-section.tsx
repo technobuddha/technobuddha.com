@@ -1,7 +1,7 @@
 import React from 'react';
 import { randomWeightedPick } from '@technobuddha/library';
 import { defaultColors, type MazeColors, type MazeProperties } from '@technobuddha/maze';
-import { useHMR } from '@technobuddha/react-hooks';
+import { useHMR } from '@technobuddha/react';
 import clsx from 'clsx';
 import { GiPalette, GiSpottedBug } from 'react-icons/gi';
 

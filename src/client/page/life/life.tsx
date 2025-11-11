@@ -1,8 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { clean, create2dArray, space, splitLines } from '@technobuddha/library';
-import { useDerivedState } from '@technobuddha/react-hooks';
-import { Size } from '@technobuddha/size';
+import { Size, useDerivedState } from '@technobuddha/react';
 
 const MOVES = [
   [1, 1],
@@ -28,7 +27,7 @@ const START =
 
 export const Life: React.FC = () => (
   <Size width="100%" height="100%">
-    {({ width, height }) => <LifeBoard start={START} boxWidth={width} boxHeight={height} />}
+    {(width, height) => <LifeBoard start={START} boxWidth={width} boxHeight={height} />}
   </Size>
 );
 

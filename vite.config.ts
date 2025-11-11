@@ -1,10 +1,11 @@
 import react from '@vitejs/plugin-react';
 import postcssMuiTheme from 'postcss-mui-theme';
 import { defineConfig } from 'vite';
+import { analyzer } from 'vite-bundle-analyzer';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-import { theme } from './src/settings/mui-theme.js';
+import { theme } from './src/settings/mui-theme.ts';
 
 export default defineConfig({
   build: {
@@ -12,6 +13,12 @@ export default defineConfig({
     outDir: '../../dist',
     assetsDir: 'core',
     rollupOptions: {
+      external: (source, importer, isResolved) => {
+        if (source.includes('@technobuddha/library')) {
+          console.log({ source, importer, isResolved });
+        }
+        return false;
+      },
       output: {
         // manualChunks(id) {
         //   if (id.includes('node_modules')) {
@@ -54,7 +61,7 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  plugins: [tsconfigPaths(), react(), svgr()],
+  plugins: [tsconfigPaths(), react(), svgr(), analyzer()],
   root: './src/client',
   css: {
     modules: {

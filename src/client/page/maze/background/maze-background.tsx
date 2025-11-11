@@ -1,17 +1,17 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { chooser } from '@technobuddha/maze';
 import {
   CanvasDrawing,
+  chooser,
   type Maze,
   type MazeGenerator,
   type MazeGeneratorProperties,
   type MazeProperties,
+  type MazeRunner,
   type MazeSolver,
   type MazeSolverProperties,
-  Runner,
 } from '@technobuddha/maze';
-import { Size } from '@technobuddha/size';
+import { Size } from '@technobuddha/react';
 
 import { useUserInterface } from '#context/user-interface';
 
@@ -29,7 +29,7 @@ export const MazeBackground: React.FC<MazeBackgroundProps> = ({
   maskColor = 'black',
 }) => (
   <Size width="100%" height="100%">
-    {({ width, height }) => (
+    {(width, height) => (
       <MazeBoard boxWidth={width} boxHeight={height} maskColor={maskColor}>
         {children}
       </MazeBoard>
@@ -54,7 +54,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
   const grid = React.useRef<HTMLDivElement | null>(null);
   const [mazeNumber, setMazeNumber] = React.useState(0);
-  const [runner, setRunner] = React.useState<Runner>();
+  const [runner, setRunner] = React.useState<MazeRunner>();
 
   React.useEffect(() => {
     if (canvasMaze.current && grid.current) {

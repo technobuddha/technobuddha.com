@@ -200,7 +200,7 @@ export const PasswordValidation: React.FC<PasswordValidationProps> = ({
     } else {
       setPass([]);
       setPasswordScore(0);
-      setPasswordWarning(t('Loading password validation, please wait...'));
+      setPasswordWarning(t('Loading password validation, please wait…'));
     }
   }, [
     t,

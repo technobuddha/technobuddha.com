@@ -1,7 +1,7 @@
 import React from 'react';
 import { randomWeightedPick } from '@technobuddha/library';
 import { type MazeSolverProperties } from '@technobuddha/maze';
-import { useHMR } from '@technobuddha/react-hooks';
+import { useHMR } from '@technobuddha/react';
 
 import { MenuItem, Select } from '#control';
 

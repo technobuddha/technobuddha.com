@@ -5,19 +5,22 @@ const config = {
   directories: {
     '.': {
       tsconfig: {
-        references: ['./src'],
+        references: ['src/settings'],
       },
     },
     'scripts': {
       environment: 'node',
       tsconfig: {
-        references: ['src'],
-      },
+        references: ['src/config', 'src/settings', 'src/server'],
+      }
+    },
+    'src/api': {
+      environment: 'browser',
     },
     'src/client': {
       environment: 'vite-client',
       tsconfig: {
-        references: ['src/api', 'src/control', 'src/maze', 'src/settings', 'src/server'],
+        references: ['src/api', 'src/control', 'src/settings', 'src/server'],
       },
     },
     'src/config': {
@@ -26,20 +29,17 @@ const config = {
     'src/control': {
       environment: 'vite-client',
       tsconfig: {
-        references: ['src/client/context'],
+        references: ['src/client'],
       }
-    },
-    'src/maze': {
-      environment: 'vite-client',
     },
     'src/server': {
       environment: 'node',
       tsconfig: {
-        references: ['src/config', 'src/settings'],
-      },
+        references: ['src/settings', 'src/config'],
+      }
     },
     'src/settings': {
-      environment: 'universal',
+      environment: 'esnext',
       tsconfig: {
         references: ['src/client'],
       },
@@ -58,8 +58,8 @@ const config = {
           '#server/*': ['./src/server/*/index.ts'],
           '#util*': ['./src/util*'],
           '#settings*': ['./src/settings*'],
-          '#config*': ['./src/config*'],
-          '#maze/*': ['./src/maze/*/index.ts'],
+          '#config': ['./src/config/index.ts'],
+          '#env': ['./src/config/env.ts'],
         },
       },
     },

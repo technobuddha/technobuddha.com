@@ -1,5 +1,6 @@
 import React from 'react';
 import { capitalize } from '@technobuddha/library';
+import { type Phase, type PlayMode, playModes } from '@technobuddha/maze';
 import { create, type InstanceProps } from 'react-modal-promise';
 
 import {
@@ -12,7 +13,8 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '#control';
-import { type Phase, type PlayMode, playModeIcons, playModes } from '#maze/runner';
+
+import { playModeIcons } from '../play-mode-icons.tsx';
 
 export type PhasePlayModeDialogProps = InstanceProps<PlayMode | undefined, void> & {
   readonly children?: never;

@@ -6,7 +6,7 @@ import { Route, Routes } from '#context/router';
 import { Box } from '#control';
 import { pages } from '#settings/pages.jsx';
 
-import css from './main.module.css';
+import css from './main.module.css' with { type: 'css' };
 
 type MainProps = {
   readonly className?: string;

@@ -6,7 +6,7 @@ import { useTranslation } from '#context/i18n';
 import { useLocation, useNavigate } from '#context/router';
 import { Alert, Box, Button, PasswordField, TextField, Typography } from '#control';
 
-import css from './login.module.css';
+import css from './login.module.css' with { type: 'css' };
 
 export const Login: React.FC = () => {
   const { t } = useTranslation();

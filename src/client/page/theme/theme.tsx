@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Typography } from '#control';
 
-import css from './theme.module.css';
+import css from './theme.module.css' with { type: 'css' };
 
 export type ThemeProps = {
   children?: never;

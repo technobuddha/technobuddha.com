@@ -1,47 +1,47 @@
 .row {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: 136px 1fr 1fr;
-    grid-template-areas: 
-        "img artist   title"
-        "img album    title"
-        "img year     title"
-        "img genre    title"
-        "img subgenre title";
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 136px 1fr 1fr;
+  grid-template-areas:
+    'img artist   title'
+    'img album    title'
+    'img year     title'
+    'img genre    title'
+    'img subgenre title';
 
-    .img {
-        grid-area: img;
-        width: 120px;
-        height: 120px;
-        margin: mui-spacing(1);
-    }
+  .img {
+    grid-area: img;
+    width: 120px;
+    height: 120px;
+    margin: mui-spacing(1);
+  }
 
-    .artist {
-        grid-area: artist;
-        font-size: 125%;
-    }
+  .artist {
+    grid-area: artist;
+    font-size: 125%;
+  }
 
-    .album {
-        grid-area: album;
-        font-size: 115%;
-    }
+  .album {
+    grid-area: album;
+    font-size: 115%;
+  }
 
-    .year {
-        grid-area: year;
-    }
+  .year {
+    grid-area: year;
+  }
 
-    .genre {
-        grid-area: genre;
-    }
+  .genre {
+    grid-area: genre;
+  }
 
-    .subgenre {
-        grid-area: subgenre;
-    }
+  .subgenre {
+    grid-area: subgenre;
+  }
 
-    .title {
-        grid-area: title;
-        margin: mui-spacing(1);
-        overflow-y: scroll;
-    }
+  .title {
+    grid-area: title;
+    margin: mui-spacing(1);
+    overflow-y: scroll;
+  }
 }

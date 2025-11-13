@@ -11,7 +11,7 @@ import { type Page, pages } from '#settings/pages.tsx';
 import Logo from './logo.svg?react';
 import { Spinner } from './spinner.tsx';
 
-import css from './home.module.css';
+import css from './home.module.css' with { type: 'css' };
 
 export type HomeProps = {
   children?: never;
@@ -23,7 +23,7 @@ export const Home: React.FC<HomeProps> = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const translatedPages = React.useMemo(
-    () => pages(t).filter((c) => c.active && (c.loggedIn === false || account != null)),
+    () => pages(t).filter((c) => c.active && (!c.loggedIn || account != null)),
     [t, account],
   );
 

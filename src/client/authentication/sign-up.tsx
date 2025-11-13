@@ -17,6 +17,8 @@ import {
 } from '#control';
 import { authenticationSettings } from '#settings/authentication';
 
+import css from './sign-up.module.css' with { type: 'css' };
+
 export const SignUp: React.FC = () => {
   const { t } = useTranslation();
   const authentication = useAuthentication();
@@ -111,7 +113,7 @@ export const SignUp: React.FC = () => {
   );
 
   return (
-    <Box onKeyUp={handleKeyPress}>
+    <Box className={css.signUp} onKeyUp={handleKeyPress}>
       <Typography variant="h1">{t('Sign Up')}</Typography>
       <TextField
         onChange={handleFirstChange}

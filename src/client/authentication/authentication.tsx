@@ -9,7 +9,7 @@ import { ForgotPassword } from './forgot-password.tsx';
 import { Login } from './login.tsx';
 import { SignUp } from './sign-up.tsx';
 
-import css from './authentication.module.css';
+import css from './authentication.module.css' with { type: 'css' };
 
 export const Authentication: React.FC = () => {
   const { t } = useTranslation();
@@ -21,22 +21,26 @@ export const Authentication: React.FC = () => {
         <Paper>
           <Box className={css.inner}>
             {pathname === '/login' && <Login />}
-            {pathname === '/sign-up' && authenticationSettings.signUp === true && <SignUp />}
-            {pathname === '/forgot-password' && authenticationSettings.forgotPassword === true && (
+            {pathname === '/sign-up' && authenticationSettings.signUp ?
+              <SignUp />
+            : null}
+            {pathname === '/forgot-password' && authenticationSettings.forgotPassword ?
               <ForgotPassword />
-            )}
+            : null}
             <Box className={css.jump}>
-              {(pathname === '/login' || pathname === '/forgot-password') &&
-                authenticationSettings.signUp === true && (
-                  <Box>
-                    <Typography variant="caption">
-                      {t("Don't have an account?")}{' '}
-                      <Link to="/sign-up" replace>
-                        {t('Sign Up')}
-                      </Link>
-                    </Typography>
-                  </Box>
-                )}
+              {(
+                (pathname === '/login' || pathname === '/forgot-password') &&
+                authenticationSettings.signUp
+              ) ?
+                <Box>
+                  <Typography variant="caption">
+                    {t("Don't have an account?")}{' '}
+                    <Link to="/sign-up" replace>
+                      {t('Sign Up')}
+                    </Link>
+                  </Typography>
+                </Box>
+              : null}
               {(pathname === '/sign-up' || pathname === '/forgot-password') && (
                 <Box>
                   <Typography variant="caption">
@@ -47,17 +51,19 @@ export const Authentication: React.FC = () => {
                   </Typography>
                 </Box>
               )}
-              {(pathname === '/login' || pathname === '/sign-up') &&
-                authenticationSettings.forgotPassword === true && (
-                  <Box>
-                    <Typography variant="caption">
-                      {t('Forgot your password?')}{' '}
-                      <Link to="/forgot-password" replace>
-                        {t('Reset your password')}
-                      </Link>
-                    </Typography>
-                  </Box>
-                )}
+              {(
+                (pathname === '/login' || pathname === '/sign-up') &&
+                authenticationSettings.forgotPassword
+              ) ?
+                <Box>
+                  <Typography variant="caption">
+                    {t('Forgot your password?')}{' '}
+                    <Link to="/forgot-password" replace>
+                      {t('Reset your password')}
+                    </Link>
+                  </Typography>
+                </Box>
+              : null}
             </Box>
           </Box>
         </Paper>

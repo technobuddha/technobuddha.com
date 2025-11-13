@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 
-import css from './failure.module.css';
+import css from './failure.module.css' with { type: 'css' };
 
 export type FailureProps = {
   readonly message?: string;

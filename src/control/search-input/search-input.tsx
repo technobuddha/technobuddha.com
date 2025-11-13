@@ -5,7 +5,7 @@ import { MdCancel, MdSearch } from 'react-icons/md';
 
 import { TextField } from '../text-field/index.ts';
 
-import css from './search-input.module.css';
+import css from './search-input.module.css' with { type: 'css' };
 
 export type SearchInputProps = {
   readonly className?: string;

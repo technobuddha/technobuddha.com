@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from '#context/router';
 import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText } from '#control';
 import { pages } from '#settings/pages.jsx';
 
-import css from './nav.module.css';
+import css from './nav.module.css' with { type: 'css' };
 
 const expansionTimeout = 1250;
 
@@ -23,7 +23,7 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
   const { t } = useTranslation();
   const { account } = useAuthentication();
   const translatedPages = React.useMemo(
-    () => pages(t).filter((c) => c.active && (c.loggedIn === false || account != null)),
+    () => pages(t).filter((c) => c.active && (!c.loggedIn || account != null)),
     [t, account],
   );
 

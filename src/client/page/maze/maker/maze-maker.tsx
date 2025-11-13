@@ -1,14 +1,21 @@
 import React from 'react';
+import {
+  CanvasDrawing,
+  type Maze,
+  type MazeGenerator,
+  type MazeGeneratorProperties,
+  type MazeProperties,
+  MazeRunner,
+  type MazeSolver,
+  type MazeSolverProperties,
+  type Phase,
+  type PlayMode,
+} from '@technobuddha/maze';
 import clsx from 'clsx';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useMeasure } from 'react-use';
 
 import { ToggleButton, ToggleButtonGroup } from '#control';
-import { CanvasDrawing } from '#maze/drawing';
-import { type MazeGenerator, type MazeGeneratorProperties } from '#maze/generator';
-import { type Maze, type MazeProperties } from '#maze/geometry';
-import { type Phase, type PlayMode, Runner } from '#maze/runner';
-import { type MazeSolver, type MazeSolverProperties } from '#maze/solver';
 
 import { CustomControls } from './custom-controls/index.ts';
 import { DemoMode } from './demo-mode/index.ts';
@@ -20,7 +27,7 @@ import { HumanSection } from './human-section/index.ts';
 import { Messages } from './messages/messages.tsx';
 import { SolverSection } from './solver-section/index.ts';
 
-import css from './maze-maker.module.css';
+import css from './maze-maker.module.css' with { type: 'css' };
 
 export type Producer<Object, Props = never, Additional = unknown> = () => {
   maker: (props: Props) => Object;
@@ -61,7 +68,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const [solverProducer, setSolverProducer] = React.useState<SolverProducer>();
   const [humanProducer, setHumanProducer] = React.useState<SolverProducer>();
 
-  const [runner, setRunner] = React.useState<Runner>();
+  const [runner, setRunner] = React.useState<MazeRunner>();
 
   React.useEffect(() => {
     if (width > 0 && height > 0) {
@@ -110,7 +117,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
 
       setRunner((r) => {
         r?.abort();
-        return new Runner({
+        return new MazeRunner({
           mazeMaker,
           generatorMaker,
           solverMaker,

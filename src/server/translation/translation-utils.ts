@@ -5,7 +5,7 @@ import { TranslationServiceClient } from '@google-cloud/translate';
 import { compareStrings, plural } from '@technobuddha/library';
 import { cheferize } from 'cheferizeIt';
 
-import { paths } from '#config/paths';
+import { paths } from '#config';
 
 const tsc = new TranslationServiceClient();
 

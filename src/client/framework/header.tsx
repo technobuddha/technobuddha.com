@@ -8,7 +8,7 @@ import { useNavigate } from '#context/router';
 import { AppBar, Box, IconButton, Typography } from '#control';
 import { authenticationSettings } from '#settings/authentication';
 
-import css from './header.module.css';
+import css from './header.module.css' with { type: 'css' };
 
 type HeaderProps = { children?: never };
 
@@ -28,7 +28,7 @@ export const Header: React.FC<HeaderProps> = () => {
           {t('Technobuddha')}
         </Typography>
       </div>
-      {Boolean(authenticationSettings.login) && (
+      {authenticationSettings.login ?
         <Box className={css.controls}>
           <Box className={css.login}>
             {Boolean(account) && (
@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = () => {
             <MdAccountCircle className={css.authorization} />
           </IconButton>
         </Box>
-      )}
+      : null}
     </AppBar>
   );
 };

@@ -6,7 +6,7 @@ import {
   type TextFieldProps as MuiTextFieldProps,
 } from '@mui/material';
 
-import css from './text-field.module.css';
+import css from './text-field.module.css' with { type: 'css' };
 
 export type TextFieldProps = {
   readonly className?: string;
@@ -47,25 +47,36 @@ export const TextField: React.FC<TextFieldProps> = ({
 }) => {
   const [text, setText] = React.useState<string>(value ?? '');
   const [valid, setValid] = React.useState<boolean>(true);
+  const [empty, setEmpty] = React.useState<boolean>(false);
 
-  const handleChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>): void => {
-      const newText = event.target.value;
+  const validate = React.useCallback(
+    (value: string): void => {
       let isValid = true;
+      let isEmpty = false;
 
-      if (required && newText.trim().length === 0) {
+      if (required && value.trim().length === 0) {
         isValid = false;
+        isEmpty = true;
       } else if (validation) {
-        isValid = validation.test(newText);
+        isValid = validation.test(value);
+        isEmpty = false;
       }
 
       setValid(isValid);
+      setEmpty(isEmpty);
       onValidation?.(isValid);
 
-      setText(newText);
-      onChange?.(newText);
+      setText(value);
+      onChange?.(value);
     },
     [onChange, onValidation, required, validation],
+  );
+
+  const handleChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>): void => {
+      validate(event.target.value);
+    },
+    [validate],
   );
 
   const slotProps = React.useMemo(
@@ -86,6 +97,11 @@ export const TextField: React.FC<TextFieldProps> = ({
     [endAdornment, startAdornment],
   );
 
+  React.useEffect(() => {
+    validate(value ?? '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validation, required, validate]);
+
   return (
     <MuiTextField
       classes={{ root: className }}
@@ -98,9 +114,9 @@ export const TextField: React.FC<TextFieldProps> = ({
       autoFocus={autoFocus}
       name={name}
       disabled={disabled}
-      error={(error ?? !valid) || (required && text.trim() === '')}
+      error={error ?? (!valid || (required && empty))}
       fullWidth
-      helperText={helperText}
+      helperText={valid || empty ? helperText : `${label} is invalid`}
       required={required}
       color="primary"
       slotProps={slotProps as MuiTextFieldProps['slotProps']}

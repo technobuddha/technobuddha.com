@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box, Typography } from '#control';
 
-import css from './service-notification.module.css';
+import css from './service-notification.module.css' with { type: 'css' };
 
 type ServerErrorProps = {
   readonly err: Error;

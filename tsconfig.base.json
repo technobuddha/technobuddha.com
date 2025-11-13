@@ -18,6 +18,7 @@
     "allowArbitraryExtensions": true,
     "declaration": true,
     "inlineSourceMap": true,
+    "removeComments": true,
     "noEmitOnError": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
@@ -49,8 +50,8 @@
       "#server/*": ["./src/server/*/index.ts"],
       "#util*": ["./src/util*"],
       "#settings*": ["./src/settings*"],
-      "#config*": ["./src/config*"],
-      "#maze/*": ["./src/maze/*/index.ts"]
+      "#config": ["./src/config/index.ts"],
+      "#env": ["./src/config/env.ts"]
     }
   }
 }

@@ -1,6 +1,5 @@
 import { clearTimeout, setTimeout } from 'node:timers';
 
-import { isNil, keys, omit } from 'lodash-es';
 import { type Logger } from 'winston';
 
 import { i18nextInit } from '#settings/i18next';
@@ -39,7 +38,7 @@ export class TranslationWorker {
   }
 
   public enqueue(url: string, body: { [key: string]: string }): void {
-    const phrases = keys(omit(body, '_t'));
+    const phrases = Object.keys(body).filter((key) => key !== '_t');
 
     this.queue[url] = url in this.queue ? this.queue[url].concat(phrases) : phrases;
   }
@@ -71,8 +70,8 @@ export class TranslationWorker {
         const promises = [] as Promise<TranslateReturn>[];
 
         for (const phrase of myQueue[ns]) {
-          if (isNil(currentTranslations[phrase])) {
-            if (isNil(archiveTranslations[phrase])) {
+          if (currentTranslations[phrase] == null) {
+            if (archiveTranslations[phrase] == null) {
               promises.push(translate(phrase, lng));
             } else {
               currentTranslations[phrase] = archiveTranslations[phrase];

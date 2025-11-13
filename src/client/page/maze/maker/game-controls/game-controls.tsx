@@ -1,20 +1,20 @@
 import React from 'react';
-import { memoize } from 'lodash-es';
+import { memoize } from '@technobuddha/library';
+import { type Human, type MazeRunner, type Phase } from '@technobuddha/maze';
 import { GiExitDoor } from 'react-icons/gi';
 import { RiArrowTurnBackLine, RiArrowUpLine, RiRestartLine } from 'react-icons/ri';
 
 import { Button, Tooltip } from '#control';
-import { type Phase, playModeIcons, type Runner } from '#maze/runner';
-import { type Human } from '#maze/solver';
 
+import { playModeIcons } from '../play-mode-icons.tsx';
 import { Section } from '../section/index.ts';
 
 import { GameControlsHelp } from './game-controls.help';
 
-import css from './game-controls.module.css';
+import css from './game-controls.module.css' with { type: 'css' };
 
 type GameControlsProps = {
-  readonly runner: Runner | undefined;
+  readonly runner: MazeRunner | undefined;
   readonly children?: never;
 };
 
@@ -54,7 +54,7 @@ export const GameControls: React.FC<GameControlsProps> = ({ runner }) => {
   }, [runner]);
 
   return (
-    <Section title="Game Controls" className={css.gameControls} info={<GameControlsHelp />} >
+    <Section title="Game Controls" className={css.gameControls} info={<GameControlsHelp />}>
       {phase === 'solve' && (
         <div className={css.movementControls}>
           <div className={css.human}>

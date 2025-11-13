@@ -67,11 +67,6 @@ export const pages: (t: TFunction) => Page[] = (t) => [
       </div>
     ),
     component: Home,
-    todo: [
-      t('Add a description to this component'),
-      t("Add some interactive features so people don't have to wait"),
-      t('Add a "What\'s new" section.'),
-    ],
   },
   {
     active: true,
@@ -83,10 +78,6 @@ export const pages: (t: TFunction) => Page[] = (t) => [
     location: '/music',
     route: '/music/*',
     component: Music,
-    todo: [
-      t('Add a description to this component'),
-      t('Increase functionality to show individual artists/albums/genres'),
-    ],
   },
   {
     active: true,
@@ -112,7 +103,6 @@ export const pages: (t: TFunction) => Page[] = (t) => [
     ),
     location: '/maze',
     component: MazeMaker,
-    todo: [t('Add a description to this component')],
   },
   {
     active: true,
@@ -142,7 +132,6 @@ export const pages: (t: TFunction) => Page[] = (t) => [
     ),
     location: '/chaos',
     component: Chaos,
-    todo: [t('Add a description to this component'), t('Clean up the UI')],
   },
   {
     active: true,
@@ -187,10 +176,6 @@ export const pages: (t: TFunction) => Page[] = (t) => [
     ),
     location: '/life',
     component: Life,
-    todo: [
-      t('Add ability to specify starting configuration'),
-      t('Add controls to start/stop and control speed'),
-    ],
   },
   {
     active: true,
@@ -209,7 +194,6 @@ export const pages: (t: TFunction) => Page[] = (t) => [
     ),
     location: '/nbody',
     component: NBody,
-    todo: [t('Add zoom and pan ability'), t('Add ability to add a new body')],
   },
   {
     active: true,
@@ -220,7 +204,6 @@ export const pages: (t: TFunction) => Page[] = (t) => [
     secondary: t('The Knight Move Problem'),
     location: '/knight',
     component: Knight,
-    todo: [t('Add a description to this component'), t('Clean up the UI')],
   },
   {
     active: true,
@@ -231,7 +214,6 @@ export const pages: (t: TFunction) => Page[] = (t) => [
     secondary: t('Maze debugger'),
     location: '/debug',
     component: MazeDebugger,
-    todo: [t('Add a description to this component')],
   },
   {
     active: true,
@@ -242,7 +224,6 @@ export const pages: (t: TFunction) => Page[] = (t) => [
     secondary: t('Visualization of the MUI theme'),
     location: '/theme',
     component: Theme,
-    todo: [t('Add a description to this component')],
   },
   {
     active: true,
@@ -253,6 +234,5 @@ export const pages: (t: TFunction) => Page[] = (t) => [
     secondary: t('Colors'),
     location: '/colors',
     component: Color,
-    todo: [t('Add a description to this component')],
   },
 ];

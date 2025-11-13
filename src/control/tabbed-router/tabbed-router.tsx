@@ -4,7 +4,7 @@ import { AppBar, Tab, Tabs } from '@mui/material';
 
 import { Navigate, useLocation, useNavigate } from '#context/router';
 
-import css from './tabbed-router.module.css';
+import css from './tabbed-router.module.css' with { type: 'css' };
 
 type TabPanelProps = {
   readonly content: React.ComponentType;

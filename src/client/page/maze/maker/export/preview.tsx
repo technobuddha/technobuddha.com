@@ -1,10 +1,8 @@
 import React from 'react';
 import { ceil } from '@technobuddha/library';
+import { type Runner, type ShowDistances } from '@technobuddha/maze';
 
-import { type ShowDistances } from '#maze/geometry';
-import { type Runner } from '#maze/runner';
-
-import css from './preview.module.css';
+import css from './preview.module.css' with { type: 'css' };
 
 export type PreviewProps = {
   readonly runner: Runner;

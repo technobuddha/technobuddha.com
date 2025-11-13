@@ -1,4 +1,4 @@
-import '#config/env';
+import '#env';
 
 import chalk from 'chalk';
 import express from 'express';

@@ -1,12 +1,11 @@
 /* eslint-disable react/jsx-handler-names */
 import React from 'react';
-
-import { type Phase, type PlayMode, type Runner } from '#maze/runner';
+import { type Phase, type PlayMode, type Runner } from '@technobuddha/maze';
 
 import { PhaseControls } from '../phase-controls/index.ts';
 import { PlayControls } from '../play-controls/index.ts';
 
-import css from './custom-controls.module.css';
+import css from './custom-controls.module.css' with { type: 'css' };
 
 export type CustomControlsProps = {
   readonly runner?: Runner;

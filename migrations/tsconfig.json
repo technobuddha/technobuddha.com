@@ -2,8 +2,15 @@
 // 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
 // 🚨
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../tsconfig.base.json",
-  "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"], "noEmit": true },
-  "include": ["*.js"],
+  "compilerOptions": {
+    "composite": true,
+    "types": [],
+    "lib": ["esnext"],
+    "allowJs": true,
+    "checkJs": true
+  },
+  "include": ["**/*.js"],
   "exclude": []
 }

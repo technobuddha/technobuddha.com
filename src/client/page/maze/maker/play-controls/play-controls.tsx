@@ -1,13 +1,14 @@
 import React from 'react';
+import { type PlayMode, playModes, type Runner } from '@technobuddha/maze';
 
 import { ToggleButton, ToggleButtonGroup } from '#control';
-import { type PlayMode, playModeIcons, playModes, type Runner } from '#maze/runner';
 
+import { playModeIcons } from '../play-mode-icons.tsx';
 import { Section } from '../section/index.ts';
 
 import { PlayControlsHelp } from './play-controls.help.tsx';
 
-import css from './play-controls.module.css';
+import css from './play-controls.module.css' with { type: 'css' };
 
 export type PlayControlsProps = {
   readonly runner: Runner | undefined;

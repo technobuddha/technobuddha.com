@@ -1,4 +1,5 @@
 import React from 'react';
+import { type Runner, type ShowDistances } from '@technobuddha/maze';
 import { create, type InstanceProps } from 'react-modal-promise';
 
 import {
@@ -13,12 +14,10 @@ import {
   RadioGroup,
   Select,
 } from '#control';
-import { type ShowDistances } from '#maze/geometry';
-import { type Runner } from '#maze/runner';
 
 import { Preview } from './preview.tsx';
 
-import css from './export-maze-dialog.module.css';
+import css from './export-maze-dialog.module.css' with { type: 'css' };
 
 type FileFormat = 'png' | 'jpg' | 'gif';
 

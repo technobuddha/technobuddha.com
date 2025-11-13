@@ -1,1 +1,1 @@
-export { Life } from './life.jsx';
+export { Life } from './life.tsx';

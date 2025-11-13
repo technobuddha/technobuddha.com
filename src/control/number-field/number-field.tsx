@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField } from '@mui/material';
 
-import css from './number-field.module.css';
+import css from './number-field.module.css' with { type: 'css' };
 
 export type NumberFieldProps = {
   readonly value: number;

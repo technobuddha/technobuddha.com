@@ -1,18 +1,23 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { Size } from '@technobuddha/size';
+import {
+  CanvasDrawing,
+  type Maze,
+  type MazeGenerator,
+  type MazeGeneratorProperties,
+  type MazeProperties,
+  MazeRunner,
+  type MazeSolver,
+  type MazeSolverProperties,
+} from '@technobuddha/maze';
+import { Size } from '@technobuddha/react';
 
 import { useUserInterface } from '#context/user-interface';
-import { CanvasDrawing } from '#maze/drawing';
-import { type MazeGenerator, type MazeGeneratorProperties } from '#maze/generator';
-import { type Maze, type MazeProperties } from '#maze/geometry';
-import { chooser } from '#maze/library';
-import { Runner } from '#maze/runner';
-import { type MazeSolver, type MazeSolverProperties } from '#maze/solver';
 
+import { chooser } from './chooser.ts';
 import { generators, mazes, solvers } from './mazes.ts';
 
-import css from './maze-background.module.css';
+import css from './maze-background.module.css' with { type: 'css' };
 
 export type MazeBackgroundProps = {
   readonly maskColor?: string;
@@ -24,7 +29,7 @@ export const MazeBackground: React.FC<MazeBackgroundProps> = ({
   maskColor = 'black',
 }) => (
   <Size width="100%" height="100%">
-    {({ width, height }) => (
+    {(width, height) => (
       <MazeBoard boxWidth={width} boxHeight={height} maskColor={maskColor}>
         {children}
       </MazeBoard>
@@ -49,7 +54,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
   const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
   const grid = React.useRef<HTMLDivElement | null>(null);
   const [mazeNumber, setMazeNumber] = React.useState(0);
-  const [runner, setRunner] = React.useState<Runner>();
+  const [runner, setRunner] = React.useState<MazeRunner>();
 
   React.useEffect(() => {
     if (canvasMaze.current && grid.current) {
@@ -108,7 +113,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         new Solver({ ...props, robots: [], ...solverProps });
       setRunner((r) => {
         r?.abort();
-        return new Runner({
+        return new MazeRunner({
           mazeMaker: selectedMaze,
           generatorMaker: selectedGenerator,
           solverMaker: selectedSolver,

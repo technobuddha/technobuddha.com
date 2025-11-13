@@ -1,13 +1,12 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { create2dArray, nbsp, numberToLetter } from '@technobuddha/library';
-import { useDerivedState } from '@technobuddha/react-hooks';
+import { create2dArray, nbsp, numberToLetter, range } from '@technobuddha/library';
+import { useDerivedState } from '@technobuddha/react';
 import clsx from 'clsx';
-import { range } from 'lodash-es';
 
 import { Box, MenuItem, Select, Typography } from '#control';
 
-import css from './knight.module.css';
+import css from './knight.module.css' with { type: 'css' };
 
 const blackKnight = '♞';
 
@@ -127,7 +126,7 @@ export const Knight: React.FC = () => {
       <Box display="flex" flexDirection="column" marginRight={4}>
         <Box display="flex" flexDirection="row" marginBottom={1}>
           <Select<number> value={width} label="Width" onChange={handleWidthChange}>
-            {range(1, 26).map((i) => (
+            {range(1, 25).map((i) => (
               <MenuItem key={i} value={i}>
                 {i.toString()}
               </MenuItem>

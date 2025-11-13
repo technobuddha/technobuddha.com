@@ -39,11 +39,11 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
   const [error, setError] = React.useState<boolean>(false);
   const [account, setAccount] = React.useState<Account | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
-  const { authentication } = useAPI() ?? {}; // TODO [2025-08-01]: Why is this coming out undefined in HMR
+  const { authentication } = useAPI() ?? {}; // TODO [2025-10-01]: Why is this coming out undefined in HMR
 
   const checkLogin = React.useCallback(async (): Promise<void> => {
     if (authenticationSettings.login) {
-      // TODO [2025-08-01]: Why is this coming out undefined in HMR
+      // TODO [2025-10-01]: Why is this coming out undefined in HMR
       return authentication
         ?.readSession()
         .then((session) => {

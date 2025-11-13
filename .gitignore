@@ -71,5 +71,5 @@ node_modules/
 #!.yarn/cache
 .pnp.*
 
-# Local Git Ignore
+# Project Ignore
 artwork

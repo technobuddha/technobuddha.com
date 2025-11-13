@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { useDerivedState } from '@technobuddha/react-hooks';
-import { Size } from '@technobuddha/size';
+import { Size, useDerivedState } from '@technobuddha/react';
 
 import { useTranslation } from '#context/i18n';
 import { enqueueSnackbar } from '#context/snackbar';
@@ -10,7 +9,7 @@ import { LinearProgress } from '#control';
 
 import { chaos } from './worker/index.ts';
 
-import css from './chaos.module.css';
+import css from './chaos.module.css' with { type: 'css' };
 
 type RGB = { r: number; g: number; b: number };
 
@@ -19,7 +18,7 @@ const MAX_ITERATION = 1024;
 
 export const Chaos: React.FC = () => (
   <Size width="100%" height="100%">
-    {({ width, height }) => <ChaosBoard boxWidth={width} boxHeight={height} />}
+    {(width, height) => <ChaosBoard boxWidth={width} boxHeight={height} />}
   </Size>
 );
 

@@ -1,15 +1,16 @@
 import React from 'react';
-import { memoize } from 'lodash-es';
+import { memoize } from '@technobuddha/library';
+import { type Phase, phases, type PlayMode, type Runner } from '@technobuddha/maze';
 
 import { Button, Step, StepLabel, Stepper } from '#control';
-import { type Phase, phases, type PlayMode, playModeIcons, type Runner } from '#maze/runner';
 
+import { playModeIcons } from '../play-mode-icons.tsx';
 import { Section } from '../section/index.ts';
 
 import { PhaseControlsHelp } from './phase-controls.help.tsx';
 import { phasePlayModeDialog } from './phase-play-mode-dialog.tsx';
 
-import css from './phase-controls.module.css';
+import css from './phase-controls.module.css' with { type: 'css' };
 
 export type PhaseControlsProps = {
   readonly runner?: Runner;

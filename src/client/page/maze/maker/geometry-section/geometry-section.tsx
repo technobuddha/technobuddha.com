@@ -1,11 +1,11 @@
 import React from 'react';
 import { randomWeightedPick } from '@technobuddha/library';
+import { defaultColors, type MazeColors, type MazeProperties } from '@technobuddha/maze';
+import { useHMR } from '@technobuddha/react';
 import clsx from 'clsx';
 import { GiPalette, GiSpottedBug } from 'react-icons/gi';
 
 import { IconButton, MenuItem, Select, Tooltip } from '#control';
-import { defaultColors, type MazeColors, type MazeProperties } from '#maze/geometry';
-import { useHMR } from '#maze/library';
 
 import { type GeometryProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';
@@ -16,7 +16,7 @@ import { debugDialog } from './debug-dialog.tsx';
 import { GeometrySectionHelp } from './geometry-section.help.tsx';
 import { paletteDialog } from './palette-dialog.tsx';
 
-import css from './geometry-section.module.css';
+import css from './geometry-section.module.css' with { type: 'css' };
 
 type GeometrySectionProps = {
   readonly className?: string;

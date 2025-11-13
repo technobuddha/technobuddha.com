@@ -4,7 +4,7 @@ import { toLAB } from '@technobuddha/color';
 
 import { ColorSpace } from './color-space.tsx';
 
-import css from './color.module.css';
+import css from './color.module.css' with { type: 'css' };
 
 type ColorProps = {
   children?: never;

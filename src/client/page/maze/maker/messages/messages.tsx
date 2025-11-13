@@ -1,16 +1,15 @@
 import React from 'react';
+import { type MessageCallback, type MessageOptions, type Runner } from '@technobuddha/maze';
 import clsx from 'clsx';
 import { IoTrash } from 'react-icons/io5';
 
 import { Box, IconButton, Tooltip } from '#control';
-import { type MessageCallback, type MessageOptions } from '#maze/random';
-import { type Runner } from '#maze/runner';
 
 import { Section } from '../section/index.ts';
 
 import { MessagesHelp } from './messages.help.tsx';
 
-import css from './messages.module.css';
+import css from './messages.module.css' with { type: 'css' };
 
 type History = {
   message: string;
@@ -78,6 +77,7 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
                 );
               }
 
+              case undefined:
               default: {
                 return (
                   <Box key={message.time} className={clsx(css.message, css.colored)}>

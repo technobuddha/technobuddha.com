@@ -18,6 +18,7 @@
     "allowArbitraryExtensions": true,
     "declaration": true,
     "inlineSourceMap": true,
+    "removeComments": true,
     "noEmitOnError": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,

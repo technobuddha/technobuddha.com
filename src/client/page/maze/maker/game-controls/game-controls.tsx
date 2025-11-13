@@ -1,6 +1,6 @@
 import React from 'react';
 import { memoize } from '@technobuddha/library';
-import { type Human, type Phase, type Runner } from '@technobuddha/maze';
+import { type Human, type MazeRunner, type Phase } from '@technobuddha/maze';
 import { GiExitDoor } from 'react-icons/gi';
 import { RiArrowTurnBackLine, RiArrowUpLine, RiRestartLine } from 'react-icons/ri';
 
@@ -14,7 +14,7 @@ import { GameControlsHelp } from './game-controls.help';
 import css from './game-controls.module.css' with { type: 'css' };
 
 type GameControlsProps = {
-  readonly runner: Runner | undefined;
+  readonly runner: MazeRunner | undefined;
   readonly children?: never;
 };
 

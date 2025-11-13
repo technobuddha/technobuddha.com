@@ -5,6 +5,6 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.base.json",
   "compilerOptions": { "composite": true, "types": [], "lib": ["esnext", "dom"] },
-  "include": ["**/*.ts", "../@types/**/*.d.ts"],
+  "include": ["**/*.ts", "../**/*.d.ts"],
   "exclude": []
 }

@@ -1,7 +1,6 @@
 import {
   Chain,
   type ChainProperties,
-  type Choices,
   Division,
   type DivisionProperties,
   Filler,
@@ -23,6 +22,8 @@ import {
   Wilsons,
   type WilsonsProperties,
 } from '@technobuddha/maze';
+
+import { type Choices } from './chooser.ts';
 
 type PropsMazeGeometry = { geometry: typeof SquareMaze } & SquareMazeProperties;
 

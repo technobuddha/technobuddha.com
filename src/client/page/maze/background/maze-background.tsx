@@ -2,12 +2,11 @@
 import React from 'react';
 import {
   CanvasDrawing,
-  chooser,
   type Maze,
   type MazeGenerator,
   type MazeGeneratorProperties,
   type MazeProperties,
-  type MazeRunner,
+  MazeRunner,
   type MazeSolver,
   type MazeSolverProperties,
 } from '@technobuddha/maze';
@@ -15,6 +14,7 @@ import { Size } from '@technobuddha/react';
 
 import { useUserInterface } from '#context/user-interface';
 
+import { chooser } from './chooser.ts';
 import { generators, mazes, solvers } from './mazes.ts';
 
 import css from './maze-background.module.css' with { type: 'css' };
@@ -113,7 +113,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         new Solver({ ...props, robots: [], ...solverProps });
       setRunner((r) => {
         r?.abort();
-        return new Runner({
+        return new MazeRunner({
           mazeMaker: selectedMaze,
           generatorMaker: selectedGenerator,
           solverMaker: selectedSolver,

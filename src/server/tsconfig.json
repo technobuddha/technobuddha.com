@@ -5,7 +5,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.base.json",
   "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"] },
-  "include": ["**/*.ts", "**/*.d.ts", "../@types/**/*.d.ts"],
+  "include": ["**/*.ts", "**/*.d.ts", "../**/*.d.ts"],
   "exclude": [],
   "references": [{ "path": "../settings" }, { "path": "../config" }]
 }

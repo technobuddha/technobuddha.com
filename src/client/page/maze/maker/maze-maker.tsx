@@ -5,11 +5,11 @@ import {
   type MazeGenerator,
   type MazeGeneratorProperties,
   type MazeProperties,
+  MazeRunner,
   type MazeSolver,
   type MazeSolverProperties,
   type Phase,
   type PlayMode,
-  Runner,
 } from '@technobuddha/maze';
 import clsx from 'clsx';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -68,7 +68,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const [solverProducer, setSolverProducer] = React.useState<SolverProducer>();
   const [humanProducer, setHumanProducer] = React.useState<SolverProducer>();
 
-  const [runner, setRunner] = React.useState<Runner>();
+  const [runner, setRunner] = React.useState<MazeRunner>();
 
   React.useEffect(() => {
     if (width > 0 && height > 0) {
@@ -117,7 +117,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
 
       setRunner((r) => {
         r?.abort();
-        return new Runner({
+        return new MazeRunner({
           mazeMaker,
           generatorMaker,
           solverMaker,

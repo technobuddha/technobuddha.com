@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataGrid, type RowRenderer } from '@technobuddha/datagrid';
+import { DataGrid, type RowRenderer } from '@technobuddha/react';
 import { MdMusicNote } from 'react-icons/md';
 
 import { type Album, useAPI } from '#context/api';

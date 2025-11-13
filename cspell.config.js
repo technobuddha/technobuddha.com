@@ -7,7 +7,7 @@ const config =
 {
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json",
   "version": "0.2",
-  "ignorePaths": ["**/*.svg", "./locales/**/*.*", "./dist/**/*.*", "**/*.tsbuildinfo"],
+  "ignorePaths": ["**/*.svg", "./locales/**/*.*", "./dist/**/*.*", "**/*.tsbuildinfo", "**/*.test.*"],
   "dictionaryDefinitions": [
     {
       "name": "internal",
@@ -76,6 +76,12 @@ const config =
       "addWords": true
     },
     {
+      "name": "more-proper",
+      "path": "./.cspell/programming.dic",
+      "description": "Additional Proper nouns",
+      "addWords": true
+    },
+    {
       "name": "technobuddha",
       "path": "./.cspell/technobuddha.dic",
       "description": "Technobuddha specific words",
@@ -100,6 +106,7 @@ const config =
     "more-npm",
     "more-numbers",
     "more-programming",
+    "more-proper",
     "technobuddha",
     "unicode",
   ],

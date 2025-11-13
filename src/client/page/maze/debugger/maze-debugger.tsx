@@ -9,11 +9,11 @@ import {
   HexagonMaze,
   type Maze,
   type MazeProperties,
+  MazeRunner,
   OctagonDiamond,
   OctagonSquare,
   PentagonMaze,
   type Pillar,
-  Runner,
   SquareMaze,
   TriangleMaze,
   WedgeMaze,
@@ -114,7 +114,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
     if (canvasMaze.current) {
       const contextMaze = new CanvasDrawing(canvasMaze.current);
 
-      const runner = new Runner({
+      const runner = new MazeRunner({
         mazeMaker: (props) => mazes[selectedMaze]({ cellSize, wallSize, ...props }),
         drawing: contextMaze,
       });

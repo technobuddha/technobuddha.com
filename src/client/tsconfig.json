@@ -5,7 +5,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.base.json",
   "compilerOptions": { "composite": true, "types": ["vite/client"], "lib": ["esnext", "dom"] },
-  "include": ["**/*.tsx", "**/*.d.ts", "**/*.ts", "../@types/**/*.d.ts"],
+  "include": ["**/*.tsx", "**/*.d.ts", "**/*.ts", "../**/*.d.ts"],
   "exclude": [],
   "references": [
     { "path": "../api" },

@@ -40,15 +40,6 @@ const config = [
     environment: 'node',
     tsConfig: 'src/config/tsconfig.json',
   }),
-  // src/control
-  app.lint({ files: ['src/control/**/*.ts'], ignores: [], tsConfig: 'src/control/tsconfig.json' }),
-  // src/control
-  app.lint({
-    files: ['src/control/**/*.tsx'],
-    ignores: [],
-    tsConfig: 'src/control/tsconfig.json',
-    react: true,
-  }),
   // src/server
   app.lint({
     files: ['src/server/**/*.ts'],

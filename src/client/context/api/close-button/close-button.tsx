@@ -1,8 +1,8 @@
 import React from 'react';
+import { IconButton } from '@technobuddha/controls';
 import { FaRegWindowClose } from 'react-icons/fa';
 
 import { type SnackbarKey } from '#context/snackbar';
-import { IconButton } from '#control';
 
 import css from './close-button.module.css' with { type: 'css' };
 

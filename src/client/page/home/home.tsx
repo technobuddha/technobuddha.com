@@ -1,10 +1,10 @@
 import React from 'react';
+import { Typography } from '@technobuddha/controls';
 
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
 import { useNavigate } from '#context/router';
-import { Typography } from '#control';
 import { MazeBackground } from '#page/maze';
 import { type Page, pages } from '#settings/pages.tsx';
 

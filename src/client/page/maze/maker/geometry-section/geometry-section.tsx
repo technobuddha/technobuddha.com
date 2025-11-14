@@ -1,11 +1,10 @@
 import React from 'react';
+import { IconButton, MenuItem, Select, Tooltip } from '@technobuddha/controls';
 import { randomWeightedPick } from '@technobuddha/library';
 import { defaultColors, type MazeColors, type MazeProperties } from '@technobuddha/maze';
 import { useHMR } from '@technobuddha/react';
 import clsx from 'clsx';
 import { GiPalette, GiSpottedBug } from 'react-icons/gi';
-
-import { IconButton, MenuItem, Select, Tooltip } from '#control';
 
 import { type GeometryProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';

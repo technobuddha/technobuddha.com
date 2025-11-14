@@ -1,7 +1,7 @@
 import React from 'react';
+import { AppBar, Box, Typography } from '@technobuddha/controls';
 
 import { useUserInterface } from '#context/user-interface';
-import { AppBar, Box, Typography } from '#control';
 
 import packageJson from '../../../package.json' with { type: 'json' };
 
@@ -17,6 +17,7 @@ export const Footer: React.FC = () => {
           <Typography variant="body2">version {packageJson?.version}</Typography>
         </Box>
         <Box className={css.message}>{footer}</Box>
+
       </Box>
     </AppBar>
   );

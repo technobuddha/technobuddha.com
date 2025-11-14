@@ -1,11 +1,11 @@
 import React from 'react';
+import { AppBar, Box, IconButton, Typography } from '@technobuddha/controls';
 import { MdAccountCircle } from 'react-icons/md';
 
 import { useAuthentication } from '#context/authentication';
 // import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useNavigate } from '#context/router';
-import { AppBar, Box, IconButton, Typography } from '#control';
 import { authenticationSettings } from '#settings/authentication';
 
 import css from './header.module.css' with { type: 'css' };

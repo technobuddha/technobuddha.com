@@ -1,10 +1,9 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
+import { Box, MenuItem, Select, Typography } from '@technobuddha/controls';
 import { create2dArray, nbsp, numberToLetter, range } from '@technobuddha/library';
 import { useDerivedState } from '@technobuddha/react';
 import clsx from 'clsx';
-
-import { Box, MenuItem, Select, Typography } from '#control';
 
 import css from './knight.module.css' with { type: 'css' };
 

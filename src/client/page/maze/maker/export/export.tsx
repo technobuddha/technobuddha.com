@@ -1,7 +1,6 @@
 import React from 'react';
-import { type Phase, type MazeRunner } from '@technobuddha/maze';
-
-import { Button } from '#control';
+import { Button } from '@technobuddha/controls';
+import { type MazeRunner,type Phase } from '@technobuddha/maze';
 
 import { exportMazeDialog } from './export-maze-dialog.tsx';
 

@@ -3,16 +3,8 @@
 /** @type {import("@technobuddha/project").TechnobuddhaConfig} */
 const config = {
   directories: {
-    '.': {
-      tsconfig: {
-        references: ['src/settings'],
-      },
-    },
     'scripts': {
       environment: 'node',
-      tsconfig: {
-        references: ['src/config', 'src/settings', 'src/server'],
-      }
     },
     'src/api': {
       environment: 'browser',
@@ -20,29 +12,20 @@ const config = {
     'src/client': {
       environment: 'vite-client',
       tsconfig: {
-        references: ['src/api', 'src/control', 'src/settings', 'src/server'],
-      },
+        references: ['src/settings']
+      }
     },
     'src/config': {
       environment: 'node',
     },
-    'src/control': {
-      environment: 'vite-client',
-      tsconfig: {
-        references: ['src/client'],
-      }
-    },
     'src/server': {
       environment: 'node',
-      tsconfig: {
-        references: ['src/settings', 'src/config'],
-      }
     },
     'src/settings': {
       environment: 'esnext',
       tsconfig: {
-        references: ['src/client'],
-      },
+        references: ['src/client']
+      }
     },
   },
   tsconfig: {
@@ -52,7 +35,6 @@ const config = {
           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
           '#api/*': ['./src/api/*/index.ts'],
           '#context/*': ['./src/client/context/*/index.ts'],
-          '#control': ['./src/control/index.ts'],
           '#page/*': ['./src/client/page/*/index.ts'],
           '#client*': ['./src/client*'],
           '#server/*': ['./src/server/*/index.ts'],

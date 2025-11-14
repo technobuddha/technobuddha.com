@@ -13,22 +13,22 @@ import { UserInterfaceProvider } from '#context/user-interface';
 import { AppLoading } from './app-loading.tsx';
 
 export const App: React.FC = () => (
-  <Suspense fallback={<AppLoading />}>
-    <IconProvider>
-      <ThemeProvider theme={theme}>
-        <SnackbarProvider>
-          <APIProvider>
-            <AuthenticationProvider>
-              <Router>
-                <UserInterfaceProvider>
-                  <Framework />
-                  <ModalContainer />
-                </UserInterfaceProvider>
-              </Router>
-            </AuthenticationProvider>
-          </APIProvider>
-        </SnackbarProvider>
-      </ThemeProvider>
-    </IconProvider>
-  </Suspense>
-);
+    <Suspense fallback={<AppLoading />}>
+      <IconProvider>
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider>
+            <APIProvider>
+              <AuthenticationProvider>
+                <Router>
+                  <UserInterfaceProvider>
+                    <Framework />
+                    <ModalContainer />
+                  </UserInterfaceProvider>
+                </Router>
+              </AuthenticationProvider>
+            </APIProvider>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </IconProvider>
+    </Suspense>
+  );

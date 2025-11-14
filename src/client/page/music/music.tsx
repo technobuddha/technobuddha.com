@@ -1,9 +1,9 @@
 // cspell:words Meeple
 import React from 'react';
+import { TabbedRouter } from '@technobuddha/controls';
 import { GiMeepleGroup, GiMusicalKeyboard, GiMusicalScore, GiMusicSpell } from 'react-icons/gi';
 
 import { useTranslation } from '#context/i18n';
-import { TabbedRouter } from '#control';
 
 import { Artists } from './artists.tsx';
 import { Genres } from './genres.tsx';

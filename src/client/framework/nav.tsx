@@ -1,11 +1,18 @@
 import React from 'react';
+import {
+  Box,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@technobuddha/controls';
 import clsx from 'clsx';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useLocation, useNavigate } from '#context/router';
-import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText } from '#control';
 import { pages } from '#settings/pages.jsx';
 
 import css from './nav.module.css' with { type: 'css' };

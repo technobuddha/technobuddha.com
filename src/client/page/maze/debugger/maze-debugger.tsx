@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, MenuItem, NumberField, Select } from '@technobuddha/controls';
 import {
   BrickMaze,
   CanvasDrawing,
@@ -19,8 +20,6 @@ import {
   WedgeMaze,
   ZetaMaze,
 } from '@technobuddha/maze';
-
-import { Button, MenuItem, NumberField, Select } from '#control';
 
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   circular: (props) => new CircularMaze(props),

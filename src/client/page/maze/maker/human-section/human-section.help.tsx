@@ -1,6 +1,5 @@
 import React from 'react';
-
-import { Box, Typography } from '#control';
+import { Box, Typography } from '@technobuddha/controls';
 
 export const HumanSectionHelp: React.FC = () => (
   <Box>

@@ -1,9 +1,9 @@
 import React from 'react';
+import { Box } from '@technobuddha/controls';
 import clsx from 'clsx';
 
 import { useTranslation } from '#context/i18n';
 import { Route, Routes } from '#context/router';
-import { Box } from '#control';
 import { pages } from '#settings/pages.jsx';
 
 import css from './main.module.css' with { type: 'css' };

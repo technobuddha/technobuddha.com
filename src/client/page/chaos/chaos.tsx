@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
+import { LinearProgress } from '@technobuddha/controls';
 import { Size, useDerivedState } from '@technobuddha/react';
 
 import { useTranslation } from '#context/i18n';
 import { enqueueSnackbar } from '#context/snackbar';
-import { LinearProgress } from '#control';
 
 import { chaos } from './worker/index.ts';
 

@@ -1,9 +1,8 @@
 import React from 'react';
+import { MenuItem, Select } from '@technobuddha/controls';
 import { randomWeightedPick } from '@technobuddha/library';
 import { type MazeSolverProperties } from '@technobuddha/maze';
 import { useHMR } from '@technobuddha/react';
-
-import { MenuItem, Select } from '#control';
 
 import { type SolverProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';

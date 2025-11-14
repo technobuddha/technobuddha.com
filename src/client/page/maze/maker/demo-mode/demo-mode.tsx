@@ -1,5 +1,5 @@
 import React from 'react';
-import { type Phase, type MazeRunner } from '@technobuddha/maze';
+import { type MazeRunner,type Phase } from '@technobuddha/maze';
 
 import { Section } from '../section/index.ts';
 

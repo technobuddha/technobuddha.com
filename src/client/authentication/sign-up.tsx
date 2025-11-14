@@ -1,10 +1,4 @@
 import React from 'react';
-import { email as emailRegExp, empty } from '@technobuddha/library';
-import { MdEmail, MdPerson } from 'react-icons/md';
-
-import { useAuthentication } from '#context/authentication';
-import { useTranslation } from '#context/i18n';
-import { useNavigate } from '#context/router';
 import {
   Alert,
   Box,
@@ -14,7 +8,13 @@ import {
   PasswordValidation,
   TextField,
   Typography,
-} from '#control';
+} from '@technobuddha/controls';
+import { email as emailRegExp, empty } from '@technobuddha/library';
+import { MdEmail, MdPerson } from 'react-icons/md';
+
+import { useAuthentication } from '#context/authentication';
+import { useTranslation } from '#context/i18n';
+import { useNavigate } from '#context/router';
 import { authenticationSettings } from '#settings/authentication';
 
 import css from './sign-up.module.css' with { type: 'css' };

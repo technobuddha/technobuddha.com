@@ -4017,11 +4017,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/controls@npm:0.0.4":
-  version: 0.0.4
-  resolution: "@technobuddha/controls@npm:0.0.4"
+"@technobuddha/controls@npm:0.0.5":
+  version: 0.0.5
+  resolution: "@technobuddha/controls@npm:0.0.5"
   dependencies:
-    "@mui/material": "npm:7.3.5"
+    "@mui/material": "npm:6.5.0"
     "@technobuddha/library": "npm:2.0.105"
     "@types/react": "npm:19.2.4"
     "@uiw/react-color": "npm:2.9.2"
@@ -4033,7 +4033,7 @@ __metadata:
     react: "npm:19.2.0"
     react-icons: "npm:5.5.0"
     react-router: "npm:7.9.6"
-  checksum: 10c0/3273c54b54127c5bb1c8e7ec4698f3848a659ac2005fb0ae590ce75c08d6590433720d6d17f96baffcef0dd94c3f558086ad8ae670ba0f69c63ce8c2237f53eb
+  checksum: 10c0/ee5c6d23659879183419fde8c8b21f756100ce273beae216cb84dab6373118eb0ce0cd30615d61d987542becbb3033cbff46d0efabff89ddc5585041bd1860dc
   languageName: node
   linkType: hard
 
@@ -4074,9 +4074,9 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@technobuddha/project@npm:0.99.158":
-  version: 0.99.158
-  resolution: "@technobuddha/project@npm:0.99.158"
+"@technobuddha/project@npm:0.99.159":
+  version: 0.99.159
+  resolution: "@technobuddha/project@npm:0.99.159"
   dependencies:
     "@eslint/js": "npm:9.37.0"
     "@inquirer/prompts": "npm:7.8.6"
@@ -4108,7 +4108,7 @@ __metadata:
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:5.2.0"
     eslint-plugin-simple-import-sort: "npm:12.1.1"
-    eslint-plugin-technobuddha: "npm:1.3.7"
+    eslint-plugin-technobuddha: "npm:1.3.8"
     eslint-plugin-tsdoc: "npm:0.4.0"
     eslint-plugin-unicorn: "npm:61.0.2"
     globals: "npm:16.4.0"
@@ -4121,7 +4121,7 @@ __metadata:
     typescript: "npm:5.9.2"
   bin:
     tbproject: dist/cli/tbproject.js
-  checksum: 10c0/28194467c1994372de61470ffa09c0400a30fac2e0dc853039b771c9cd960b935f149037383735659f22d232cba5eda87a58dfa2758a4e3010ce8f648576e7e3
+  checksum: 10c0/1cbe01d396828dd1088a0de4d0404ddd9e0467d23a578bbb8b62ae37de83fdffa3c4c3468741330d6fe77fd6a33fa75c4f2a998e1e0d45e08f0e9958ed52b274
   languageName: node
   linkType: hard
 
@@ -8681,14 +8681,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-technobuddha@npm:1.3.7":
-  version: 1.3.7
-  resolution: "eslint-plugin-technobuddha@npm:1.3.7"
+"eslint-plugin-technobuddha@npm:1.3.8":
+  version: 1.3.8
+  resolution: "eslint-plugin-technobuddha@npm:1.3.8"
   dependencies:
     "@technobuddha/library": "npm:2.0.105"
     eslint: "npm:9.36.0"
     get-tsconfig: "npm:4.10.1"
-  checksum: 10c0/be029f30925d47de4dfb7171f0a96c41ba0631b62bc4645f8c10cd041b61375e3728d01447f448a786b8bc15c9ba3b65814f29d677ee3d82a9112465ddeb05c0
+  checksum: 10c0/4a384dbad137889498febc732291104882d65ea0eb947ae50e4464bfeddb0ab7cd4e2678b32d77a579aa6607cf8ae3d37b516771204ad73fd25e992c965ff56c
   languageName: node
   linkType: hard
 
@@ -14554,11 +14554,11 @@ __metadata:
     "@react-router/serve": "npm:7.9.5"
     "@technobuddha/builder": "npm:0.99.26"
     "@technobuddha/color": "npm:0.3.2"
-    "@technobuddha/controls": "npm:0.0.4"
+    "@technobuddha/controls": "npm:0.0.5"
     "@technobuddha/library": "npm:2.0.105"
     "@technobuddha/maze": "npm:0.1.4"
     "@technobuddha/openapi": "link:../@technobuddha/openapi/"
-    "@technobuddha/project": "npm:0.99.158"
+    "@technobuddha/project": "npm:0.99.159"
     "@technobuddha/react": "npm:0.0.7"
     "@types/browserslist-useragent": "npm:3.0.7"
     "@types/cli-progress": "npm:^3.11.6"

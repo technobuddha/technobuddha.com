@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-handler-names */
 import React from 'react';
-import { type Phase, type PlayMode, type MazeRunner } from '@technobuddha/maze';
+import { type MazeRunner,type Phase, type PlayMode } from '@technobuddha/maze';
 
 import { PhaseControls } from '../phase-controls/index.ts';
 import { PlayControls } from '../play-controls/index.ts';

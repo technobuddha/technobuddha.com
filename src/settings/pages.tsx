@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, Typography } from '@technobuddha/controls';
 import { type IconType } from 'react-icons';
 import {
   GiChessKnight,
@@ -14,7 +15,6 @@ import {
 import { HiColorSwatch } from 'react-icons/hi';
 
 import { type TFunction } from '#context/i18n';
-import { Link, Typography } from '#control';
 import { Chaos } from '#page/chaos';
 import { Color } from '#page/color';
 import { Home } from '#page/home';

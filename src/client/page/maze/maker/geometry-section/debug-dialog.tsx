@@ -1,6 +1,4 @@
 import React from 'react';
-import { create, type InstanceProps } from 'react-modal-promise';
-
 import {
   Button,
   Checkbox,
@@ -10,7 +8,8 @@ import {
   DialogTitle,
   MenuItem,
   Select,
-} from '#control';
+} from '@technobuddha/controls';
+import { create, type InstanceProps } from 'react-modal-promise';
 
 import { type Debug, shows } from './debug.ts';
 

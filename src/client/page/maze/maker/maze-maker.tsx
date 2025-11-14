@@ -1,4 +1,5 @@
 import React from 'react';
+import { ToggleButton, ToggleButtonGroup } from '@technobuddha/controls';
 import {
   CanvasDrawing,
   type Maze,
@@ -14,8 +15,6 @@ import {
 import clsx from 'clsx';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useMeasure } from 'react-use';
-
-import { ToggleButton, ToggleButtonGroup } from '#control';
 
 import { CustomControls } from './custom-controls/index.ts';
 import { DemoMode } from './demo-mode/index.ts';

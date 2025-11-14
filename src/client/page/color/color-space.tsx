@@ -1,7 +1,6 @@
 import React from 'react';
 import { type ColorSpecification, type RGB, toRGB } from '@technobuddha/color';
-
-import { Slider } from '#control';
+import { Slider } from '@technobuddha/controls';
 
 import css from './color-space.module.css' with { type: 'css' };
 

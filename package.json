@@ -32,7 +32,7 @@
     "@react-router/dev": "7.9.5",
     "@technobuddha/builder": "0.99.26",
     "@technobuddha/openapi": "link:../@technobuddha/openapi/",
-    "@technobuddha/project": "0.99.158",
+    "@technobuddha/project": "0.99.159",
     "@types/cli-progress": "^3.11.6",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.5",
@@ -72,7 +72,7 @@
     "vitepress": "1.6.4"
   },
   "technobuddhaProject": {
-    "version": "0.99.157",
+    "version": "0.99.159",
     "created": "2020-04-01T04:20:42.690Z"
   },
   "type": "module",
@@ -88,7 +88,7 @@
     "@react-router/node": "7.9.5",
     "@react-router/serve": "7.9.5",
     "@technobuddha/color": "0.3.2",
-    "@technobuddha/controls": "0.0.4",
+    "@technobuddha/controls": "0.0.5",
     "@technobuddha/library": "2.0.105",
     "@technobuddha/maze": "0.1.4",
     "@technobuddha/react": "0.0.7",

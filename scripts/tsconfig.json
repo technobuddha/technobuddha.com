@@ -6,10 +6,5 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"] },
   "include": ["**/*.d.ts", "**/*.ts"],
-  "exclude": [],
-  "references": [
-    { "path": "../src/config" },
-    { "path": "../src/settings" },
-    { "path": "../src/server" }
-  ]
+  "exclude": []
 }

@@ -1,10 +1,10 @@
 import React from 'react';
+import { Alert, Box, Button, PasswordField, TextField, Typography } from '@technobuddha/controls';
 import { MdEmail } from 'react-icons/md';
 
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useLocation, useNavigate } from '#context/router';
-import { Alert, Box, Button, PasswordField, TextField, Typography } from '#control';
 
 import css from './login.module.css' with { type: 'css' };
 

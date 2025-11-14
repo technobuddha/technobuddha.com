@@ -29,7 +29,7 @@ export const MazeBackground: React.FC<MazeBackgroundProps> = ({
   maskColor = 'black',
 }) => (
   <Size width="100%" height="100%">
-    {(width, height) => (
+    {({ width, height }) => (
       <MazeBoard boxWidth={width} boxHeight={height} maskColor={maskColor}>
         {children}
       </MazeBoard>

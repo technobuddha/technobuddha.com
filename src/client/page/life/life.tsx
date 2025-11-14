@@ -27,7 +27,7 @@ const START =
 
 export const Life: React.FC = () => (
   <Size width="100%" height="100%">
-    {(width, height) => <LifeBoard start={START} boxWidth={width} boxHeight={height} />}
+    {({ width, height }) => <LifeBoard start={START} boxWidth={width} boxHeight={height} />}
   </Size>
 );
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { type Runner, type ShowDistances } from '@technobuddha/maze';
+import { type MazeRunner, type ShowDistances } from '@technobuddha/maze';
 import { create, type InstanceProps } from 'react-modal-promise';
 
 import {
@@ -28,7 +28,7 @@ const mimeTypes: Record<FileFormat, string> = {
 };
 
 export type ExportMazeDialogProps = InstanceProps<void, void> & {
-  readonly runner: Runner;
+  readonly runner: MazeRunner;
   readonly children?: never;
 };
 

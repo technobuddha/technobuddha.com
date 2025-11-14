@@ -1,12 +1,12 @@
 import React from 'react';
-import { type Phase, type Runner } from '@technobuddha/maze';
+import { type Phase, type MazeRunner } from '@technobuddha/maze';
 
 import { Section } from '../section/index.ts';
 
 import css from './demo-mode.module.css' with { type: 'css' };
 
 export type DemoModeProps = {
-  readonly runner: Runner | undefined;
+  readonly runner: MazeRunner | undefined;
   readonly children?: never;
 };
 

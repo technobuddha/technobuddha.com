@@ -1,7 +1,7 @@
 /* eslint-disable n/no-sync */
 import path from 'node:path';
 
-import { err, findRootDirectorySync } from '@technobuddha/library';
+import { err, findRootDirectorySync } from '@technobuddha/library/node';
 
 const home = findRootDirectorySync();
 if (!home) {
@@ -10,6 +10,7 @@ if (!home) {
 }
 
 export const paths = {
+  home,
   views: path.join(home, 'src', 'client', 'views'),
   artwork: path.join(home, 'artwork'),
   wellKnown: path.join(home, '.well-known'),

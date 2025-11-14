@@ -4017,6 +4017,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@technobuddha/controls@npm:0.0.4":
+  version: 0.0.4
+  resolution: "@technobuddha/controls@npm:0.0.4"
+  dependencies:
+    "@mui/material": "npm:7.3.5"
+    "@technobuddha/library": "npm:2.0.105"
+    "@types/react": "npm:19.2.4"
+    "@uiw/react-color": "npm:2.9.2"
+    "@zxcvbn-ts/core": "npm:3.0.4"
+    "@zxcvbn-ts/language-common": "npm:3.0.4"
+    "@zxcvbn-ts/language-en": "npm:3.0.2"
+    clsx: "npm:2.1.1"
+    colorjs.io: "npm:0.5.2"
+    react: "npm:19.2.0"
+    react-icons: "npm:5.5.0"
+    react-router: "npm:7.9.6"
+  checksum: 10c0/3273c54b54127c5bb1c8e7ec4698f3848a659ac2005fb0ae590ce75c08d6590433720d6d17f96baffcef0dd94c3f558086ad8ae670ba0f69c63ce8c2237f53eb
+  languageName: node
+  linkType: hard
+
 "@technobuddha/library@npm:2.0.100":
   version: 2.0.100
   resolution: "@technobuddha/library@npm:2.0.100"
@@ -4054,9 +4074,9 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@technobuddha/project@npm:0.99.157":
-  version: 0.99.157
-  resolution: "@technobuddha/project@npm:0.99.157"
+"@technobuddha/project@npm:0.99.158":
+  version: 0.99.158
+  resolution: "@technobuddha/project@npm:0.99.158"
   dependencies:
     "@eslint/js": "npm:9.37.0"
     "@inquirer/prompts": "npm:7.8.6"
@@ -4088,7 +4108,7 @@ __metadata:
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-react-hooks: "npm:5.2.0"
     eslint-plugin-simple-import-sort: "npm:12.1.1"
-    eslint-plugin-technobuddha: "npm:1.3.6"
+    eslint-plugin-technobuddha: "npm:1.3.7"
     eslint-plugin-tsdoc: "npm:0.4.0"
     eslint-plugin-unicorn: "npm:61.0.2"
     globals: "npm:16.4.0"
@@ -4101,7 +4121,7 @@ __metadata:
     typescript: "npm:5.9.2"
   bin:
     tbproject: dist/cli/tbproject.js
-  checksum: 10c0/1e67091025a2183caeab1f77c892fd310331331966cee629c02287e01069a355b0b2aa7ff0710a3d35d37071130e0549d898596bf5e16c7790788c644bfeb87a
+  checksum: 10c0/28194467c1994372de61470ffa09c0400a30fac2e0dc853039b771c9cd960b935f149037383735659f22d232cba5eda87a58dfa2758a4e3010ce8f648576e7e3
   languageName: node
   linkType: hard
 
@@ -8661,15 +8681,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-technobuddha@npm:1.3.6":
-  version: 1.3.6
-  resolution: "eslint-plugin-technobuddha@npm:1.3.6"
+"eslint-plugin-technobuddha@npm:1.3.7":
+  version: 1.3.7
+  resolution: "eslint-plugin-technobuddha@npm:1.3.7"
   dependencies:
     "@technobuddha/library": "npm:2.0.105"
     eslint: "npm:9.36.0"
     get-tsconfig: "npm:4.10.1"
-    read-package-up: "npm:11.0.0"
-  checksum: 10c0/ae37ec3d6c2a6cc920f60f9d455f5280e2e4ca713b1b7127e979d04b9745c0c46c90a3ceceefc31c81796606598912b8e281db5b1393e14f87684e1fb3b376bb
+  checksum: 10c0/be029f30925d47de4dfb7171f0a96c41ba0631b62bc4645f8c10cd041b61375e3728d01447f448a786b8bc15c9ba3b65814f29d677ee3d82a9112465ddeb05c0
   languageName: node
   linkType: hard
 
@@ -13052,6 +13071,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-router@npm:7.9.6":
+  version: 7.9.6
+  resolution: "react-router@npm:7.9.6"
+  dependencies:
+    cookie: "npm:^1.0.1"
+    set-cookie-parser: "npm:^2.6.0"
+  peerDependencies:
+    react: ">=18"
+    react-dom: ">=18"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+  checksum: 10c0/2a177bbe19021e3b8211df849ea5b3f3a4f482327e6de3341aaeaa4f1406dc9be7b675b229eefea6761e04a59a40ccaaf8188f2ee88eb2d0b2a6b6448daea368
+  languageName: node
+  linkType: hard
+
 "react-style-singleton@npm:^2.2.2, react-style-singleton@npm:^2.2.3":
   version: 2.2.3
   resolution: "react-style-singleton@npm:2.2.3"
@@ -14519,10 +14554,11 @@ __metadata:
     "@react-router/serve": "npm:7.9.5"
     "@technobuddha/builder": "npm:0.99.26"
     "@technobuddha/color": "npm:0.3.2"
+    "@technobuddha/controls": "npm:0.0.4"
     "@technobuddha/library": "npm:2.0.105"
     "@technobuddha/maze": "npm:0.1.4"
     "@technobuddha/openapi": "link:../@technobuddha/openapi/"
-    "@technobuddha/project": "npm:0.99.157"
+    "@technobuddha/project": "npm:0.99.158"
     "@technobuddha/react": "npm:0.0.7"
     "@types/browserslist-useragent": "npm:3.0.7"
     "@types/cli-progress": "npm:^3.11.6"

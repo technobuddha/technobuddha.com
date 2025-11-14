@@ -18,7 +18,7 @@ const MAX_ITERATION = 1024;
 
 export const Chaos: React.FC = () => (
   <Size width="100%" height="100%">
-    {(width, height) => <ChaosBoard boxWidth={width} boxHeight={height} />}
+    {({ width, height }) => <ChaosBoard boxWidth={width} boxHeight={height} />}
   </Size>
 );
 

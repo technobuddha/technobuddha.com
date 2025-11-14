@@ -1,5 +1,5 @@
 import React from 'react';
-import { type MessageCallback, type MessageOptions, type Runner } from '@technobuddha/maze';
+import { type MessageCallback, type MessageOptions, type MazeRunner } from '@technobuddha/maze';
 import clsx from 'clsx';
 import { IoTrash } from 'react-icons/io5';
 
@@ -17,7 +17,7 @@ type History = {
 } & MessageOptions;
 
 type MessagesProps = {
-  readonly runner: Runner | undefined;
+  readonly runner: MazeRunner | undefined;
   readonly children?: never;
 };
 

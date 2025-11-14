@@ -1,6 +1,6 @@
 import React from 'react';
 import { memoize } from '@technobuddha/library';
-import { type Phase, phases, type PlayMode, type Runner } from '@technobuddha/maze';
+import { type Phase, phases, type PlayMode, type MazeRunner } from '@technobuddha/maze';
 
 import { Button, Step, StepLabel, Stepper } from '#control';
 
@@ -13,7 +13,7 @@ import { phasePlayModeDialog } from './phase-play-mode-dialog.tsx';
 import css from './phase-controls.module.css' with { type: 'css' };
 
 export type PhaseControlsProps = {
-  readonly runner?: Runner;
+  readonly runner?: MazeRunner;
 
   readonly onPhasePlayModeChange?: (this: void, phase: Phase, value: PlayMode) => void;
   readonly children?: never;

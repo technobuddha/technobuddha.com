@@ -1,5 +1,5 @@
 import React from 'react';
-import { Human, type MazeSolverProperties, type Runner } from '@technobuddha/maze';
+import { Human, type MazeSolverProperties, type MazeRunner } from '@technobuddha/maze';
 
 import { Checkbox } from '#control';
 
@@ -11,7 +11,7 @@ import { HumanSectionHelp } from './human-section.help.tsx';
 type HumanSectionProps = {
   readonly className?: string;
   readonly onChange?: (this: void, producer: SolverProducer) => void;
-  readonly runner?: Runner;
+  readonly runner?: MazeRunner;
   readonly children?: never;
 };
 

@@ -48,7 +48,7 @@
     "@types/zxcvbn": "^4.4.5",
     "@vitejs/plugin-react": "5.1.1",
     "cli-progress": "3.12.0",
-    "glob": "11.0.3",
+    "glob": "11.1.0",
     "i18next-scanner": "4.6.0",
     "i18next-scanner-typescript": "1.2.1",
     "n-readlines": "1.0.3",

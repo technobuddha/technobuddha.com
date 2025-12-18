@@ -86,7 +86,7 @@
     "@mui/material": "6.5.0",
     "@mui/styles": "6.5.0",
     "@react-router/node": "7.9.5",
-    "@react-router/serve": "7.9.5",
+    "@react-router/serve": "7.9.6",
     "@technobuddha/color": "0.3.2",
     "@technobuddha/library": "2.0.105",
     "@technobuddha/maze": "0.1.4",

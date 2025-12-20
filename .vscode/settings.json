@@ -17,5 +17,10 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
-  "files.encoding": "utf8"
+  "files.encoding": "utf8",
+  "i18n-ally.localesPaths": [
+    "locales",
+    "src/client/context/i18n",
+    "src/client/page/maze/maker/messages"
+  ]
 }

@@ -1,6 +1,6 @@
 //@ts-check
 
-/** @type {import('@technobuddha/builder').Builds} */
+/** @type {import('@technobuddha/project/build').Builds} */
 const config = {
   dev: {
     watch: true,
@@ -13,7 +13,7 @@ const config = {
         name: 'Technobuddha',
         directory: './src/server', // /etc/letsencrypt/live/technobuddha
         command: 'tsx src/server/server.ts',
-        daemon: true,
+        context: 'daemon',
       },
     ],
   },

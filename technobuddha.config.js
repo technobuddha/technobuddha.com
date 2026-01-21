@@ -4,6 +4,9 @@ const config = {
   directories: {
     'scripts': {
       environment: 'node',
+      tsconfig: {
+        references: ['src/server', 'src/settings'],
+      }
     },
     'src/api': {
       environment: 'browser',
@@ -39,8 +42,7 @@ const config = {
           '#server/*': ['./src/server/*/index.ts'],
           '#util*': ['./src/util*'],
           '#settings*': ['./src/settings*'],
-          '#config': ['./src/config/index.ts'],
-          '#env': ['./src/config/env.ts'],
+          '#config': ['./src/config/index.ts']
         },
       },
     },

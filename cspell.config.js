@@ -12,106 +12,132 @@ const config =
     {
       "name": "internal",
       "path": "./.cspell/internal.dic",
-      "description": "Internal Project specific words",
+      "description": "INTERNAL TO THIS PROJECT",
       "addWords": true
     },
     {
-      "name": "more-css",
-      "path": "./.cspell/css.dic",
-      "description": "Additional css keywords",
+      "name": "tb-color",
+      "path": "~/.cspell/color.dic",
+      "description": "Color",
       "addWords": true
     },
     {
-      "name": "more-color",
-      "path": "./.cspell/color.dic",
-      "description": "Additional color keywords",
+      "name": "tb-css",
+      "path": "~/.cspell/css.dic",
+      "description": "CSS",
       "addWords": true
     },
     {
-      "name": "more-db",
-      "path": "./.cspell/db.dic",
-      "description": "Additional database keywords",
+      "name": "tb-db",
+      "path": "~/.cspell/db.dic",
+      "description": "Database",
       "addWords": true
     },
     {
-      "name": "more-english",
-      "path": "./.cspell/english.dic",
-      "description": "Additional English words",
+      "name": "tb-english",
+      "path": "~/.cspell/english.dic",
+      "description": "English",
       "addWords": true
     },
     {
-      "name": "more-fonts",
-      "path": "./.cspell/fonts.dic",
-      "description": "Additional font package names",
+      "name": "tb-fonts",
+      "path": "~/.cspell/fonts.dic",
+      "description": "Font",
       "addWords": true
     },
     {
-      "name": "more-html",
-      "path": "./.cspell/html.dic",
-      "description": "HTML words",
+      "name": "tb-html",
+      "path": "~/.cspell/html.dic",
+      "description": "HTML",
       "addWords": true,
     },
     {
-      "name": "more-math",
-      "path": "./.cspell/math.dic",
-      "description": "Math terms",
+      "name": "tb-math",
+      "path": "~/.cspell/math.dic",
+      "description": "Math",
       "addWords": true,
     },
     {
-      "name": "more-npm",
-      "path": "./.cspell/npm.dic",
-      "description": "Additional npm package names",
-      "addWords": true
-    },
-    {
-      "name": "more-numbers",
-      "path": "./.cspell/numbers.dic",
-      "description": "Math terms",
+      "name": "tb-numbers",
+      "path": "~/.cspell/numbers.dic",
+      "description": "Number",
       "addWords": true,
     },
     {
-      "name": "more-programming",
-      "path": "./.cspell/programming.dic",
-      "description": "Additional programming keywords",
+      "name": "tb-programming",
+      "path": "~/.cspell/programming.dic",
+      "description": "Programming",
       "addWords": true
     },
     {
-      "name": "more-proper",
-      "path": "./.cspell/programming.dic",
-      "description": "Additional Proper nouns",
+      "name": "tb-proper",
+      "path": "~/.cspell/proper.dic",
+      "description": "Proper nouns",
       "addWords": true
     },
     {
-      "name": "technobuddha",
-      "path": "./.cspell/technobuddha.dic",
-      "description": "Technobuddha specific words",
+      "name": "tb-software",
+      "path": "~/.cspell/software.dic",
+      "description": "Software",
       "addWords": true
     },
     {
-      "name": "unicode",
-      "path": "./.cspell/unicode.dic",
-      "description": "Unicode names",
+      "name": "tb-technobuddha",
+      "path": "~/.cspell/technobuddha.dic",
+      "description": "Technobuddha",
+      "addWords": true
+    },
+    {
+      "name": "tb-unicode",
+      "path": "~/.cspell/unicode.dic",
+      "description": "Unicode",
       "addWords": true
     },
   ],
   "dictionaries": [
+    "typescript",
+    "node",
+    "html",
+    "css",
+    "bash",
+    "fonts",
+    "filetypes",
+    "npm",
+
     "internal",
-    "more-css",
-    "more-color",
-    "more-db",
-    "more-english",
-    "more-fonts",
-    "more-html",
-    "more-math",
-    "more-npm",
-    "more-numbers",
-    "more-programming",
-    "more-proper",
-    "technobuddha",
-    "unicode",
+    "tb-color",
+    "tb-css",
+    "tb-db",
+    "tb-english",
+    "tb-fonts",
+    "tb-html",
+    "tb-math",
+    "tb-numbers",
+    "tb-programming",
+    "tb-proper",
+    "tb-software",
+    "tb-technobuddha",
+    "tb-unicode",
   ],
-  "ignoreWords": [],
-  "import": []
+  "patterns": [
+    {
+      "name": "comment-single-line",
+      "pattern": "/\\/\\/.*/g"
+    },
+    {
+      "name": "comment-multi-line",
+      "pattern": "/\\/\\*(?:.|\\n)*?\\*\\//g"
+    },
+    {
+      "name": "example",
+      "pattern": "/@example(?:.|\\n)*?\\*(?:\\s*@|\\/)/g"
+    },
+    {
+      "name": "comments",
+      "pattern": ["comment-single-line", "example"]
+    }
+  ],
+  ignoreRegExpList: ['comments'],
 }
 
 export default config;

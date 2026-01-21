@@ -1,5 +1,5 @@
-#!/bin/env -S ts-node --prefer-ts-exts  -r ./config/env.ts -r tsconfig-paths/register
-import 'dotenv/config';
+#!/bin/env -S ts-node --prefer-ts-exts  -r tsconfig-paths/register
+import '@technobuddha/project/env';
 
 import chalk from 'chalk';
 import cliProgress from 'cli-progress';
@@ -7,7 +7,7 @@ import nReadLines from 'n-readlines';
 
 import { db } from '#server/db';
 
-const partOfSet = /^([0-9]+)(\/[0-9]+)?(\s*.*)$/u;
+const partOfSet = /^([0-9]+)(\/[0-9]+)?(\s*.*)$/v;
 function parsePartOfSet(text: string | null | undefined): {
   disc: number;
   set: number;

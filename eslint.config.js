@@ -1,15 +1,21 @@
-// @ts-check
 // 🚨
 // 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
 // 🚨
+// @ts-check
 import { app } from '@technobuddha/project';
 
-/** @type {import('eslint').Linter.Config[]} */
+/** @type import('eslint').Linter.Config[] */
 const config = [
+  { ignores: ['coverage', 'dist'] },
   // .
   app.lint({ files: ['*.config.js'], ignores: [], environment: 'node' }),
   // .
-  app.lint({ files: ['*.config.ts'], ignores: [], environment: 'node', tsConfig: 'tsconfig.json' }),
+  app.lint({
+    files: ['*.config.ts', '*.setup.ts'],
+    ignores: [],
+    environment: 'node',
+    tsConfig: 'tsconfig.json',
+  }),
   // scripts
   app.lint({
     files: ['scripts/**/*.ts'],

@@ -1,8 +1,11 @@
-#!/bin/env -S tsx -r ./src/config/env.ts
+#!/bin/env -S tsx
+import '@technobuddha/project/env';
+
 import path from 'node:path';
 import stream from 'node:stream';
 
-import { isString, out } from '@technobuddha/library';
+import { isString } from '@technobuddha/library';
+import { out } from '@technobuddha/library/node';
 import chalk from 'chalk';
 import { type I18NextScannerConfig } from 'i18next-scanner';
 import scanner from 'i18next-scanner';

@@ -1,15 +1,6 @@
-//@ts-check
-/**
- * @type {import('node-pg-migrate').ColumnDefinitions | undefined}
- */
-module.exports.shorthands = undefined;
+exports.shorthands = undefined;
 
-/**
- * @param pgm {import('node-pg-migrate').MigrationBuilder}
- * @param run {() => void | undefined}
- * @returns {Promise<void> | void}
- */
-module.exports.up = (pgm) => {
+exports.up = pgm => {
   pgm.createExtension('uuid-ossp', { ifNotExists: true });
   pgm.createExtension('pgcrypto', { ifNotExists: true });
   pgm.createExtension('citext', { ifNotExists: true });
@@ -44,12 +35,7 @@ module.exports.up = (pgm) => {
   );
 };
 
-/**
- * @param pgm {import('node-pg-migrate').MigrationBuilder}
- * @param run {() => void | undefined}
- * @returns {Promise<void> | void}
- */
-module.exports.down = pgm => {
+exports.down = pgm => {
   pgm.dropTable('session');
   pgm.dropTable('account');
 

@@ -1,8 +1,19 @@
-exports.shorthands = undefined;
+/* eslint-disable tsdoc/syntax */
+//@ts-check
+
+/**
+ * @type {import('node-pg-migrate').ColumnDefinitions | undefined}
+ */
+module.exports.shorthands = undefined;
 
 const names = [ 'track', 'track_old', 'track_new' ];
 
-exports.up = pgm => {
+/**
+ * @param pgm {import('node-pg-migrate').MigrationBuilder}
+ * @param run {() => void | undefined}
+ * @returns {Promise<void> | void}
+ */
+module.exports.up = (pgm) => {
     for(const name of names) {
         pgm.createTable(
             name,
@@ -62,7 +73,13 @@ exports.up = pgm => {
     }
 };
 
-exports.down = pgm => {
-    for(const name of names)
-        pgm.dropTable(name);
+/**
+ * @param pgm {import('node-pg-migrate').MigrationBuilder}
+ * @param run {() => void | undefined}
+ * @returns {Promise<void> | void}
+ */
+module.exports.down = (pgm) => {
+    for(const name of names) {
+      pgm.dropTable(name);
+    }
 };

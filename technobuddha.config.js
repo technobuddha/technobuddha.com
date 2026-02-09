@@ -29,6 +29,14 @@ const config = {
         references: ['src/client']
       }
     },
+    'migrations': {
+      environment: 'node',
+      tsconfig: {
+        compilerOptions: {
+          noEmit: true,
+        }
+      }
+    },
   },
   tsconfig: {
     base: {

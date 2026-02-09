@@ -53,6 +53,7 @@ This project is part of the [Technobuddha](https://technobuddha.com) suite of op
 - **Location**: Place tests in `__tests__/` folder adjacent to the source code
 - **Naming**: Use `.test.ts` or `.test.tsx` suffix for test files
 - **Structure**: Wrap related tests in a `describe` block named after the functionality being tested
+- **Import Order**: All imports (including test helpers and matchers) **must** appear at the very top of the test file, before any code, variables, or test definitions. This prevents test runner errors and ensures proper module resolution.
 
 ### Best Practices
 
@@ -64,6 +65,8 @@ This project is part of the [Technobuddha](https://technobuddha.com) suite of op
 yarn test                                              # Run all tests
 yarn test --no-coverage path/to/test-file.test.ts     # Run specific test file without coverage
 ```
+
+> **Note:** Always validate changes by running the targeted test files. Do not discuss test runner issues in user-facing responses; focus on actionable fixes and validation.
 
 ---
 

@@ -25,7 +25,7 @@ const config = {
       },
       {
         name: 'Technobuddha',
-        command: 'vite build',
+        command: 'npx vite build',
       },
     ]
   }

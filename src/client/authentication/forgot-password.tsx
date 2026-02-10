@@ -23,7 +23,7 @@ export const ForgotPassword: React.FC = () => {
 
   const isEnabled = (): boolean => validEmail;
 
-  const handleExecute = React.useCallback((e: React.FormEvent<HTMLButtonElement>): void => {
+  const handleExecute = React.useCallback((e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
 
     //if(!await authentication.login(username!, password!))

@@ -2,11 +2,7 @@ import React from 'react';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import HttpApi from 'i18next-http-backend';
-import {
-  I18nextProvider,
-  initReactI18next,
-  useTranslation as usei18NextTranslation,
-} from 'react-i18next';
+import { I18nextProvider, initReactI18next } from 'react-i18next';
 
 import { i18nextInit } from '#settings/i18next';
 
@@ -23,8 +19,4 @@ export const I18nProvider: React.FC = ({ children }: I18nProviderProps) => (
 export const { t } = i18next;
 
 export type { TFunction } from 'i18next';
-// export { useTranslation } from 'react-i18next';
-export function useTranslation(): { t: typeof i18next.t } {
-  console.log('useTranslation is rendering');
-  return usei18NextTranslation();
-}
+export { useTranslation } from 'react-i18next';

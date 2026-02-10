@@ -3653,9 +3653,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/project@npm:0.1.0-299":
-  version: 0.1.0-299
-  resolution: "@technobuddha/project@npm:0.1.0-299"
+"@technobuddha/project@npm:0.1.0-303":
+  version: 0.1.0-303
+  resolution: "@technobuddha/project@npm:0.1.0-303"
   dependencies:
     "@dotenvx/dotenvx": "npm:1.52.0"
     "@eslint/js": "npm:9.39.2"
@@ -3727,7 +3727,7 @@ __metadata:
     find-unexported-files: dist/find-unexported-files/find-unexported-files.js
     sync: dist/sync/sync.js
     tb: dist/tb/tb.js
-  checksum: 10c0/f37463e2e1a16c0db9cbb48c376478e85dd1f77902356f594ccf99e96336b07dea3b44eeddb0b4b031893e7b9ae8002a77baf921f7e3a6fb4a8d6228269ea513
+  checksum: 10c0/aba414c638092ddb2e2a3fed6abfa5756d0925d4ee35284b6ba77bfeee63cfe4a278e106e8c81d373d77b8d5fea2646744cda5ad0050e9e46258926879bcd8b6
   languageName: node
   linkType: hard
 
@@ -13636,7 +13636,7 @@ __metadata:
     "@technobuddha/controls": "npm:0.0.12"
     "@technobuddha/maze": "npm:0.1.5"
     "@technobuddha/postgres": "npm:0.0.1-19"
-    "@technobuddha/project": "npm:0.1.0-299"
+    "@technobuddha/project": "npm:0.1.0-303"
     "@technobuddha/react": "npm:0.0.13"
     "@types/browserslist-useragent": "npm:3.0.7"
     "@types/cli-progress": "npm:^3.11.6"

@@ -12,7 +12,7 @@ const config = {
       {
         name: 'Technobuddha',
         directory: './src/server', // /etc/letsencrypt/live/technobuddha
-        command: 'tsx src/server/server.ts',
+        command: 'npx tsx src/server/server.ts',
         context: 'daemon',
       },
     ],

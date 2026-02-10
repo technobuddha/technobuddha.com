@@ -1,4 +1,4 @@
-import camelcaseKeys from 'camelcase-keys';
+import { camelCase } from '@technobuddha/library';
 import { type CamelCasedPropertiesDeep } from 'type-fest';
 
 import { MusicAPI } from '#api/music';
@@ -12,7 +12,9 @@ export async function tracks(): Promise<Track[]> {
   return api.getTracks().then((response) => {
     switch (response.status) {
       case 200: {
-        return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Track[]>;
+        return response.payload.map((item) =>
+          Object.fromEntries(Object.entries(item).map(([key, value]) => [camelCase(key), value])),
+        ) as CamelCasedPropertiesDeep<Track[]>;
       }
 
       case 400:
@@ -28,7 +30,9 @@ export async function newAlbums(): Promise<Album[]> {
   return api.getNewAlbums().then((response) => {
     switch (response.status) {
       case 200: {
-        return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Album[]>;
+        return response.payload.map((item) =>
+          Object.fromEntries(Object.entries(item).map(([key, value]) => [camelCase(key), value])),
+        ) as CamelCasedPropertiesDeep<Album[]>;
       }
 
       case 400:
@@ -44,7 +48,9 @@ export async function artists(): Promise<Artist[]> {
   return api.getArtists().then((response) => {
     switch (response.status) {
       case 200: {
-        return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Artist[]>;
+        return response.payload.map((item) =>
+          Object.fromEntries(Object.entries(item).map(([key, value]) => [camelCase(key), value])),
+        ) as CamelCasedPropertiesDeep<Artist[]>;
       }
 
       case 400:
@@ -60,7 +66,9 @@ export async function genres(): Promise<Genre[]> {
   return api.getGenres().then((response) => {
     switch (response.status) {
       case 200: {
-        return camelcaseKeys(response.payload) as CamelCasedPropertiesDeep<Genre[]>;
+        return response.payload.map((item) =>
+          Object.fromEntries(Object.entries(item).map(([key, value]) => [camelCase(key), value])),
+        ) as CamelCasedPropertiesDeep<Genre[]>;
       }
 
       case 400:

@@ -1,9 +1,9 @@
 #!/bin/env -S ts-node --prefer-ts-exts  -r tsconfig-paths/register
 import '@technobuddha/project/env';
 
+import { readLines } from '@technobuddha/library/node';
 import chalk from 'chalk';
 import cliProgress from 'cli-progress';
-import nReadLines from 'n-readlines';
 
 import { db } from '#server/db';
 
@@ -59,17 +59,14 @@ void (async function main() {
 
     for (const file of ['/media/music/tracks.mldata']) {
       //cspell:ignore mldata
-      // eslint-disable-next-line new-cap
-      const lineReader = new nReadLines(file);
+      const lineReader = readLines(file);
 
-      let line: Buffer | false;
       let index = 0;
-
-      while ((line = lineReader.next())) {
+      for await (const line of lineReader) {
         if (index++ === 0) {
-          b1.start(Number.parseInt(line.toString()), 0, { speed: 'N/A' });
+          b1.start(Number.parseInt(line), 0, { speed: 'N/A' });
         } else {
-          const json = JSON.parse(line.toString());
+          const json = JSON.parse(line);
           const {
             ContentID,
             Path,

@@ -1,4 +1,4 @@
-import camelcaseKeys from 'camelcase-keys';
+import { camelCase } from '@technobuddha/library';
 
 import { AuthenticationAPI } from '#api/authentication';
 
@@ -11,7 +11,9 @@ export async function readSession(): Promise<Account | null> {
   return api.readSession().then((response) => {
     switch (response.status) {
       case 200: {
-        return camelcaseKeys(response.payload);
+        return Object.fromEntries(
+          Object.entries(response.payload).map(([key, value]) => [camelCase(key), value]),
+        ) as Account;
       }
 
       case 401: {
@@ -30,7 +32,9 @@ export async function createSession(email: string, password: string): Promise<Ac
   return api.createSession({ body: { email, password } }).then((response) => {
     switch (response.status) {
       case 201: {
-        return camelcaseKeys(response.payload);
+        return Object.fromEntries(
+          Object.entries(response.payload).map(([key, value]) => [camelCase(key), value]),
+        ) as Account;
       }
 
       case 401: {
@@ -68,7 +72,9 @@ export async function checkPasswordStrength(
   return api.checkPasswordStrength({ body: { password, userInputs } }).then((response) => {
     switch (response.status) {
       case 200: {
-        return camelcaseKeys(response.payload);
+        return Object.fromEntries(
+          Object.entries(response.payload).map(([key, value]) => [camelCase(key), value]),
+        ) as PasswordStrength;
       }
 
       case 500:
@@ -88,7 +94,9 @@ export async function createAccount(
   return api.createAccount({ body: { first, last, email, password } }).then((response) => {
     switch (response.status) {
       case 200: {
-        return camelcaseKeys(response.payload);
+        return Object.fromEntries(
+          Object.entries(response.payload).map(([key, value]) => [camelCase(key), value]),
+        ) as Account;
       }
 
       case 401: {

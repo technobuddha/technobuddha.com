@@ -2,10 +2,18 @@
   "name": "technobuddha.com",
   "version": "9.1.1",
   "description": "Technobuddha application",
-  "author": { "name": "Phil Hill", "email": "phil@technobuddha.com" },
+  "author": {
+    "name": "Phil Hill",
+    "email": "phil@technobuddha.com"
+  },
   "license": "MIT",
-  "repository": { "type": "git", "url": "https://github.com/technobuddha/technobuddha.com" },
-  "bugs": { "url": "https://github.com/technobuddha/technobuddha.com/issues" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/technobuddha/technobuddha.com"
+  },
+  "bugs": {
+    "url": "https://github.com/technobuddha/technobuddha.com/issues"
+  },
   "homepage": "https://github.com/technobuddha/technobuddha.com#readme",
   "packageManager": "yarn@4.12.0",
   "scripts": {
@@ -16,9 +24,9 @@
     "import-artwork": "tsx scripts/import-artwork.ts",
     "migrate up": "node-pg-migrate --migrations-dir migrations up",
     "migrate down": "node-pg-migrate --migrations-dir migrations down",
-    "lint": "eslint src",
-    "scan": "tsx scripts/scanner.ts",
-    "publish": "build publish",
+    "lint": "npx eslint src",
+    "scan": "npx tsx scripts/scanner.ts",
+    "publish": "npx build publish",
     "test": "npx vitest --typecheck run",
     "test:watch": "npx vitest --typecheck --no-coverage watch",
     "test:full": "npx vitest --typecheck --mode=full run",
@@ -27,7 +35,7 @@
   },
   "devDependencies": {
     "@react-router/dev": "7.13.0",
-    "@technobuddha/project": "0.1.0-303",
+    "@technobuddha/project": "0.1.0-341",
     "@types/browserslist-useragent": "3.0.7",
     "@types/cli-progress": "^3.11.6",
     "@types/cookie-parser": "^1.4.10",
@@ -54,9 +62,13 @@
     "vite-plugin-node": "7.0.0",
     "vite-plugin-svgr": "4.5.0"
   },
-  "technobuddhaProject": { "created": "2020-04-01T04:20:42.690Z" },
+  "technobuddhaProject": {
+    "created": "2020-04-01T04:20:42.690Z"
+  },
   "type": "module",
-  "engines": { "node": ">=24.0.0" },
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "dependencies": {
     "@google-cloud/translate": "9.3.0",
     "@mui/material": "7.3.7",
@@ -67,7 +79,7 @@
     "@technobuddha/controls": "0.0.12",
     "@technobuddha/maze": "0.1.5",
     "@technobuddha/postgres": "0.0.1-19",
-    "@technobuddha/react": "0.0.13",
+    "@technobuddha/react": "0.0.15",
     "@uiw/react-color": "2.9.4",
     "@zxcvbn-ts/core": "3.0.4",
     "@zxcvbn-ts/language-common": "3.0.4",

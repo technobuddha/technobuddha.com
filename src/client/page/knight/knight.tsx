@@ -191,6 +191,20 @@ export const Knight: React.FC = () => {
   );
 };
 
+function createBoard(
+  width: number,
+  height: number,
+  startX: number,
+  startY: number,
+  finishX: number,
+  finishY: number,
+): (number | null)[][] {
+  const board = create2dArray<number | null>(width, height, null);
+  board[startX][startY] = 0;
+  board[finishX][finishY] = null;
+  return board;
+}
+
 export type KnightSolverProps = {
   readonly width: number;
   readonly height: number;
@@ -220,16 +234,18 @@ export const KnightSolver: React.FC<KnightSolverProps> = ({
     [height, width, startX, startY, finishX, finishY],
   );
   const target = React.useMemo(() => new Square(finishX, finishY), [finishX, finishY]);
-  const board = React.useMemo(() => {
-    const b = create2dArray<number | null>(width, height, null);
-    b[startX][startY] = 0;
-    b[finishX][finishY] = null;
-    return b;
+  const [board, setBoard] = React.useState(() =>
+    createBoard(width, height, startX, startY, finishX, finishY),
+  );
+
+  React.useEffect(() => {
+    setBoard(createBoard(width, height, startX, startY, finishX, finishY));
   }, [height, width, startX, startY, finishX, finishY]);
 
   React.useEffect(() => {
     if (positions.length > 0) {
       for (const pos of positions) {
+        // eslint-disable-next-line react-hooks/immutability
         board[pos.x][pos.y] = move;
       }
       const timer = setTimeout(() => {

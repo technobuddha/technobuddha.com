@@ -1,5 +1,6 @@
 import React from 'react';
 import { memoize } from '@technobuddha/library';
+import { useConst } from '@technobuddha/react';
 import { type IconType } from 'react-icons';
 
 import css from './spinner.module.css' with { type: 'css' };
@@ -28,9 +29,8 @@ export function Spinner<T extends SpinnerComponent>({
   onClick,
   children,
 }: SpinnerProps<T>): React.ReactNode {
-  const animationId = React.useMemo(
+  const animationId = useConst(
     () => `spinner${Math.floor(Math.random() * 0xffffffff).toString(16)}`,
-    [],
   );
   const keyframes = React.useMemo(() => {
     const duration = speed * components.length;
@@ -60,7 +60,7 @@ export function Spinner<T extends SpinnerComponent>({
     [speed, components.length, animationId],
   );
 
-  const angle = React.useMemo(() => 360 / components.length, [components]);
+  const angle = React.useMemo(() => 360 / components.length, [components.length]);
 
   const segmentStyle1 = React.useMemo(
     (): React.CSSProperties => ({ transform: `translate(0, -50%) rotate(${270 - angle / 2}deg)` }),

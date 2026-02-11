@@ -3653,9 +3653,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/project@npm:0.1.0-303":
-  version: 0.1.0-303
-  resolution: "@technobuddha/project@npm:0.1.0-303"
+"@technobuddha/project@npm:0.1.0-341":
+  version: 0.1.0-341
+  resolution: "@technobuddha/project@npm:0.1.0-341"
   dependencies:
     "@dotenvx/dotenvx": "npm:1.52.0"
     "@eslint/js": "npm:9.39.2"
@@ -3727,13 +3727,13 @@ __metadata:
     find-unexported-files: dist/find-unexported-files/find-unexported-files.js
     sync: dist/sync/sync.js
     tb: dist/tb/tb.js
-  checksum: 10c0/aba414c638092ddb2e2a3fed6abfa5756d0925d4ee35284b6ba77bfeee63cfe4a278e106e8c81d373d77b8d5fea2646744cda5ad0050e9e46258926879bcd8b6
+  checksum: 10c0/295813d0759d95c7feefa2099d6df8230ff3442e62725d2ed8da74d217891b2d785b5a3e4870cf2f2b2b3f65fb70a6d1b0a4c485dde9056ef07bafbb24c15b55
   languageName: node
   linkType: hard
 
-"@technobuddha/react@npm:0.0.13":
-  version: 0.0.13
-  resolution: "@technobuddha/react@npm:0.0.13"
+"@technobuddha/react@npm:0.0.15":
+  version: 0.0.15
+  resolution: "@technobuddha/react@npm:0.0.15"
   dependencies:
     clsx: "npm:2.1.1"
     query-string: "npm:9.3.1"
@@ -3743,7 +3743,7 @@ __metadata:
     "@mui/styles": ^6.4.8
     react: ^19.2.4
     react-icons: ^5.5.0
-  checksum: 10c0/36a10b777977bb1fce75da388b10aadfe602ec3bcef74407146ec7e88a5d1b3c56359f8cb68aa40b40c2dc9fd3cf41f8b4ee36b178452944ebb82a6aa6cd352d
+  checksum: 10c0/f2d86f9bdc8b65adc4669e00c2a70d719255fae221e9888efec900705845c2cd5f2a7d11add861ce66f73732b80a8f500e3d8dcfc644daf018e1cb1411cda0df
   languageName: node
   linkType: hard
 
@@ -13636,8 +13636,8 @@ __metadata:
     "@technobuddha/controls": "npm:0.0.12"
     "@technobuddha/maze": "npm:0.1.5"
     "@technobuddha/postgres": "npm:0.0.1-19"
-    "@technobuddha/project": "npm:0.1.0-303"
-    "@technobuddha/react": "npm:0.0.13"
+    "@technobuddha/project": "npm:0.1.0-341"
+    "@technobuddha/react": "npm:0.0.15"
     "@types/browserslist-useragent": "npm:3.0.7"
     "@types/cli-progress": "npm:^3.11.6"
     "@types/cookie-parser": "npm:^1.4.10"

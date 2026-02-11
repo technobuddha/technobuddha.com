@@ -38,13 +38,13 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
 
     setShape(value);
 
-    if (g && g.variations.length === 1) {
+    if (g?.variations.length === 1) {
       setVariation(g.variations[0].title);
     } else {
       setVariation(undefined);
     }
 
-    if (g && g.sizes.length === 1) {
+    if (g?.sizes.length === 1) {
       setSize(g.sizes[0].title);
     } else {
       setSize(undefined);

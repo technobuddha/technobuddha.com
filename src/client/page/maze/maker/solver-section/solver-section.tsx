@@ -26,7 +26,7 @@ export const SolverSection: React.FC<SolverSectionProps> = ({ className, onChang
 
     const g = solvers.find((g) => g.title === value);
 
-    if (g && g.variations.length === 1) {
+    if (g?.variations.length === 1) {
       setVariation(g.variations[0].title);
     } else {
       setVariation(undefined);

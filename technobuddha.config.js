@@ -4,18 +4,12 @@ const config = {
   directories: {
     'scripts': {
       environment: 'node',
-      tsconfig: {
-        references: ['src/server', 'src/settings'],
-      }
     },
     'src/api': {
       environment: 'browser',
     },
     'src/client': {
       environment: 'vite-client',
-      tsconfig: {
-        references: ['src/settings']
-      }
     },
     'src/config': {
       environment: 'node',
@@ -25,9 +19,6 @@ const config = {
     },
     'src/settings': {
       environment: 'esnext',
-      tsconfig: {
-        references: ['src/client']
-      }
     },
     'migrations': {
       environment: 'node',

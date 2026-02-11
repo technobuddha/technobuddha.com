@@ -13,5 +13,6 @@
     "noEmit": true
   },
   "include": ["*.config.js", "*.config.ts", "*.setup.ts"],
-  "exclude": []
+  "exclude": [],
+  "references": [{ "path": "src/settings" }]
 }

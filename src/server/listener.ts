@@ -25,9 +25,9 @@ export function listener(app: Express, logger: Logger): void {
     const fileAuthority = path.join(certificateHome, 'technobuddha', 'chain.pem');
 
     void Promise.all([
-      fs.readFile(filePrivate, 'utf8').catch(() => null),
-      fs.readFile(filePublic, 'utf8').catch(() => null),
-      fs.readFile(fileAuthority, 'utf8').catch(() => null),
+      fs.readFile(filePrivate, 'utf-8').catch(() => null),
+      fs.readFile(filePublic, 'utf-8').catch(() => null),
+      fs.readFile(fileAuthority, 'utf-8').catch(() => null),
     ]).then(([key, cert, ca]) => {
       const credentials = key && cert && ca ? { key, cert, ca } : null;
 

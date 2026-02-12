@@ -1,6 +1,6 @@
 import React from 'react';
 import { Checkbox } from '@technobuddha/controls';
-import { Human, type MazeRunner,type MazeSolverProperties } from '@technobuddha/maze';
+import { Human, type MazeRunner, type MazeSolverProperties } from '@technobuddha/maze';
 
 import { type SolverProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';

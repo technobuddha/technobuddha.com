@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, IconButton, Tooltip } from '@technobuddha/controls';
-import { type MazeRunner,type MessageCallback, type MessageOptions } from '@technobuddha/maze';
+import { type MazeRunner, type MessageCallback, type MessageOptions } from '@technobuddha/maze';
 import clsx from 'clsx';
 import { IoTrash } from 'react-icons/io5';
 

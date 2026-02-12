@@ -7,7 +7,7 @@ const config = {
     steps: [
       {
         name: 'Clean',
-        command: 'rm -rf ./dist'
+        command: 'rm -rf ./dist',
       },
       {
         name: 'Technobuddha',
@@ -27,8 +27,8 @@ const config = {
         name: 'Technobuddha',
         command: 'npx vite build',
       },
-    ]
-  }
+    ],
+  },
 };
 
 export default config;

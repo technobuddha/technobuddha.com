@@ -25,8 +25,8 @@ const config = {
       tsconfig: {
         compilerOptions: {
           noEmit: true,
-        }
-      }
+        },
+      },
     },
   },
   tsconfig: {
@@ -41,16 +41,14 @@ const config = {
           '#server/*': ['./src/server/*/index.ts'],
           '#util*': ['./src/util*'],
           '#settings*': ['./src/settings*'],
-          '#config': ['./src/config/index.ts']
+          '#config': ['./src/config/index.ts'],
         },
       },
     },
   },
   git: {
-    ignore: [
-      'artwork'
-    ]
-  }
+    ignore: ['artwork'],
+  },
 };
 
 export default config;

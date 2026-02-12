@@ -17,7 +17,6 @@ export const Footer: React.FC = () => {
           <Typography variant="body2">version {packageJson?.version}</Typography>
         </Box>
         <Box className={css.message}>{footer}</Box>
-
       </Box>
     </AppBar>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Step, StepLabel, Stepper } from '@technobuddha/controls';
 import { memoize } from '@technobuddha/library';
-import { type MazeRunner,type Phase, phases, type PlayMode } from '@technobuddha/maze';
+import { type MazeRunner, type Phase, phases, type PlayMode } from '@technobuddha/maze';
 
 import { playModeIcons } from '../play-mode-icons.tsx';
 import { Section } from '../section/index.ts';

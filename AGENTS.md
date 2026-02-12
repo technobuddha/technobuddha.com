@@ -3,6 +3,7 @@
      🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
      🚨
 -->
+
 # Project Guidelines for AI Agents
 
 This document provides guidelines for AI agents working on this codebase.

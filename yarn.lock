@@ -3622,10 +3622,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/library@npm:2.1.0-68":
-  version: 2.1.0-68
-  resolution: "@technobuddha/library@npm:2.1.0-68"
-  checksum: 10c0/df9676ac04b48033314183d22c0589d65385299e3ef0e1ad1ecd87522d569b9d644c0b520486cc7cea0a0eac31c472c26b4cb4b73f9862307babe7b3a4ed478a
+"@technobuddha/library@npm:2.1.0-70":
+  version: 2.1.0-70
+  resolution: "@technobuddha/library@npm:2.1.0-70"
+  checksum: 10c0/73d1ee63e4fb0e899b631f3781226e6b6d4ff8fa1582962eb8357bb923e4321ced84a56bddcfacf18985ae97bd12ec4538e786f15847fa6709352b5be8ef977f
   languageName: node
   linkType: hard
 
@@ -3653,14 +3653,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/project@npm:0.1.0-341":
-  version: 0.1.0-341
-  resolution: "@technobuddha/project@npm:0.1.0-341"
+"@technobuddha/project@npm:0.1.0-364":
+  version: 0.1.0-364
+  resolution: "@technobuddha/project@npm:0.1.0-364"
   dependencies:
     "@dotenvx/dotenvx": "npm:1.52.0"
     "@eslint/js": "npm:9.39.2"
     "@inquirer/prompts": "npm:8.2.0"
-    "@technobuddha/library": "npm:2.1.0-68"
+    "@technobuddha/library": "npm:2.1.0-70"
     "@types/eslint": "npm:9.6.1"
     "@types/ignore-walk": "npm:4.0.3"
     "@types/jsdom": "npm:^27.0.0"
@@ -3727,7 +3727,7 @@ __metadata:
     find-unexported-files: dist/find-unexported-files/find-unexported-files.js
     sync: dist/sync/sync.js
     tb: dist/tb/tb.js
-  checksum: 10c0/295813d0759d95c7feefa2099d6df8230ff3442e62725d2ed8da74d217891b2d785b5a3e4870cf2f2b2b3f65fb70a6d1b0a4c485dde9056ef07bafbb24c15b55
+  checksum: 10c0/54cf183e60c24323b9cb97db4e75a21538c72b8d480d810edc520a68b21555ad66f49b37e6edd4d38973737621e5cca15ea0375b211185aadf80bc1e3959f426
   languageName: node
   linkType: hard
 
@@ -13636,7 +13636,7 @@ __metadata:
     "@technobuddha/controls": "npm:0.0.12"
     "@technobuddha/maze": "npm:0.1.5"
     "@technobuddha/postgres": "npm:0.0.1-19"
-    "@technobuddha/project": "npm:0.1.0-341"
+    "@technobuddha/project": "npm:0.1.0-364"
     "@technobuddha/react": "npm:0.0.15"
     "@types/browserslist-useragent": "npm:3.0.7"
     "@types/cli-progress": "npm:^3.11.6"

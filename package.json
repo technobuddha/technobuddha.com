@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@react-router/dev": "7.13.0",
-    "@technobuddha/project": "0.1.0-341",
+    "@technobuddha/project": "0.1.0-364",
     "@types/browserslist-useragent": "3.0.7",
     "@types/cli-progress": "^3.11.6",
     "@types/cookie-parser": "^1.4.10",

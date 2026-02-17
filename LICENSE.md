@@ -1,3 +1,8 @@
+<!-- markdown-lint-disable MD041
+     🚨
+     🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
+     🚨
+-->
 # MIT License
 
 Copyright ⓒ 2020–2026 Phil Hill - All Rights Reserved

@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@react-router/dev": "7.13.0",
-    "@technobuddha/project": "0.1.0-364",
+    "@technobuddha/project": "0.1.0-408",
     "@types/browserslist-useragent": "3.0.7",
     "@types/cli-progress": "^3.11.6",
     "@types/cookie-parser": "^1.4.10",
@@ -78,7 +78,7 @@
     "@technobuddha/color": "0.3.3-2",
     "@technobuddha/controls": "0.0.12",
     "@technobuddha/maze": "0.1.5",
-    "@technobuddha/postgres": "0.0.1-19",
+    "@technobuddha/postgres": "0.0.1-22",
     "@technobuddha/react": "0.0.15",
     "@uiw/react-color": "2.9.4",
     "@zxcvbn-ts/core": "3.0.4",

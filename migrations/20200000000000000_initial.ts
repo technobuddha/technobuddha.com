@@ -1,6 +1,9 @@
-exports.shorthands = undefined;
+/* eslint-disable check-file/filename-naming-convention */
+import { type ColumnDefinitions, type MigrationBuilder } from 'node-pg-migrate';
 
-exports.up = pgm => {
+export const shorthands: ColumnDefinitions | undefined = undefined;
+
+export async function up(pgm: MigrationBuilder): Promise<void> {
   pgm.createExtension('uuid-ossp', { ifNotExists: true });
   pgm.createExtension('pgcrypto', { ifNotExists: true });
   pgm.createExtension('citext', { ifNotExists: true });
@@ -33,13 +36,14 @@ exports.up = pgm => {
       expires: { type: 'timestamptz', notNull: true },
     }
   );
-};
 
-exports.down = pgm => {
-  pgm.dropTable('session');
+}
+
+export async function down(pgm: MigrationBuilder): Promise<void> {
+    pgm.dropTable('session');
   pgm.dropTable('account');
 
   pgm.dropExtension('citext', { ifExists: true });
   pgm.dropExtension('pgcrypto', { ifExists: true });
   pgm.dropExtension('uuid-ossp', { ifExists: true });
-};
+}

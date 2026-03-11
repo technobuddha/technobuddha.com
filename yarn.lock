@@ -3607,10 +3607,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/library@npm:2.1.0-78":
-  version: 2.1.0-78
-  resolution: "@technobuddha/library@npm:2.1.0-78"
-  checksum: 10c0/5b0dd687a787b41e3d471bca2d956f93c3faeb2f5d2208c549e0f654b96c71caf085cac418453b9f8b32b68da09091d7e2ace46723d09bbf4d28a0066aee3d6d
+"@technobuddha/library@npm:2.1.0-81":
+  version: 2.1.0-81
+  resolution: "@technobuddha/library@npm:2.1.0-81"
+  checksum: 10c0/681639f2aed0b9f496af1690509d9a9e183a893b381fd49386286a32e9215e1050309f3a26996f221b6049fdf5c577bd16784ce67e96717c31d78cbe0c402274
   languageName: node
   linkType: hard
 
@@ -3638,16 +3638,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/project@npm:0.1.0-408":
-  version: 0.1.0-408
-  resolution: "@technobuddha/project@npm:0.1.0-408"
+"@technobuddha/project@npm:0.1.0-411":
+  version: 0.1.0-411
+  resolution: "@technobuddha/project@npm:0.1.0-411"
   dependencies:
     "@dotenvx/dotenvx": "npm:1.52.0"
     "@eslint/js": "npm:9.39.2"
     "@inquirer/prompts": "npm:8.2.0"
     "@microsoft/tsdoc": "npm:0.16.0"
     "@microsoft/tsdoc-config": "npm:0.18.0"
-    "@technobuddha/library": "npm:2.1.0-78"
+    "@technobuddha/library": "npm:2.1.0-81"
     "@types/eslint": "npm:9.6.1"
     "@types/ignore-walk": "npm:4.0.3"
     "@types/jsdom": "npm:^27.0.0"
@@ -3713,7 +3713,7 @@ __metadata:
     find-unexported-files: dist/find-unexported-files/find-unexported-files.js
     sync: dist/sync/sync.js
     tb: dist/tb/tb.js
-  checksum: 10c0/f2e3e1eb56931747996bebfc84faf01c201dd8a738cfeda13d713e6f35956b2e06a1c3d5a50ad377c79eb3fff7bd0032182d989ad1dcf5dfbae11b1691792e3b
+  checksum: 10c0/f1d6a6f580acca3d6f1b6d59bee611fd3a0f461f0888e76b9a2b629dabff3a5f7fe75d9f9dbf27f268d0af3499cf6ab753a3cb518eaead51f6046b0f75144d23
   languageName: node
   linkType: hard
 
@@ -13525,7 +13525,7 @@ __metadata:
     "@technobuddha/controls": "npm:0.0.12"
     "@technobuddha/maze": "npm:0.1.5"
     "@technobuddha/postgres": "npm:0.0.1-22"
-    "@technobuddha/project": "npm:0.1.0-408"
+    "@technobuddha/project": "npm:0.1.0-411"
     "@technobuddha/react": "npm:0.0.15"
     "@types/browserslist-useragent": "npm:3.0.7"
     "@types/cli-progress": "npm:^3.11.6"

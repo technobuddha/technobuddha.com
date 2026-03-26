@@ -21,7 +21,7 @@ const config = [
   // scripts
   app.lint({
     files: ['scripts/**/*.ts'],
-    ignores: [],
+    ignores: ['scripts/i18next-scanner-typescript/**/*'],
     environment: 'node',
     tsConfig: 'scripts/tsconfig.json',
   }),

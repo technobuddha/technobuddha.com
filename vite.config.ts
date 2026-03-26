@@ -29,7 +29,10 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  plugins: [tsconfigPaths(), react(), svgr()], //, analyzer()],
+  plugins: [react(), svgr()], //, analyzer()],
+  resolve: {
+    tsconfigPaths: true,
+  },
   root: './src/client',
   css: {
     modules: {

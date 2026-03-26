@@ -12,7 +12,6 @@
     "checkJs": true,
     "noEmit": true
   },
-  "include": ["*.config.js", "*.config.ts"],
-  "exclude": [],
-  "references": [{ "path": "src/settings" }]
+  "include": ["*.env", "*.config.js", "*.config.ts"],
+  "exclude": []
 }

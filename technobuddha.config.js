@@ -28,20 +28,24 @@ const config = {
         },
       },
     },
+    '.': {
+      tsconfig: {
+        references: ['src/settings']
+      }
+    }
   },
   tsconfig: {
     base: {
       compilerOptions: {
         paths: {
-          /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
-          '#api/*': ['./src/api/*/index.ts'],
-          '#context/*': ['./src/client/context/*/index.ts'],
-          '#page/*': ['./src/client/page/*/index.ts'],
-          '#client*': ['./src/client*'],
-          '#server/*': ['./src/server/*/index.ts'],
-          '#util*': ['./src/util*'],
-          '#settings*': ['./src/settings*'],
-          '#config': ['./src/config/index.ts'],
+          // '#api/*': ['./src/api/*/index.js'],
+          // '#context/*': ['./src/client/context/*/index.js'],
+          // '#page/*': ['./src/client/page/*/index.ts'],
+          // '#client/*': ['./src/client/*/index.js'],
+          // '#server/*': ['./src/server/*/index.js'],
+          // '#util*': ['./src/util*'],
+          // '#settings*': ['./src/settings*'],
+          // '#config': ['./src/config/index.js'],
         },
       },
     },

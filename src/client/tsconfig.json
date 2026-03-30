@@ -6,6 +6,6 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": { "composite": true, "types": ["vite/client"], "lib": ["esnext", "dom"] },
   "include": ["**/*.tsx", "**/*.d.ts", "**/*.ts"],
-  "exclude": [],
+  "exclude": ["eslint.config.js"],
   "references": [{ "path": "../settings" }, { "path": "../api" }]
 }

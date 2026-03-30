@@ -6,6 +6,10 @@ import { lint } from '@technobuddha/project';
 import { defineConfig } from 'eslint/config';
 
 export default defineConfig([
-  lint({ files: ['*.config.js'], environment: 'node' }),
-  lint({ files: ['*.config.ts'], environment: 'node', typescript: true }),
+  lint({
+    files: ['**/*.ts'],
+    ignores: ['i18next-scanner-typescript/**/*'],
+    environment: 'node',
+    typescript: true,
+  }),
 ]);

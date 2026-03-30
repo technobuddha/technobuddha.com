@@ -6,6 +6,6 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"] },
   "include": ["**/*.ts", "**/*.d.ts"],
-  "exclude": [],
+  "exclude": ["eslint.config.js"],
   "references": [{ "path": "../config" }, { "path": "../settings" }]
 }

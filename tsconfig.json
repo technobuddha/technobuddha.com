@@ -13,5 +13,6 @@
     "noEmit": true
   },
   "include": ["*.env", "*.config.js", "*.config.ts"],
-  "exclude": []
+  "exclude": ["eslint.config.js"],
+  "references": [{ "path": "src/settings" }]
 }

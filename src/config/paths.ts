@@ -1,9 +1,8 @@
-/* eslint-disable n/no-sync */
 import path from 'node:path';
 
-import { err, locateRootDirectorySync } from '@technobuddha/library/node';
+import { err, locatePackageRootSync } from '@technobuddha/library/node';
 
-const home = locateRootDirectorySync();
+const home = locatePackageRootSync();
 if (!home) {
   err('Could not find project root directory');
   process.exit(1);

@@ -42,14 +42,14 @@
     "allowUnreachableCode": false,
     "skipLibCheck": true,
     "paths": {
-      "#api/*": ["./src/api/*/index.ts"],
-      "#context/*": ["./src/client/context/*/index.ts"],
+      "#api/*": ["./src/api/*/index.js"],
+      "#context/*": ["./src/client/context/*/index.js"],
       "#page/*": ["./src/client/page/*/index.ts"],
-      "#client*": ["./src/client*"],
-      "#server/*": ["./src/server/*/index.ts"],
+      "#client/*": ["./src/client/*/index.js"],
+      "#server/*": ["./src/server/*/index.js"],
       "#util*": ["./src/util*"],
       "#settings*": ["./src/settings*"],
-      "#config": ["./src/config/index.ts"]
+      "#config": ["./src/config/index.js"]
     }
   }
 }

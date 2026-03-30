@@ -17,7 +17,7 @@ const config = {
       },
     ],
   },
-  prod: {
+  build: {
     steps: [
       {
         name: 'Clean',

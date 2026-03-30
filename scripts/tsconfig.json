@@ -12,6 +12,6 @@
     "lib": ["esnext"]
   },
   "include": ["**/*.d.ts", "**/*.ts"],
-  "exclude": [],
+  "exclude": ["eslint.config.js"],
   "references": [{ "path": "../src/server" }, { "path": "../src/settings" }]
 }

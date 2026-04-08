@@ -54,7 +54,6 @@ export const NewAlbums: React.FC = () => {
           { name: 'genre', header: t('Genre'), type: 'array', sortBy: ['genre', 'subgenre'] },
           { name: 'subgenre', header: t('Style'), type: 'array', sortBy: ['subgenre'] },
         ]}
-        // eslint-disable-next-line react/jsx-no-bind
         rowRenderer={rowRenderer}
         filters={[
           { type: 'checkbox-list', name: 'genre', Icon: MdMusicNote },

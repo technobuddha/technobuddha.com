@@ -13,8 +13,8 @@ export const Login: React.FC = () => {
   const authentication = useAuthentication();
   const navigate = useNavigate();
   const location = useLocation();
-  const [username, setUsername] = React.useState<string>('');
-  const [password, setPassword] = React.useState<string>('');
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   const handleUsernameChange = React.useCallback((text: string): void => {

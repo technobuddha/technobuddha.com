@@ -10,6 +10,7 @@
     width: 50%;
 
     .site {
+      padding-left: mui-spacing(1);
       position: relative;
     }
 

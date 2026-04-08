@@ -21,12 +21,12 @@ type MessagesProps = {
 };
 
 export const Messages: React.FC<MessagesProps> = ({ runner }) => {
-  const box = React.useRef<HTMLDivElement>(null);
+  const boxRef = React.useRef<HTMLDivElement>(null);
   const [history, setHistory] = React.useState<History[]>([]);
 
   React.useEffect(() => {
-    if (box.current) {
-      box.current.scrollTop = box.current.scrollHeight;
+    if (boxRef.current) {
+      boxRef.current.scrollTop = boxRef.current.scrollHeight;
     }
   }, [history]);
 
@@ -49,7 +49,7 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
   return (
     <Section title="Messages" className={css.messages} info={<MessagesHelp />}>
       <Box className={css.container}>
-        <Box ref={box} className={css.scroll}>
+        <Box ref={boxRef} className={css.scroll}>
           {history.toReversed().map((message) => {
             switch (message.level) {
               case 'error': {

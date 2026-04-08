@@ -4,8 +4,9 @@ import { randomWeightedPick } from '@technobuddha/library';
 import { type MazeSolverProperties } from '@technobuddha/maze';
 import { useHMR } from '@technobuddha/react';
 
+import { Section } from '#page/maze/maker/section';
+
 import { type SolverProducer } from '../maze-maker.tsx';
-import { Section } from '../section/index.ts';
 import { solvers } from '../selection.ts';
 
 import { SolverSectionHelp } from './solver-section.help.tsx';

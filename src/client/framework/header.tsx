@@ -22,27 +22,25 @@ export const Header: React.FC<HeaderProps> = () => {
 
   return (
     <AppBar className={css.header} position="static" elevation={1} component="header">
-      <div>
-        <div className={css.display}>
-          <Typography variant="h5" className={css.site}>
-            {t('Technobuddha')}
-          </Typography>
-        </div>
-        {authenticationSettings.login ?
-          <Box className={css.controls}>
-            <Box className={css.login}>
-              {Boolean(account) && (
-                <Typography>
-                  {account?.first} {account?.last}
-                </Typography>
-              )}
-            </Box>
-            <IconButton onClick={handleUserClick}>
-              <MdAccountCircle className={css.authorization} />
-            </IconButton>
+      <Box className={css.display}>
+        <Typography variant="h5" className={css.site}>
+          {t('Technobuddha')}
+        </Typography>
+      </Box>
+      {authenticationSettings.login && (
+        <Box className={css.controls}>
+          <Box className={css.login}>
+            {Boolean(account) && (
+              <Typography variant="body1">
+                {account?.first} {account?.last}
+              </Typography>
+            )}
           </Box>
-        : null}
-      </div>
+          <IconButton onClick={handleUserClick}>
+            <MdAccountCircle className={css.authorization} />
+          </IconButton>
+        </Box>
+      )}
     </AppBar>
   );
 };

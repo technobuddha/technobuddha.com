@@ -36,12 +36,12 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
 
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [clicked, setClicked] = React.useState(false);
-  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const cancelTimer = (): void => {
-    if (timer.current) {
-      clearTimeout(timer.current);
-      timer.current = undefined;
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = undefined;
     }
   };
 
@@ -55,7 +55,7 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
   const handleMouseOver = React.useCallback((): void => {
     cancelTimer();
     if (!clicked) {
-      timer.current = setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         setMenuOpen(true);
       }, expansionTimeout);
     }

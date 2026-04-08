@@ -26,7 +26,7 @@ export const PaletteDialog: React.FC<PaletteDialogProps> = ({
   onResolve,
   onReject,
 }) => {
-  const [colors, setColors] = React.useState<MazeColors>(value);
+  const [colors, setColors] = React.useState(value);
   const [selected, setSelected] = React.useState<keyof MazeColors>('cell');
 
   const handleSelectionChange = React.useCallback(

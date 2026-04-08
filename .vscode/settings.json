@@ -16,6 +16,5 @@
     "locales",
     "src/client/context/i18n",
     "src/client/page/maze/maker/messages"
-  ],
-  "js/ts.tsdk.path": "node_modules/typescript/lib"
+  ]
 }

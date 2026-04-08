@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { Box, MenuItem, Select, Typography } from '@technobuddha/controls';
 import { create2dArray, nbsp, numberToLetter, range } from '@technobuddha/library';
@@ -239,13 +238,13 @@ export const KnightSolver: React.FC<KnightSolverProps> = ({
   );
 
   React.useEffect(() => {
+    // eslint-disable-next-line react/set-state-in-effect
     setBoard(createBoard(width, height, startX, startY, finishX, finishY));
   }, [height, width, startX, startY, finishX, finishY]);
 
   React.useEffect(() => {
     if (positions.length > 0) {
       for (const pos of positions) {
-        // eslint-disable-next-line react-hooks/immutability
         board[pos.x][pos.y] = move;
       }
       const timer = setTimeout(() => {

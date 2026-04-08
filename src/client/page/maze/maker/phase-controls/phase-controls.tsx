@@ -33,6 +33,7 @@ export const PhaseControls: React.FC<PhaseControlsProps> = ({ runner, onPhasePla
         setPhase((event as CustomEvent).detail as Phase);
       };
       runner.addEventListener('phase', onPhaseChange);
+      // eslint-disable-next-line react/set-state-in-effect
       setPhase(runner.phase);
 
       return () => runner.removeEventListener('phase', onPhaseChange);
@@ -41,7 +42,7 @@ export const PhaseControls: React.FC<PhaseControlsProps> = ({ runner, onPhasePla
     return undefined;
   }, [runner]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react/exhaustive-deps
   const handlePhasePlayModeChange = React.useCallback(
     memoize((p: Phase) => () => {
       const phase = p === 'final' ? 'observe' : p;

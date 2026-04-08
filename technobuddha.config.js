@@ -3,25 +3,25 @@
 const config = {
   directories: {
     'scripts': {
-      environment: 'node',
+      platform: 'node',
     },
     'src/api': {
-      environment: 'browser',
+      platform: 'browser',
     },
     'src/client': {
-      environment: 'vite-client',
+      platform: 'vite-client',
     },
     'src/config': {
-      environment: 'node',
+      platform: 'node',
     },
     'src/server': {
-      environment: 'node',
+      platform: 'node',
     },
     'src/settings': {
-      environment: 'esnext',
+      platform: 'esnext',
     },
     'migrations': {
-      environment: 'node',
+      platform: 'node',
       tsconfig: {
         compilerOptions: {
           noEmit: true,

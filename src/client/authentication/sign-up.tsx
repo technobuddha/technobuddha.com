@@ -15,7 +15,7 @@ import { MdEmail, MdPerson } from 'react-icons/md';
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useNavigate } from '#context/router';
-import { authenticationSettings } from '#settings/authentication';
+import { authenticationSettings } from '#settings/authentication.ts';
 
 import css from './sign-up.module.css' with { type: 'css' };
 
@@ -23,16 +23,16 @@ export const SignUp: React.FC = () => {
   const { t } = useTranslation();
   const authentication = useAuthentication();
   const navigate = useNavigate();
-  const [first, setFirst] = React.useState<string>(empty);
-  const [last, setLast] = React.useState<string>(empty);
-  const [email, setEmail] = React.useState<string>(empty);
-  const [password, setPassword] = React.useState<string>(empty);
-  const [validFirst, setValidFirst] = React.useState<boolean>(false);
-  const [validLast, setValidLast] = React.useState<boolean>(false);
-  const [validEmail, setValidEmail] = React.useState<boolean>(false);
-  const [validPassword, setValidPassword] = React.useState<boolean>(false);
-  const [tosAccepted, setTosAccepted] = React.useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = React.useState<string>(empty);
+  const [first, setFirst] = React.useState(empty);
+  const [last, setLast] = React.useState(empty);
+  const [email, setEmail] = React.useState(empty);
+  const [password, setPassword] = React.useState(empty);
+  const [validFirst, setValidFirst] = React.useState(false);
+  const [validLast, setValidLast] = React.useState(false);
+  const [validEmail, setValidEmail] = React.useState(false);
+  const [validPassword, setValidPassword] = React.useState(false);
+  const [tosAccepted, setTosAccepted] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState(empty);
 
   const handleFirstChange = React.useCallback((text: string): void => {
     setFirst(text);

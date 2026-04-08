@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { clean, create2dArray, space, splitLines } from '@technobuddha/library';
 import { Size, useDerivedState } from '@technobuddha/react';
@@ -39,11 +38,11 @@ type LifeBoardProps = {
 };
 
 const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: LifeBoardProps) => {
-  const canvas = React.useRef<HTMLCanvasElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const width = React.useMemo(() => Math.floor(boxWidth / SIZE), [boxWidth]);
   const height = React.useMemo(() => Math.floor(boxHeight / SIZE), [boxHeight]);
   const [move, setMove] = React.useState(0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react/exhaustive-deps
   const history = React.useMemo(() => [] as boolean[][][], [width, height, start]);
   const [board, setBoard] = useDerivedState(() => {
     const b = create2dArray(width, height, false);
@@ -131,7 +130,7 @@ const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: Lif
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
-      const context = canvas.current!.getContext('2d')!;
+      const context = canvasRef.current!.getContext('2d')!;
 
       if (move === 0) {
         context.fillStyle = 'powderblue';
@@ -233,6 +232,6 @@ const LifeBoard: React.FC<LifeBoardProps> = ({ boxWidth, boxHeight, start }: Lif
 
   return (
     // eslint-disable-next-line jsx-a11y/control-has-associated-label
-    <canvas ref={canvas} width={boxWidth} height={boxHeight} />
+    <canvas ref={canvasRef} width={boxWidth} height={boxHeight} />
   );
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import { shallowEquals } from '@technobuddha/library';
 
 import { type Account, useAPI } from '#context/api';
-import { authenticationSettings } from '#settings/authentication';
+import { authenticationSettings } from '#settings/authentication.ts';
 
 import { AuthenticationContext } from './context.ts';
 
@@ -36,9 +36,9 @@ type AuthenticationProviderProps = {
 };
 
 export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ children }) => {
-  const [error, setError] = React.useState<boolean>(false);
+  const [error, setError] = React.useState(false);
   const [account, setAccount] = React.useState<Account | null>(null);
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [loading, setLoading] = React.useState(true);
   const { authentication } = useAPI() ?? {};
 
   const checkLogin = React.useCallback(async (): Promise<void> => {
@@ -145,5 +145,5 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({ 
     [error, account, login, logout, createAccount],
   );
 
-  return <AuthenticationContext.Provider value={value}>{children}</AuthenticationContext.Provider>;
+  return <AuthenticationContext value={value}>{children}</AuthenticationContext>;
 };

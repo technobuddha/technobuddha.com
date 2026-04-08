@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-handler-names */
 import React from 'react';
 import { type MazeRunner, type Phase, type PlayMode } from '@technobuddha/maze';
 

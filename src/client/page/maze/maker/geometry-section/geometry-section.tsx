@@ -10,7 +10,7 @@ import { type GeometryProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';
 import { distances, geometries, wraparounds } from '../selection.ts';
 
-import { type Debug, defaultDebug } from './debug.ts';
+import { defaultDebug } from './debug.ts';
 import { debugDialog } from './debug-dialog.tsx';
 import { GeometrySectionHelp } from './geometry-section.help.tsx';
 import { paletteDialog } from './palette-dialog.tsx';
@@ -28,8 +28,8 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
   const [variation, setVariation] = React.useState<string>();
   const [size, setSize] = React.useState<string>();
   const [wraparound, setWraparound] = React.useState<string>();
-  const [debug, setDebug] = React.useState<Debug>(defaultDebug);
-  const [color, setColor] = React.useState<MazeColors>(defaultColors);
+  const [debug, setDebug] = React.useState(defaultDebug);
+  const [color, setColor] = React.useState(defaultColors);
   const [distance, setDistance] = React.useState<string>();
   const hmr = useHMR();
 

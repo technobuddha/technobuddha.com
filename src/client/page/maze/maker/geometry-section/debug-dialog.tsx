@@ -41,7 +41,7 @@ export type DebugDialogProps = InstanceProps<Debug, void> & {
 };
 
 export const DebugDialog: React.FC<DebugDialogProps> = ({ value, isOpen, onResolve, onReject }) => {
-  const [show, setShow] = React.useState<string>(
+  const [show, setShow] = React.useState(() =>
     findShow(value.showBridges, value.showCoordinates, value.showKind),
   );
   const [announceMaze, setAnnounceMaze] = React.useState(value.announceMaze);

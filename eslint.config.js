@@ -3,9 +3,8 @@
 // 🚨
 // @ts-check
 import { lint } from '@technobuddha/project';
-import { defineConfig } from 'eslint/config';
 
-export default defineConfig([
-  lint({ files: ['*.config.js'], environment: 'node' }),
-  lint({ files: ['*.config.ts'], environment: 'node', typescript: true }),
-]);
+export default lint(
+  { files: ['*.config.js'], platform: 'node' },
+  { files: ['*.config.ts'], platform: 'node', typescript: true },
+);

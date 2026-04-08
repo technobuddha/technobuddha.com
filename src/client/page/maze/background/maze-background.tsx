@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {
   CanvasDrawing,
@@ -51,14 +50,14 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
   maskColor,
 }) => {
   const { setFooter } = useUserInterface();
-  const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
-  const grid = React.useRef<HTMLDivElement | null>(null);
+  const canvasMazeRef = React.useRef<HTMLCanvasElement | null>(null);
+  const gridRef = React.useRef<HTMLDivElement | null>(null);
   const [mazeNumber, setMazeNumber] = React.useState(0);
   const [runner, setRunner] = React.useState<MazeRunner>();
 
   React.useEffect(() => {
-    if (canvasMaze.current && grid.current) {
-      const drawing = new CanvasDrawing(canvasMaze.current);
+    if (canvasMazeRef.current && gridRef.current) {
+      const drawing = new CanvasDrawing(canvasMazeRef.current);
       drawing.clear();
 
       const {
@@ -74,8 +73,8 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         title: solverName,
       } = chooser(solvers)!;
 
-      const cRect = canvasMaze.current.getBoundingClientRect();
-      const rects = Array.from(grid.current.children).flatMap((child) =>
+      const cRect = canvasMazeRef.current.getBoundingClientRect();
+      const rects = Array.from(gridRef.current.children).flatMap((child) =>
         Array.from(child.children).map((grandChild) => grandChild.getBoundingClientRect()),
       );
 
@@ -111,6 +110,7 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
         new Generator({ ...props, ...generatorProps });
       const selectedSolver = (props: MazeSolverProperties): MazeSolver =>
         new Solver({ ...props, robots: [], ...solverProps });
+      // eslint-disable-next-line react/set-state-in-effect
       setRunner((r) => {
         r?.abort();
         return new MazeRunner({
@@ -139,12 +139,12 @@ export const MazeBoard: React.FC<MazeBoardProps> = ({
     <div className={css.mazeBackground} style={{ width: boxWidth, height: boxHeight }}>
       <canvas
         aria-label="A maze being created and solved"
-        ref={canvasMaze}
+        ref={canvasMazeRef}
         width={boxWidth}
         height={boxHeight}
         className={css.canvas}
       />
-      <div ref={grid} className={css.children} style={{ width: boxWidth, height: boxHeight }}>
+      <div ref={gridRef} className={css.children} style={{ width: boxWidth, height: boxHeight }}>
         {children}
       </div>
     </div>

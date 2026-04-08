@@ -19,6 +19,7 @@ export const DemoMode: React.FC<DemoModeProps> = ({ runner }) => {
         setPhase((event as CustomEvent).detail as Phase);
       };
       runner.addEventListener('phase', onPhaseChange);
+      // eslint-disable-next-line react/set-state-in-effect
       setPhase(runner.phase);
 
       return () => runner.removeEventListener('phase', onPhaseChange);

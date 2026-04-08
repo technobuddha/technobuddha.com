@@ -72,7 +72,7 @@ export const HumanSection: React.FC<HumanSectionProps> = ({ className, onChange,
         }),
       title: 'Human',
     }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react/exhaustive-deps
   }, [finalDestination, markVisited, markDeadEnds, hideReverse, onChange, hmr]);
 
   return (

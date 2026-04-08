@@ -26,6 +26,7 @@ export const GameControls: React.FC<GameControlsProps> = ({ runner }) => {
         setPhase((event as CustomEvent).detail as Phase);
       };
       runner.addEventListener('phase', onPhaseChange);
+      // eslint-disable-next-line react/set-state-in-effect
       setPhase(runner.phase);
 
       return () => runner.removeEventListener('phase', onPhaseChange);
@@ -34,7 +35,7 @@ export const GameControls: React.FC<GameControlsProps> = ({ runner }) => {
     return undefined;
   }, [runner]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react/exhaustive-deps
   const handleCommand = React.useCallback(
     memoize((key: string) => (_event: React.MouseEvent<HTMLButtonElement>) => {
       const human = runner?.solver as Human;

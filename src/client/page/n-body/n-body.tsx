@@ -1,12 +1,11 @@
 // cspell:words LUTETIA, SIWA, MATHILDE, GEOGRAPHOS, TOUTATIS, OTAWARA, ITOKAWA, BENNU, HAUMEA, GONGGONG, INTERAMNIA, KALLIOPE, MAKEMAKE
 
-/* eslint-disable react/no-this-in-sfc */
 import React from 'react';
 
 import css from './n-body.module.css' with { type: 'css' };
 
 export const NBody: React.FC = () => {
-  const div = React.useRef<HTMLDivElement>(null);
+  const divRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -17,8 +16,8 @@ export const NBody: React.FC = () => {
     const TIME_SCALE = 1000;
     const GRAVITY_SCALE = 100;
 
-    const centerX = div.current!.offsetWidth / 2;
-    const centerY = div.current!.offsetHeight / 2;
+    const centerX = divRef.current!.offsetWidth / 2;
+    const centerY = divRef.current!.offsetHeight / 2;
 
     class Velocity {
       public x: number;
@@ -97,7 +96,7 @@ export const NBody: React.FC = () => {
         this.element.innerHTML = `● ${name}`;
         this.element.style.color = color;
         this.element.style.visibility = 'hidden';
-        div.current!.append(this.element);
+        divRef.current!.append(this.element);
 
         this.trails = Array.from({ length: 100 })
           .fill(null)
@@ -107,7 +106,7 @@ export const NBody: React.FC = () => {
             trail.innerHTML = '·';
             trail.style.color = color;
             trail.style.visibility = 'hidden';
-            div.current!.append(trail);
+            divRef.current!.append(trail);
             return trail;
           });
         this.trailPointer = 0;
@@ -692,5 +691,5 @@ export const NBody: React.FC = () => {
     };
   });
 
-  return <div ref={div} className={css.space} />;
+  return <div ref={divRef} className={css.space} />;
 };

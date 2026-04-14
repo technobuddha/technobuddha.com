@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { useTranslation } from '#context/i18n';
 import { Route, Routes } from '#context/router';
-import { pages } from '#settings/pages.jsx';
+import { pages } from '#settings/pages.tsx';
 
 import css from './main.module.css' with { type: 'css' };
 

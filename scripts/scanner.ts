@@ -19,7 +19,7 @@ import {
   type TranslateReturn,
   writeTranslations,
 } from '#server/translation';
-import { i18nextInit } from '#settings/i18next';
+import { i18nextInit } from '#settings/i18next.ts';
 
 void (async function main() {
   const foreign =

@@ -10,7 +10,7 @@ export function translation(app: Application, logger: Logger): void {
     // if (process.env.GCLOUD_PROJECT && process.env.GOOGLE_APPLICATION_CREDENTIALS) {
     const translationWorker = new TranslationWorker(logger);
 
-    app.post('/locales/*', (req, res) => {
+    app.post('/locales/*ns', (req, res) => {
       const [, , , nsFile] = req.url.split('/');
       const [ns] = nsFile.split('.');
 

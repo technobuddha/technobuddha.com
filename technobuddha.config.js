@@ -34,22 +34,6 @@ const config = {
       }
     }
   },
-  tsconfig: {
-    base: {
-      compilerOptions: {
-        paths: {
-          // '#api/*': ['./src/api/*/index.js'],
-          // '#context/*': ['./src/client/context/*/index.js'],
-          // '#page/*': ['./src/client/page/*/index.ts'],
-          // '#client/*': ['./src/client/*/index.js'],
-          // '#server/*': ['./src/server/*/index.js'],
-          // '#util*': ['./src/util*'],
-          // '#settings*': ['./src/settings*'],
-          // '#config': ['./src/config/index.js'],
-        },
-      },
-    },
-  },
   git: {
     ignore: ['artwork'],
   },

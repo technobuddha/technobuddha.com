@@ -14,8 +14,9 @@
     "#client/*": "./src/client/*/index.js",
     "#server/*": "./src/server/*/index.js",
     "#util*": "./src/util*",
-    "#settings*": "./src/settings*",
-    "#config": "./src/config/index.js"
+    "#settings/*": "./src/settings/*.ts",
+    "#config": "./src/config/index.js",
+    "#env": "./src/config/env.js"
   },
   "author": {
     "name": "Phil Hill",

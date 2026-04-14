@@ -1,4 +1,4 @@
-import '@technobuddha/project/env';
+import '#env';
 
 import chalk from 'chalk';
 import express from 'express';

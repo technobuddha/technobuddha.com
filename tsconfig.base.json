@@ -40,7 +40,6 @@
     "noImplicitOverride": true,
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
-    "skipLibCheck": true,
-    "paths": {}
+    "skipLibCheck": true
   }
 }

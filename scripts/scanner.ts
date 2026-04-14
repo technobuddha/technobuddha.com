@@ -1,5 +1,5 @@
 #!/bin/env -S tsx
-import '@technobuddha/project/env';
+import '#env';
 
 import path from 'node:path';
 import stream from 'node:stream';
@@ -7,8 +7,8 @@ import stream from 'node:stream';
 import { isString } from '@technobuddha/library';
 import { out } from '@technobuddha/library/node';
 import chalk from 'chalk';
-import { type I18NextScannerConfig } from 'i18next-scanner';
 import scanner from 'i18next-scanner';
+import { type I18NextScannerConfig } from 'i18next-scanner';
 import typescriptTransform from 'i18next-scanner-typescript';
 import vfs from 'vinyl-fs';
 
@@ -105,6 +105,7 @@ void (async function main() {
     .pipe(
       new stream.Transform({
         objectMode: true,
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         async transform(file, _enc, callback) {
           const [lng, ns] = file.path.split('/');
           const newTranslations = JSON.parse(file.contents.toString()) as Record<string, string>;

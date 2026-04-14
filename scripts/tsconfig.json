@@ -13,5 +13,9 @@
   },
   "include": ["**/*.d.ts", "**/*.ts"],
   "exclude": ["eslint.config.js"],
-  "references": [{ "path": "../src/server" }]
+  "references": [
+    { "path": "../src/config" },
+    { "path": "../src/server" },
+    { "path": "../src/settings" }
+  ]
 }

@@ -1,5 +1,5 @@
 #!/bin/env -S ts-node --prefer-ts-exts  -r tsconfig-paths/register
-import '@technobuddha/project/env';
+import '#env';
 
 import { readLines } from '@technobuddha/library/node';
 import chalk from 'chalk';

@@ -1,6 +1,6 @@
+import { db } from '@technobuddha/postgres';
 import { type SnakeCase } from 'type-fest';
 
-import { db } from './driver.ts';
 import { type Track } from './schema/index.ts';
 
 type DBTrack = { [Key in keyof Track as SnakeCase<Key>]: Track[Key] };

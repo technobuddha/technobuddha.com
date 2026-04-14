@@ -2,10 +2,9 @@
 import '#env';
 
 import { readLines } from '@technobuddha/library/node';
+import { db } from '@technobuddha/postgres';
 import chalk from 'chalk';
 import cliProgress from 'cli-progress';
-
-import { db } from '#server/db';
 
 const partOfSet = /^([0-9]+)(\/[0-9]+)?(\s*.*)$/v;
 function parsePartOfSet(text: string | null | undefined): {

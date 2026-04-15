@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import { splitLines } from '@technobuddha/library';
 import express from 'express';
-import { type Application, /*type NextFunction,*/ type Request, type Response } from 'express';
+import { type Application, type Request, type Response } from 'express';
 import { type Logger } from 'winston';
 
 import { paths } from '#config';

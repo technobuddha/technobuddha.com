@@ -1,3 +1,4 @@
+/// <dependency package="mustache" />
 import { replacer, reviver } from '@technobuddha/library';
 import chalk from 'chalk';
 import cookieParser from 'cookie-parser';

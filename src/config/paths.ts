@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { err, locatePackageRootSync } from '@technobuddha/library/node';
+import { err, locatePackageRootSync } from '@technobuddha/library';
 
 const home = locatePackageRootSync();
 if (!home) {

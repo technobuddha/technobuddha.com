@@ -4,7 +4,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "composite": true, "types": [], "lib": ["esnext", "dom"] },
+  "compilerOptions": { "composite": true, "lib": ["esnext", "dom"], "types": [] },
   "include": ["**/*.ts"],
   "exclude": ["eslint.config.js"]
 }

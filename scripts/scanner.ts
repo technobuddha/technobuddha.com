@@ -4,8 +4,7 @@ import '#env';
 import path from 'node:path';
 import stream from 'node:stream';
 
-import { isString } from '@technobuddha/library';
-import { out } from '@technobuddha/library/node';
+import { isString, out } from '@technobuddha/library';
 import chalk from 'chalk';
 import scanner from 'i18next-scanner';
 import { type I18NextScannerConfig } from 'i18next-scanner';

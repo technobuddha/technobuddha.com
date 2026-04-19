@@ -2,7 +2,5 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "parthr2031.colorful-comments",
-    "tal7aouy.indent-colorizer"
   ]
 }

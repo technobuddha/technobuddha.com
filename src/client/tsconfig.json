@@ -4,7 +4,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "composite": true, "types": ["vite/client"], "lib": ["esnext", "dom"] },
+  "compilerOptions": { "composite": true, "lib": ["esnext", "dom"], "types": ["vite/client"] },
   "include": ["**/*.tsx", "**/*.d.ts", "**/*.ts"],
   "exclude": ["eslint.config.js"],
   "references": [{ "path": "../api" }, { "path": "../settings" }]

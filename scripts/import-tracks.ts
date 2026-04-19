@@ -1,7 +1,7 @@
 #!/bin/env -S ts-node --prefer-ts-exts  -r tsconfig-paths/register
 import '#env';
 
-import { readLines } from '@technobuddha/library/node';
+import { readLines } from '@technobuddha/library';
 import { db } from '@technobuddha/postgres';
 import chalk from 'chalk';
 import cliProgress from 'cli-progress';

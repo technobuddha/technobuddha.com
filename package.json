@@ -2,7 +2,8 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "technobuddha.com",
   "description": "Technobuddha application",
-  "version": "9.1.1",
+  "version": "9.1.1-0",
+  "stableVersion": "9.1.0",
   "license": "MIT",
   "type": "module",
   "types": "dist/index.d.ts",
@@ -89,7 +90,7 @@
     "zxcvbn": "4.4.2"
   },
   "devDependencies": {
-    "@technobuddha/project": "1.0.0-5",
+    "@technobuddha/project": "1.0.0-8",
     "@types/cli-progress": "3.11.6",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
@@ -128,5 +129,5 @@
   "technobuddhaProject": {
     "created": "2020-04-01T04:20:42.690Z"
   },
-  "packageManager": "yarn@4.13.0"
+  "packageManager": "yarn@4.14.1"
 }

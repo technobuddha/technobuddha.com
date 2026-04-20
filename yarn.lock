@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 8
+  version: 9
   cacheKey: 10c0
 
 "@asamuzakjp/css-color@npm:^5.1.5":
@@ -2646,9 +2646,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@technobuddha/project@npm:1.0.0-5":
-  version: 1.0.0-5
-  resolution: "@technobuddha/project@npm:1.0.0-5"
+"@technobuddha/project@npm:1.0.0-8":
+  version: 1.0.0-8
+  resolution: "@technobuddha/project@npm:1.0.0-8"
   dependencies:
     "@commander-js/extra-typings": "npm:14.0.0"
     "@dotenvx/dotenvx": "npm:1.61.1"
@@ -2691,7 +2691,7 @@ __metadata:
     eslint-plugin-react-web-api: "npm:4.2.3"
     eslint-plugin-react-x: "npm:4.2.3"
     eslint-plugin-simple-import-sort: "npm:13.0.0"
-    eslint-plugin-technobuddha: "npm:3.0.0-8"
+    eslint-plugin-technobuddha: "npm:2.0.0-1"
     eslint-plugin-unicorn: "npm:64.0.0"
     globals: "npm:17.5.0"
     iconv-lite: "npm:0.7.2"
@@ -2721,7 +2721,7 @@ __metadata:
     eslint-comments: dist/eslint-comments/eslint-comments.js
     tb: dist/tb/tb.js
     unexported-files: dist/unexported-files/unexported-files.js
-  checksum: 10c0/428f2f86010f084c09e37857514e4fc3288516b8a5b271c8e76cf9140a88333398403ff9bd940741f5dad6e3e4652cb0167fa43f396722c8906a9e7b06e87110
+  checksum: 10c0/70c3577a47e75e602e4aa7d0ecccf8c5de61f63d981f9162815e8f3eb5a0cc8d6a41293655cb8dd7174fceed653150311933b54e9ab7236ce265d02931bf7283
   languageName: node
   linkType: hard
 
@@ -6338,16 +6338,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-technobuddha@npm:3.0.0-8":
-  version: 3.0.0-8
-  resolution: "eslint-plugin-technobuddha@npm:3.0.0-8"
+"eslint-plugin-technobuddha@npm:2.0.0-1":
+  version: 2.0.0-1
+  resolution: "eslint-plugin-technobuddha@npm:2.0.0-1"
   dependencies:
     "@microsoft/tsdoc": "npm:0.16.0"
     "@microsoft/tsdoc-config": "npm:0.18.1"
     "@technobuddha/library": "npm:2.1.0-111"
     eslint: "npm:10.2.1"
     get-tsconfig: "npm:4.14.0"
-  checksum: 10c0/1737d173f67a86c5c0666c2ab6bcb91264d8c8f35f4d4ad88a391f92ade282b23b16c70a6a5fe46d65b7f33223a066b5be1c6336cdff6016368dffcc84a51928
+  checksum: 10c0/0594fec7931d3e4004e068bb5f61005f77728bb04fe6ef95b31e80bf758e128c43b8db9c261c0a24448526d4ee97cb22712f531995aea2a83ed03508e6381e48
   languageName: node
   linkType: hard
 
@@ -11532,7 +11532,7 @@ __metadata:
     "@technobuddha/library": "npm:2.1.0-111"
     "@technobuddha/maze": "npm:0.1.9"
     "@technobuddha/postgres": "npm:0.0.1-29"
-    "@technobuddha/project": "npm:1.0.0-5"
+    "@technobuddha/project": "npm:1.0.0-8"
     "@technobuddha/react": "npm:0.0.20"
     "@types/cli-progress": "npm:3.11.6"
     "@types/cookie-parser": "npm:^1.4.10"

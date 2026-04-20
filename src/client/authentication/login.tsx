@@ -1,10 +1,10 @@
 import React from 'react';
+import { Alert, Box, Button, PasswordField, TextField, Typography } from '@technobuddha/controls';
 import { MdEmail } from 'react-icons/md';
 
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useLocation, useNavigate } from '#context/router';
-import { Alert, Box, Button, PasswordField, TextField, Typography } from '#control';
 
 import css from './login.module.css' with { type: 'css' };
 
@@ -13,8 +13,8 @@ export const Login: React.FC = () => {
   const authentication = useAuthentication();
   const navigate = useNavigate();
   const location = useLocation();
-  const [username, setUsername] = React.useState<string>('');
-  const [password, setPassword] = React.useState<string>('');
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   const handleUsernameChange = React.useCallback((text: string): void => {

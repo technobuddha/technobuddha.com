@@ -1,9 +1,9 @@
 import React from 'react';
+import { DelayedLoading } from '@technobuddha/controls';
 import { DataGrid } from '@technobuddha/react';
 
 import { type Genre } from '#context/api';
 import { useAPI } from '#context/api';
-import { DelayedLoading } from '#control';
 
 export const Genres: React.FC = () => {
   const api = useAPI();

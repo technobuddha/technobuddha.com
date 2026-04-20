@@ -49,7 +49,7 @@ export async function readTranslations(
   const filename = path.join(paths.locales, lng, `${group ? `${ns}.${group}` : ns}.json`);
 
   return fs
-    .readFile(filename, 'utf8')
+    .readFile(filename, 'utf-8')
     .then((data) => JSON.parse(data))
     .catch(() => {});
 }

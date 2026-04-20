@@ -1,12 +1,12 @@
 import React from 'react';
-import { type Phase, type Runner } from '@technobuddha/maze';
+import { type MazeRunner, type Phase } from '@technobuddha/maze';
 
 import { Section } from '../section/index.ts';
 
 import css from './demo-mode.module.css' with { type: 'css' };
 
 export type DemoModeProps = {
-  readonly runner: Runner | undefined;
+  readonly runner: MazeRunner | undefined;
   readonly children?: never;
 };
 
@@ -19,6 +19,7 @@ export const DemoMode: React.FC<DemoModeProps> = ({ runner }) => {
         setPhase((event as CustomEvent).detail as Phase);
       };
       runner.addEventListener('phase', onPhaseChange);
+      // eslint-disable-next-line react/set-state-in-effect
       setPhase(runner.phase);
 
       return () => runner.removeEventListener('phase', onPhaseChange);

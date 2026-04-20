@@ -1,6 +1,4 @@
 import React from 'react';
-import { create, type InstanceProps } from 'react-modal-promise';
-
 import {
   Button,
   Checkbox,
@@ -10,7 +8,8 @@ import {
   DialogTitle,
   MenuItem,
   Select,
-} from '#control';
+} from '@technobuddha/controls';
+import { create, type InstanceProps } from 'react-modal-promise';
 
 import { type Debug, shows } from './debug.ts';
 
@@ -42,7 +41,7 @@ export type DebugDialogProps = InstanceProps<Debug, void> & {
 };
 
 export const DebugDialog: React.FC<DebugDialogProps> = ({ value, isOpen, onResolve, onReject }) => {
-  const [show, setShow] = React.useState<string>(
+  const [show, setShow] = React.useState(() =>
     findShow(value.showBridges, value.showCoordinates, value.showKind),
   );
   const [announceMaze, setAnnounceMaze] = React.useState(value.announceMaze);

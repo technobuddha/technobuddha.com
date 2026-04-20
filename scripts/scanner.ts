@@ -1,11 +1,13 @@
-#!/bin/env -S tsx -r ./src/config/env.ts
+#!/bin/env -S tsx
+import '#env';
+
 import path from 'node:path';
 import stream from 'node:stream';
 
 import { isString, out } from '@technobuddha/library';
 import chalk from 'chalk';
-import { type I18NextScannerConfig } from 'i18next-scanner';
 import scanner from 'i18next-scanner';
+import { type I18NextScannerConfig } from 'i18next-scanner';
 import typescriptTransform from 'i18next-scanner-typescript';
 import vfs from 'vinyl-fs';
 
@@ -16,7 +18,7 @@ import {
   type TranslateReturn,
   writeTranslations,
 } from '#server/translation';
-import { i18nextInit } from '#settings/i18next';
+import { i18nextInit } from '#settings/i18next.ts';
 
 void (async function main() {
   const foreign =
@@ -102,6 +104,7 @@ void (async function main() {
     .pipe(
       new stream.Transform({
         objectMode: true,
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         async transform(file, _enc, callback) {
           const [lng, ns] = file.path.split('/');
           const newTranslations = JSON.parse(file.contents.toString()) as Record<string, string>;

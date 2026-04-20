@@ -1,8 +1,4 @@
 import React from 'react';
-import { capitalize } from '@technobuddha/library';
-import { type Phase, type PlayMode, playModes } from '@technobuddha/maze';
-import { create, type InstanceProps } from 'react-modal-promise';
-
 import {
   Button,
   Dialog,
@@ -12,7 +8,10 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Typography,
-} from '#control';
+} from '@technobuddha/controls';
+import { capitalize } from '@technobuddha/library';
+import { type Phase, type PlayMode, playModes } from '@technobuddha/maze';
+import { create, type InstanceProps } from 'react-modal-promise';
 
 import { playModeIcons } from '../play-mode-icons.tsx';
 

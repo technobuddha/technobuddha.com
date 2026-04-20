@@ -1,7 +1,7 @@
 import React from 'react';
+import { AppBar, Box, Typography } from '@technobuddha/controls';
 
 import { useUserInterface } from '#context/user-interface';
-import { AppBar, Box, Typography } from '#control';
 
 import packageJson from '../../../package.json' with { type: 'json' };
 

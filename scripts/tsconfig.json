@@ -4,12 +4,12 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../tsconfig.base.json",
-  "compilerOptions": { "composite": true, "types": ["node"], "lib": ["esnext"] },
+  "compilerOptions": { "composite": true, "lib": ["esnext"], "types": ["node"] },
   "include": ["**/*.d.ts", "**/*.ts"],
-  "exclude": [],
+  "exclude": ["eslint.config.js"],
   "references": [
     { "path": "../src/config" },
-    { "path": "../src/settings" },
-    { "path": "../src/server" }
+    { "path": "../src/server" },
+    { "path": "../src/settings" }
   ]
 }

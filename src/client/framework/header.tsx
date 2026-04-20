@@ -1,12 +1,11 @@
 import React from 'react';
+import { AppBar, Box, IconButton, Typography } from '@technobuddha/controls';
 import { MdAccountCircle } from 'react-icons/md';
 
 import { useAuthentication } from '#context/authentication';
-// import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useNavigate } from '#context/router';
-import { AppBar, Box, IconButton, Typography } from '#control';
-import { authenticationSettings } from '#settings/authentication';
+import { authenticationSettings } from '#settings/authentication.ts';
 
 import css from './header.module.css' with { type: 'css' };
 
@@ -23,16 +22,16 @@ export const Header: React.FC<HeaderProps> = () => {
 
   return (
     <AppBar className={css.header} position="static" elevation={1} component="header">
-      <div className={css.display}>
+      <Box className={css.display}>
         <Typography variant="h5" className={css.site}>
           {t('Technobuddha')}
         </Typography>
-      </div>
-      {authenticationSettings.login ?
+      </Box>
+      {authenticationSettings.login && (
         <Box className={css.controls}>
           <Box className={css.login}>
             {Boolean(account) && (
-              <Typography>
+              <Typography variant="body1">
                 {account?.first} {account?.last}
               </Typography>
             )}
@@ -41,7 +40,7 @@ export const Header: React.FC<HeaderProps> = () => {
             <MdAccountCircle className={css.authorization} />
           </IconButton>
         </Box>
-      : null}
+      )}
     </AppBar>
   );
 };

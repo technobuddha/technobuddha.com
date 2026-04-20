@@ -1,8 +1,7 @@
 import React from 'react';
+import { Button, Step, StepLabel, Stepper } from '@technobuddha/controls';
 import { memoize } from '@technobuddha/library';
-import { type Phase, phases, type PlayMode, type Runner } from '@technobuddha/maze';
-
-import { Button, Step, StepLabel, Stepper } from '#control';
+import { type MazeRunner, type Phase, phases, type PlayMode } from '@technobuddha/maze';
 
 import { playModeIcons } from '../play-mode-icons.tsx';
 import { Section } from '../section/index.ts';
@@ -13,7 +12,7 @@ import { phasePlayModeDialog } from './phase-play-mode-dialog.tsx';
 import css from './phase-controls.module.css' with { type: 'css' };
 
 export type PhaseControlsProps = {
-  readonly runner?: Runner;
+  readonly runner?: MazeRunner;
 
   readonly onPhasePlayModeChange?: (this: void, phase: Phase, value: PlayMode) => void;
   readonly children?: never;
@@ -34,6 +33,7 @@ export const PhaseControls: React.FC<PhaseControlsProps> = ({ runner, onPhasePla
         setPhase((event as CustomEvent).detail as Phase);
       };
       runner.addEventListener('phase', onPhaseChange);
+      // eslint-disable-next-line react/set-state-in-effect
       setPhase(runner.phase);
 
       return () => runner.removeEventListener('phase', onPhaseChange);
@@ -42,7 +42,7 @@ export const PhaseControls: React.FC<PhaseControlsProps> = ({ runner, onPhasePla
     return undefined;
   }, [runner]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react/exhaustive-deps
   const handlePhasePlayModeChange = React.useCallback(
     memoize((p: Phase) => () => {
       const phase = p === 'final' ? 'observe' : p;

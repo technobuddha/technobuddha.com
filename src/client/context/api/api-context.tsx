@@ -28,7 +28,7 @@ export type API = {
 
 const APIContext = React.createContext<API>(null!);
 export function useAPI(): API {
-  return React.useContext(APIContext);
+  return React.use(APIContext);
 }
 
 type APIProviderProps = {
@@ -55,5 +55,5 @@ export const APIProvider: React.FC<APIProviderProps> = ({ children }) => {
     [],
   );
 
-  return <APIContext.Provider value={value}>{children}</APIContext.Provider>;
+  return <APIContext value={value}>{children}</APIContext>;
 };

@@ -1,8 +1,9 @@
+/// <dependency package="mustache" />
 import { replacer, reviver } from '@technobuddha/library';
 import chalk from 'chalk';
 import cookieParser from 'cookie-parser';
-import { type Application } from 'express';
 import express from 'express';
+import { type Application } from 'express';
 import mustacheExpress from 'mustache-express';
 import responseTime from 'response-time';
 import { type Logger } from 'winston';

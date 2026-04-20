@@ -1,9 +1,8 @@
 import React from 'react';
-import { type MessageCallback, type MessageOptions, type Runner } from '@technobuddha/maze';
+import { Box, IconButton, Tooltip } from '@technobuddha/controls';
+import { type MazeRunner, type MessageCallback, type MessageOptions } from '@technobuddha/maze';
 import clsx from 'clsx';
 import { IoTrash } from 'react-icons/io5';
-
-import { Box, IconButton, Tooltip } from '#control';
 
 import { Section } from '../section/index.ts';
 
@@ -17,17 +16,17 @@ type History = {
 } & MessageOptions;
 
 type MessagesProps = {
-  readonly runner: Runner | undefined;
+  readonly runner: MazeRunner | undefined;
   readonly children?: never;
 };
 
 export const Messages: React.FC<MessagesProps> = ({ runner }) => {
-  const box = React.useRef<HTMLDivElement>(null);
+  const boxRef = React.useRef<HTMLDivElement>(null);
   const [history, setHistory] = React.useState<History[]>([]);
 
   React.useEffect(() => {
-    if (box.current) {
-      box.current.scrollTop = box.current.scrollHeight;
+    if (boxRef.current) {
+      boxRef.current.scrollTop = boxRef.current.scrollHeight;
     }
   }, [history]);
 
@@ -50,7 +49,7 @@ export const Messages: React.FC<MessagesProps> = ({ runner }) => {
   return (
     <Section title="Messages" className={css.messages} info={<MessagesHelp />}>
       <Box className={css.container}>
-        <Box ref={box} className={css.scroll}>
+        <Box ref={boxRef} className={css.scroll}>
           {history.toReversed().map((message) => {
             switch (message.level) {
               case 'error': {

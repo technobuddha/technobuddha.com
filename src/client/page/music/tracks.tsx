@@ -1,10 +1,10 @@
 import React from 'react';
+import { DelayedLoading } from '@technobuddha/controls';
 import { DataGrid } from '@technobuddha/react';
 import { MdAlbum, MdGroup, MdMusicNote } from 'react-icons/md';
 
 import { type Track } from '#context/api';
 import { useAPI } from '#context/api';
-import { DelayedLoading } from '#control';
 
 export const Tracks: React.FC = () => {
   const api = useAPI();

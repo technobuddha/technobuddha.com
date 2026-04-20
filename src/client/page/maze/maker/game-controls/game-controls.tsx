@@ -1,10 +1,9 @@
 import React from 'react';
+import { Button, Tooltip } from '@technobuddha/controls';
 import { memoize } from '@technobuddha/library';
 import { type Human, type MazeRunner, type Phase } from '@technobuddha/maze';
 import { GiExitDoor } from 'react-icons/gi';
 import { RiArrowTurnBackLine, RiArrowUpLine, RiRestartLine } from 'react-icons/ri';
-
-import { Button, Tooltip } from '#control';
 
 import { playModeIcons } from '../play-mode-icons.tsx';
 import { Section } from '../section/index.ts';
@@ -27,6 +26,7 @@ export const GameControls: React.FC<GameControlsProps> = ({ runner }) => {
         setPhase((event as CustomEvent).detail as Phase);
       };
       runner.addEventListener('phase', onPhaseChange);
+      // eslint-disable-next-line react/set-state-in-effect
       setPhase(runner.phase);
 
       return () => runner.removeEventListener('phase', onPhaseChange);
@@ -35,7 +35,7 @@ export const GameControls: React.FC<GameControlsProps> = ({ runner }) => {
     return undefined;
   }, [runner]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react/exhaustive-deps
   const handleCommand = React.useCallback(
     memoize((key: string) => (_event: React.MouseEvent<HTMLButtonElement>) => {
       const human = runner?.solver as Human;

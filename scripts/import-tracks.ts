@@ -1,13 +1,12 @@
-#!/bin/env -S ts-node --prefer-ts-exts  -r ./config/env.ts -r tsconfig-paths/register
-import 'dotenv/config';
+#!/bin/env -S ts-node --prefer-ts-exts  -r tsconfig-paths/register
+import '#env';
 
+import { readLines } from '@technobuddha/library';
+import { db } from '@technobuddha/postgres';
 import chalk from 'chalk';
 import cliProgress from 'cli-progress';
-import nReadLines from 'n-readlines';
 
-import { db } from '#server/db';
-
-const partOfSet = /^([0-9]+)(\/[0-9]+)?(\s*.*)$/u;
+const partOfSet = /^([0-9]+)(\/[0-9]+)?(\s*.*)$/v;
 function parsePartOfSet(text: string | null | undefined): {
   disc: number;
   set: number;
@@ -59,17 +58,14 @@ void (async function main() {
 
     for (const file of ['/media/music/tracks.mldata']) {
       //cspell:ignore mldata
-      // eslint-disable-next-line new-cap
-      const lineReader = new nReadLines(file);
+      const lineReader = readLines(file);
 
-      let line: Buffer | false;
       let index = 0;
-
-      while ((line = lineReader.next())) {
+      for await (const line of lineReader) {
         if (index++ === 0) {
-          b1.start(Number.parseInt(line.toString()), 0, { speed: 'N/A' });
+          b1.start(Number.parseInt(line), 0, { speed: 'N/A' });
         } else {
-          const json = JSON.parse(line.toString());
+          const json = JSON.parse(line);
           const {
             ContentID,
             Path,

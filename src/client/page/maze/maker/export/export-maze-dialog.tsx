@@ -1,7 +1,4 @@
 import React from 'react';
-import { type Runner, type ShowDistances } from '@technobuddha/maze';
-import { create, type InstanceProps } from 'react-modal-promise';
-
 import {
   Button,
   Checkbox,
@@ -13,7 +10,9 @@ import {
   Radio,
   RadioGroup,
   Select,
-} from '#control';
+} from '@technobuddha/controls';
+import { type MazeRunner, type ShowDistances } from '@technobuddha/maze';
+import { create, type InstanceProps } from 'react-modal-promise';
 
 import { Preview } from './preview.tsx';
 
@@ -28,7 +27,7 @@ const mimeTypes: Record<FileFormat, string> = {
 };
 
 export type ExportMazeDialogProps = InstanceProps<void, void> & {
-  readonly runner: Runner;
+  readonly runner: MazeRunner;
   readonly children?: never;
 };
 

@@ -1,8 +1,4 @@
 import React from 'react';
-import { titleCase } from '@technobuddha/library';
-import { defaultColors, type MazeColors } from '@technobuddha/maze';
-import { create, type InstanceProps } from 'react-modal-promise';
-
 import {
   Button,
   ColorPicker,
@@ -12,7 +8,10 @@ import {
   DialogTitle,
   Radio,
   Tooltip,
-} from '#control';
+} from '@technobuddha/controls';
+import { titleCase } from '@technobuddha/library';
+import { defaultColors, type MazeColors } from '@technobuddha/maze';
+import { create, type InstanceProps } from 'react-modal-promise';
 
 import css from './palette-dialog.module.css' with { type: 'css' };
 
@@ -27,7 +26,7 @@ export const PaletteDialog: React.FC<PaletteDialogProps> = ({
   onResolve,
   onReject,
 }) => {
-  const [colors, setColors] = React.useState<MazeColors>(value);
+  const [colors, setColors] = React.useState(value);
   const [selected, setSelected] = React.useState<keyof MazeColors>('cell');
 
   const handleSelectionChange = React.useCallback(

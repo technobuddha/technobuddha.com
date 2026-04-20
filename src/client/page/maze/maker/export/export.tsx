@@ -1,14 +1,13 @@
 import React from 'react';
-import { type Phase, type Runner } from '@technobuddha/maze';
-
-import { Button } from '#control';
+import { Button } from '@technobuddha/controls';
+import { type MazeRunner, type Phase } from '@technobuddha/maze';
 
 import { exportMazeDialog } from './export-maze-dialog.tsx';
 
 import css from './export.module.css' with { type: 'css' };
 
 export type ExportControlsProps = {
-  readonly runner?: Runner;
+  readonly runner?: MazeRunner;
   readonly children?: never;
 };
 

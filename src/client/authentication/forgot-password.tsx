@@ -1,9 +1,9 @@
 import React from 'react';
+import { Button, TextField, Typography } from '@technobuddha/controls';
 import { email as emailRegExp, empty } from '@technobuddha/library';
 import { MdEmail } from 'react-icons/md';
 
 import { useTranslation } from '#context/i18n';
-import { Button, TextField, Typography } from '#control';
 
 export type LoginMode = 'login' | 'forgotPassword' | 'signUp';
 export type LoginState = { mode: LoginMode };
@@ -23,7 +23,7 @@ export const ForgotPassword: React.FC = () => {
 
   const isEnabled = (): boolean => validEmail;
 
-  const handleExecute = React.useCallback((e: React.FormEvent<HTMLButtonElement>): void => {
+  const handleExecute = React.useCallback((e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
 
     //if(!await authentication.login(username!, password!))

@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
+import { LinearProgress } from '@technobuddha/controls';
 import { Size, useDerivedState } from '@technobuddha/react';
 
 import { useTranslation } from '#context/i18n';
 import { enqueueSnackbar } from '#context/snackbar';
-import { LinearProgress } from '#control';
 
 import { chaos } from './worker/index.ts';
 
@@ -18,7 +17,7 @@ const MAX_ITERATION = 1024;
 
 export const Chaos: React.FC = () => (
   <Size width="100%" height="100%">
-    {(width, height) => <ChaosBoard boxWidth={width} boxHeight={height} />}
+    {({ width, height }) => <ChaosBoard boxWidth={width} boxHeight={height} />}
   </Size>
 );
 
@@ -27,24 +26,24 @@ type Mode = 'compute' | 'display';
 
 const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoardProps) => {
   const { t } = useTranslation();
-  const canvas = React.useRef<HTMLCanvasElement>(null);
-  const overlay = React.useRef<HTMLCanvasElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const overlayRef = React.useRef<HTMLCanvasElement>(null);
   const width = React.useMemo(() => Math.floor(boxWidth / SIZE), [boxWidth]);
   const height = React.useMemo(() => Math.floor(boxHeight / SIZE), [boxHeight]);
   const [mode, setMode] = useDerivedState<Mode>('compute', [width, height]);
   const [showLegend, setShowLegend] = React.useState(true);
-  const grid = React.useRef<RGB[][]>([]);
+  const gridRef = React.useRef<RGB[][]>([]);
 
-  const xMin = React.useRef(-2.0);
-  const xMax = React.useRef(+0.75);
-  const yMin = React.useRef(-1.25);
-  const yMax = React.useRef(+1.25);
+  const xMinRef = React.useRef(-2.0);
+  const xMaxRef = React.useRef(+0.75);
+  const yMinRef = React.useRef(-1.25);
+  const yMaxRef = React.useRef(+1.25);
 
-  const mouseIsDown = React.useRef(false);
-  const pillar = React.useRef({ x: 0, y: 0 });
+  const mouseIsDownRef = React.useRef(false);
+  const pillarRef = React.useRef({ x: 0, y: 0 });
 
   const coordinates = (event: React.MouseEvent<HTMLCanvasElement>): { x: number; y: number } => {
-    const { top, left } = canvas.current!.getBoundingClientRect();
+    const { top, left } = canvasRef.current!.getBoundingClientRect();
     const x = event.clientX - left;
     const y = event.clientY - top;
     return { x, y };
@@ -57,15 +56,15 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
     x: number;
     y: number;
   }): { x: number; y: number } => {
-    const x = xMin.current + (clientX / width) * (xMax.current - xMin.current);
-    const y = yMin.current + (clientY / height) * (yMax.current - yMin.current);
+    const x = xMinRef.current + (clientX / width) * (xMaxRef.current - xMinRef.current);
+    const y = yMinRef.current + (clientY / height) * (yMaxRef.current - yMinRef.current);
     return { x, y };
   };
 
   const clearOverlay = React.useCallback((): CanvasRenderingContext2D => {
-    overlay.current!.focus();
+    overlayRef.current!.focus();
 
-    const context = overlay.current!.getContext('2d')!;
+    const context = overlayRef.current!.getContext('2d')!;
     context.clearRect(0, 0, width, height);
     return context;
   }, [height, width]);
@@ -76,47 +75,50 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
       event.preventDefault();
 
       if (event.button === 2) {
-        const xMid = (xMin.current + xMax.current) / 2;
-        const yMid = (yMin.current + yMax.current) / 2;
+        const xMid = (xMinRef.current + xMaxRef.current) / 2;
+        const yMid = (yMinRef.current + yMaxRef.current) / 2;
 
-        xMin.current = xMid - (xMid - xMin.current) * Math.sqrt(10);
-        xMax.current = xMid + (xMax.current - xMid) * Math.sqrt(10);
-        yMin.current = yMid - (yMid - yMin.current) * Math.sqrt(10);
-        yMax.current = yMid + (yMax.current - yMid) * Math.sqrt(10);
+        xMinRef.current = xMid - (xMid - xMinRef.current) * Math.sqrt(10);
+        xMaxRef.current = xMid + (xMaxRef.current - xMid) * Math.sqrt(10);
+        yMinRef.current = yMid - (yMid - yMinRef.current) * Math.sqrt(10);
+        yMaxRef.current = yMid + (yMaxRef.current - yMid) * Math.sqrt(10);
         setMode('compute');
       } else {
-        mouseIsDown.current = true;
-        pillar.current = coordinates(event);
+        mouseIsDownRef.current = true;
+        pillarRef.current = coordinates(event);
       }
     }
   };
 
   const handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement>): void => {
-    if (mode === 'display' && mouseIsDown.current) {
+    if (mode === 'display' && mouseIsDownRef.current) {
       const click = coordinates(event);
 
-      if (Math.abs(click.x - pillar.current.x) < 10 || Math.abs(click.y - pillar.current.y) < 10) {
+      if (
+        Math.abs(click.x - pillarRef.current.x) < 10 ||
+        Math.abs(click.y - pillarRef.current.y) < 10
+      ) {
         clearOverlay();
       } else {
-        const first = scaledCoordinates(pillar.current);
+        const first = scaledCoordinates(pillarRef.current);
         const second = scaledCoordinates(click);
 
-        xMin.current = Math.min(first.x, second.x);
-        xMax.current = Math.max(first.x, second.x);
-        yMin.current = Math.min(first.y, second.y);
-        yMax.current = Math.max(first.y, second.y);
+        xMinRef.current = Math.min(first.x, second.x);
+        xMaxRef.current = Math.max(first.x, second.x);
+        yMinRef.current = Math.min(first.y, second.y);
+        yMaxRef.current = Math.max(first.y, second.y);
         setMode('compute');
       }
-      mouseIsDown.current = false;
+      mouseIsDownRef.current = false;
     }
   };
 
   const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>): void => {
-    if (mode === 'display' && mouseIsDown.current) {
+    if (mode === 'display' && mouseIsDownRef.current) {
       const { x, y } = coordinates(event);
       const context = clearOverlay();
       context.strokeStyle = 'white';
-      context.strokeRect(x, y, pillar.current.x - x, pillar.current.y - y);
+      context.strokeRect(x, y, pillarRef.current.x - x, pillarRef.current.y - y);
     }
   };
 
@@ -139,18 +141,18 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
         .mandelbrot(
           width,
           height,
-          xMin.current,
-          xMax.current,
-          yMin.current,
-          yMax.current,
+          xMinRef.current,
+          xMaxRef.current,
+          yMinRef.current,
+          yMaxRef.current,
           MAX_ITERATION,
         )
         .then((result) => {
-          grid.current = result.colors;
-          xMin.current = result.x_min;
-          xMax.current = result.x_max;
-          yMin.current = result.y_min;
-          yMax.current = result.y_max;
+          gridRef.current = result.colors;
+          xMinRef.current = result.x_min;
+          xMaxRef.current = result.x_max;
+          yMinRef.current = result.y_min;
+          yMaxRef.current = result.y_max;
           setMode('display');
         })
 
@@ -158,10 +160,15 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
           enqueueSnackbar({ message: err.message, variant: 'error' });
         });
     } else {
-      setTimeout(() => {
-        const context = canvas.current!.getContext('2d')!;
+      const timer = setTimeout(() => {
+        const context = canvasRef.current!.getContext('2d')!;
         context.translate(0.5, 0.5);
-        const imageData = context.getImageData(0, 0, canvas.current!.width, canvas.current!.height);
+        const imageData = context.getImageData(
+          0,
+          0,
+          canvasRef.current!.width,
+          canvasRef.current!.height,
+        );
 
         const setPixel = (x: number, y: number, r: number, g: number, b: number): void => {
           const offset = x * 4 + y * imageData.width * 4;
@@ -173,13 +180,14 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
 
         for (let i = 0; i < width; ++i) {
           for (let j = 0; j < height; ++j) {
-            const rgb = grid.current[i][j];
+            const rgb = gridRef.current[i][j];
 
             setPixel(i, j, rgb.r, rgb.g, rgb.b);
           }
         }
 
         context.putImageData(imageData, 0, 0);
+        clearTimeout(timer);
       }, 0);
     }
   }, [clearOverlay, height, mode, setMode, width]);
@@ -209,10 +217,10 @@ const ChaosBoard: React.FC<ChaosBoardProps> = ({ boxWidth, boxHeight }: ChaosBoa
         </div>
       )}
       {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-      <canvas ref={canvas} className={css.canvas} width={boxWidth} height={boxHeight} />
+      <canvas ref={canvasRef} className={css.canvas} width={boxWidth} height={boxHeight} />
       {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
       <canvas
-        ref={overlay}
+        ref={overlayRef}
         className={css.overlay}
         tabIndex={0}
         width={boxWidth}

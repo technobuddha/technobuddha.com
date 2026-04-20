@@ -1,11 +1,11 @@
 import React from 'react';
 import { ceil } from '@technobuddha/library';
-import { type Runner, type ShowDistances } from '@technobuddha/maze';
+import { type MazeRunner, type ShowDistances } from '@technobuddha/maze';
 
 import css from './preview.module.css' with { type: 'css' };
 
 export type PreviewProps = {
-  readonly runner: Runner;
+  readonly runner: MazeRunner;
   readonly showSolution?: boolean;
   readonly transparentBackground?: boolean;
   readonly showDistances?: ShowDistances;
@@ -18,7 +18,7 @@ export const Preview: React.FC<PreviewProps> = ({
   showDistances = 'none',
 }) => {
   const { maze } = runner;
-  const canvas = React.useRef<HTMLCanvasElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   const { width, height, scale } = React.useMemo(() => {
     const drawing = maze.drawing!;
@@ -33,9 +33,9 @@ export const Preview: React.FC<PreviewProps> = ({
   }, [maze]);
 
   React.useEffect(() => {
-    if (canvas.current && maze) {
+    if (canvasRef.current && maze) {
       maze.export({
-        canvas: canvas.current,
+        canvas: canvasRef.current,
         scale,
         showSolution,
         transparentBackground,
@@ -48,7 +48,7 @@ export const Preview: React.FC<PreviewProps> = ({
 
   return (
     <div className={css.preview}>
-      <canvas ref={canvas} width={width} height={height} aria-label="Maze Preview" />
+      <canvas ref={canvasRef} width={width} height={height} aria-label="Maze Preview" />
     </div>
   );
 };

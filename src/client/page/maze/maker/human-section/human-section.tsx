@@ -1,7 +1,6 @@
 import React from 'react';
-import { Human, type MazeSolverProperties, type Runner } from '@technobuddha/maze';
-
-import { Checkbox } from '#control';
+import { Checkbox } from '@technobuddha/controls';
+import { Human, type MazeRunner, type MazeSolverProperties } from '@technobuddha/maze';
 
 import { type SolverProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';
@@ -11,7 +10,7 @@ import { HumanSectionHelp } from './human-section.help.tsx';
 type HumanSectionProps = {
   readonly className?: string;
   readonly onChange?: (this: void, producer: SolverProducer) => void;
-  readonly runner?: Runner;
+  readonly runner?: MazeRunner;
   readonly children?: never;
 };
 
@@ -73,7 +72,7 @@ export const HumanSection: React.FC<HumanSectionProps> = ({ className, onChange,
         }),
       title: 'Human',
     }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react/exhaustive-deps
   }, [finalDestination, markVisited, markDeadEnds, hideReverse, onChange, hmr]);
 
   return (

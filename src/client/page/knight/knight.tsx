@@ -1,10 +1,8 @@
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
+import { Box, MenuItem, Select, Typography } from '@technobuddha/controls';
 import { create2dArray, nbsp, numberToLetter, range } from '@technobuddha/library';
 import { useDerivedState } from '@technobuddha/react';
 import clsx from 'clsx';
-
-import { Box, MenuItem, Select, Typography } from '#control';
 
 import css from './knight.module.css' with { type: 'css' };
 
@@ -192,6 +190,20 @@ export const Knight: React.FC = () => {
   );
 };
 
+function createBoard(
+  width: number,
+  height: number,
+  startX: number,
+  startY: number,
+  finishX: number,
+  finishY: number,
+): (number | null)[][] {
+  const board = create2dArray<number | null>(width, height, null);
+  board[startX][startY] = 0;
+  board[finishX][finishY] = null;
+  return board;
+}
+
 export type KnightSolverProps = {
   readonly width: number;
   readonly height: number;
@@ -221,11 +233,13 @@ export const KnightSolver: React.FC<KnightSolverProps> = ({
     [height, width, startX, startY, finishX, finishY],
   );
   const target = React.useMemo(() => new Square(finishX, finishY), [finishX, finishY]);
-  const board = React.useMemo(() => {
-    const b = create2dArray<number | null>(width, height, null);
-    b[startX][startY] = 0;
-    b[finishX][finishY] = null;
-    return b;
+  const [board, setBoard] = React.useState(() =>
+    createBoard(width, height, startX, startY, finishX, finishY),
+  );
+
+  React.useEffect(() => {
+    // eslint-disable-next-line react/set-state-in-effect
+    setBoard(createBoard(width, height, startX, startY, finishX, finishY));
   }, [height, width, startX, startY, finishX, finishY]);
 
   React.useEffect(() => {

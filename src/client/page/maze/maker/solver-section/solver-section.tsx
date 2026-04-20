@@ -1,12 +1,12 @@
 import React from 'react';
+import { MenuItem, Select } from '@technobuddha/controls';
 import { randomWeightedPick } from '@technobuddha/library';
 import { type MazeSolverProperties } from '@technobuddha/maze';
 import { useHMR } from '@technobuddha/react';
 
-import { MenuItem, Select } from '#control';
+import { Section } from '#page/maze/maker/section';
 
 import { type SolverProducer } from '../maze-maker.tsx';
-import { Section } from '../section/index.ts';
 import { solvers } from '../selection.ts';
 
 import { SolverSectionHelp } from './solver-section.help.tsx';
@@ -27,7 +27,7 @@ export const SolverSection: React.FC<SolverSectionProps> = ({ className, onChang
 
     const g = solvers.find((g) => g.title === value);
 
-    if (g && g.variations.length === 1) {
+    if (g?.variations.length === 1) {
       setVariation(g.variations[0].title);
     } else {
       setVariation(undefined);

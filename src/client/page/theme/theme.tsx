@@ -1,6 +1,5 @@
 import React from 'react';
-
-import { Typography } from '#control';
+import { Typography } from '@technobuddha/controls';
 
 import css from './theme.module.css' with { type: 'css' };
 

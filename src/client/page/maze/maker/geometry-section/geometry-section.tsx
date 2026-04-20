@@ -1,17 +1,16 @@
 import React from 'react';
+import { IconButton, MenuItem, Select, Tooltip } from '@technobuddha/controls';
 import { randomWeightedPick } from '@technobuddha/library';
 import { defaultColors, type MazeColors, type MazeProperties } from '@technobuddha/maze';
 import { useHMR } from '@technobuddha/react';
 import clsx from 'clsx';
 import { GiPalette, GiSpottedBug } from 'react-icons/gi';
 
-import { IconButton, MenuItem, Select, Tooltip } from '#control';
-
 import { type GeometryProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';
 import { distances, geometries, wraparounds } from '../selection.ts';
 
-import { type Debug, defaultDebug } from './debug.ts';
+import { defaultDebug } from './debug.ts';
 import { debugDialog } from './debug-dialog.tsx';
 import { GeometrySectionHelp } from './geometry-section.help.tsx';
 import { paletteDialog } from './palette-dialog.tsx';
@@ -29,8 +28,8 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
   const [variation, setVariation] = React.useState<string>();
   const [size, setSize] = React.useState<string>();
   const [wraparound, setWraparound] = React.useState<string>();
-  const [debug, setDebug] = React.useState<Debug>(defaultDebug);
-  const [color, setColor] = React.useState<MazeColors>(defaultColors);
+  const [debug, setDebug] = React.useState(defaultDebug);
+  const [color, setColor] = React.useState(defaultColors);
   const [distance, setDistance] = React.useState<string>();
   const hmr = useHMR();
 
@@ -39,13 +38,13 @@ export const GeometrySection: React.FC<GeometrySectionProps> = ({ className, onC
 
     setShape(value);
 
-    if (g && g.variations.length === 1) {
+    if (g?.variations.length === 1) {
       setVariation(g.variations[0].title);
     } else {
       setVariation(undefined);
     }
 
-    if (g && g.sizes.length === 1) {
+    if (g?.sizes.length === 1) {
       setSize(g.sizes[0].title);
     } else {
       setSize(undefined);

@@ -1,12 +1,19 @@
 import React from 'react';
+import {
+  Box,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@technobuddha/controls';
 import clsx from 'clsx';
 import { MdMenu, MdMenuOpen } from 'react-icons/md';
 
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useLocation, useNavigate } from '#context/router';
-import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText } from '#control';
-import { pages } from '#settings/pages.jsx';
+import { pages } from '#settings/pages.tsx';
 
 import css from './nav.module.css' with { type: 'css' };
 
@@ -29,12 +36,12 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
 
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [clicked, setClicked] = React.useState(false);
-  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const cancelTimer = (): void => {
-    if (timer.current) {
-      clearTimeout(timer.current);
-      timer.current = undefined;
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = undefined;
     }
   };
 
@@ -48,7 +55,7 @@ export const Nav: React.FC<NavProps> = ({ className }) => {
   const handleMouseOver = React.useCallback((): void => {
     cancelTimer();
     if (!clicked) {
-      timer.current = setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         setMenuOpen(true);
       }, expansionTimeout);
     }

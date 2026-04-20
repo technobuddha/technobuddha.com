@@ -1,10 +1,10 @@
 import React from 'react';
+import { DelayedLoading } from '@technobuddha/controls';
 import { DataGrid, type RowRenderer } from '@technobuddha/react';
 import { MdMusicNote } from 'react-icons/md';
 
 import { type Album, useAPI } from '#context/api';
 import { useTranslation } from '#context/i18n';
-import { DelayedLoading } from '#control';
 
 import css from './new-albums.module.css' with { type: 'css' };
 
@@ -54,7 +54,6 @@ export const NewAlbums: React.FC = () => {
           { name: 'genre', header: t('Genre'), type: 'array', sortBy: ['genre', 'subgenre'] },
           { name: 'subgenre', header: t('Style'), type: 'array', sortBy: ['subgenre'] },
         ]}
-        // eslint-disable-next-line react/jsx-no-bind
         rowRenderer={rowRenderer}
         filters={[
           { type: 'checkbox-list', name: 'genre', Icon: MdMusicNote },

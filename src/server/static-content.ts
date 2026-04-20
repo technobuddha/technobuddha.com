@@ -1,13 +1,13 @@
 import path from 'node:path';
 
 import { splitLines } from '@technobuddha/library';
-import { type Application, /*type NextFunction,*/ type Request, type Response } from 'express';
 import express from 'express';
+import { type Application, type Request, type Response } from 'express';
 import { type Logger } from 'winston';
 
 import { paths } from '#config';
-import { browserSettings } from '#settings/browser';
-import { userInterfaceSettings } from '#settings/user-interface';
+import { browserSettings } from '#settings/browser.ts';
+import { userInterfaceSettings } from '#settings/user-interface.ts';
 
 import { cacheControl } from './cache-control.ts';
 

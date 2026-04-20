@@ -3,23 +3,23 @@
   "tagDefinitions": [
     {
       "tagName": "@type",
-      "syntaxKind": "block",
-      "allowMultiple": true
+      "syntaxKind": "block"
     },
     {
       "tagName": "@yields",
-      "syntaxKind": "block",
-      "allowMultiple": true
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@document",
+      "syntaxKind": "block"
     },
     {
       "tagName": "@group",
-      "syntaxKind": "block",
-      "allowMultiple": false
+      "syntaxKind": "block"
     },
     {
       "tagName": "@category",
-      "syntaxKind": "block",
-      "allowMultiple": false
+      "syntaxKind": "block"
     }
   ]
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ToggleButton, ToggleButtonGroup } from '@technobuddha/controls';
 import {
   CanvasDrawing,
   type Maze,
@@ -14,8 +15,6 @@ import {
 import clsx from 'clsx';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useMeasure } from 'react-use';
-
-import { ToggleButton, ToggleButtonGroup } from '#control';
 
 import { CustomControls } from './custom-controls/index.ts';
 import { DemoMode } from './demo-mode/index.ts';
@@ -44,9 +43,9 @@ export type MazeMakerProps = {
 
 export const MazeMaker: React.FC<MazeMakerProps> = () => {
   const [top, { width, height }] = useMeasure<HTMLDivElement>();
-  const frame = React.useRef<HTMLDivElement>(null);
+  const frameRef = React.useRef<HTMLDivElement>(null);
 
-  const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
+  const canvasMazeRef = React.useRef<HTMLCanvasElement | null>(null);
   const [mazeNumber, setMazeNumber] = React.useState(0);
 
   const [mode, setMode] = useQueryState('mode', parseAsString.withDefault('demo'));
@@ -72,23 +71,24 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
 
   React.useEffect(() => {
     if (width > 0 && height > 0) {
-      if (canvasMaze.current) {
-        canvasMaze.current.remove();
-        canvasMaze.current = null;
+      if (canvasMazeRef.current) {
+        canvasMazeRef.current.remove();
+        canvasMazeRef.current = null;
       }
 
-      if (frame.current) {
+      if (frameRef.current) {
         const canvas = document.createElement('canvas');
         canvas.width = width - 12;
         canvas.height = height - 20;
         canvas.className = css.canvas;
         canvas.setAttribute('aria-label', 'A Maze being created and solved');
 
-        frame.current.insertBefore(canvas, null);
-        canvasMaze.current = canvas;
+        frameRef.current.insertBefore(canvas, null);
+        canvasMazeRef.current = canvas;
         const drawingMaze = new CanvasDrawing(canvas);
         drawingMaze.clear();
 
+        // eslint-disable-next-line react/set-state-in-effect
         setDrawing(drawingMaze);
       }
     }
@@ -100,12 +100,15 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
 
     if (drawing && geometryProducer && generatorProducer && solpro) {
       const { maker: mazeMaker, title: geometryTitle, announceMaze } = geometryProducer();
+      // eslint-disable-next-line react/set-state-in-effect
       setMazeName(geometryTitle);
 
       const { maker: generatorMaker, title: generatorTitle } = generatorProducer();
+      // eslint-disable-next-line react/set-state-in-effect
       setGeneratorName(generatorTitle);
 
       const { maker: solverMaker, title: solverTitle } = solpro();
+      // eslint-disable-next-line react/set-state-in-effect
       setSolverName(solverTitle);
 
       // const piChoice = chooser(plugins);
@@ -115,6 +118,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
       // const { name: plugName, value: plugin } = chooser(plugins);
       // setPluginName(plugName);
 
+      // eslint-disable-next-line react/set-state-in-effect
       setRunner((r) => {
         r?.abort();
         return new MazeRunner({
@@ -128,7 +132,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
         });
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react/exhaustive-deps
   }, [mode, drawing, mazeNumber]);
 
   React.useEffect(() => {
@@ -179,7 +183,7 @@ export const MazeMaker: React.FC<MazeMakerProps> = () => {
     <div className={css.mazeMaker}>
       <div ref={top} className={css.maze}>
         {width > 0 && height > 0 && (
-          <div ref={frame} className={css.title}>
+          <div ref={frameRef} className={css.title}>
             <span className={css.text}>Geometry:</span>
             <span className={css.option}>{mazeName}</span>
             <span className={css.text}>Generator:</span>

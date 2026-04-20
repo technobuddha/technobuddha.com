@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, MenuItem, NumberField, Select } from '@technobuddha/controls';
 import {
   BrickMaze,
   CanvasDrawing,
@@ -20,8 +21,6 @@ import {
   ZetaMaze,
 } from '@technobuddha/maze';
 
-import { Button, MenuItem, NumberField, Select } from '#control';
-
 const mazes: Record<string, (props: MazeProperties) => Maze> = {
   circular: (props) => new CircularMaze(props),
   cubic: (props) => new CubicMaze(props),
@@ -41,10 +40,8 @@ type MazeDebuggerProps = {
   children?: never;
 };
 
-type MazeType = keyof typeof mazes;
-
 export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
-  const [selectedMaze, setSelectedMaze] = React.useState<MazeType>('square');
+  const [selectedMaze, setSelectedMaze] = React.useState('square');
   const [show, setShow] = React.useState('moves');
   const [x, setX] = React.useState(0);
   const [y, setY] = React.useState(0);
@@ -105,20 +102,21 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
     setWallSize(value === 0 ? undefined : value);
   }, []);
 
-  const canvasMaze = React.useRef<HTMLCanvasElement | null>(null);
+  const canvasMazeRef = React.useRef<HTMLCanvasElement | null>(null);
 
   const boxWidth = 500;
   const boxHeight = 800;
 
   React.useEffect(() => {
-    if (canvasMaze.current) {
-      const contextMaze = new CanvasDrawing(canvasMaze.current);
+    if (canvasMazeRef.current) {
+      const contextMaze = new CanvasDrawing(canvasMazeRef.current);
 
       const runner = new MazeRunner({
         mazeMaker: (props) => mazes[selectedMaze]({ cellSize, wallSize, ...props }),
         drawing: contextMaze,
       });
 
+      // eslint-disable-next-line react/set-state-in-effect
       setMaze(runner.maze);
       runner.draw();
     }
@@ -241,6 +239,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
       }
     }
 
+    // eslint-disable-next-line react/set-state-in-effect
     setErrors(err);
   }, [maze]);
 
@@ -257,7 +256,7 @@ export const MazeDebugger: React.FC<MazeDebuggerProps> = () => {
         >
           {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
           <canvas
-            ref={canvasMaze}
+            ref={canvasMazeRef}
             width={boxWidth}
             height={boxHeight}
             style={{ position: 'absolute', zIndex: 1 }}

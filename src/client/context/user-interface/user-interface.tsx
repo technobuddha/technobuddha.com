@@ -13,7 +13,7 @@ const UserInterfaceContext = React.createContext<UseUserInterface>({
 });
 
 export function useUserInterface(): UseUserInterface {
-  return React.useContext(UserInterfaceContext);
+  return React.use(UserInterfaceContext);
 }
 
 type UserInterfaceProviderProps = {
@@ -25,6 +25,7 @@ export const UserInterfaceProvider: React.FC<UserInterfaceProviderProps> = ({ ch
   const [footer, setFooter] = React.useState<React.ReactNode>(null);
 
   React.useLayoutEffect(() => {
+    // eslint-disable-next-line react/set-state-in-effect
     setFooter(null);
   }, [location]);
 
@@ -36,5 +37,5 @@ export const UserInterfaceProvider: React.FC<UserInterfaceProviderProps> = ({ ch
     [footer, setFooter],
   );
 
-  return <UserInterfaceContext.Provider value={value}>{children}</UserInterfaceContext.Provider>;
+  return <UserInterfaceContext value={value}>{children}</UserInterfaceContext>;
 };

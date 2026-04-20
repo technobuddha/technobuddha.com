@@ -1,23 +1,9 @@
 //@ts-check
 
-/** @type {import('@technobuddha/builder').Builds} */
+/** @type {import('@technobuddha/project/build').Builds} */
 const config = {
   dev: {
     watch: true,
-    steps: [
-      {
-        name: 'Clean',
-        command: 'rm -rf ./dist'
-      },
-      {
-        name: 'Technobuddha',
-        directory: './src/server', // /etc/letsencrypt/live/technobuddha
-        command: 'tsx src/server/server.ts',
-        daemon: true,
-      },
-    ],
-  },
-  prod: {
     steps: [
       {
         name: 'Clean',
@@ -25,10 +11,24 @@ const config = {
       },
       {
         name: 'Technobuddha',
-        command: 'vite build',
+        directory: './src/server', // /etc/letsencrypt/live/technobuddha
+        command: 'npx tsx src/server/server.ts',
+        context: 'daemon',
       },
-    ]
-  }
+    ],
+  },
+  build: {
+    steps: [
+      {
+        name: 'Clean',
+        command: 'rm -rf ./dist',
+      },
+      {
+        name: 'Technobuddha',
+        command: 'npx vite build',
+      },
+    ],
+  },
 };
 
 export default config;

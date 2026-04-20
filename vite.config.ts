@@ -3,7 +3,6 @@ import postcssMuiTheme from 'postcss-mui-theme';
 import { defineConfig } from 'vite';
 // import { analyzer } from 'vite-bundle-analyzer';
 import svgr from 'vite-plugin-svgr';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { theme } from './src/settings/mui-theme.ts';
 
@@ -29,7 +28,10 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  plugins: [tsconfigPaths(), react(), svgr()], //, analyzer()],
+  plugins: [react(), svgr()], //, analyzer()],
+  resolve: {
+    tsconfigPaths: true,
+  },
   root: './src/client',
   css: {
     modules: {

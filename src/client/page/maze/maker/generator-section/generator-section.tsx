@@ -1,9 +1,8 @@
 import React from 'react';
+import { MenuItem, Select } from '@technobuddha/controls';
 import { randomWeightedPick } from '@technobuddha/library';
 import { type MazeGeneratorProperties } from '@technobuddha/maze';
 import { useHMR } from '@technobuddha/react';
-
-import { MenuItem, Select } from '#control';
 
 import { type GeneratorProducer } from '../maze-maker.tsx';
 import { Section } from '../section/index.ts';
@@ -27,7 +26,7 @@ export const GeneratorSection: React.FC<GeneratorSectionProps> = ({ className, o
     setGenerator(value);
 
     const g = generators.find((g) => g.title === value);
-    if (g && g.variations.length === 1) {
+    if (g?.variations.length === 1) {
       setVariation(g.variations[0].title);
     } else {
       setVariation(undefined);

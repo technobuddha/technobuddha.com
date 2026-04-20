@@ -1,7 +1,6 @@
 import React from 'react';
+import { Box, Card, CardContent, Help, Typography } from '@technobuddha/controls';
 import clsx from 'clsx';
-
-import { Box, Card, CardContent, Help, Typography } from '#control';
 
 import css from './section.module.css' with { type: 'css' };
 

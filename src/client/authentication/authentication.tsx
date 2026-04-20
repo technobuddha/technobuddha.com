@@ -1,9 +1,9 @@
 import React from 'react';
+import { Box, Link, Paper, Typography, Watermark } from '@technobuddha/controls';
 
 import { useTranslation } from '#context/i18n';
 import { useLocation } from '#context/router';
-import { Box, Link, Paper, Typography, Watermark } from '#control';
-import { authenticationSettings } from '#settings/authentication';
+import { authenticationSettings } from '#settings/authentication.ts';
 
 import { ForgotPassword } from './forgot-password.tsx';
 import { Login } from './login.tsx';

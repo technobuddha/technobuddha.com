@@ -10263,9 +10263,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:7.14.1":
-  version: 7.14.1
-  resolution: "react-router@npm:7.14.1"
+"react-router@npm:7.15.1":
+  version: 7.15.1
+  resolution: "react-router@npm:7.15.1"
   dependencies:
     cookie: "npm:^1.0.1"
     set-cookie-parser: "npm:^2.6.0"
@@ -10275,7 +10275,7 @@ __metadata:
   peerDependenciesMeta:
     react-dom:
       optional: true
-  checksum: 10c0/57b86accdc50b917509e4b21f821dd432807e3f62b5e978d0d5174fc7da3798ce57ce896cbf70a8ba8f6f3d53515a07021e759829908239b4eee34c804695120
+  checksum: 10c0/3daff5404c7de1429447e735f1ee7e070d4f11632f589cec70c5171f2357be9cada2162f780bc9061eb153646109ad6e80c2d10a6b27256593f28a66945f4c76
   languageName: node
   linkType: hard
 
@@ -11578,7 +11578,7 @@ __metadata:
     react-i18next: "npm:17.0.4"
     react-icons: "npm:5.6.0"
     react-modal-promise: "npm:1.0.2"
-    react-router: "npm:7.14.1"
+    react-router: "npm:7.15.1"
     react-use: "npm:17.6.0"
     response-time: "npm:2.3.4"
     tsx: "npm:4.21.0"

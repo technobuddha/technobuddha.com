@@ -9,19 +9,18 @@
 
 // prettier-ignore
 type Home = {
-  readonly 'home': string;
-  readonly 'introduction': string;
-  readonly 'logo': string;
-  readonly 'note': string;
-  readonly 'wheel-of-components': string;
-  readonly 'wheelOfComponents': string;
-  readonly 'component': string;
-  readonly 'description': string;
+  readonly 'home': '_home_1t4xs_1';
+  readonly 'introduction': '_introduction_1t4xs_5';
+  readonly 'logo': '_logo_1t4xs_13';
+  readonly 'note': '_note_1t4xs_27';
+  readonly 'wheel-of-components': '_wheel-of-components_1t4xs_32';
+  readonly 'wheelOfComponents': '_wheel-of-components_1t4xs_32';
+  readonly 'component': '_component_1t4xs_41';
+  readonly 'description': '_description_1t4xs_42';
 };
 
 declare const home: Home;
 
 export default home;
 
-//# sourceMappingURL=home.module.d.css.ts.map
-
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImhvbWUubW9kdWxlLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7OztXQUFDO1dBSUU7V0FRRTtXQWNBO1dBS0Y7V0FBQTtXQVNJO1dBQ0UiLCJmaWxlIjoiaG9tZS5tb2R1bGUuZC5jc3MudHMiLCJzb3VyY2VSb290IjoiIn0=

@@ -17,7 +17,7 @@
     "resolveJsonModule": true,
     "allowArbitraryExtensions": true,
     "declaration": true,
-    "inlineSourceMap": true,
+    "sourceMap": true,
     "removeComments": true,
     "noEmitOnError": true,
     "isolatedModules": true,

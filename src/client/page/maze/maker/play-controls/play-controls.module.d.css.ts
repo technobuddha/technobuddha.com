@@ -9,13 +9,12 @@
 
 // prettier-ignore
 type PlayControls = {
-  readonly 'play-controls': string;
-  readonly 'playControls': string;
+  readonly 'play-controls': '_play-controls_13mp1_1';
+  readonly 'playControls': '_play-controls_13mp1_1';
 };
 
 declare const playControls: PlayControls;
 
 export default playControls;
 
-//# sourceMappingURL=play-controls.module.d.css.ts.map
-
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInBsYXktY29udHJvbHMubW9kdWxlLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7OztXQUFDO1dBQUEiLCJmaWxlIjoicGxheS1jb250cm9scy5tb2R1bGUuZC5jc3MudHMiLCJzb3VyY2VSb290IjoiIn0=

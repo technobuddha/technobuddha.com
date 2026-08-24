@@ -17,8 +17,5 @@
     "src/client/context/i18n",
     "src/client/page/maze/maker/messages"
   ],
-  "cmtd.showTypeFiles": false,
-  "files.exclude": {
-    "**/*.module.{d.css,css.d,d.less,less.d,d.sass,sass.d,d.scss,scss.d,d.styl,styl.d,d.stylus,stylus.d}{.ts,.ts.map}": true
-  }
+  "css.customData": ["./.vscode/custom.css-data.json"]
 }

@@ -9,14 +9,13 @@
 
 // prettier-ignore
 type ServiceNotification = {
-  readonly 'server-error': string;
-  readonly 'serverError': string;
-  readonly 'message': string;
+  readonly 'server-error': '_server-error_sdr0j_1';
+  readonly 'serverError': '_server-error_sdr0j_1';
+  readonly 'message': '_message_sdr0j_4';
 };
 
 declare const serviceNotification: ServiceNotification;
 
 export default serviceNotification;
 
-//# sourceMappingURL=service-notification.module.d.css.ts.map
-
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNlcnZpY2Utbm90aWZpY2F0aW9uLm1vZHVsZS5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7V0FBQztXQUFBO1dBR0UiLCJmaWxlIjoic2VydmljZS1ub3RpZmljYXRpb24ubW9kdWxlLmQuY3NzLnRzIiwic291cmNlUm9vdCI6IiJ9

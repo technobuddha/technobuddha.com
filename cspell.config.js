@@ -2,7 +2,7 @@
 // 🚨 CHANGES TO THIS FILE WILL BE OVERRIDDEN
 // 🚨
 // @ts-check
-/** @type import("cspell").CSpellSettings */
+/** @type import("@cspell/cspell-types").CSpellSettings */
 const config = {
   $schema:
     'https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json',

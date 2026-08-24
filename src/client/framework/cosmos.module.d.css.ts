@@ -9,14 +9,13 @@
 
 // prettier-ignore
 type Cosmos = {
-  readonly 'frame': string;
-  readonly 'nav': string;
-  readonly 'main': string;
+  readonly 'frame': '_frame_k6tkp_1';
+  readonly 'nav': '_nav_k6tkp_10';
+  readonly 'main': '_main_k6tkp_14';
 };
 
 declare const cosmos: Cosmos;
 
 export default cosmos;
 
-//# sourceMappingURL=cosmos.module.d.css.ts.map
-
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvc21vcy5tb2R1bGUuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O1dBQUM7V0FTRTtXQUlBIiwiZmlsZSI6ImNvc21vcy5tb2R1bGUuZC5jc3MudHMiLCJzb3VyY2VSb290IjoiIn0=

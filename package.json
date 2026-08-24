@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "technobuddha.com",
-  "description": "Technobuddha application",
   "version": "9.1.1-0",
+  "description": "Technobuddha application",
   "stableVersion": "9.1.0",
   "license": "MIT",
   "type": "module",
@@ -21,7 +21,8 @@
   },
   "author": {
     "name": "Phil Hill",
-    "email": "phil@technobuddha.com"
+    "email": "phil@technobuddha.com",
+    "url": "https://technobuddha.com"
   },
   "repository": {
     "type": "git",
@@ -45,17 +46,17 @@
     "test:watch": "npx vitest --typecheck --no-coverage watch",
     "test:full": "npx vitest --typecheck --mode=full run",
     "spell": "npx cspell lint src",
-    "prepare": "npx husky"
+    "prepare": "husky"
   },
   "dependencies": {
-    "@dotenvx/dotenvx": "1.63.0",
+    "@dotenvx/dotenvx": "2.0.0",
     "@emotion/react": "11.14.0",
     "@google-cloud/translate": "9.3.0",
     "@mui/material": "7.3.10",
     "@mui/styles": "6.5.0",
     "@technobuddha/color": "0.3.3-8",
     "@technobuddha/controls": "0.0.16",
-    "@technobuddha/library": "2.1.0-115",
+    "@technobuddha/library": "2.1.0-154",
     "@technobuddha/maze": "0.1.9",
     "@technobuddha/postgres": "0.0.1-29",
     "@technobuddha/react": "0.0.20",
@@ -89,14 +90,15 @@
     "zxcvbn": "4.4.2"
   },
   "devDependencies": {
-    "@technobuddha/project": "1.0.0-32",
+    "@cspell/cspell-types": "10.0.1",
+    "@technobuddha/project": "1.0.0-107",
     "@types/cli-progress": "3.11.6",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/http-proxy-middleware": "1.0.0",
     "@types/mustache": "^4.2.6",
     "@types/mustache-express": "^1.2.5",
-    "@types/node": "25.6.0",
+    "@types/node": "25.9.4",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@types/response-time": "^2.3.9",
@@ -104,7 +106,7 @@
     "@types/zxcvbn": "^4.4.5",
     "@vitejs/plugin-react": "6.0.1",
     "cli-progress": "3.12.0",
-    "cspell": "10.0.0",
+    "cspell": "10.0.1",
     "glob": "13.0.6",
     "husky": "9.1.7",
     "i18next-scanner": "4.6.0",
@@ -112,12 +114,12 @@
     "node-pg-migrate": "8.0.4",
     "openapi-types": "12.1.3",
     "postcss-mui-theme": "1.3.19",
-    "tsx": "4.21.0",
-    "type-fest": "5.6.0",
+    "tsx": "4.22.4",
+    "type-fest": "5.7.0",
     "typescript": "6.0.3",
     "vinyl": "3.0.1",
     "vinyl-fs": "4.0.2",
-    "vite": "8.0.10",
+    "vite": "8.1.2",
     "vite-plugin-svgr": "5.2.0"
   },
   "resolutions": {
@@ -129,5 +131,5 @@
   "technobuddhaProject": {
     "created": "2020-04-01T04:20:42.690Z"
   },
-  "packageManager": "yarn@4.14.1"
+  "packageManager": "yarn@4.17.0"
 }

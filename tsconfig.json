@@ -7,7 +7,6 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
-    "composite": true,
     "lib": ["esnext"],
     "noEmit": true,
     "types": ["node"]

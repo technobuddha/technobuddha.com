@@ -9,16 +9,15 @@
 
 // prettier-ignore
 type GeometrySection = {
-  readonly 'geometry-section': string;
-  readonly 'geometrySection': string;
-  readonly 'row': string;
-  readonly 'item': string;
-  readonly 'buttons': string;
+  readonly 'geometry-section': '_geometry-section_jp96j_1';
+  readonly 'geometrySection': '_geometry-section_jp96j_1';
+  readonly 'row': '_row_jp96j_2';
+  readonly 'item': '_item_jp96j_7';
+  readonly 'buttons': '_buttons_jp96j_13';
 };
 
 declare const geometrySection: GeometrySection;
 
 export default geometrySection;
 
-//# sourceMappingURL=geometry-section.module.d.css.ts.map
-
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImdlb21ldHJ5LXNlY3Rpb24ubW9kdWxlLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7OztXQUFDO1dBQUE7V0FDRTtXQUtFO1dBTUEiLCJmaWxlIjoiZ2VvbWV0cnktc2VjdGlvbi5tb2R1bGUuZC5jc3MudHMiLCJzb3VyY2VSb290IjoiIn0=

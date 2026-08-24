@@ -9,14 +9,13 @@
 
 // prettier-ignore
 type CloseButton = {
-  readonly 'close-button': string;
-  readonly 'closeButton': string;
-  readonly 'icon': string;
+  readonly 'close-button': '_close-button_aizgu_1';
+  readonly 'closeButton': '_close-button_aizgu_1';
+  readonly 'icon': '_icon_aizgu_2';
 };
 
 declare const closeButton: CloseButton;
 
 export default closeButton;
 
-//# sourceMappingURL=close-button.module.d.css.ts.map
-
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsb3NlLWJ1dHRvbi5tb2R1bGUuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O1dBQUM7V0FBQTtXQUNFIiwiZmlsZSI6ImNsb3NlLWJ1dHRvbi5tb2R1bGUuZC5jc3MudHMiLCJzb3VyY2VSb290IjoiIn0=

@@ -9,12 +9,11 @@
 
 // prettier-ignore
 type NBody = {
-  readonly 'space': string;
+  readonly 'space': '_space_1kwda_1';
 };
 
 declare const nBody: NBody;
 
 export default nBody;
 
-//# sourceMappingURL=n-body.module.d.css.ts.map
-
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm4tYm9keS5tb2R1bGUuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O1dBQUMiLCJmaWxlIjoibi1ib2R5Lm1vZHVsZS5kLmNzcy50cyIsInNvdXJjZVJvb3QiOiIifQ==

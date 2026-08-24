@@ -9,20 +9,19 @@
 
 // prettier-ignore
 type Messages = {
-  readonly 'messages': string;
-  readonly 'container': string;
-  readonly 'scroll': string;
-  readonly 'message': string;
-  readonly 'color': string;
-  readonly 'info': string;
-  readonly 'text': string;
-  readonly 'colored': string;
-  readonly 'tools': string;
+  readonly 'messages': '_messages_1b2hw_1';
+  readonly 'container': '_container_1b2hw_4';
+  readonly 'scroll': '_scroll_1b2hw_10';
+  readonly 'message': '_message_1b2hw_1';
+  readonly 'color': '_color_1b2hw_24';
+  readonly 'info': '_info_1b2hw_33';
+  readonly 'text': '_text_1b2hw_34';
+  readonly 'colored': '_colored_1b2hw_41';
+  readonly 'tools': '_tools_1b2hw_49';
 };
 
 declare const messages: Messages;
 
 export default messages;
 
-//# sourceMappingURL=messages.module.d.css.ts.map
-
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1lc3NhZ2VzLm1vZHVsZS5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7V0FBQztXQUdFO1dBTUU7V0FRRTtXQU1FO1dBU0M7V0FDQztXQU9EO1dBUUwiLCJmaWxlIjoibWVzc2FnZXMubW9kdWxlLmQuY3NzLnRzIiwic291cmNlUm9vdCI6IiJ9

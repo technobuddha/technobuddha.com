@@ -17,5 +17,32 @@
     "src/client/context/i18n",
     "src/client/page/maze/maker/messages"
   ],
-  "css.customData": ["./.vscode/custom.css-data.json"]
+  "css.customData": ["./.vscode/custom.css-data.json"],
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "markdown",
+    "css",
+    "html",
+    "json",
+    "jsonc"
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "markdown",
+    "css",
+    "html",
+    "json",
+    "jsonc"
+  ],
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ]
 }

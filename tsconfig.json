@@ -11,7 +11,7 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["*.config.js", "*.config.ts"],
+  "include": ["*.ts", "*.js"],
   "exclude": ["eslint.config.js"],
   "references": [{ "path": "src/settings" }]
 }

@@ -49,20 +49,18 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@dotenvx/dotenvx": "2.0.0",
-    "@emotion/react": "11.14.0",
+    "#settings": "latest",
+    "@dotenvx/dotenvx": "2.21.0",
     "@google-cloud/translate": "9.3.0",
     "@mui/material": "7.3.10",
-    "@mui/styles": "6.5.0",
-    "@technobuddha/color": "0.3.3-8",
-    "@technobuddha/controls": "0.0.16",
-    "@technobuddha/library": "2.1.0-154",
-    "@technobuddha/maze": "0.1.9",
-    "@technobuddha/postgres": "0.0.1-29",
-    "@technobuddha/react": "0.0.20",
-    "@uiw/react-color": "2.10.1",
+    "@technobuddha/color": "0.3.3-12",
+    "@technobuddha/controls": "1.0.0-1",
+    "@technobuddha/library": "2.1.0-188",
+    "@technobuddha/maze": "0.2.0-4",
+    "@technobuddha/postgres": "1.0.0-1",
+    "@technobuddha/react": "1.0.0-1",
     "ajv": "8.20.0",
-    "chalk": "5.6.2",
+    "chalk": "6.0.0",
     "cheferizeIt": "1.0.4",
     "clsx": "2.1.1",
     "comlink": "4.4.2",
@@ -90,15 +88,14 @@
     "zxcvbn": "4.4.2"
   },
   "devDependencies": {
-    "@cspell/cspell-types": "10.0.1",
-    "@technobuddha/project": "1.0.0-107",
-    "@types/cli-progress": "3.11.6",
+    "@cspell/cspell-types": "10.1.1",
+    "@types/cli-progress": "^3.11.6",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/http-proxy-middleware": "1.0.0",
     "@types/mustache": "^4.2.6",
     "@types/mustache-express": "^1.2.5",
-    "@types/node": "25.9.4",
+    "@types/node": "26.3.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@types/response-time": "^2.3.9",
@@ -106,21 +103,22 @@
     "@types/zxcvbn": "^4.4.5",
     "@vitejs/plugin-react": "6.0.1",
     "cli-progress": "3.12.0",
-    "cspell": "10.0.1",
+    "cspell": "10.1.1",
     "glob": "13.0.6",
     "husky": "9.1.7",
     "i18next-scanner": "4.6.0",
     "i18next-scanner-typescript": "1.2.1",
     "node-pg-migrate": "8.0.4",
     "openapi-types": "12.1.3",
-    "postcss-mui-theme": "1.3.19",
-    "tsx": "4.22.4",
-    "type-fest": "5.7.0",
+    "postcss-mui-theme": "1.2.0",
+    "tsx": "4.23.12",
+    "type-fest": "5.8.0",
     "typescript": "6.0.3",
     "vinyl": "3.0.1",
     "vinyl-fs": "4.0.2",
-    "vite": "8.1.2",
-    "vite-plugin-svgr": "5.2.0"
+    "vite": "8.2.2",
+    "vite-plugin-svgr": "5.2.0",
+    "@technobuddha/project": "1.0.0-195"
   },
   "resolutions": {
     "postcss": "8.5.9"
@@ -131,5 +129,5 @@
   "technobuddhaProject": {
     "created": "2020-04-01T04:20:42.690Z"
   },
-  "packageManager": "yarn@4.17.0"
+  "packageManager": "yarn@4.18.0"
 }

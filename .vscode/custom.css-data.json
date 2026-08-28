@@ -1,5 +1,19 @@
 {
   "version": 1.1,
+  "functions": [
+    {
+      name: "mui-theme",
+      description: "MUI theme properties"
+    },
+    {
+      name: "mui-spacing",
+      description: "MUI theme spacing",
+    },
+    {
+      name: "contrastText",
+      description: "Contrasting Text Color"
+    }
+  ]
   "properties": [
     {
       "name": "composes",

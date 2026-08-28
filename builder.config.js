@@ -1,16 +1,16 @@
 //@ts-check
 
-/** @type {import('@technobuddha/project/build').Builds} */
+/** @type import('\@technobuddha/project/build').Builds */
 const config = {
   dev: {
     watch: true,
     steps: [
       {
-        name: 'Clean',
+        display: 'Clean',
         command: 'rm -rf ./dist',
       },
       {
-        name: 'Technobuddha',
+        display: 'Technobuddha',
         directory: './src/server', // /etc/letsencrypt/live/technobuddha
         command: 'npx tsx src/server/server.ts',
         context: 'daemon',
@@ -20,11 +20,11 @@ const config = {
   build: {
     steps: [
       {
-        name: 'Clean',
+        display: 'Clean',
         command: 'rm -rf ./dist',
       },
       {
-        name: 'Technobuddha',
+        display: 'Technobuddha',
         command: 'npx vite build',
       },
     ],

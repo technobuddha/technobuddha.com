@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Card, CardContent, Help, Typography } from '@technobuddha/controls';
 import clsx from 'clsx';
 
-import css from './section.module.css' with { type: 'css' };
+import css from './section.module.css';
 
 type SectionProps = {
   readonly className?: string;

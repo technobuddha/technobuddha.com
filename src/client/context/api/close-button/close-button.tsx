@@ -4,7 +4,7 @@ import { FaRegWindowClose } from 'react-icons/fa';
 
 import { type SnackbarKey } from '#context/snackbar';
 
-import css from './close-button.module.css' with { type: 'css' };
+import css from './close-button.module.css';
 
 export type CloseButtonProps = {
   readonly snackbarKey: SnackbarKey;

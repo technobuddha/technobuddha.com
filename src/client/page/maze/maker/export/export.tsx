@@ -4,7 +4,7 @@ import { type MazeRunner, type Phase } from '@technobuddha/maze';
 
 import { exportMazeDialog } from './export-maze-dialog.tsx';
 
-import css from './export.module.css' with { type: 'css' };
+import css from './export.module.css';
 
 export type ExportControlsProps = {
   readonly runner?: MazeRunner;

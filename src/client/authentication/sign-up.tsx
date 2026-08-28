@@ -15,9 +15,9 @@ import { MdEmail, MdPerson } from 'react-icons/md';
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useNavigate } from '#context/router';
-import { authenticationSettings } from '#settings/authentication.ts';
+import { authenticationSettings } from '#settings';
 
-import css from './sign-up.module.css' with { type: 'css' };
+import css from './sign-up.module.css';
 
 export const SignUp: React.FC = () => {
   const { t } = useTranslation();

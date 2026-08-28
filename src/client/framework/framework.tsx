@@ -3,11 +3,11 @@ import { CssBaseline } from '@mui/material';
 
 import { Authentication } from '#client/authentication';
 import { Navigate, Route, Routes } from '#context/router';
-import { userInterfaceSettings } from '#settings/user-interface.ts';
+import { userInterfaceSettings } from '#settings';
 
 import { Cosmos } from './cosmos.tsx';
 
-import css from './framework.module.css' with { type: 'css' };
+import css from './framework.module.css';
 
 export const Framework: React.FC = () => (
   <>

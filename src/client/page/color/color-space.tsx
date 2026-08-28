@@ -2,7 +2,7 @@ import React from 'react';
 import { type ColorSpecification, type RGB, toRGB } from '@technobuddha/color';
 import { Slider } from '@technobuddha/controls';
 
-import css from './color-space.module.css' with { type: 'css' };
+import css from './color-space.module.css';
 
 type ColorSpaceProps<T extends string> = {
   readonly colorSpace: Record<T, Attributes>;

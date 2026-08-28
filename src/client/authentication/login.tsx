@@ -6,7 +6,7 @@ import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useLocation, useNavigate } from '#context/router';
 
-import css from './login.module.css' with { type: 'css' };
+import css from './login.module.css';
 
 export const Login: React.FC = () => {
   const { t } = useTranslation();

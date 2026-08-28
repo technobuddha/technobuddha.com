@@ -5,7 +5,7 @@ import { Header } from './header.tsx';
 import { Main } from './main.tsx';
 import { Nav } from './nav.tsx';
 
-import css from './cosmos.module.css' with { type: 'css' };
+import css from './cosmos.module.css';
 
 export const Cosmos: React.FC = () => (
   <>

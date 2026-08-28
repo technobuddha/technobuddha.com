@@ -4,9 +4,9 @@ import clsx from 'clsx';
 
 import { useTranslation } from '#context/i18n';
 import { Route, Routes } from '#context/router';
-import { pages } from '#settings/pages.tsx';
+import { pages } from '#settings';
 
-import css from './main.module.css' with { type: 'css' };
+import css from './main.module.css';
 
 type MainProps = {
   readonly className?: string;

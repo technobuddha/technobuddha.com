@@ -9,7 +9,7 @@ import { Section } from '../section/index.ts';
 import { PhaseControlsHelp } from './phase-controls.help.tsx';
 import { phasePlayModeDialog } from './phase-play-mode-dialog.tsx';
 
-import css from './phase-controls.module.css' with { type: 'css' };
+import css from './phase-controls.module.css';
 
 export type PhaseControlsProps = {
   readonly runner?: MazeRunner;

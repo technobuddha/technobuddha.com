@@ -13,7 +13,7 @@ import { create, type InstanceProps } from 'react-modal-promise';
 
 import { type Debug, shows } from './debug.ts';
 
-import css from './debug-dialog.module.css' with { type: 'css' };
+import css from './debug-dialog.module.css';
 
 function findShow(showBridges: boolean, showCoordinates: boolean, showKind: boolean): string {
   return (

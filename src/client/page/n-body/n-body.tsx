@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import css from './n-body.module.css' with { type: 'css' };
+import css from './n-body.module.css';
 
 export const NBody: React.FC = () => {
   const divRef = React.useRef<HTMLDivElement>(null);

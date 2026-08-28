@@ -16,7 +16,7 @@ import { create, type InstanceProps } from 'react-modal-promise';
 
 import { Preview } from './preview.tsx';
 
-import css from './export-maze-dialog.module.css' with { type: 'css' };
+import css from './export-maze-dialog.module.css';
 
 type FileFormat = 'png' | 'jpg' | 'gif';
 

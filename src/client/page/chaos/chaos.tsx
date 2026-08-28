@@ -8,7 +8,7 @@ import { enqueueSnackbar } from '#context/snackbar';
 
 import { chaos } from './worker/index.ts';
 
-import css from './chaos.module.css' with { type: 'css' };
+import css from './chaos.module.css';
 
 type RGB = { r: number; g: number; b: number };
 

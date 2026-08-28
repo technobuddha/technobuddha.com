@@ -4,7 +4,7 @@ import { type MazeRunner, type Phase, type PlayMode } from '@technobuddha/maze';
 import { PhaseControls } from '../phase-controls/index.ts';
 import { PlayControls } from '../play-controls/index.ts';
 
-import css from './custom-controls.module.css' with { type: 'css' };
+import css from './custom-controls.module.css';
 
 export type CustomControlsProps = {
   readonly runner?: MazeRunner;

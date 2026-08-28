@@ -7,7 +7,7 @@ import { Section } from '../section/index.ts';
 
 import { PlayControlsHelp } from './play-controls.help.tsx';
 
-import css from './play-controls.module.css' with { type: 'css' };
+import css from './play-controls.module.css';
 
 export type PlayControlsProps = {
   readonly runner: MazeRunner | undefined;

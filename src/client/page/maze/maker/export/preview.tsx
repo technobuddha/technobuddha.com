@@ -2,7 +2,7 @@ import React from 'react';
 import { ceil } from '@technobuddha/library';
 import { type MazeRunner, type ShowDistances } from '@technobuddha/maze';
 
-import css from './preview.module.css' with { type: 'css' };
+import css from './preview.module.css';
 
 export type PreviewProps = {
   readonly runner: MazeRunner;

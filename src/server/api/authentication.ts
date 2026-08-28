@@ -2,7 +2,7 @@ import { type Router, Router as router } from 'express';
 import { type Logger } from 'winston';
 import zxcvbn from 'zxcvbn';
 
-import { authenticationSettings } from '#settings/authentication';
+import { authenticationSettings } from '#settings';
 
 import { cacheControl } from '../cache-control.ts';
 import {

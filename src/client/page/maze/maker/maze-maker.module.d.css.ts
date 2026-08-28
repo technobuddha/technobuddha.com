@@ -10,6 +10,7 @@
 // prettier-ignore
 type MazeMaker = {
   readonly 'maze-maker': '_maze-maker_7ayhi_1';
+  readonly 'mazeMaker': '_maze-maker_7ayhi_1';
   readonly 'maze': '_maze_7ayhi_1';
   readonly 'title': '_title_7ayhi_14';
   readonly 'text': '_text_7ayhi_20';
@@ -25,4 +26,4 @@ declare const mazeMaker: MazeMaker;
 
 export default mazeMaker;
 
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1hemUtbWFrZXIubW9kdWxlLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7OztXQUFDO1dBTUU7V0FPRTtXQU1FO1dBV0E7V0FLRjtXQVFGO1dBT0U7V0FhQTtXQUtFIiwiZmlsZSI6Im1hemUtbWFrZXIubW9kdWxlLmQuY3NzLnRzIiwic291cmNlUm9vdCI6IiJ9
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1hemUtbWFrZXIubW9kdWxlLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7OztXQUFDO1dBQUE7V0FNRTtXQU9FO1dBTUU7V0FXQTtXQUtGO1dBUUY7V0FPRTtXQWFBO1dBS0UiLCJmaWxlIjoibWF6ZS1tYWtlci5tb2R1bGUuZC5jc3MudHMiLCJzb3VyY2VSb290IjoiIn0=

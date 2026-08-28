@@ -26,7 +26,7 @@ import { HumanSection } from './human-section/index.ts';
 import { Messages } from './messages/messages.tsx';
 import { SolverSection } from './solver-section/index.ts';
 
-import css from './maze-maker.module.css' with { type: 'css' };
+import css from './maze-maker.module.css';
 
 export type Producer<Object, Props = never, Additional = unknown> = () => {
   maker: (props: Props) => Object;

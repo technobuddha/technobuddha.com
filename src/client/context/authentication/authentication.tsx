@@ -2,7 +2,7 @@ import React from 'react';
 import { shallowEquals } from '@technobuddha/library';
 
 import { type Account, useAPI } from '#context/api';
-import { authenticationSettings } from '#settings/authentication.ts';
+import { authenticationSettings } from '#settings';
 
 import { AuthenticationContext } from './context.ts';
 

@@ -18,7 +18,7 @@ import {
   type TranslateReturn,
   writeTranslations,
 } from '#server/translation';
-import { i18nextInit } from '#settings/i18next.ts';
+import { i18nextInit } from '#settings';
 
 void (async function main() {
   const foreign =
@@ -106,7 +106,7 @@ void (async function main() {
         objectMode: true,
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         async transform(file, _enc, callback) {
-          const [lng, ns] = file.path.split('/');
+          const [lng, ns] = file.path.split('/', 2);
           const newTranslations = JSON.parse(file.contents.toString()) as Record<string, string>;
           const oldTranslations = await readTranslations(lng, ns);
           const archiveTranslations = await readTranslations(lng, ns, 'archive');
@@ -114,10 +114,10 @@ void (async function main() {
 
           for (const [key, translation] of Object.entries(newTranslations)) {
             if (translation == null) {
-              if (key in oldTranslations) {
+              if (Object.hasOwn(oldTranslations, key)) {
                 newTranslations[key] = oldTranslations[key];
                 delete oldTranslations[key];
-              } else if (key in archiveTranslations) {
+              } else if (Object.hasOwn(archiveTranslations, key)) {
                 newTranslations[key] = archiveTranslations[key];
                 delete archiveTranslations[key];
                 out(`${chalk.cyanBright('reinstated')} ${chalk.grey(`${ns} ${lng}`)} ${key}\n`);

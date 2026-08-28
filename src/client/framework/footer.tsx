@@ -5,7 +5,7 @@ import { useUserInterface } from '#context/user-interface';
 
 import packageJson from '../../../package.json' with { type: 'json' };
 
-import css from './footer.module.css' with { type: 'css' };
+import css from './footer.module.css';
 
 export const Footer: React.FC = () => {
   const { footer } = useUserInterface();

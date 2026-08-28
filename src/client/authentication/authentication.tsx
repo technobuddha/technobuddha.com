@@ -3,13 +3,13 @@ import { Box, Link, Paper, Typography, Watermark } from '@technobuddha/controls'
 
 import { useTranslation } from '#context/i18n';
 import { useLocation } from '#context/router';
-import { authenticationSettings } from '#settings/authentication.ts';
+import { authenticationSettings } from '#settings';
 
 import { ForgotPassword } from './forgot-password.tsx';
 import { Login } from './login.tsx';
 import { SignUp } from './sign-up.tsx';
 
-import css from './authentication.module.css' with { type: 'css' };
+import css from './authentication.module.css';
 
 export const Authentication: React.FC = () => {
   const { t } = useTranslation();

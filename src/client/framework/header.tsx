@@ -5,9 +5,9 @@ import { MdAccountCircle } from 'react-icons/md';
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useNavigate } from '#context/router';
-import { authenticationSettings } from '#settings/authentication.ts';
+import { authenticationSettings } from '#settings';
 
-import css from './header.module.css' with { type: 'css' };
+import css from './header.module.css';
 
 type HeaderProps = { children?: never };
 

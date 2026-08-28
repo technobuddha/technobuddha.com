@@ -4,7 +4,7 @@ import { create2dArray, nbsp, numberToLetter, range } from '@technobuddha/librar
 import { useDerivedState } from '@technobuddha/react';
 import clsx from 'clsx';
 
-import css from './knight.module.css' with { type: 'css' };
+import css from './knight.module.css';
 
 const blackKnight = '♞';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@technobuddha/controls';
 
-import css from './service-notification.module.css' with { type: 'css' };
+import css from './service-notification.module.css';
 
 type ServerErrorProps = {
   readonly err: Error;

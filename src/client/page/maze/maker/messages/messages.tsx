@@ -8,7 +8,7 @@ import { Section } from '../section/index.ts';
 
 import { MessagesHelp } from './messages.help.tsx';
 
-import css from './messages.module.css' with { type: 'css' };
+import css from './messages.module.css';
 
 type History = {
   message: string;

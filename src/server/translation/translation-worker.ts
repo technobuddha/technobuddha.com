@@ -1,6 +1,6 @@
 import { type Logger } from 'winston';
 
-import { i18nextInit } from '#settings/i18next';
+import { i18nextInit } from '#settings';
 
 import {
   readTranslations,

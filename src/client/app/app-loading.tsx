@@ -1,7 +1,7 @@
 import React from 'react';
 import { CircularProgress } from '@technobuddha/controls';
 
-import css from './app-loading.module.css' with { type: 'css' };
+import css from './app-loading.module.css';
 
 type AppLoadingProps = {
   children?: never;

@@ -16,10 +16,11 @@ type PaletteDialog = {
   readonly 'swatch': '_swatch_brvu4_19';
   readonly 'picker': '_picker_brvu4_27';
   readonly 'color-picker': '_color-picker_brvu4_29';
+  readonly 'colorPicker': '_color-picker_brvu4_29';
 };
 
 declare const paletteDialog: PaletteDialog;
 
 export default paletteDialog;
 
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInBhbGV0dGUtZGlhbG9nLm1vZHVsZS5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7V0FBQztXQUtFO1dBS0U7V0FJRTtXQUlBO1dBUUo7V0FFRSIsImZpbGUiOiJwYWxldHRlLWRpYWxvZy5tb2R1bGUuZC5jc3MudHMiLCJzb3VyY2VSb290IjoiIn0=
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInBhbGV0dGUtZGlhbG9nLm1vZHVsZS5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7V0FBQztXQUtFO1dBS0U7V0FJRTtXQUlBO1dBUUo7V0FFRTtXQUFBIiwiZmlsZSI6InBhbGV0dGUtZGlhbG9nLm1vZHVsZS5kLmNzcy50cyIsInNvdXJjZVJvb3QiOiIifQ==

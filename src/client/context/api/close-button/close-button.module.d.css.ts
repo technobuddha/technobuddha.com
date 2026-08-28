@@ -10,6 +10,7 @@
 // prettier-ignore
 type CloseButton = {
   readonly 'close-button': '_close-button_aizgu_1';
+  readonly 'closeButton': '_close-button_aizgu_1';
   readonly 'icon': '_icon_aizgu_2';
 };
 
@@ -17,4 +18,4 @@ declare const closeButton: CloseButton;
 
 export default closeButton;
 
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsb3NlLWJ1dHRvbi5tb2R1bGUuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O1dBQUM7V0FDRSIsImZpbGUiOiJjbG9zZS1idXR0b24ubW9kdWxlLmQuY3NzLnRzIiwic291cmNlUm9vdCI6IiJ9
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNsb3NlLWJ1dHRvbi5tb2R1bGUuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O1dBQUM7V0FBQTtXQUNFIiwiZmlsZSI6ImNsb3NlLWJ1dHRvbi5tb2R1bGUuZC5jc3MudHMiLCJzb3VyY2VSb290IjoiIn0=

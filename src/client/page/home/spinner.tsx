@@ -3,7 +3,7 @@ import { memoize } from '@technobuddha/library';
 import { useConst } from '@technobuddha/react';
 import { type IconType } from 'react-icons';
 
-import css from './spinner.module.css' with { type: 'css' };
+import css from './spinner.module.css';
 
 export type SpinnerComponent = {
   name: string;
@@ -76,20 +76,16 @@ export function Spinner<T extends SpinnerComponent>({
   );
   const iconBoxStyle = React.useMemo(
     () =>
-      memoize(
-        (i: number): React.CSSProperties => ({
-          transform: `rotate(${-(270 + (i + 0.5) * angle)}deg)`,
-        }),
-      ),
+      memoize((i: number): React.CSSProperties => ({
+        transform: `rotate(${-(270 + (i + 0.5) * angle)}deg)`,
+      })),
     [angle],
   );
   const iconInnerStyle = React.useMemo(
     () =>
-      memoize(
-        (i: number): React.CSSProperties => ({
-          transform: `rotate(${270 + (i + 0.5) * angle}deg)`,
-        }),
-      ),
+      memoize((i: number): React.CSSProperties => ({
+        transform: `rotate(${270 + (i + 0.5) * angle}deg)`,
+      })),
     [angle],
   );
   const iconStyle = React.useMemo<React.CSSProperties>(

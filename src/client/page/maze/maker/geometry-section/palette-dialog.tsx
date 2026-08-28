@@ -13,7 +13,7 @@ import { titleCase } from '@technobuddha/library';
 import { defaultColors, type MazeColors } from '@technobuddha/maze';
 import { create, type InstanceProps } from 'react-modal-promise';
 
-import css from './palette-dialog.module.css' with { type: 'css' };
+import css from './palette-dialog.module.css';
 
 export type PaletteDialogProps = InstanceProps<MazeColors, void> & {
   readonly value: MazeColors;

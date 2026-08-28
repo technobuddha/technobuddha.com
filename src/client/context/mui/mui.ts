@@ -1,2 +1,2 @@
 export { ThemeProvider, useTheme } from '@mui/material';
-export { theme } from '#settings/mui-theme.ts';
+export { theme } from '#settings';

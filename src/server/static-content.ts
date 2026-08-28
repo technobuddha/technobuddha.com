@@ -6,8 +6,7 @@ import { type Application, type Request, type Response } from 'express';
 import { type Logger } from 'winston';
 
 import { paths } from '#config';
-import { browserSettings } from '#settings/browser.ts';
-import { userInterfaceSettings } from '#settings/user-interface.ts';
+import { browserSettings, userInterfaceSettings } from '#settings';
 
 import { cacheControl } from './cache-control.ts';
 

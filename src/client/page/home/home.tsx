@@ -6,12 +6,12 @@ import { useTranslation } from '#context/i18n';
 import { useTheme } from '#context/mui';
 import { useNavigate } from '#context/router';
 import { MazeBackground } from '#page/maze';
-import { type Page, pages } from '#settings/pages.tsx';
+import { type Page, pages } from '#settings';
 
 import Logo from './logo.svg?react';
 import { Spinner } from './spinner.tsx';
 
-import css from './home.module.css' with { type: 'css' };
+import css from './home.module.css';
 
 export type HomeProps = {
   children?: never;

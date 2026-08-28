@@ -1,7 +1,6 @@
 import { type Request, type Response } from 'express';
 
-import { browserSettings } from '#settings/browser.ts';
-import { userInterfaceSettings } from '#settings/user-interface.ts';
+import { browserSettings, userInterfaceSettings } from '#settings';
 
 export function status404(_req: Request, res: Response): void {
   res.statusMessage = 'NOT FOUND';

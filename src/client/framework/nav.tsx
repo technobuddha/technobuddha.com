@@ -13,9 +13,9 @@ import { MdMenu, MdMenuOpen } from 'react-icons/md';
 import { useAuthentication } from '#context/authentication';
 import { useTranslation } from '#context/i18n';
 import { useLocation, useNavigate } from '#context/router';
-import { pages } from '#settings/pages.tsx';
+import { pages } from '#settings';
 
-import css from './nav.module.css' with { type: 'css' };
+import css from './nav.module.css';
 
 const expansionTimeout = 1250;
 

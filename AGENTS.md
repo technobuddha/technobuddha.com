@@ -138,7 +138,7 @@ This project is part of the [Technobuddha](https://technobuddha.com) suite of op
 - Other configurations are more static but may be updated in future versions of `@technobuddha/project`.
 - All configurations can be updated by running the command `npx tb`. Note that this will overwrite any local changes to the configuration files, including ALL `tsconfig.json` files.
 - If an error is found in a configuration, let the user know that `@technobuddha/project` needs to be updated.
-- The file `technobuddha.config.js` at the root of the repository is used to customize certain aspects of the generated configurations.
+- The file `technobuddha.config.ts` at the root of the repository is used to customize certain aspects of the generated configurations.
 
 ### Build
 

@@ -10,7 +10,7 @@ import { Section } from '../section/index.ts';
 
 import { GameControlsHelp } from './game-controls.help';
 
-import css from './game-controls.module.css' with { type: 'css' };
+import css from './game-controls.module.css';
 
 type GameControlsProps = {
   readonly runner: MazeRunner | undefined;

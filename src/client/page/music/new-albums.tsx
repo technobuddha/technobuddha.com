@@ -6,7 +6,7 @@ import { MdMusicNote } from 'react-icons/md';
 import { type Album, useAPI } from '#context/api';
 import { useTranslation } from '#context/i18n';
 
-import css from './new-albums.module.css' with { type: 'css' };
+import css from './new-albums.module.css';
 
 export const NewAlbums: React.FC = () => {
   const { t } = useTranslation();

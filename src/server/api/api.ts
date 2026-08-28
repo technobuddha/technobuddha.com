@@ -1,8 +1,7 @@
 import { type Express, Router as router } from 'express';
 import { type Logger } from 'winston';
 
-import { browserSettings } from '#settings/browser';
-import { userInterfaceSettings } from '#settings/user-interface';
+import { browserSettings, userInterfaceSettings } from '#settings';
 
 import { authentication } from './authentication.ts';
 import { music } from './music.ts';

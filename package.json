@@ -14,8 +14,7 @@
     "#page/*": "./src/client/page/*/index.ts",
     "#client/*": "./src/client/*/index.js",
     "#server/*": "./src/server/*/index.js",
-    "#util*": "./src/util*",
-    "#settings/*": "./src/settings/*",
+    "#settings": "./src/settings/index.js",
     "#config": "./src/config/index.js",
     "#env": "./src/config/env.js"
   },
@@ -33,7 +32,7 @@
     "url": "https://github.com/technobuddha/technobuddha.com/issues"
   },
   "scripts": {
-    "build": "build default",
+    "build": "build",
     "start": "build dev",
     "import-tracks": "tsx scripts/import-tracks.ts",
     "import-artwork": "tsx scripts/import-artwork.ts",
@@ -50,14 +49,17 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "2.22.0",
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
     "@google-cloud/translate": "10.0.1",
     "@mui/material": "9.4.0",
     "@technobuddha/color": "0.3.3-16",
     "@technobuddha/controls": "1.0.0-5",
-    "@technobuddha/library": "2.1.0-195",
+    "@technobuddha/library": "2.1.0-196",
     "@technobuddha/maze": "0.2.0-8",
     "@technobuddha/postgres": "1.0.0-4",
     "@technobuddha/react": "1.0.0-7",
+    "@uiw/react-color": "2.10.3",
     "ajv": "8.20.0",
     "chalk": "6.0.0",
     "cheferizeIt": "1.0.4",
@@ -88,6 +90,7 @@
   },
   "devDependencies": {
     "@cspell/cspell-types": "10.1.1",
+    "@technobuddha/project": "1.0.0-206",
     "@types/cli-progress": "^3.11.6",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
@@ -103,6 +106,7 @@
     "@vitejs/plugin-react": "6.1.1",
     "cli-progress": "3.12.0",
     "cspell": "10.1.1",
+    "css-module-type-definitions": "2.0.0-52",
     "glob": "13.0.6",
     "husky": "9.1.7",
     "i18next-scanner": "4.6.0",
@@ -116,8 +120,7 @@
     "vinyl": "3.0.1",
     "vinyl-fs": "4.0.2",
     "vite": "8.2.2",
-    "vite-plugin-svgr": "5.2.0",
-    "@technobuddha/project": "1.0.0-202"
+    "vite-plugin-svgr": "5.2.0"
   },
   "resolutions": {
     "postcss": "8.5.9"

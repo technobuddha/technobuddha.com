@@ -1,6 +1,6 @@
-//@ts-check
-/** @type import("\@technobuddha/project").TechnobuddhaConfig */
-const config = {
+import { defineConfig } from '@technobuddha/project/config';
+
+export default defineConfig({
   directories: {
     'scripts': {
       platform: 'node',
@@ -30,13 +30,11 @@ const config = {
     },
     '.': {
       tsconfig: {
-        references: ['src/settings']
-      }
-    }
+        references: ['src/settings'],
+      },
+    },
   },
   git: {
     ignore: ['artwork'],
   },
-};
-
-export default config;
+});

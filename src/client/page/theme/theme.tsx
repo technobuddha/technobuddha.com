@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@technobuddha/controls';
 
-import css from './theme.module.css' with { type: 'css' };
+import css from './theme.module.css';
 
 export type ThemeProps = {
   children?: never;

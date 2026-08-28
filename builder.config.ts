@@ -1,7 +1,6 @@
-//@ts-check
+import { defineBuilds } from '@technobuddha/project/build';
 
-/** @type import('\@technobuddha/project/build').Builds */
-const config = {
+export default defineBuilds({
   dev: {
     watch: true,
     steps: [
@@ -29,6 +28,4 @@ const config = {
       },
     ],
   },
-};
-
-export default config;
+});

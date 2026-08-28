@@ -32,7 +32,7 @@
     "url": "https://github.com/technobuddha/technobuddha.com/issues"
   },
   "scripts": {
-    "build": "build",
+    "build": "build default",
     "start": "build dev",
     "import-tracks": "tsx scripts/import-tracks.ts",
     "import-artwork": "tsx scripts/import-artwork.ts",
@@ -49,17 +49,14 @@
   },
   "dependencies": {
     "@dotenvx/dotenvx": "2.22.0",
-    "@emotion/react": "11.14.0",
-    "@emotion/styled": "11.14.1",
     "@google-cloud/translate": "10.0.1",
     "@mui/material": "9.4.0",
     "@technobuddha/color": "0.3.3-16",
     "@technobuddha/controls": "1.0.0-5",
-    "@technobuddha/library": "2.1.0-196",
+    "@technobuddha/library": "2.1.0-197",
     "@technobuddha/maze": "0.2.0-8",
     "@technobuddha/postgres": "1.0.0-4",
     "@technobuddha/react": "1.0.0-7",
-    "@uiw/react-color": "2.10.3",
     "ajv": "8.20.0",
     "chalk": "6.0.0",
     "cheferizeIt": "1.0.4",
@@ -90,7 +87,7 @@
   },
   "devDependencies": {
     "@cspell/cspell-types": "10.1.1",
-    "@technobuddha/project": "1.0.0-206",
+    "@technobuddha/project": "1.0.0-208",
     "@types/cli-progress": "^3.11.6",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
